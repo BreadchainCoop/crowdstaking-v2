@@ -21,7 +21,7 @@ export function useClaimableYield() {
   });
 
   useEffect(() => {
-    if (status === "success" && data) {
+    if (status === "success" && data !== null) {
       setClaimableYield(parseFloat(formatUnits(data as bigint, 18)));
     }
     if (status === "error") {
