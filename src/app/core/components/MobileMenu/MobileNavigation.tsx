@@ -2,7 +2,6 @@ import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { isExternal } from "util/types";
 
 interface IProps {
   handleNavToggle: () => void;
