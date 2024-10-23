@@ -118,7 +118,7 @@ export function DistributionOverview({
                     </span>
                   </div>
                   <div>.</div>
-                  <div className="w-[45%]">
+                  <div className="w-[45%] text-xl leading-[1.1] self-end">
                     {
                       formatBalance(claimableYield + yieldIncrement, 4).split(
                         "."
