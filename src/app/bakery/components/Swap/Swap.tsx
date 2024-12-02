@@ -80,18 +80,46 @@ export function Swap() {
     }));
   };
 
+  const renderActive = () => {
+    return (
+      <h3 className="text-2xl inline font-medium py-0 me-2 px-4 rounded-[10px] bg-breadpink-700/10 dark:bg-none text-breadpink-500 dark:text-breadpink-shaded border border-breadpink-shaded ">
+        <span>{swapState.mode === "BAKE" ? "Bake" : "Burn"}</span>
+      </h3>
+    );
+  };
+
+  const renderInactive = () => {
+    return (
+      <h3
+        onClick={handleSwapReverse}
+        className="text-2xl inline font-medium hover:cursor-pointer me-2 px-4 rounded-[10px] hover:text-breadpink-500 hover:bg-breadpink-700/10 hover:dark:text-breadpink-shaded"
+      >
+        <span>{swapState.mode === "BAKE" ? "Burn" : "Bake"}</span>
+      </h3>
+    );
+  };
+
   return (
     <>
       {user.features.breadCounter && <TotalSupply />}
       <div className="w-full p-2 sm:p-4">
-        <div className="w-full max-w-[30rem] m-auto relative rounded-xl swap-drop-shadow bg-breadgray-ultra-white dark:bg-breadgray-grey200 border-breadgray-burnt flex flex-col items-center">
+        <div className="w-full max-w-[30rem] p-3 m-auto relative rounded-xl swap-drop-shadow bg-breadgray-ultra-white dark:bg-breadgray-grey200 border-breadgray-burnt flex flex-col items-center">
           <div className="w-full drop-shadow-swap">
-            <div className="w-full px-4 pt-2">
-              <h2 className="text-[1.5rem] md:text-[1.9rem] font-medium">
-                {swapState.mode === "BAKE" ? "Bake" : "Burn"}
-              </h2>
+            <div className="w-full ">
+              {swapState.mode === "BAKE" && (
+                <span>
+                  {renderActive()}
+                  {renderInactive()}
+                </span>
+              )}
+              {swapState.mode === "BURN" && (
+                <span>
+                  {renderInactive()}
+                  {renderActive()}
+                </span>
+              )}
             </div>
-            <div className="relative w-full p-2 flex flex-col gap-1">
+            <div className="relative w-full my-2 flex flex-col gap-1">
               <FromPanel
                 inputValue={swapState.value}
                 swapMode={swapState.mode}
@@ -107,7 +135,7 @@ export function Swap() {
               />
             </div>
           </div>
-          <div className="p-2 pt-0 w-full">
+          <div className="w-full">
             {(() => {
               switch (user.status) {
                 case "LOADING":
@@ -162,7 +190,7 @@ export function Swap() {
           </div>
         </div>
       </div>
-      <div className="px-4 pb-4">
+      <div className="px-2 pb-4">
         <LiquidityBanner />
       </div>
     </>

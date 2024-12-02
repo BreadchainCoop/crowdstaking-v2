@@ -25,6 +25,7 @@ const colors = {
     400: "#A416AD",
     500: "#D04EC5",
     600: "#F5E8F6",
+    700: "#DE56E7",
   },
   status: {
     danger: "#D8745C",
