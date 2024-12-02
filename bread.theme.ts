@@ -36,6 +36,7 @@ const colors = {
     shaded: "#D04EC5",
     violet: "#A416AD",
   },
+  "gnosis-green": "#3E6957",
   "button-border": "#2E2E2E",
 };
 

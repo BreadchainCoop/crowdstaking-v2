@@ -24,6 +24,24 @@ export function WXDAIIcon({ size = "regular" }: { size?: "regular" | "full" }) {
   );
 }
 
+export function GnosisIcon({
+  size = "regular",
+}: {
+  size?: "small" | "regular";
+}) {
+  return (
+    <div className={clsx("rounded-full overflow-hidden")}>
+      <Image
+        src={"/gnosis_icon.svg"}
+        alt="Gnosis icon"
+        className={size === "small" ? "size-6" : "size-10"}
+        width="30"
+        height="30"
+      />
+    </div>
+  );
+}
+
 export function BreadIcon({
   size = "regular",
 }: {

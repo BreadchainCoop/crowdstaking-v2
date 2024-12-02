@@ -2,7 +2,6 @@
 import type { ChangeEvent } from "react";
 import { useCallback, useState } from "react";
 import { useChainModal } from "@rainbow-me/rainbowkit";
-
 import { FromPanel } from "./FromPanel";
 import SwapReverse from "../SwapReverse";
 import ToPanel from "./ToPanel";
@@ -15,6 +14,7 @@ import Burn from "./Burn";
 import { Address } from "viem";
 import { InsufficentBalance } from "./InsufficentBalance";
 import { LiquidityBanner } from "../LiquidityBanner/LiquidityBanner";
+import { BridgeBanner } from "../BridgeBanner/BridgeBanner";
 import { TotalSupply } from "../TotalSupply";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
 
@@ -161,6 +161,9 @@ export function Swap() {
             })()}
           </div>
         </div>
+      </div>
+      <div className="px-4 pb-4">
+        <BridgeBanner />
       </div>
       <div className="px-4 pb-4">
         <LiquidityBanner />
