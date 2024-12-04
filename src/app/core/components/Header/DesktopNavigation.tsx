@@ -52,7 +52,7 @@ function DesktopNavigation({ currentPath }: { currentPath: string }) {
       </DesktopNavigationLink>
       {features.governancePage === true && (
         <DesktopNavigationLink
-          isCurrentPage={currentPath === "/governance"}
+          isCurrentPage={currentPath.includes("/governance")}
           href="/governance"
         >
           Governance

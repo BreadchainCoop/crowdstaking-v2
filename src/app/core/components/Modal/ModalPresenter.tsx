@@ -1,3 +1,4 @@
+"use client";
 import * as Dialog from "@radix-ui/react-dialog";
 import { AnimatePresence, motion } from "framer-motion";
 import { useModal } from "@/app/core/context/ModalContext";
@@ -5,6 +6,7 @@ import { ConfirmRecastModal } from "./ConfirmRecastModal";
 import { ModalOverlay } from "./ModalUI";
 import { VoteTransactionModal } from "./TransactionModal/VoteTransactionModal";
 import { BakeryTransactionModal } from "./TransactionModal/BakeryTransactionModal";
+import { LPVaultTransactionModal } from "./LPVaultTransactionModal/LPVaultTransactionModal";
 
 export function ModalPresenter() {
   const { modalState, setModal } = useModal();
@@ -27,6 +29,10 @@ export function ModalPresenter() {
                       return <VoteTransactionModal modalState={modalState} />;
                     case "CONFIRM_RECAST":
                       return <ConfirmRecastModal setModal={setModal} />;
+                    case "LP_VAULT_TRANSACTION":
+                      return (
+                        <LPVaultTransactionModal modalState={modalState} />
+                      );
                     default:
                       throw new Error(
                         "unhandled modalState.type in switch statement"

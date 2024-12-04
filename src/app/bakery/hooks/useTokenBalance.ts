@@ -10,7 +10,7 @@ export interface UseTokenBalanceResult {
 
 export function useTokenBalance(
   tokenAddress: Hex,
-  holderAddress: string
+  holderAddress: Hex
 ): UseTokenBalanceResult {
   const { data, status, error } = useContractRead({
     address: tokenAddress,
@@ -20,7 +20,7 @@ export function useTokenBalance(
     watch: true,
   });
 
-  const value = data ? formatUnits(BigInt(data as string), 18).toString() : "0";
+  const value = data ? formatUnits(data, 18).toString() : "0";
 
   return { value, status, error };
 }

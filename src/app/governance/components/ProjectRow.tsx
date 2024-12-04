@@ -1,9 +1,8 @@
 import { ReactNode } from "react";
 import { Hex } from "viem";
 import Image from "next/image";
-import { Badge, LinkBadge } from "@/app/core/components/Badge/Badge";
+import { LinkBadge } from "@/app/core/components/Badge/Badge";
 import { BreadIcon } from "@/app/core/components/Icons/TokenIcons";
-import { PowerIcon } from "@/app/core/components/Icons/PowerIcon";
 import { formatVotePercentage } from "@/app/core/util/formatter";
 import { projectsMeta } from "@/app/projectsMeta";
 import type { TConnectedUserState } from "@/app/core/hooks/useConnectedUser";

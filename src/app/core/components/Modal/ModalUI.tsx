@@ -15,7 +15,7 @@ export const ModalContainer = forwardRef(
     return (
       <div
         ref={ref}
-        className="max-h-90vh fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-2 flex justify-center items-center z-40"
+        className="h-screen fixed w-screen top-0 p-2 flex justify-center items-center z-40 pointer-events-none"
         {...props}
       >
         <motion.section
@@ -23,7 +23,7 @@ export const ModalContainer = forwardRef(
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 8, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="sm:w-[26rem] flex flex-col items-center rounded dark:bg-opacity-100 p-4 bg-breadgray-ultra-white border border-breadgray-light-grey dark:border-none dark:bg-breadgray-charcoal relative"
+          className="max-w-[26rem] flex flex-col items-center rounded dark:bg-opacity-100 p-4 bg-breadgray-ultra-white border border-breadgray-light-grey dark:border-none dark:bg-breadgray-charcoal relative pointer-events-auto"
         >
           <DialogPrimitiveClose className="absolute top-0 right-0 w-10 h-10 p-3">
             <CloseIcon />
@@ -49,7 +49,9 @@ export function ModalHeading({ children }: { children: ReactNode }) {
 
 export function ModalContent({ children }: { children: ReactNode }) {
   return (
-    <div className="px-2 pt-4 flex flex-col gap-4 items-center">{children}</div>
+    <div className="px-2 pt-4 flex flex-col gap-4 items-center w-full">
+      {children}
+    </div>
   );
 }
 

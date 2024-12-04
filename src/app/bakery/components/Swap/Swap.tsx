@@ -6,7 +6,6 @@ import { useChainModal } from "@rainbow-me/rainbowkit";
 import { FromPanel } from "./FromPanel";
 import SwapReverse from "../SwapReverse";
 import ToPanel from "./ToPanel";
-import { sanitizeInputValue } from "../swapUtils";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import Button from "@/app/core/components/Button";
 import { AccountMenu } from "@/app/core/components/Header/AccountMenu";
@@ -17,6 +16,7 @@ import { Address } from "viem";
 import { InsufficentBalance } from "./InsufficentBalance";
 import { LiquidityBanner } from "../LiquidityBanner/LiquidityBanner";
 import { TotalSupply } from "../TotalSupply";
+import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
 
 export type TSwapMode = "BAKE" | "BURN";
 

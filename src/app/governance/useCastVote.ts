@@ -39,7 +39,6 @@ export function useCastVote(
         },
         null
       );
-      console.log({ mostRecentVote });
       setCastVote({
         status: "SUCCESS",
         data: mostRecentVote

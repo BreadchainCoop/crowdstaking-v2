@@ -76,6 +76,7 @@ export default function Bake({
         return;
       }
       if (isSafe) {
+        // TODO look at using eth_getTransactionRecipt to catch submitted transactions
         const safeSdk = new SafeAppsSDK();
         const tx = await safeSdk.txs.getBySafeTxHash(writeData.hash);
         if (tx.txStatus === TransactionStatus.AWAITING_CONFIRMATIONS) {

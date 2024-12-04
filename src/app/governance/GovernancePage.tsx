@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
+import { Hex } from "viem";
 
 import { ProjectRow, VoteDisplay, VoteForm } from "./components/ProjectRow";
 import { CastVotePanel } from "./components/CastVote";
@@ -7,9 +8,7 @@ import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { ResultsPanel } from "./components/ResultsPanel";
 import { useCurrentVotingDistribution } from "./useCurrentVotingDistribution";
 import { useCastVote } from "./useCastVote";
-import { useUserVotingPower } from "./useUserVotingPower";
 import { DistributionOverview } from "./components/DistributionOverview";
-import { Hex } from "viem";
 import { VotingPower } from "./components/VotingPower";
 import { useLastClaimedBlockNumber } from "./useLastClaimedBlockNumber";
 import { useCycleLength } from "./useCycleLength";
@@ -20,7 +19,9 @@ import { InfoCallout } from "./components/InfoCallout";
 import { useDistributions } from "./useDistributions";
 import { useModal } from "../core/context/ModalContext";
 import { projectsMeta } from "../projectsMeta";
+import { PageGrid } from "./components/PageGrid";
 import { ProjectsProvider } from "@/app/core/context/ProjectContext/ProjectContext";
+import { useVotingPower } from "./context/VotingPowerContext";
 
 export function GovernancePage() {
   const { user, isSafe } = useConnectedUser();
@@ -28,9 +29,10 @@ export function GovernancePage() {
   const { lastClaimedBlocknumber } = useLastClaimedBlockNumber();
   const { cycleLength } = useCycleLength();
   const { castVote } = useCastVote(user, lastClaimedBlocknumber);
-  const { userVotingPower } = useUserVotingPower(user, cycleLength);
   const { minRequiredVotingPower } = useMinRequiredVotingPower();
   const { data: distributionsData } = useDistributions();
+
+  const userVotingPower = useVotingPower();
 
   const { cycleDates } = useCycleDates(cycleLength);
 
@@ -152,10 +154,22 @@ export function GovernancePage() {
     return castVote.status === "SUCCESS" && castVote.data ? true : false;
   }, [castVote]);
 
-  const userCanVote =
-    userVotingPower && userVotingPower > Number(minRequiredVotingPower || 0)
-      ? true
-      : false;
+  const { userCanVote, totalUserVotingPower } = useMemo(() => {
+    const totalUserVotingPower =
+      userVotingPower &&
+      userVotingPower.bread.status === "success" &&
+      userVotingPower.butteredBread.status === "success"
+        ? userVotingPower.bread.value + userVotingPower.butteredBread.value
+        : null;
+
+    const userCanVote =
+      totalUserVotingPower &&
+      totalUserVotingPower > Number(minRequiredVotingPower || 0)
+        ? true
+        : false;
+
+    return { userCanVote, totalUserVotingPower };
+  }, [minRequiredVotingPower, userVotingPower]);
 
   if (
     castVote.status === "ERROR" ||
@@ -188,8 +202,8 @@ export function GovernancePage() {
     );
 
   return (
-    <section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 lg:px-8">
-      <div className="grid w-full grid-cols-12 governance-rows p-4 md:py-8 md:px-2 gap-y-8 sm:gap-8 lg:gap-5 lg:gap-y-3">
+    <section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
+      <PageGrid>
         <div className="col-span-12 lg:col-span-8 row-start-1 row-span-1">
           <h3 className="text-3xl font-bold text-breadgray-grey100 dark:text-breadgray-ultra-white">
             Bread Governance
@@ -215,7 +229,7 @@ export function GovernancePage() {
         <div className="col-span-12 row-start-4 lg:col-start-1 lg:col-span-8 lg:row-start-2">
           <VotingPower
             minRequiredVotingPower={minRequiredVotingPower}
-            userVotingPower={userVotingPower}
+            userVotingPower={totalUserVotingPower}
             userHasVoted={userHasVoted}
             cycleDates={cycleDates}
             cycleLength={cycleLength}
@@ -231,10 +245,11 @@ export function GovernancePage() {
               account,
               castPoints: currentVotingDistribution.data[1][i],
             }))
-            .toSorted(
-              (a, b) =>
+            .toSorted((a, b) => {
+              return (
                 projectsMeta[a.account].order - projectsMeta[b.account].order
-            )
+              );
+            })
             .map((project, i) => {
               return (
                 <div key={`project_row_${project.account}`}>
@@ -279,7 +294,7 @@ export function GovernancePage() {
             resetFormState={resetFormState}
           />
         </div>
-      </div>
+      </PageGrid>
       {/* <Diagnostics /> */}
     </section>
   );

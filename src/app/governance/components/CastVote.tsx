@@ -106,7 +106,7 @@ export function CastVote({
     address: distributorAddress,
     abi: DISTRIBUTOR_ABI,
     functionName: "castVote",
-    args: [vote],
+    args: [vote.map((num) => BigInt(num))],
     enabled: writeIsEnabled && distributorAddress !== "0x",
   });
 
@@ -222,8 +222,8 @@ export function CastVote({
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
                   d="M0.5 0H2.5V2H0.5V0ZM4.5 4H2.5V2H4.5V4ZM6.5 6H4.5V4H6.5V6ZM8.5 6H6.5V8H4.5V10H2.5V12H0.5V14H2.5V12H4.5V10H6.5V8H8.5V10H10.5V12H12.5V14H14.5V12H12.5V10H10.5V8H8.5V6ZM10.5 4V6H8.5V4H10.5ZM12.5 2V4H10.5V2H12.5ZM12.5 2V0H14.5V2H12.5Z"
                   fill="#D8745C"
                 />

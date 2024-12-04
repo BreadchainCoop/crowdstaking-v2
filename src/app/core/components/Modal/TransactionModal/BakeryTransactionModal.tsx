@@ -54,7 +54,12 @@ export function BakeryTransactionModal({
   if (!transaction)
     throw new Error("Transaction modal requires a transaction!");
 
-  if (transaction.data.type === "VOTE") {
+  if (
+    transaction.data.type === "VOTE" ||
+    transaction.data.type === "LP_VAULT_ALLOWANCE" ||
+    transaction.data.type === "LP_VAULT_DEPOSIT" ||
+    transaction.data.type === "LP_VAULT_WITHDRAW"
+  ) {
     throw new Error("Incorrect transaction type for modal!");
   }
 

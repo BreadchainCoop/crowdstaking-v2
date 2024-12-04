@@ -17,6 +17,7 @@ import {
   TokenLabelContainer,
   TokenLabelText,
 } from "./SwapUI";
+import { MaxButton } from "@/app/core/components/MaxButton";
 
 interface IProps {
   inputValue: string;
@@ -93,15 +94,13 @@ function TokenBalance({
         )}
       </TokenBalanceText>
       {tokenBalance.status === "SUCCESS" && (
-        <button
-          type="button"
-          className="px-2 font-bold text-breadviolet-violet dark:text-breadpink-shaded text-sm"
+        <MaxButton
           onClick={() => {
             handleBalanceClick(tokenBalance.value);
           }}
         >
           max
-        </button>
+        </MaxButton>
       )}
     </TokenBalanceContainer>
   );

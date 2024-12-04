@@ -45,7 +45,15 @@ export function TransactionWatcher({
         payload: { toastType: "REVERTED", txHash: hash },
       });
     }
-  }, [status, hash, waitData, transactionsDispatch, toastDispatch]);
+  }, [
+    status,
+    hash,
+    waitData,
+    transactionsDispatch,
+    toastDispatch,
+    playSound,
+    transaction,
+  ]);
 
   return null;
 }

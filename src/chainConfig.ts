@@ -22,6 +22,9 @@ export interface ChainConfiguration {
   DISBURSER: {
     address: Hex;
   };
+  BUTTER: {
+    address: Hex;
+  };
   BUTTERED_BREAD: {
     address: Hex;
   };
@@ -31,7 +34,6 @@ export interface ChainConfiguration {
 }
 
 export const BREAD_ADDRESS = "0xa555d5344f6FB6c65da19e403Cb4c1eC4a1a5Ee3";
-const DISBURSER_ADDRESS = "0x8ce361602B935680E8DeC218b820ff5056BeB7af";
 
 export interface IConfig {
   [chainId: number]: ChainConfiguration;
@@ -53,6 +55,9 @@ const sepolia: ChainConfiguration = {
   BUTTERED_BREAD: {
     address: "0x",
   },
+  BUTTER: {
+    address: "0xf3d8f3de71657d342db60dd714c8a2ae37eac6b4",
+  },
   SDAI_ADAPTOR: {
     address: "0x",
   },
@@ -67,12 +72,14 @@ const gnosis: ChainConfiguration = {
     decimals: 18,
     address: "0xa555d5344f6FB6c65da19e403Cb4c1eC4a1a5Ee3",
   },
-
   DISBURSER: {
     address: "0xeE95A62b749d8a2520E0128D9b3aCa241269024b",
   },
   BUTTERED_BREAD: {
-    address: "0x",
+    address: "0x680B581605DC0A6902735a80dE35Cb0Ef6E90865",
+  },
+  BUTTER: {
+    address: "0xf3d8f3de71657d342db60dd714c8a2ae37eac6b4",
   },
   SDAI_ADAPTOR: {
     address: "0xD499b51fcFc66bd31248ef4b28d656d67E591A94",
@@ -82,7 +89,7 @@ const gnosis: ChainConfiguration = {
 const anvil: ChainConfiguration = {
   ID: 31337,
   NETWORK_STRING: "Anvil",
-  EXPLORER: "NONE",
+  EXPLORER: "https://gnosisscan.io",
   BREAD: {
     symbol: "BREAD",
     decimals: 18,
@@ -94,7 +101,11 @@ const anvil: ChainConfiguration = {
   },
   BUTTERED_BREAD: {
     address:
-      (!!DISTRIBUTOR_DEPLOYED && (DISTRIBUTOR_DEPLOYED.ADDRESS as Hex)) || "0x",
+      (!!BUTTERED_BREAD_DEPLOYED && (BUTTERED_BREAD_DEPLOYED.ADDRESS as Hex)) ||
+      "0x",
+  },
+  BUTTER: {
+    address: "0xf3d8f3de71657d342db60dd714c8a2ae37eac6b4",
   },
   SDAI_ADAPTOR: {
     address: "0xD499b51fcFc66bd31248ef4b28d656d67E591A94",

@@ -1,3 +1,4 @@
+import { TransactionType } from "@/app/governance/lp-vaults/components/VaultPanel";
 import { type ReactNode, createContext, useContext, useState } from "react";
 
 export type RecastModalState = {
@@ -15,10 +16,17 @@ export type BakeryTransactionModalState = {
   hash: string | null;
 };
 
+export type LPVaultTransactionModalState = {
+  type: "LP_VAULT_TRANSACTION";
+  transactionType: TransactionType;
+  parsedValue: bigint;
+};
+
 export type ModalState =
   | BakeryTransactionModalState
   | VoteModalState
   | RecastModalState
+  | LPVaultTransactionModalState
   | null;
 export type ModalContext = {
   modalState: ModalState;

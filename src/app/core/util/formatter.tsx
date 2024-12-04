@@ -5,7 +5,7 @@ export const truncateAddress = (address: string): string =>
 
 export function formatBalance(value: number, decimals: number) {
   const balanceFormatter = new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: decimals,
+    minimumFractionDigits: 0,
     maximumFractionDigits: decimals,
     minimumIntegerDigits: 1,
     useGrouping: true,

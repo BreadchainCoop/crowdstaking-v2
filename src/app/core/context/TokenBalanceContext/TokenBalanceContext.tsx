@@ -83,7 +83,7 @@ function ProviderWithUser({
     }
     if (breadBalanceStatus === "success") {
       const value = breadBalanceData
-        ? formatUnits(BigInt(breadBalanceData as string), 18).toString()
+        ? formatUnits(breadBalanceData, 18).toString()
         : "0";
 
       setBreadBalanceState({

@@ -9,12 +9,7 @@ import { useContractRead, useNetwork } from "wagmi";
 
 import { ERC20_ABI, SDAI_ADAPTOR_ABI } from "@/abi";
 import { useEffect, useMemo, useState } from "react";
-import {
-  differenceInDays,
-  differenceInHours,
-  differenceInSeconds,
-  format,
-} from "date-fns";
+import { differenceInDays, differenceInHours, format } from "date-fns";
 import { getConfig } from "@/chainConfig";
 import { formatUnits } from "viem";
 import clsx from "clsx";
@@ -50,7 +45,6 @@ export function DistributionOverview({
     address: config.BREAD.address,
     abi: ERC20_ABI,
     functionName: "totalSupply",
-    args: [],
     watch: true,
     cacheTime: 6_000,
   });
@@ -108,7 +102,7 @@ export function DistributionOverview({
 
   return (
     <div className="col-span-12 lg:col-span-4 row-start-2 lg:row-start-1 lg:row-span-2">
-      <div className="flex justify-center">
+      <div className="flex justify-center lg:block lg:w-full">
         <CardBox>
           <div className="max-w-96 m-auto lg:max-w-full flex flex-col items-center justify-center p-5 shadow-card">
             <h4 className="text-xl font-medium text-breadgray-rye dark:text-breadgray-light-grey tracking-wide uppercase leading-none">
@@ -172,7 +166,7 @@ export function DistributionOverview({
                   </span>
                 </div>
               </div>
-              <div className="flex w-full">
+              <div className="flex w-full gap-2">
                 <p className="grow text-breadgray-rye dark:text-breadgray-grey">
                   Voting cycle #
                   {distributions == undefined ? "--" : distributions.length + 1}

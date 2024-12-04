@@ -10,6 +10,7 @@ const colors = {
     "og-dark": "#2E2E2E",
     charcoal: "#242424",
     darkest: "#272727",
+    pitchblack: "#181818",
     "cta-bg": "#2c2c2c",
     grey300: "#222222",
     grey200: "#1c1c1c",
@@ -23,6 +24,7 @@ const colors = {
     300: "#E873D3",
     400: "#A416AD",
     500: "#D04EC5",
+    600: "#F5E8F6",
   },
   status: {
     danger: "#D8745C",

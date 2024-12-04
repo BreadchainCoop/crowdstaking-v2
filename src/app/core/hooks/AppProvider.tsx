@@ -6,14 +6,14 @@ import { TokenBalancesProvider } from "@/app/core/context/TokenBalanceContext/To
 import { ConnectedUserProvider } from "@/app/core/hooks/useConnectedUser";
 import { TransactionsProvider } from "@/app/core/context/TransactionsContext/TransactionsContext";
 import { ToastProvider } from "@/app/core/context/ToastContext/ToastContext";
-import Header from "../components/Header/Header";
-import { Footer } from "../components/Footer/Footer";
+
 import { Features } from "@/app/layout";
 import { useSentry } from "./useSentry";
-import { Toaster } from "../components/Toaster/Toaster";
+
 import { ModalProvider } from "../context/ModalContext";
-import { ModalPresenter } from "../components/Modal/ModalPresenter";
+
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 const queryClient = new QueryClient();
 
@@ -33,28 +33,13 @@ export function AppProvider({
           <TokenBalancesProvider>
             <ToastProvider>
               <TransactionsProvider>
-                <ModalProvider>
-                  <Layout>{children}</Layout>
-                </ModalProvider>
+                <ModalProvider>{children}</ModalProvider>
               </TransactionsProvider>
             </ToastProvider>
           </TokenBalancesProvider>
+          <ReactQueryDevtools initialIsOpen={true} />
         </QueryClientProvider>
       </ConnectedUserProvider>
     </WagmiProvider>
-  );
-}
-
-function Layout({ children }: { children: ReactNode }) {
-  return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <main className="grow relative">
-        <ModalPresenter />
-        <Toaster />
-        {children}
-      </main>
-      <Footer />
-    </div>
   );
 }

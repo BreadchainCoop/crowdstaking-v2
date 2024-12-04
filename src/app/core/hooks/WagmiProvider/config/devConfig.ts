@@ -16,7 +16,16 @@ if (!WALLET_CONNECT_PROJECT_ID)
 
 const chainsConfig = configureChains(
   [
-    { ...foundry, id: 31337 },
+    {
+      ...foundry,
+      id: 31337,
+      contracts: {
+        multicall3: {
+          address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+          blockCreated: 21_022_491,
+        },
+      },
+    },
     {
       ...gnosis,
       iconUrl: "gnosis_icon.svg",
@@ -64,7 +73,6 @@ const connectors = connectorsForWallets([
 ]);
 
 const config = createConfig({
-  autoConnect: true,
   connectors,
   publicClient,
 });

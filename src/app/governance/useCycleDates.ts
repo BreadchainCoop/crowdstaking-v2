@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useBlockNumber, useContractRead, useNetwork } from "wagmi";
 import { add, sub } from "date-fns";
 import { CycleLengthState } from "./useCycleLength";
+import { useLastClaimedBlockNumber } from "./useLastClaimedBlockNumber";
 
 export type CycleDatesLoading = {
   status: "LOADING";
@@ -29,42 +30,29 @@ export function useCycleDates(cycleLength: CycleLengthState) {
 
   const { chain: activeChain } = useNetwork();
   const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const distributorAddress = config.DISBURSER.address;
 
-  const {
-    data: lastClaimedBlockNumberData,
-    status: lastClaimedBlockNumberStatus,
-  } = useContractRead({
-    address: distributorAddress,
-    abi: DISTRIBUTOR_ABI,
-    functionName: "lastClaimedBlockNumber",
-    watch: true,
-    cacheTime: 3_000,
-  });
+  const { lastClaimedBlocknumber } = useLastClaimedBlockNumber();
 
   const { data: currentBlockNumberData, status: currentBlockNumberStatus } =
     useBlockNumber();
 
   useEffect(() => {
     if (
-      lastClaimedBlockNumberStatus === "error" ||
       currentBlockNumberStatus === "error" ||
-      lastClaimedBlockNumberData ||
+      lastClaimedBlocknumber ||
       cycleLength !== null
     ) {
     }
     if (
-      lastClaimedBlockNumberStatus === "success" &&
-      lastClaimedBlockNumberData &&
+      lastClaimedBlocknumber &&
       cycleLength.status === "SUCCESS" &&
       currentBlockNumberStatus === "success" &&
       currentBlockNumberData
     ) {
       const secondsSinceStart =
-        (Number(currentBlockNumberData) - Number(lastClaimedBlockNumberData)) *
-        5;
+        (Number(currentBlockNumberData) - Number(lastClaimedBlocknumber)) * 5;
       const cycleBlocksRemaining =
-        Number(lastClaimedBlockNumberData) +
+        Number(lastClaimedBlocknumber) +
         cycleLength.data -
         Number(currentBlockNumberData);
       const cycleSecondsRemaining = cycleBlocksRemaining * 5;
@@ -77,8 +65,7 @@ export function useCycleDates(cycleLength: CycleLengthState) {
       });
     }
   }, [
-    lastClaimedBlockNumberData,
-    lastClaimedBlockNumberStatus,
+    lastClaimedBlocknumber,
     cycleLength,
     currentBlockNumberData,
     currentBlockNumberStatus,

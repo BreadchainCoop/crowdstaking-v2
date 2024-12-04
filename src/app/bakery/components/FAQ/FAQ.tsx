@@ -31,7 +31,7 @@ function AccordionHeader({ children }: { children: ReactNode }) {
 
 function AccordionTrigger({ children }: { children: ReactNode }) {
   return (
-    <Accordion.Trigger className="w-full text-left grid grid-cols-faq-trigger gap-4 justify-between group AccordionTrigger">
+    <Accordion.Trigger className="w-full text-left grid grid-cols-faq-trigger gap-4 justify-between group">
       {children}
       <div className="size-6 text-breadgray-grey100 dark:text-breadgray-ultra-white">
         <svg

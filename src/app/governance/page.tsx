@@ -2,7 +2,7 @@ import { GovernancePage } from "./GovernancePage";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Bread Governance",
+  title: "Bread Voting",
   description: "Bake and burn BREAD. Fund post-capitalist web3.",
 };
 

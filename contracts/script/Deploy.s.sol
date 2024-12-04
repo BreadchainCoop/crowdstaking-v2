@@ -23,7 +23,7 @@ contract Deploy is Script {
     // Distributor Config
     address _bread = address(0xa555d5344f6FB6c65da19e403Cb4c1eC4a1a5Ee3);
     uint256 _minRequiredVotingPower = 5;
-    uint256 _cycleLength = 518400;
+    uint256 _cycleLength = 60;
     uint256 _maxPoints = 10000;
     uint256 _precision = 1000000000000000000;
     uint256 _yieldFixedSplitDivisor = 2;

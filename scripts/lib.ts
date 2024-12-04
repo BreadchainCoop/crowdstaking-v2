@@ -1,7 +1,13 @@
-import { BREAD_ABI, DISTRIBUTOR_ABI, ERC20_ABI } from "../src/abi";
+import {
+  BREAD_ABI,
+  BUTTERED_BREAD_ABI,
+  DISTRIBUTOR_ABI,
+  ERC20_ABI,
+} from "../src/abi";
 import { getConfig } from "../src/chainConfig";
 import {
   Hex,
+  TransactionReceipt,
   createPublicClient,
   createTestClient,
   http,
@@ -11,7 +17,7 @@ import {
 } from "viem";
 import { foundry } from "viem/chains";
 
-const config = getConfig(31337);
+export const anvilConfig = getConfig(31337);
 
 export const anvilAccounts: Array<Hex> = [
   // mock wallet 2
@@ -27,8 +33,8 @@ export const anvilAccounts: Array<Hex> = [
 ];
 
 export const DEV_ACCOUNT = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
-const LP_TOKEN_WHALE = "0xc2fB4B3EA53E10c88D193E709A81C4dc7aEC902e" as Hex;
-const LP_TOKEN_CONTRACT = "0xf3d8f3de71657d342db60dd714c8a2ae37eac6b4" as Hex;
+const BUTTER_WHALE = "0xc2fB4B3EA53E10c88D193E709A81C4dc7aEC902e" as Hex;
+const BREAD_OWNER = "0x918dEf5d593F46735f74F9E2B280Fe51AF3A99ad" as Hex;
 
 // test client is useful as you can use it to send transactions
 // with any wallet without having the private key
@@ -56,7 +62,7 @@ export async function bakeBread(
   try {
     const hash = await testClient.writeContract({
       account: account,
-      address: config.BREAD.address,
+      address: anvilConfig.BREAD.address,
       abi: BREAD_ABI,
       functionName: "mint",
       // mint is a payable function so we pass the value like this
@@ -83,22 +89,22 @@ export async function fundLpTokens(account: Hex = DEV_ACCOUNT) {
   // so it can pay the gas fees to send the LP tokens
   await testClient.sendTransaction({
     account: account,
-    to: LP_TOKEN_WHALE,
+    to: BUTTER_WHALE,
     value: parseUnits("5", 18),
   });
 
   // impersonate the account with the LP tokens
   await testClient.impersonateAccount({
-    address: LP_TOKEN_WHALE,
+    address: BUTTER_WHALE,
   });
 
   await testClient.writeContract({
-    account: LP_TOKEN_WHALE,
-    address: LP_TOKEN_CONTRACT,
+    account: BUTTER_WHALE,
+    address: anvilConfig.BUTTER.address,
     abi: ERC20_ABI,
     functionName: "transfer",
     // this isn't a payable function so we pass the value as an argument
-    args: [DEV_ACCOUNT, parseUnits("1000", 18)],
+    args: [DEV_ACCOUNT, parseUnits("10000", 18)],
   });
 }
 
@@ -108,7 +114,7 @@ export async function balanceOf(anvilAccount: Hex) {
   });
 
   const res = await publicClient.readContract({
-    address: config.BREAD.address,
+    address: anvilConfig.BREAD.address,
     abi: BREAD_ABI,
     functionName: "balanceOf",
     args: [anvilAccount],
@@ -123,24 +129,24 @@ function generateVote() {
   return vote;
 }
 
-export async function submitVote(anvilAccount: Hex) {
+export async function castVote(account: Hex = DEV_ACCOUNT) {
   await testClient.impersonateAccount({
-    address: anvilAccount,
+    address: account,
   });
 
   try {
     const hash = await testClient.writeContract({
-      address: config.DISBURSER.address,
+      address: anvilConfig.DISBURSER.address,
       abi: DISTRIBUTOR_ABI,
       functionName: "castVote",
-      account: anvilAccount,
+      account: account,
       args: [
         [
-          generateVote(),
-          generateVote(),
-          generateVote(),
-          generateVote(),
-          generateVote(),
+          BigInt(generateVote()),
+          BigInt(generateVote()),
+          BigInt(generateVote()),
+          BigInt(generateVote()),
+          BigInt(generateVote()),
         ],
       ],
     });
@@ -148,32 +154,14 @@ export async function submitVote(anvilAccount: Hex) {
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
     if (receipt.status !== "success") {
-      console.log(`Failed to vote: ${anvilAccount} - `, Object.keys(receipt));
-      // console.log({ receipt });
+      console.log(`Failed to vote: ${account} - `, Object.keys(receipt));
 
-      const transaction = await publicClient.getTransaction({ hash });
-
-      console.log({ transaction });
-
-      // const callData = {
-      //   to: receipt.to,
-      //   data: transaction.input,
-      //   from: receipt.from,
-      //   gas: receipt.gasUsed,
-      // };
-
-      await publicClient
-        .call({ data: transaction.input, blockNumber: receipt.blockNumber })
-        .catch((error) => {
-          const revertReason = error.data;
-          console.log("Revert error:", error);
-          console.log("Revert reason:", revertReason);
-        });
+      await logRevertReason(receipt);
 
       return;
     }
 
-    console.log(`Mock Bread Holder voted: ${anvilAccount} - ${receipt.status}`);
+    console.log(`vote cast: ${account} - ${receipt.status}`);
   } catch (err) {
     console.log(err);
   }
@@ -181,10 +169,123 @@ export async function submitVote(anvilAccount: Hex) {
 
 export async function getCurrentDistribution() {
   const res = await publicClient.readContract({
-    address: config.DISBURSER.address,
+    address: anvilConfig.DISBURSER.address,
     abi: DISTRIBUTOR_ABI,
     functionName: "getCurrentVotingDistribution",
   });
 
   console.log(`Current distribution: - ${res}`);
+}
+
+export async function setClaimer(newClaimer: Hex) {
+  await testClient.impersonateAccount({
+    address: BREAD_OWNER,
+  });
+
+  try {
+    const hash = await testClient.writeContract({
+      address: anvilConfig.BREAD.address,
+      abi: BREAD_ABI,
+      functionName: "setYieldClaimer",
+      account: BREAD_OWNER,
+      args: [newClaimer],
+    });
+
+    const receipt = await publicClient.waitForTransactionReceipt({ hash });
+    if (receipt.status === "reverted") {
+      console.log("setYieldClaimer reverted: ", receipt);
+    }
+    console.log("setYieldClaimer: ", receipt.status);
+  } catch (err) {
+    console.log("failed to set claimer: ", err);
+  }
+}
+
+export async function lockLpTokens(account: Hex = DEV_ACCOUNT) {
+  await testClient.impersonateAccount({
+    address: account,
+  });
+
+  try {
+    const hash = await testClient.writeContract({
+      account: account,
+      address: anvilConfig.BUTTER.address,
+      abi: ERC20_ABI,
+      functionName: "approve",
+      args: [anvilConfig.BUTTERED_BREAD.address, parseUnits("5000", 18)],
+    });
+
+    const receipt = await publicClient.waitForTransactionReceipt({ hash });
+
+    if (receipt.status !== "success") {
+      await logRevertReason(receipt);
+      return;
+    }
+    console.log("allowance transaction: ", receipt.status);
+  } catch (err) {
+    console.log("allowance transaction failed: ", err);
+  }
+
+  try {
+    const hash = await testClient.writeContract({
+      account: account,
+      address: anvilConfig.BUTTERED_BREAD.address,
+      abi: BUTTERED_BREAD_ABI,
+      functionName: "deposit",
+      args: [anvilConfig.BUTTER.address, parseUnits("5000", 18)],
+    });
+
+    const receipt = await publicClient.waitForTransactionReceipt({ hash });
+
+    if (receipt.status !== "success") {
+      await logRevertReason(receipt);
+      return;
+    }
+    console.log("deposit transaction: ", receipt.status);
+  } catch (err) {
+    console.log("deposit transaction failed: ", err);
+  }
+}
+
+export async function distributeYield(account: Hex = DEV_ACCOUNT) {
+  await testClient.impersonateAccount({
+    address: account,
+  });
+
+  try {
+    const hash = await testClient.writeContract({
+      account: account,
+      address: anvilConfig.DISBURSER.address,
+      abi: DISTRIBUTOR_ABI,
+      functionName: "distributeYield",
+    });
+
+    const receipt = await publicClient.waitForTransactionReceipt({ hash });
+
+    if (receipt.status !== "success") {
+      await logRevertReason(receipt);
+      return;
+    }
+    console.log("distributeYield transaction: ", receipt.status);
+  } catch (err) {
+    console.log("distributeYield transaction failed: ", err);
+  }
+}
+
+export async function mineBlocks(blocks: number) {
+  await testClient.mine({ blocks });
+}
+
+async function logRevertReason(receipt: TransactionReceipt) {
+  const transaction = await publicClient.getTransaction({
+    hash: receipt.transactionHash,
+  });
+
+  await publicClient
+    .call({ data: transaction.input, blockNumber: receipt.blockNumber })
+    .catch((error) => {
+      const revertReason = error.data;
+      console.log("Revert error:", error);
+      console.log("Revert reason:", revertReason);
+    });
 }

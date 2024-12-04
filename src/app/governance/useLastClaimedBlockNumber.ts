@@ -3,6 +3,7 @@ import { useContractRead, useNetwork } from "wagmi";
 
 import { DISTRIBUTOR_ABI } from "@/abi";
 import { getConfig } from "@/chainConfig";
+import { formatUnits } from "viem";
 
 export function useLastClaimedBlockNumber() {
   const [lastClaimedBlocknumber, setLastClaimedBlockNumber] = useState<
@@ -28,7 +29,7 @@ export function useLastClaimedBlockNumber() {
       lastClaimedBlockNumberStatus === "success" &&
       lastClaimedBlockNumberData
     ) {
-      setLastClaimedBlockNumber(lastClaimedBlockNumberData as bigint);
+      setLastClaimedBlockNumber(lastClaimedBlockNumberData);
     }
   }, [lastClaimedBlockNumberStatus, lastClaimedBlockNumberData]);
 

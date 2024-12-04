@@ -1,4 +1,4 @@
-import { bakeBread, fundLpTokens } from "./lib";
+import { bakeBread, fundLpTokens, lockLpTokens } from "./lib";
 
 /*
   This script sets a dev wallet up with bread and lp tokens

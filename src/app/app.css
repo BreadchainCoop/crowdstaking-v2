@@ -149,3 +149,15 @@
     }
   }
 }
+
+.border-gradient {
+  background: linear-gradient(
+    220deg,
+    #b72085 2%,
+    #cd19aa 28%,
+    #c463ca 55%,
+    #f5ac37 72%,
+    #f9c625 86%,
+    #ffe70f 100%
+  );
+}

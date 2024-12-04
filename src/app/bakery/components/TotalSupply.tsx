@@ -10,7 +10,6 @@ export function TotalSupply() {
     address: "0xa555d5344f6FB6c65da19e403Cb4c1eC4a1a5Ee3",
     abi: ERC20_ABI,
     functionName: "totalSupply",
-    args: [],
     watch: true,
     cacheTime: 6_000,
   });
@@ -20,9 +19,7 @@ export function TotalSupply() {
       <div className="flex items-center gap-2 p-2 bg-white dark:bg-breadgray-charcoal rounded">
         <span className="rounded-full w-2 h-2 bg-status-success supply-light" />
         <span className="text-xl font-semibold">
-          {data
-            ? formatSupply(parseInt(formatUnits(BigInt(data as string), 18)))
-            : "--.--"}
+          {data ? formatSupply(parseInt(formatUnits(data, 18))) : "--.--"}
         </span>
         <GradientText>$BREAD</GradientText>
         <span className="font-bold text-xl">strong</span>

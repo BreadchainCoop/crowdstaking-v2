@@ -7,15 +7,18 @@ import "./app.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import { Metadata } from "next";
 import Script from "next/script";
-
-function parseFeatureVar(feature: string | undefined): boolean {
-  return feature === "true" ? true : false;
-}
+import { ReactNode } from "react";
+import Header from "./core/components/Header/Header";
+import { ModalPresenter } from "./core/components/Modal/ModalPresenter";
+import { Toaster } from "./core/components/Toaster/Toaster";
+import { Footer } from "./core/components/Footer/Footer";
+import { parseFeatureVar } from "./core/util/parseFeatureVar";
 
 const features = {
   governancePage: parseFeatureVar(process.env.FEATURE_GOVERNANCE),
   breadCounter: parseFeatureVar(process.env.FEATURE_BREAD_COUNTER),
   recastVote: parseFeatureVar(process.env.FEATURE_RECAST_VOTE),
+  lpVaults: parseFeatureVar(process.env.FEATURE_LP_VAULTS),
 };
 
 export type Features = {
@@ -65,8 +68,24 @@ export default function App({ children }: { children: React.ReactNode }) {
           redhat.variable
         )}
       >
-        <AppProvider features={features}>{children}</AppProvider>
+        <AppProvider features={features}>
+          <Layout>{children}</Layout>
+        </AppProvider>
       </body>
     </html>
+  );
+}
+
+function Layout({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex min-h-screen flex-col">
+      <Header />
+      <main className="grow relative">
+        <ModalPresenter />
+        <Toaster />
+        {children}
+      </main>
+      <Footer />
+    </div>
   );
 }

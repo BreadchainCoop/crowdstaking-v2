@@ -90,13 +90,13 @@ const ProjectsProvider = ({
       );
       setVotingPowerState({ status: "SUCCESS", dataKey: "POWER", value });
     }
-  }, [currentVotingPowerData, currentVotingPowerStatus]);
+  }, [currentVotingPowerData, currentVotingPowerStatus, cycleLength]);
 
   useEffect(() => {
     if (breadBalanceStatus === "error") {
       setBreadBalanceState({ status: "ERROR" });
     } else if (breadBalanceStatus === "success" && breadBalanceData) {
-      const value = formatUnits(BigInt(breadBalanceData as string), 18);
+      const value = formatUnits(breadBalanceData, 18);
       setBreadBalanceState({ status: "SUCCESS", dataKey: "BREAD", value });
     } else if (breadBalanceStatus === "success") {
       const value = "0.00";

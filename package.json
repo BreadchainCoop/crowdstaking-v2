@@ -9,7 +9,7 @@
     "serve": "serve out",
     "deploy": "npm install -g pnpm@9.1.4 && pnpm install --prod=true --frozen-lockfile && pnpm run build",
     "chain:start": "anvil --fork-url https://rpc.gnosis.gateway.fm --chain-id 31337 --block-time 5",
-    "chain:setup": "tsx scripts/setup.ts && cd contracts && forge script script/Deploy.s.sol:Deploy --broadcast --rpc-url http://localhost:8545 --private-key 0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6 --legacy",
+    "chain:setup": "NODE_ENV=development tsx scripts/setupPreDeploy.ts && cd contracts && forge script script/Deploy.s.sol:Deploy --broadcast --rpc-url http://localhost:8545 --private-key 0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6 --legacy && cd .. && NODE_ENV=development tsx scripts/setupPostDeploy.ts",
     "lint": "next lint",
     "find-deadcode": "ts-prune | grep -v '(used in module)'"
   },
