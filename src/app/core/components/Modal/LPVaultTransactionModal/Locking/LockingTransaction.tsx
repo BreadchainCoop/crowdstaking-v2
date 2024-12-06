@@ -88,7 +88,7 @@ export function LockingTransaction({
           </StatusMessageSmall>
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 justify-center items-center">
           <TransactionStage
             status={
               !lockingState.status.includes("deposit_transaction")

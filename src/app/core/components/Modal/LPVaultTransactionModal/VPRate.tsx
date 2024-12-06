@@ -123,7 +123,7 @@ export function WXDaiBreadIcon() {
 
 export function PillContainer({ children }: { children: ReactNode }) {
   return (
-    <div className="bg-breadgray-burnt rounded-full flex gap-2 items-center px-2 py-1">
+    <div className="dark:bg-breadgray-burnt rounded-full flex gap-2 items-center px-2 py-1">
       {children}
     </div>
   );
