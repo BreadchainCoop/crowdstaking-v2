@@ -3,12 +3,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
+import { useConnectedUser } from "../../hooks/useConnectedUser";
+
 interface IProps {
   handleNavToggle: () => void;
 }
 
 export function MobileNavigation({ handleNavToggle }: IProps) {
   const pathname = usePathname();
+  const user = useConnectedUser();
   return (
     <nav className="flex flex-col gap-4 justify-end">
       <MobileNavigationLink
@@ -32,6 +35,55 @@ export function MobileNavigation({ handleNavToggle }: IProps) {
       >
         Docs
       </MobileNavigationLink>
+      {user.user.features.lpVaults && (
+        <>
+          <Link
+            href="/vote"
+            onClick={() => handleNavToggle()}
+            className="text-neutral-900 dark:text-breadgray-rye dark:hover:text-breadgray-light-grey flex gap-2 items-center justify-end px-2"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              className="fill-current"
+            >
+              <g opacity="0.5">
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M19 4H21V6H19V4ZM17 8V6H19V8H17ZM15 8H17V10H15V8ZM15 8H13V6H15V8ZM3 6H11V8H3V6ZM11 16H3V18H11V16ZM18 18V16H20V14H18V16H16V14H14V16H16V18H14V20H16V18H18ZM18 18V20H20V18H18Z"
+                />
+              </g>
+            </svg>
+            <span>Vote</span>
+          </Link>
+          <Link
+            href="/vaults"
+            onClick={() => handleNavToggle()}
+            className="text-neutral-900 dark:text-breadgray-rye dark:hover:text-breadgray-light-grey flex gap-2 items-center justify-end px-2"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              className="fill-current"
+            >
+              <g opacity="0.5">
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M4 5H20V6H21V7H22V17H21H20V18V19H17V18H12H7V19H6H5H4V18V17H3H2V7H3V6H4V5ZM20 12H14V13H13V14H12H11V13H10V12H4V13V14V15V16H7H8H9H10H11H12H13H20V12ZM20 10V7H13V10H12H11V7H4V8V9V10H11V11V12H12H13V11V10H20Z"
+                />
+              </g>
+            </svg>
+
+            <span>Vaults</span>
+          </Link>
+        </>
+      )}
     </nav>
   );
 }
