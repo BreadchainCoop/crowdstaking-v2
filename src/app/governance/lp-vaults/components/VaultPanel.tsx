@@ -99,7 +99,7 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                   <span className="font-bold text-breadgray-grey100 dark:text-breadgray-ultra-white">
                     {formatBalance(
                       Number(formatUnits(lpTokenBalance.data as bigint, 18)),
-                      3
+                      0
                     )}
                   </span>
                 ) : (
@@ -116,7 +116,7 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                             Number(
                               formatUnits(vaultTokenBalance.butter.value, 18)
                             ),
-                            3
+                            0
                           )
                         : "-"}
                     </span>
@@ -265,7 +265,7 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                               Number(
                                 formatUnits(vaultTokenBalance.butter.value, 18)
                               ),
-                              3
+                              0
                             )
                           : "-"}
                       </div>
@@ -287,7 +287,7 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                             Number(
                               formatUnits(lpTokenBalance.data as bigint, 18)
                             ),
-                            3
+                            0
                           )
                         : "-"}
                       <MaxButton
