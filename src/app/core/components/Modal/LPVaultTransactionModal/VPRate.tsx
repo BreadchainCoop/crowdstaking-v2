@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 import { formatBalance } from "@/app/core/util/formatter";
 
 export function LockVPRate({ value }: { value: bigint }) {
-  const tokenAmount = formatBalance(Number(formatUnits(value, 18)), 3);
+  const tokenAmount = formatBalance(Number(formatUnits(value, 18)), 0);
   const vpAmount = tokenAmount;
 
   return (
@@ -38,7 +38,7 @@ export function LockVPRate({ value }: { value: bigint }) {
 }
 
 export function UnlockVPRate({ value }: { value: bigint }) {
-  const tokenAmount = formatBalance(Number(formatUnits(value, 18)), 3);
+  const tokenAmount = formatBalance(Number(formatUnits(value, 18)), 0);
   const vpAmount = tokenAmount;
 
   return (
