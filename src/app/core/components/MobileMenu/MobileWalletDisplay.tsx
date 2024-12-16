@@ -17,9 +17,6 @@ function MobileWalletDisplay({
   const { disconnectAsync } = useDisconnect();
   const { watchAsset } = useWatchAsset();
 
-  function addToken() {
-    watchAsset();
-  }
   return (
     <ConnectButton.Custom>
       {({
@@ -39,6 +36,7 @@ function MobileWalletDisplay({
 
         return (
           <div
+            className="flex justify-end"
             {...(!ready && {
               "aria-hidden": true,
               style: {
@@ -68,8 +66,6 @@ function MobileWalletDisplay({
                   <MobileWalletDisconnectButton
                     handleDisconnect={() => disconnectAsync()}
                   />
-
-                  {/* <button onClick={addToken}>add token to wallet</button> */}
                 </div>
               );
             })()}
