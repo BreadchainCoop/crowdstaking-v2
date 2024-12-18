@@ -30,7 +30,7 @@ export default function GovernanceLayout({
 
 function GovernanceNavigation() {
   return (
-    <div className="rounded-lg p-4 bg-breadgray-ultra-white dark:bg-breadgray-grey200 border-2 border-breadpink-300 border-opacity-30">
+    <div className="rounded-[15px] p-4 bg-breadgray-ultra-white dark:bg-breadgray-grey200 border-2 border-breadpink-300 border-opacity-30">
       <nav className="px-4 flex flex-row gap-4">
         <NavLink href="/governance">
           <div className="w-5 h-5">
@@ -85,8 +85,9 @@ function NavLink({
     <Link
       {...props}
       className={clsx(
-        "flex flex-row items-center gap-2 dark:text-breadgray-ultra-white transition-opacity font-semibold",
-        currentPath !== props.href && "opacity-50"
+        "flex flex-row items-center gap-2 dark:text-breadgray-ultra-white transition-all font-semibold",
+        currentPath !== props.href &&
+          "opacity-50 dark:hover:text-breadpink-shaded hover:text-breadpink-500 hover:opacity-100"
       )}
     >
       {children}
