@@ -118,7 +118,20 @@ function RightValueDisplay({ children }: { children: ReactNode }) {
 }
 
 export function WXDaiBreadIcon() {
-  return <img src="/wxdai_bread_lp_icon.png" alt="wxdai bread lp token icon" />;
+  return (
+    <div>
+      <img
+        src="/wxdai_bread_lp_icon.png"
+        alt="wxdai bread lp token icon"
+        className="block dark:hidden"
+      />
+      <img
+        src="/wxdai_bread_lp_icon_dark.png"
+        alt="wxdai bread lp token icon"
+        className="hidden dark:block"
+      />
+    </div>
+  );
 }
 
 export function PillContainer({ children }: { children: ReactNode }) {

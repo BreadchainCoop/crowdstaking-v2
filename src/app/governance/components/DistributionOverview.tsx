@@ -230,7 +230,7 @@ export function DistributionOverview({
             </div>
             <div>
               <a
-                className="flex items-center gap-2 text-sm font-medium pt-4 text-breadgray-grey100 hover:text-breadpink-shaded dark:text-breadgray-ultra-white"
+                className="flex items-center gap-2 text-sm font-medium pt-4 text-breadgray-grey100 dark:text-breadgray-ultra-white"
                 href="https://breadchain.notion.site/BREAD-Voting-Power-UI-0f2d350320b94e4ba9aeec2ef6fdcb84"
                 target="_blank"
                 rel="noopener noreferrer"

@@ -34,6 +34,11 @@ export function LPVotingPowerPage() {
         </div>
       </div>
       <div className="w-full">
+        <h2 className="font-bold text-xl">Manage your BREAD LP vaults</h2>
+        <p className="text-breadgray-rye dark:text-breadgray-grey mt-2 mb-4">
+          Lock LP tokens for voting power within the Breadchain cooperative
+          network
+        </p>
         <Accordion
           value={accordionState}
           onValueChange={setAccordionState}
