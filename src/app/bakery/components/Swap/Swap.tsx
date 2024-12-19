@@ -1,6 +1,6 @@
 "use client";
 import type { ChangeEvent } from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useChainModal } from "@rainbow-me/rainbowkit";
 import { FromPanel } from "./FromPanel";
 import SwapReverse from "../SwapReverse";
@@ -17,6 +17,7 @@ import { LiquidityBanner } from "../LiquidityBanner/LiquidityBanner";
 import { BridgeBanner } from "../BridgeBanner/BridgeBanner";
 import { TotalSupply } from "../TotalSupply";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
+import * as Sentry from "@sentry/browser";
 
 export type TSwapMode = "BAKE" | "BURN";
 
@@ -58,6 +59,14 @@ export function Swap() {
       value: sanitizedValue,
     });
   };
+
+  useEffect(() => {
+    Sentry.withScope((scope) => {
+      scope.setTag("section", "homepage");
+      scope.setUser({ id: "123", username: "user" });
+      Sentry.captureException("test error");
+    });
+  }, []);
 
   const handleSwapReverse = () => {
     setSwapState((state) => ({

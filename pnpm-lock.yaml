@@ -26,6 +26,9 @@ importers:
       '@safe-global/safe-apps-sdk':
         specifier: ^8.1.0
         version: 8.1.0(bufferutil@4.0.8)(typescript@5.4.2)(utf-8-validate@5.0.10)
+      '@sentry/browser':
+        specifier: ^8.47.0
+        version: 8.47.0
       '@sentry/nextjs':
         specifier: ^8.47.0
         version: 8.47.0(@opentelemetry/core@1.30.0(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.56.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.0(@opentelemetry/api@1.9.0))(next@14.1.0(@babel/core@7.24.0)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.90.3(esbuild@0.18.20))
@@ -7415,7 +7418,7 @@ snapshots:
   '@jridgewell/trace-mapping@0.3.9':
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
-      '@jridgewell/sourcemap-codec': 1.4.15
+      '@jridgewell/sourcemap-codec': 1.5.0
     optional: true
 
   '@lit-labs/ssr-dom-shim@1.2.0': {}
