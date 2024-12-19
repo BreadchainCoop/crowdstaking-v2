@@ -12,6 +12,7 @@ env:
   NEXT_PUBLIC_QUIKNODE_URL: xxxx
   NEXT_PUBLIC_ALCHEMY_MAINNET_API_KEY: xxxx
   HARDHAT_RPC_URL: ${{ secrets.HARDHAT_RPC_URL }}
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
 jobs:
   linting:
