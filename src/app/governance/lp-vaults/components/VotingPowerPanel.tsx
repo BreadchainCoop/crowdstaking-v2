@@ -44,7 +44,7 @@ export function VotingPowerPanel() {
   };
 
   return (
-    <div className="w-full max-w-[24rem] m-auto">
+    <div className="w-full md:max-w-[24rem] m-auto">
       <CardBox>
         <div className="p-4 flex flex-col items-center gap-4">
           <h2 className="font-medium text-xl leading-none dark:text-breadgray-light-grey">

@@ -91,7 +91,7 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
     >
       <AccordionHeader className="flex flex-col gap-6 md:gap-2">
         <AccordionTrigger className="flex flex-col py-8 px-4 gap-6 group">
-          <div className="flex w-full">
+          <div className="flex w-full flex-wrap">
             <div className="flex pr-4">
               <BreadIcon />
               <div className="transform -translate-x-1">
@@ -102,10 +102,10 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
               {lpTokenMeta[tokenAddress].poolName}
             </h2>
 
-            {/* desktop token balances */}
-            <div className="hidden md:flex pr-2 gap-4 items-center">
-              <div className="flex gap-2">
-                Unlocked LP tokens:
+            {/* Token balances */}
+            <div className="flex w-full md:w-auto pr-2 gap-4 items-center mt-4 md:mt-0 order-3 md:order-2 flex-wrap">
+              <div className="flex w-full md:w-auto justify-between gap-2 items-center px-4 md:px-2 mb-2 md:mb-0">
+                <div>Unlocked LP tokens:</div>
                 {lpTokenBalance.status === "success" ? (
                   <span className="font-bold text-breadgray-grey100 dark:text-breadgray-ultra-white">
                     {formatBalance(
@@ -114,30 +114,35 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                     )}
                   </span>
                 ) : (
-                  <span>-</span>
+                  <span className="ml-auto">-</span>
                 )}
               </div>
-              <GradientBorder>
-                <div className="rounded-full px-4 bg-breadpink-600 dark:bg-[#30252E] dark:bg-opacity-100 text-breadgray-rye dark:text-breadgray-grey flex gap-2">
-                  Locked tokens:
-                  {user.status === "CONNECTED" ? (
-                    <span className="font-bold text-breadgray-grey100 dark:text-breadgray-ultra-white">
-                      {vaultTokenBalance?.butter.status === "success"
-                        ? formatBalance(
-                            Number(
-                              formatUnits(vaultTokenBalance.butter.value, 18)
-                            ),
-                            0
-                          )
-                        : "-"}
-                    </span>
-                  ) : (
-                    <span>-</span>
-                  )}
-                </div>
-              </GradientBorder>
+
+              <div className="w-full md:w-auto">
+                <GradientBorder>
+                  <div className="flex w-full md:w-auto justify-between rounded-full px-4 bg-breadpink-600 dark:bg-[#30252E] dark:bg-opacity-100 text-breadgray-rye dark:text-breadgray-grey items-center gap-2">
+                    <div>Locked tokens:</div>
+                    {user.status === "CONNECTED" ? (
+                      <span className="font-bold text-breadgray-grey100 dark:text-breadgray-ultra-white">
+                        {vaultTokenBalance?.butter.status === "success"
+                          ? formatBalance(
+                              Number(
+                                formatUnits(vaultTokenBalance.butter.value, 18)
+                              ),
+                              0
+                            )
+                          : "-"}
+                      </span>
+                    ) : (
+                      <span className="ml-auto">-</span>
+                    )}
+                  </div>
+                </GradientBorder>
+              </div>
             </div>
-            <div className="size-6 text-breadgray-grey100 dark:text-breadgray-ultra-white">
+
+            {/* Accordion toggle arrow */}
+            <div className="size-6 text-breadgray-grey100 dark:text-breadgray-ultra-white order-2 md:order-3">
               <svg
                 className="w-full h-full fill-current group-data-[state=open]:rotate-180"
                 width="24"
@@ -155,47 +160,9 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
             </div>
           </div>
         </AccordionTrigger>
-
-        {/* mobile token balances */}
-        <div className="w-full flex flex-col md:hidden pr-2 gap-4 items-center">
-          <div className="w-full flex px-3">
-            <div className="grow text-left">Unlocked LP tokens:</div>
-            {lpTokenBalance.status === "success" ? (
-              <span className="font-bold text-breadgray-grey100 dark:text-breadgray-ultra-white">
-                {formatBalance(
-                  Number(formatUnits(lpTokenBalance.data as bigint, 18)),
-                  3
-                )}
-              </span>
-            ) : (
-              "-"
-            )}
-          </div>
-          <div className="w-full">
-            <GradientBorder>
-              <div className="flex rounded-full px-3 bg-breadpink-600 dark:bg-[#30252E] dark:bg-opacity-100 text-breadgray-grey">
-                <div className="grow text-left text-breadgray-rye dark:text-breadgray-grey">
-                  Locked tokens:
-                </div>
-                <span className="font-bold text-breadgray-grey100 dark:text-breadgray-ultra-white">
-                  {user.status === "CONNECTED"
-                    ? vaultTokenBalance?.butter.status === "success"
-                      ? formatBalance(
-                          Number(
-                            formatUnits(vaultTokenBalance.butter.value, 18)
-                          ),
-                          3
-                        )
-                      : "-"
-                    : "-"}
-                </span>
-              </div>
-            </GradientBorder>
-          </div>
-        </div>
       </AccordionHeader>
       <AccordionContent className="pt-2 pb-4 md:px-20">
-        <div className="grid grid-cols-2 gap-5">
+        <div className="grid grid-cols-2 gap-5 px-5">
           <section className="col-span-2 lg:col-span-1 flex flex-col gap-4">
             {transactionType === "LOCK" && (
               <>
