@@ -64,7 +64,7 @@ export function Swap() {
     Sentry.withScope((scope) => {
       scope.setTag("section", "homepage");
       scope.setUser({ id: "123", username: "user" });
-      Sentry.captureException("test error");
+      Sentry.captureException("test error here");
     });
   }, []);
 
