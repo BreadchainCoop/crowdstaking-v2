@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 import { formatBalance } from "@/app/core/util/formatter";
 
 export function LockVPRate({ value }: { value: bigint }) {
-  const tokenAmount = formatBalance(Number(formatUnits(value, 18)), 3);
+  const tokenAmount = formatBalance(Number(formatUnits(value, 18)), 0);
   const vpAmount = tokenAmount;
 
   return (
@@ -38,7 +38,7 @@ export function LockVPRate({ value }: { value: bigint }) {
 }
 
 export function UnlockVPRate({ value }: { value: bigint }) {
-  const tokenAmount = formatBalance(Number(formatUnits(value, 18)), 3);
+  const tokenAmount = formatBalance(Number(formatUnits(value, 18)), 0);
   const vpAmount = tokenAmount;
 
   return (
@@ -118,12 +118,25 @@ function RightValueDisplay({ children }: { children: ReactNode }) {
 }
 
 export function WXDaiBreadIcon() {
-  return <img src="/wxdai_bread_lp_icon.png" alt="wxdai bread lp token icon" />;
+  return (
+    <div>
+      <img
+        src="/wxdai_bread_lp_icon.png"
+        alt="wxdai bread lp token icon"
+        className="block dark:hidden"
+      />
+      <img
+        src="/wxdai_bread_lp_icon_dark.png"
+        alt="wxdai bread lp token icon"
+        className="hidden dark:block"
+      />
+    </div>
+  );
 }
 
 export function PillContainer({ children }: { children: ReactNode }) {
   return (
-    <div className="bg-breadgray-burnt rounded-full flex gap-2 items-center px-2 py-1">
+    <div className="dark:bg-breadgray-burnt rounded-full flex gap-2 items-center px-2 py-1">
       {children}
     </div>
   );

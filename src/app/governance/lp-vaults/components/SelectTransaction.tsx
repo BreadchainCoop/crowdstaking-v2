@@ -71,10 +71,10 @@ function RadioInput({
       <label
         htmlFor={name}
         className={clsx(
-          "col-start-1 row-start-1 rounded-full text-lg border dark:border-[#00000000] bg-opacity-10 font-bold py-2 flex gap-4 px-8 items-end justify-center leading-none text-breadgray-grey",
+          "col-start-1 row-start-1 rounded-full text-lg border dark:border-[#00000000] font-bold py-2 flex gap-4 px-8 items-end justify-center leading-none text-breadgray-rye transition-colors",
           isSelected
-            ? "border-breadviolet-shaded dark:border-breadpink-300 text-breadpink-300 bg-[#DE56E7]"
-            : " bg-breadgray-light-grey"
+            ? "border-breadviolet-shaded dark:border-breadpink-300 text-breadpink-300 bg-breadpink-700 bg-opacity-10"
+            : "z-50 bg-breadgray-light-grey hover:bg-breadpink-700/10 hover:border-breadpink-700/10 hover:text-breadpink-300 bg-opacity-30"
         )}
       >
         <div className="size-5">{icon}</div>

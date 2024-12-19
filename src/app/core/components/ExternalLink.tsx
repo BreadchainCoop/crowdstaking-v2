@@ -8,7 +8,12 @@ export function ExternalLink({
   children: ReactNode;
 }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer">
+    <a
+      href={href}
+      target="_blank"
+      className="hover:text-breadviolet-shaded hover:dark:text-breadpink-shaded"
+      rel="noopener noreferrer"
+    >
       {children}
     </a>
   );

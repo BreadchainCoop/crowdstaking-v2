@@ -73,13 +73,24 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
     });
   }
 
+  const renderExternalLinkContent = (text: string) => {
+    return (
+      <div className="flex gap-2 items-center">
+        <span className="text-sm font-medium">{text}</span>
+        <div className="text-breadpink-shaded">
+          <LinkIcon />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <AccordionItem
       value="first"
-      className="grid w-full flex-col dark:bg-breadgray-grey200 border-2 rounded-xl dark:border-breadgray-burnt hover:border-breadgray-light-grey"
+      className="grid w-full flex-col dark:bg-breadgray-grey200 bg-breadgray-ultra-white border-2 rounded-xl dark:border-breadgray-burnt border-breadgray-light-grey hover:border-breadviolet-shaded"
     >
-      <AccordionHeader className="p-4 flex flex-col gap-6 md:gap-2">
-        <AccordionTrigger className="flex flex-col gap-6 group">
+      <AccordionHeader className="flex flex-col gap-6 md:gap-2">
+        <AccordionTrigger className="flex flex-col py-8 px-4 gap-6 group">
           <div className="flex w-full">
             <div className="flex pr-4">
               <BreadIcon />
@@ -99,11 +110,11 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                   <span className="font-bold text-breadgray-grey100 dark:text-breadgray-ultra-white">
                     {formatBalance(
                       Number(formatUnits(lpTokenBalance.data as bigint, 18)),
-                      3
+                      0
                     )}
                   </span>
                 ) : (
-                  "-"
+                  <span>-</span>
                 )}
               </div>
               <GradientBorder>
@@ -116,12 +127,12 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                             Number(
                               formatUnits(vaultTokenBalance.butter.value, 18)
                             ),
-                            3
+                            0
                           )
                         : "-"}
                     </span>
                   ) : (
-                    "-"
+                    <span>-</span>
                   )}
                 </div>
               </GradientBorder>
@@ -144,29 +155,6 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
             </div>
           </div>
         </AccordionTrigger>
-        <div className="flex gap-4 md:pl-16">
-          <ExternalLink href={lpTokenMeta[tokenAddress].visitPool}>
-            <div className="flex gap-2 items-center">
-              <span className="text-sm font-medium dark:text-breadgray-ultra-white">
-                Visit pool on Curve
-              </span>
-              <div className="text-breadpink-shaded">
-                <LinkIcon />
-              </div>
-            </div>
-          </ExternalLink>
-
-          <ExternalLink href={lpTokenMeta[tokenAddress].inspectContract}>
-            <div className="flex gap-2 items-center">
-              <span className="text-sm font-medium dark:text-breadgray-ultra-white">
-                Inspect vault contract
-              </span>
-              <div className="text-breadpink-shaded">
-                <LinkIcon />
-              </div>
-            </div>
-          </ExternalLink>
-        </div>
 
         {/* mobile token balances */}
         <div className="w-full flex flex-col md:hidden pr-2 gap-4 items-center">
@@ -206,20 +194,67 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
           </div>
         </div>
       </AccordionHeader>
-      <AccordionContent className="p-4 pt-4 md:px-20">
+      <AccordionContent className="pt-2 pb-4 md:px-20">
         <div className="grid grid-cols-2 gap-5">
           <section className="col-span-2 lg:col-span-1 flex flex-col gap-4">
-            <h2 className="font-bold text-xl">
-              Lock LP tokens, get voting power
-            </h2>
-            <p>
-              Enter a desired amount of LP tokens to lock to receive voting
-              power.
-              <p className="pt-4">
-                The amount you choose to lock can always be retrieved by
-                selecting the unlock button.
-              </p>
-            </p>
+            {transactionType === "LOCK" && (
+              <>
+                <h2 className="font-bold text-xl">
+                  Lock LP tokens, get voting power
+                </h2>
+                <p className="dark:text-breadgray-grey">
+                  Enter a desired amount of LP tokens to lock to receive voting
+                  power.
+                </p>
+                <p className="dark:text-breadgray-grey">
+                  The amount you choose to lock can always be retrieved by
+                  selecting the unlock button.
+                </p>
+              </>
+            )}
+            {transactionType === "UNLOCK" && (
+              <>
+                <h2 className="font-bold text-xl">Unlock LP tokens</h2>
+                <p className="dark:text-breadgray-grey">
+                  When unlocking your LP tokens you retrieve your curve
+                  BREAD/XDAI-LP tokens back.
+                </p>
+                <p className="dark:text-breadgray-grey">
+                  You will no longer receive voting power for the next voting
+                  cycles.
+                </p>
+              </>
+            )}
+            <div className="flex gap-4">
+              <ExternalLink href={lpTokenMeta[tokenAddress].visitPool}>
+                {renderExternalLinkContent("Visit pool on Curve")}
+              </ExternalLink>
+
+              <ExternalLink href={lpTokenMeta[tokenAddress].inspectContract}>
+                {renderExternalLinkContent("Inspect vault contract")}
+              </ExternalLink>
+            </div>
+            {transactionType === "UNLOCK" && (
+              <div>
+                <p className="text-breadviolet-violet dark:text-status-warning flex font-bold items-start gap-2">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 18 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="fill-breadviolet-violet dark:fill-status-warning inline-block align-middle mt-1"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M0 0H1.99976H2H15.9998V2H2V16H15.9998V18L2 18L1.99976 18L0 18V0ZM18 0H16V18H18V0ZM8 12.0001H10V14.0001H8V12.0001ZM10 4H8V10H10V4Z"
+                    />
+                  </svg>
+                  You can only unlock ALL your locked LP tokens at once.
+                </p>
+              </div>
+            )}
           </section>
           <div className="col-span-2 lg:col-span-1">
             <div className="py-4">
@@ -238,13 +273,13 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                 submitTransaction();
               }}
             >
-              <div className="flex flex-col gap-3 px-[10px] py-4 dark:bg-breadgray-charcoal rounded-md border border-breadgray-lightgrey dark:border-breadgray-rye">
+              <div className="flex flex-col gap-3 px-[10px] py-4 dark:bg-breadgray-charcoal bg-breadgray-ultra-white rounded-md border border-breadgray-lightgrey dark:border-breadgray-rye">
                 <div className="flex gap-4 items-center">
                   {transactionType === "LOCK" ? (
                     <input
                       type="text"
                       value={inputValue}
-                      className="text-breadgray-ultra-lightgrey bg-[#00000000] font-bold text-2xl placeholder-breadgray-grey100 dark:placeholder-neutral-200 w-0 grow shrink"
+                      className="text-breadgray-ultra-lightgrey bg-[#00000000] ps-2 font-bold text-2xl placeholder-breadgray-grey100 dark:placeholder-neutral-200 w-0 grow shrink"
                       onChange={(event) => {
                         setInputValue(sanitizeInputValue(event.target.value));
                       }}
@@ -258,14 +293,14 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                       spellCheck="false"
                     />
                   ) : (
-                    <div className="font-bold text-2xl grow">
+                    <div className="font-bold text-2xl ps-2 grow">
                       <div className="truncate">
                         {vaultTokenBalance?.butter.status === "success"
                           ? formatBalance(
                               Number(
                                 formatUnits(vaultTokenBalance.butter.value, 18)
                               ),
-                              3
+                              0
                             )
                           : "-"}
                       </div>
@@ -287,7 +322,7 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                             Number(
                               formatUnits(lpTokenBalance.data as bigint, 18)
                             ),
-                            3
+                            0
                           )
                         : "-"}
                       <MaxButton
@@ -302,7 +337,17 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                       </MaxButton>
                     </>
                   ) : (
-                    <span className="h-4"> </span>
+                    <>
+                      <span>Locked LP tokens: </span>
+                      {vaultTokenBalance?.butter.status === "success"
+                        ? formatBalance(
+                            Number(
+                              formatUnits(vaultTokenBalance.butter.value, 18)
+                            ),
+                            3
+                          )
+                        : "-"}
+                    </>
                   )}
                 </div>
               </div>
