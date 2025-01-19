@@ -3,7 +3,7 @@ import Button from "../../Button";
 import { ModalContent, ModalHeading, StatusMessage } from "../LPModalUI";
 import { useEffect, useReducer, useState } from "react";
 import {
-  useContractRead,
+  useReadContract,
   useContractWrite,
   usePrepareContractWrite,
 } from "wagmi";
@@ -53,12 +53,11 @@ export function WithdrawTransaction({
     });
   }, [transactionsDispatch]);
 
-  const lockedBalance = useContractRead({
+  const lockedBalance = useReadContract({
     address: chainConfig.BUTTERED_BREAD.address,
     abi: BUTTERED_BREAD_ABI,
     functionName: "accountToLPBalance",
     args: [user.address, chainConfig.BUTTER.address],
-    watch: true,
   });
 
   const prepareWrite = usePrepareContractWrite({

@@ -2,7 +2,7 @@ import { DISTRIBUTOR_ABI } from "@/abi";
 import { getConfig } from "@/chainConfig";
 import { useEffect, useState } from "react";
 import { Hex } from "viem";
-import { useContractRead, useNetwork } from "wagmi";
+import { useReadContract, useNetwork } from "wagmi";
 
 export type CurrentVotingDistributionState =
   | CurrentVotingDistributionLoading
@@ -34,13 +34,13 @@ export function useCurrentVotingDistribution() {
     data: currentVotingDistributionData,
     status: currentVotingDistributionStatus,
     error: currentVotingDistributionError,
-  } = useContractRead({
+  } = useReadContract({
     address: distriubutorAddress,
     abi: DISTRIBUTOR_ABI,
     functionName: "getCurrentVotingDistribution",
-    watch: true,
-    enabled: distriubutorAddress !== "0x",
-    cacheTime: 2_000,
+    query: {
+      enabled: distriubutorAddress !== "0x",
+    },
   });
 
   useEffect(() => {
