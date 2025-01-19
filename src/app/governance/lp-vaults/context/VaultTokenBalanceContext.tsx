@@ -6,7 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useContractRead } from "wagmi";
+import { useReadContract } from "wagmi";
 
 import {
   TUserConnected,
@@ -76,12 +76,11 @@ function ProviderWithUser({
 
   const config = getConfig(user.chain.id);
 
-  const { data, status, error } = useContractRead({
+  const { data, status, error } = useReadContract({
     address: config.BUTTERED_BREAD.address,
     abi: BUTTERED_BREAD_ABI,
     functionName: "accountToLPBalance",
     args: [user.address, config.BUTTER.address],
-    watch: true,
   });
 
   useEffect(() => {

@@ -5,7 +5,7 @@ import { useClaimableYield } from "../useClaimableYield";
 import { LinkIcon } from "@/app/core/components/Icons/LinkIcon";
 import Tooltip from "@/app/core/components/Tooltip";
 import { CardBox } from "@/app/core/components/CardBox";
-import { useContractRead, useNetwork } from "wagmi";
+import { useReadContract, useNetwork } from "wagmi";
 
 import { ERC20_ABI, SDAI_ADAPTOR_ABI } from "@/abi";
 import { useEffect, useMemo, useState } from "react";
@@ -31,7 +31,7 @@ export function DistributionOverview({
     data: apyData,
     error: apyError,
     status: apyStatus,
-  } = useContractRead({
+  } = useReadContract({
     address: config.SDAI_ADAPTOR.address,
     abi: SDAI_ADAPTOR_ABI,
     functionName: "vaultAPY",
@@ -41,12 +41,10 @@ export function DistributionOverview({
     data: totalSupplyData,
     status: totalSupplyStatus,
     error: totalSupplyError,
-  } = useContractRead({
+  } = useReadContract({
     address: config.BREAD.address,
     abi: ERC20_ABI,
     functionName: "totalSupply",
-    watch: true,
-    cacheTime: 6_000,
   });
 
   const yieldPerHour = useMemo(() => {

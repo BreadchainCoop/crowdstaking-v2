@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useReducer } from "react";
-import { useContractRead } from "wagmi";
+import { useReadContract } from "wagmi";
 import clsx from "clsx";
 
 import { getConfig } from "@/chainConfig";
@@ -34,12 +34,11 @@ export function LockingTransaction({
   });
 
   const { status: userAllowanceStatus, data: userAllowanceData } =
-    useContractRead({
+    useReadContract({
       address: chainConfig.BUTTER.address,
       abi: ERC20_ABI,
       functionName: "allowance",
       args: [user.address, chainConfig.BUTTERED_BREAD.address],
-      watch: true,
     });
 
   useEffect(() => {
