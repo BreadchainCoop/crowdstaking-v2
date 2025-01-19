@@ -1,7 +1,7 @@
 import { DISTRIBUTOR_ABI } from "@/abi";
 import { getConfig } from "@/chainConfig";
 import { useEffect, useState } from "react";
-import { useBlockNumber, useContractRead, useNetwork } from "wagmi";
+import { useBlockNumber, useNetwork } from "wagmi";
 import { add, sub } from "date-fns";
 import { CycleLengthState } from "./useCycleLength";
 import { useLastClaimedBlockNumber } from "./useLastClaimedBlockNumber";

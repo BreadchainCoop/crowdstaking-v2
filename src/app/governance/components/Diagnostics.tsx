@@ -6,7 +6,7 @@ import { getConfig } from "@/chainConfig";
 import { useEffect } from "react";
 import { formatUnits, Hex } from "viem";
 import {
-  useContractRead,
+  useReadContract,
   useContractWrite,
   useNetwork,
   usePrepareContractWrite,
@@ -65,12 +65,11 @@ function ProjectDisplay({ account }: { account: Hex }) {
   const breadAddress = config.BREAD.address;
 
   const { data: breadBalanceData, status: breadBalanceStatus } =
-    useContractRead({
+    useReadContract({
       address: breadAddress,
       abi: BREAD_ABI,
       functionName: "balanceOf",
       args: [account],
-      watch: true,
     });
 
   return (

@@ -6,7 +6,7 @@ import React, {
   useMemo,
   ReactNode,
 } from "react";
-import { useNetwork, useContractRead } from "wagmi";
+import { useNetwork, useReadContract } from "wagmi";
 import { getConfig } from "@/chainConfig";
 import { formatBalance } from "@/app/core/util/formatter";
 import { formatUnits } from "viem";
@@ -57,12 +57,11 @@ const ProjectsProvider = ({
 
   // BREAD token balance
   const { data: breadBalanceData, status: breadBalanceStatus } =
-    useContractRead({
+    useReadContract({
       address: config.BREAD.address,
       abi: ERC20_ABI,
       functionName: "balanceOf",
       args: [address],
-      watch: true,
     });
 
   // Current voting power
@@ -70,7 +69,7 @@ const ProjectsProvider = ({
     data: currentVotingPowerData,
     status: currentVotingPowerStatus,
     error: currentVotingPowerError,
-  } = useContractRead({
+  } = useReadContract({
     address: distributorAddress,
     abi: DISTRIBUTOR_ABI,
     functionName: "getCurrentVotingPower",

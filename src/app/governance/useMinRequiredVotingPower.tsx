@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useContractRead, useNetwork } from "wagmi";
+import { useReadContract, useNetwork } from "wagmi";
 
 import { DISTRIBUTOR_ABI } from "@/abi";
 import { getConfig } from "@/chainConfig";
@@ -17,7 +17,7 @@ export function useMinRequiredVotingPower() {
   const {
     data: minRequiredVotingPowerData,
     status: minRequiredVotingPowerStatus,
-  } = useContractRead({
+  } = useReadContract({
     address: distributorAddress,
     abi: DISTRIBUTOR_ABI,
     functionName: "minRequiredVotingPower",
