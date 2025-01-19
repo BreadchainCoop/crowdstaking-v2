@@ -8,6 +8,7 @@ import { publicProvider } from "wagmi/providers/public";
 
 import { getWallets } from "./wallets";
 import { mockWallet } from "./mockWallet";
+import { SafeConnector } from "wagmi/connectors/safe";
 
 const WALLET_CONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
@@ -73,7 +74,16 @@ const connectors = connectorsForWallets([
 ]);
 
 const config = createConfig({
-  connectors,
+  connectors: [
+    ...connectors(),
+    new SafeConnector({
+      chains,
+      options: {
+        allowedDomains: [/app.safe.global$/],
+        debug: false,
+      },
+    }),
+  ],
   publicClient,
 });
 
