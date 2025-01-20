@@ -1,4 +1,4 @@
-import { useContractWrite, useNetwork, usePrepareContractWrite } from "wagmi";
+import { useWriteContract, useNetwork, usePrepareContractWrite } from "wagmi";
 
 import Button from "@/app/core/components/Button";
 
@@ -111,36 +111,34 @@ export function CastVote({
   });
 
   const {
-    write,
+    writeContract,
     data: writeData,
     isError: writeIsError,
     error: writeError,
-  } = useContractWrite(prepareConfig);
+  } = useWriteContract(prepareConfig);
 
   useEffect(() => {
     (async () => {
-      if (!writeData?.hash) return;
-      if (
-        transactionsState.submitted.find((tx) => tx.hash === writeData.hash)
-      ) {
+      if (!writeData) return;
+      if (transactionsState.submitted.find((tx) => tx.hash === writeData)) {
         return;
       }
       if (isSafe) {
         const safeSdk = new SafeAppsSDK();
-        const tx = await safeSdk.txs.getBySafeTxHash(writeData.hash);
+        const tx = await safeSdk.txs.getBySafeTxHash(writeData);
         if (tx.txStatus === TransactionStatus.AWAITING_CONFIRMATIONS) {
           transactionsDispatch({
             type: "SET_SAFE_SUBMITTED",
-            payload: { hash: writeData.hash },
+            payload: { hash: writeData },
           });
-          setModal({ type: "VOTE_TRANSACTION", hash: writeData.hash });
+          setModal({ type: "VOTE_TRANSACTION", hash: writeData });
           setIsRecasting(false);
           return;
         }
         if (tx.txStatus === TransactionStatus.SUCCESS) {
           transactionsDispatch({
             type: "SET_SUBMITTED",
-            payload: { hash: writeData.hash },
+            payload: { hash: writeData },
           });
           setIsRecasting(false);
           return;
@@ -149,9 +147,9 @@ export function CastVote({
       // not safe
       transactionsDispatch({
         type: "SET_SUBMITTED",
-        payload: { hash: writeData.hash },
+        payload: { hash: writeData },
       });
-      setModal({ type: "VOTE_TRANSACTION", hash: writeData.hash });
+      setModal({ type: "VOTE_TRANSACTION", hash: writeData });
       setIsRecasting(false);
     })();
   }, [
@@ -176,7 +174,7 @@ export function CastVote({
           fullWidth
           size="large"
           onClick={() => {
-            if (!write) return;
+            if (!writeContract) return;
             if (prepareConfigStatus !== "success") {
               console.log("castVote tx prepare failed: ", prepareConfigError);
               return;
@@ -193,7 +191,7 @@ export function CastVote({
               type: "VOTE_TRANSACTION",
               hash: "",
             });
-            write();
+            writeContract(prepareConfig);
           }}
           disabled={
             !userCanVote || !writeIsEnabled || prepareConfigStatus !== "success"
