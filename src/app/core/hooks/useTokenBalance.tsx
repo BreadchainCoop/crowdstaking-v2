@@ -11,7 +11,9 @@ export function useTokenBalance(user: TConnectedUserState, tokenAddress: Hex) {
     abi: ERC20_ABI,
     functionName: "balanceOf",
     args: [user.status === "CONNECTED" ? user.address : "0x"],
-    enabled: user.status === "CONNECTED",
+    query: {
+      enabled: user.status === "CONNECTED",
+    },
   });
 
   const refetchTokenBalance = () => {

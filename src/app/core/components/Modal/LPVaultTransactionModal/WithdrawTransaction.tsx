@@ -65,9 +65,11 @@ export function WithdrawTransaction({
     abi: BUTTERED_BREAD_ABI,
     functionName: "withdraw",
     args: [chainConfig.BUTTER.address, modalState.parsedValue],
-    enabled:
-      lockedBalance.status === "success" &&
-      modalState.parsedValue <= (lockedBalance.data as bigint),
+    query: {
+      enabled:
+        lockedBalance.status === "success" &&
+        modalState.parsedValue <= (lockedBalance.data as bigint),
+    },
   });
 
   useEffect(() => {
