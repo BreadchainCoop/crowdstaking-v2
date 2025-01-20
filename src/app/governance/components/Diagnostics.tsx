@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { formatUnits, Hex } from "viem";
 import {
   useReadContract,
-  useContractWrite,
+  useWriteContract,
   useNetwork,
   usePrepareContractWrite,
 } from "wagmi";
@@ -28,10 +28,10 @@ export function Diagnostics() {
   });
 
   const {
-    write,
+    writeContract,
     data: distributeYieldData,
     status: distributeYieldStatus,
-  } = useContractWrite(prepareConfig);
+  } = useWriteContract(prepareConfig);
 
   useEffect(() => {
     if (prepareError) {
@@ -44,7 +44,7 @@ export function Diagnostics() {
       <div>
         <Button
           onClick={() => {
-            write?.();
+            writeContract?.(prepareConfig);
           }}
         >
           Distribute Yield

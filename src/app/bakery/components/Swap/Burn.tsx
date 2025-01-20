@@ -1,4 +1,4 @@
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { useWriteContract, usePrepareContractWrite } from "wagmi";
 import { parseEther } from "viem";
 
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
@@ -56,29 +56,27 @@ export default function Burn({
   }, [debouncedValue, prepareStatus, setButtonIsEnabled]);
 
   const {
-    write,
-    isLoading: writeIsLoading,
+    writeContract,
+    isPending: writeIsLoading,
     isError: writeIsError,
     error: writeError,
     isSuccess: writeIsSuccess,
     data: writeData,
-  } = useContractWrite(prepareConfig);
+  } = useWriteContract(prepareConfig);
 
   useEffect(() => {
     (async () => {
-      if (!writeData?.hash) return;
-      if (
-        transactionsState.submitted.find((tx) => tx.hash === writeData.hash)
-      ) {
+      if (!writeData) return;
+      if (transactionsState.submitted.find((tx) => tx.hash === writeData)) {
         return;
       }
       if (isSafe) {
         const safeSdk = new SafeAppsSDK();
-        const tx = await safeSdk.txs.getBySafeTxHash(writeData.hash);
+        const tx = await safeSdk.txs.getBySafeTxHash(writeData);
         if (tx.txStatus === TransactionStatus.AWAITING_CONFIRMATIONS) {
           transactionsDispatch({
             type: "SET_SAFE_SUBMITTED",
-            payload: { hash: writeData.hash },
+            payload: { hash: writeData },
           });
           setModal({
             type: "BAKERY_TRANSACTION",
@@ -90,11 +88,11 @@ export default function Burn({
       // not safe
       transactionsDispatch({
         type: "SET_SUBMITTED",
-        payload: { hash: writeData.hash },
+        payload: { hash: writeData },
       });
       setModal({
         type: "BAKERY_TRANSACTION",
-        hash: writeData.hash,
+        hash: writeData,
       });
       clearInputValue();
     })();
@@ -119,7 +117,7 @@ export default function Burn({
         size="xl"
         disabled={!buttonIsEnabled}
         onClick={() => {
-          if (!write) return;
+          if (!writeContract) return;
           transactionsDispatch({
             type: "NEW",
             payload: {
@@ -133,7 +131,7 @@ export default function Burn({
             type: "BAKERY_TRANSACTION",
             hash: null,
           });
-          write();
+          writeContract(prepareConfig);
         }}
       >
         Burn

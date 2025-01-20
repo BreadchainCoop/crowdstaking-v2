@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { useWriteContract, usePrepareContractWrite } from "wagmi";
 
 import Button from "@/app/core/components/Button";
 import { useIsMobile } from "@/app/core/hooks/useIsMobile";
@@ -53,20 +53,20 @@ export function IncreaseAllowance({
   }, [prepareWriteStatus, prepareWriteError]);
 
   const {
-    write: contractWriteWrite,
+    writeContract: contractWriteWrite,
     status: contractWriteStatus,
     data: contractWriteData,
-  } = useContractWrite(prepareWriteConfig);
+  } = useWriteContract(prepareWriteConfig);
 
   useEffect(() => {
     if (contractWriteStatus === "success" && contractWriteData) {
       transactionsDispatch({
         type: "SET_SUBMITTED",
-        payload: { hash: contractWriteData.hash },
+        payload: { hash: contractWriteData },
       });
       lockingDispatch({
         type: "TRANSACTION_SUBMITTED",
-        payload: { hash: contractWriteData.hash },
+        payload: { hash: contractWriteData },
       });
     }
     if (contractWriteStatus === "error") {
@@ -105,7 +105,7 @@ export function IncreaseAllowance({
     <Button
       onClick={() => {
         if (!contractWriteWrite) return;
-        contractWriteWrite();
+        contractWriteWrite(prepareWriteConfig);
         setIsWalletOpen(true);
       }}
       disabled={isWalletOpen}

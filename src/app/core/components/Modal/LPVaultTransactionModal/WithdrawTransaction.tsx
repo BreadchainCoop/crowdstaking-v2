@@ -4,7 +4,7 @@ import { ModalContent, ModalHeading, StatusMessage } from "../LPModalUI";
 import { useEffect, useReducer, useState } from "react";
 import {
   useReadContract,
-  useContractWrite,
+  useWriteContract,
   usePrepareContractWrite,
 } from "wagmi";
 import { BUTTERED_BREAD_ABI } from "@/abi";
@@ -77,20 +77,20 @@ export function WithdrawTransaction({
   }, [prepareWrite]);
 
   const {
-    write: contractWriteWrite,
+    writeContract: contractWriteWrite,
     status: contractWriteStatus,
     data: contractWriteData,
-  } = useContractWrite(prepareWrite.config);
+  } = useWriteContract(prepareWrite.config);
 
   useEffect(() => {
     if (contractWriteStatus === "success" && contractWriteData) {
       transactionsDispatch({
         type: "SET_SUBMITTED",
-        payload: { hash: contractWriteData.hash },
+        payload: { hash: contractWriteData },
       });
       withdrawDispatch({
         type: "TRANSACTION_SUBMITTED",
-        payload: { hash: contractWriteData.hash },
+        payload: { hash: contractWriteData },
       });
       setIsWalletOpen(false);
     }
@@ -169,7 +169,7 @@ export function WithdrawTransaction({
               onClick={() => {
                 if (!contractWriteWrite) return;
                 setIsWalletOpen(true);
-                contractWriteWrite();
+                contractWriteWrite(prepareWrite.config);
               }}
               disabled={isWalletOpen}
               fullWidth={isMobile}

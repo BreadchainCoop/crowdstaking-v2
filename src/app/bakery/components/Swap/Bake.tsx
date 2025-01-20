@@ -1,4 +1,4 @@
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { useWriteContract, usePrepareContractWrite } from "wagmi";
 import { parseEther } from "viem";
 
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
@@ -59,41 +59,39 @@ export default function Bake({
   }, [debouncedValue, prepareStatus, setButtonIsEnabled]);
 
   const {
-    write,
-    isLoading: writeIsLoading,
+    writeContract,
+    isPending: writeIsLoading,
     isError: writeIsError,
     error: writeError,
     isSuccess: writeIsSuccess,
     data: writeData,
-  } = useContractWrite(prepareConfig);
+  } = useWriteContract(prepareConfig);
 
   useEffect(() => {
     (async () => {
-      if (!writeData?.hash) return;
-      if (
-        transactionsState.submitted.find((tx) => tx.hash === writeData.hash)
-      ) {
+      if (!writeData) return;
+      if (transactionsState.submitted.find((tx) => tx.hash === writeData)) {
         return;
       }
       if (isSafe) {
         // TODO look at using eth_getTransactionRecipt to catch submitted transactions
         const safeSdk = new SafeAppsSDK();
-        const tx = await safeSdk.txs.getBySafeTxHash(writeData.hash);
+        const tx = await safeSdk.txs.getBySafeTxHash(writeData);
         if (tx.txStatus === TransactionStatus.AWAITING_CONFIRMATIONS) {
           transactionsDispatch({
             type: "SET_SAFE_SUBMITTED",
-            payload: { hash: writeData.hash },
+            payload: { hash: writeData },
           });
-          setModal({ type: "BAKERY_TRANSACTION", hash: writeData.hash });
+          setModal({ type: "BAKERY_TRANSACTION", hash: writeData });
           return;
         }
       }
       // not safe
       transactionsDispatch({
         type: "SET_SUBMITTED",
-        payload: { hash: writeData.hash },
+        payload: { hash: writeData },
       });
-      setModal({ type: "BAKERY_TRANSACTION", hash: writeData.hash });
+      setModal({ type: "BAKERY_TRANSACTION", hash: writeData });
       clearInputValue();
     })();
   }, [
@@ -118,7 +116,7 @@ export default function Bake({
         size="xl"
         disabled={!buttonIsEnabled}
         onClick={() => {
-          if (!write) return;
+          if (!writeContract) return;
           transactionsDispatch({
             type: "NEW",
             payload: {
@@ -129,7 +127,7 @@ export default function Bake({
             type: "BAKERY_TRANSACTION",
             hash: null,
           });
-          write();
+          writeContract(prepareConfig);
         }}
       >
         Bake

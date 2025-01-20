@@ -4,7 +4,7 @@ import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
 import { LockingDeposit, LockingEvent } from "./lockingReducer";
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
 import { getConfig } from "@/chainConfig";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { useWriteContract, usePrepareContractWrite } from "wagmi";
 import { BUTTERED_BREAD_ABI } from "@/abi";
 import { useModal } from "@/app/core/context/ModalContext";
 import { formatUnits } from "viem";
@@ -56,20 +56,20 @@ export function Lock({
   }, [prepareWriteStatus, prepareWriteError]);
 
   const {
-    write: contractWriteWrite,
+    writeContract: contractWriteWrite,
     status: contractWriteStatus,
     data: contractWriteData,
-  } = useContractWrite(prepareWriteConfig);
+  } = useWriteContract(prepareWriteConfig);
 
   useEffect(() => {
     if (contractWriteStatus === "success" && contractWriteData) {
       transactionsDispatch({
         type: "SET_SUBMITTED",
-        payload: { hash: contractWriteData.hash },
+        payload: { hash: contractWriteData },
       });
       lockingDispatch({
         type: "TRANSACTION_SUBMITTED",
-        payload: { hash: contractWriteData.hash },
+        payload: { hash: contractWriteData },
       });
       setIsWalletOpen(false);
     }
@@ -135,7 +135,7 @@ export function Lock({
       onClick={() => {
         if (!contractWriteWrite) return;
         setIsWalletOpen(true);
-        contractWriteWrite();
+        contractWriteWrite(prepareWriteConfig);
       }}
       disabled={isWalletOpen}
       fullWidth={isMobile}
