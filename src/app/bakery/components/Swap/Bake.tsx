@@ -47,7 +47,9 @@ export default function Bake({
     functionName: "mint",
     args: [user.address],
     value: parsedValue,
-    enabled: parseFloat(debouncedValue) > 0,
+    query: {
+      enabled: parseFloat(debouncedValue) > 0,
+    },
   });
 
   useEffect(() => {

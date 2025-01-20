@@ -44,7 +44,9 @@ export default function Burn({
     abi: BREAD_ABI,
     functionName: "burn",
     args: [parsedValue, user.address],
-    enabled: parseFloat(debouncedValue) > 0,
+    query: {
+      enabled: parseFloat(debouncedValue) > 0,
+    },
   });
 
   useEffect(() => {

@@ -107,7 +107,9 @@ export function CastVote({
     abi: DISTRIBUTOR_ABI,
     functionName: "castVote",
     args: [vote.map((num) => BigInt(num))],
-    enabled: writeIsEnabled && distributorAddress !== "0x",
+    query: {
+      enabled: writeIsEnabled && distributorAddress !== "0x",
+    },
   });
 
   const {
