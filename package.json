@@ -24,6 +24,7 @@
     "@sentry/nextjs": "^8.47.0",
     "@sentry/react": "^7.109.0",
     "@tanstack/react-query": "^5.64.2",
+    "@tanstack/react-query-devtools": "4",
     "@wagmi/core": "^1.4.12",
     "blo": "^1.1.1",
     "clsx": "^2.0.0",
@@ -34,7 +35,6 @@
     "pino-pretty": "^11.2.2",
     "react": "^18",
     "react-dom": "^18",
-    "react-query": "^3.39.3",
     "react-tooltip": "^5.28.0",
     "viem": "^2.22.9",
     "wagmi": "^2.14.8"
