@@ -6,7 +6,7 @@ import React, {
   useMemo,
   ReactNode,
 } from "react";
-import { useNetwork, useReadContract } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
 import { getConfig } from "@/chainConfig";
 import { formatBalance } from "@/app/core/util/formatter";
 import { formatUnits } from "viem";
@@ -51,7 +51,7 @@ const ProjectsProvider = ({
   const [votingPowerState, setVotingPowerState] = useState<TContractDataState>({
     status: "LOADING",
   });
-  const { chain: activeChain } = useNetwork();
+  const { chain: activeChain } = useAccount();
   const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
   const distributorAddress = config.DISBURSER.address;
 

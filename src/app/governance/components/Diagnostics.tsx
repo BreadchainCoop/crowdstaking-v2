@@ -60,7 +60,7 @@ export function Diagnostics() {
 }
 
 function ProjectDisplay({ account }: { account: Hex }) {
-  const { chain: activeChain } = useNetwork();
+  const { chain: activeChain } = useAccount();
   const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
   const breadAddress = config.BREAD.address;
 

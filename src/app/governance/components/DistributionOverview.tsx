@@ -5,7 +5,7 @@ import { useClaimableYield } from "../useClaimableYield";
 import { LinkIcon } from "@/app/core/components/Icons/LinkIcon";
 import Tooltip from "@/app/core/components/Tooltip";
 import { CardBox } from "@/app/core/components/CardBox";
-import { useReadContract, useNetwork } from "wagmi";
+import { useReadContract, useAccount } from "wagmi";
 
 import { ERC20_ABI, SDAI_ADAPTOR_ABI } from "@/abi";
 import { useEffect, useMemo, useState } from "react";
@@ -22,7 +22,7 @@ export function DistributionOverview({
   distributions: void[] | undefined;
 }) {
   const { claimableYield } = useClaimableYield();
-  const { chain: activeChain } = useNetwork();
+  const { chain: activeChain } = useAccount();
   const [dsrAPY, setDsrAPY] = useState("");
   const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
   const [yieldIncrement, setYieldIncrement] = useState(0);
