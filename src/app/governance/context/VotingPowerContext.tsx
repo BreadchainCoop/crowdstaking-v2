@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useNetwork, useQuery } from "wagmi";
+import { useAccount, useQuery } from "wagmi";
 import { multicall } from "@wagmi/core";
 import { Hex } from "viem";
 
@@ -49,8 +49,8 @@ export function VotingPowerProvider({
     bread: { status: "loading" },
     butteredBread: { status: "loading" },
   });
-  const network = useNetwork();
-  const config = getConfig(network.chain?.id || "DEFAULT");
+  const { chainId } = useAccount();
+  const config = getConfig(chainId || "DEFAULT");
 
   const { data, status, error } = useQuery(["vpMulticall"], async () => {
     return await multicall({
