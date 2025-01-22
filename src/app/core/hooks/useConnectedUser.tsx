@@ -7,7 +7,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { type Chain, useAccount, useNetwork } from "wagmi";
+import { type Chain, useAccount } from "wagmi";
 import {
   getConfig,
   isChainSupported,
@@ -73,8 +73,8 @@ function ConnectedUserProvider({
     connector: activeConnector,
     address: accountAddress,
     status,
+    chain: activeChain,
   } = useAccount();
-  const { chain: activeChain } = useNetwork();
 
   useEffect(() => {
     const config =

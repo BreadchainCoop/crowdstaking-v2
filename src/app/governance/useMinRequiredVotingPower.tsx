@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useReadContract, useNetwork } from "wagmi";
+import { useReadContract, useAccount } from "wagmi";
 
 import { DISTRIBUTOR_ABI } from "@/abi";
 import { getConfig } from "@/chainConfig";
@@ -10,7 +10,7 @@ export function useMinRequiredVotingPower() {
     number | null
   >(null);
 
-  const { chain: activeChain } = useNetwork();
+  const { chain: activeChain } = useAccount();
   const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
   const distributorAddress = config.DISBURSER.address;
 
