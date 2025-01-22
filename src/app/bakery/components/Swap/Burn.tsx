@@ -1,4 +1,4 @@
-import { useWriteContract, usePrepareContractWrite } from "wagmi";
+import { useWriteContract, useSimulateContract } from "wagmi";
 import { parseEther } from "viem";
 
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
@@ -36,10 +36,10 @@ export default function Burn({
   );
 
   const {
-    config: prepareConfig,
+    data: prepareConfig,
     status: prepareStatus,
     error: prepareError,
-  } = usePrepareContractWrite({
+  } = useSimulateContract({
     address: BREAD.address,
     abi: BREAD_ABI,
     functionName: "burn",
@@ -64,7 +64,7 @@ export default function Burn({
     error: writeError,
     isSuccess: writeIsSuccess,
     data: writeData,
-  } = useWriteContract(prepareConfig);
+  } = useWriteContract();
 
   useEffect(() => {
     (async () => {
@@ -133,7 +133,7 @@ export default function Burn({
             type: "BAKERY_TRANSACTION",
             hash: null,
           });
-          writeContract(prepareConfig);
+          writeContract(prepareConfig!.request);
         }}
       >
         Burn
