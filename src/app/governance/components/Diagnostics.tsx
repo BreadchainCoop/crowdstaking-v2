@@ -8,20 +8,20 @@ import { formatUnits, Hex } from "viem";
 import {
   useReadContract,
   useWriteContract,
-  useNetwork,
-  usePrepareContractWrite,
+  useAccount,
+  useSimulateContract,
 } from "wagmi";
 
 export function Diagnostics() {
-  const { chain: activeChain } = useNetwork();
+  const { chain: activeChain } = useAccount();
   const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
   const distributorAddress = config.DISBURSER.address;
 
   const {
-    config: prepareConfig,
+    data: prepareConfig,
     status: prepareStatus,
     error: prepareError,
-  } = usePrepareContractWrite({
+  } = useSimulateContract({
     address: distributorAddress,
     abi: DISTRIBUTOR_ABI,
     functionName: "distributeYield",
@@ -31,7 +31,7 @@ export function Diagnostics() {
     writeContract,
     data: distributeYieldData,
     status: distributeYieldStatus,
-  } = useWriteContract(prepareConfig);
+  } = useWriteContract();
 
   useEffect(() => {
     if (prepareError) {
@@ -44,7 +44,7 @@ export function Diagnostics() {
       <div>
         <Button
           onClick={() => {
-            writeContract?.(prepareConfig);
+            writeContract?.(prepareConfig!.request);
           }}
         >
           Distribute Yield

@@ -2,11 +2,7 @@ import { formatUnits, Hex } from "viem";
 import Button from "../../Button";
 import { ModalContent, ModalHeading, StatusMessage } from "../LPModalUI";
 import { useEffect, useReducer, useState } from "react";
-import {
-  useReadContract,
-  useWriteContract,
-  usePrepareContractWrite,
-} from "wagmi";
+import { useReadContract, useWriteContract, useSimulateContract } from "wagmi";
 import { BUTTERED_BREAD_ABI } from "@/abi";
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
 import {
@@ -60,7 +56,7 @@ export function WithdrawTransaction({
     args: [user.address, chainConfig.BUTTER.address],
   });
 
-  const prepareWrite = usePrepareContractWrite({
+  const prepareWrite = useSimulateContract({
     address: chainConfig.BUTTERED_BREAD.address,
     abi: BUTTERED_BREAD_ABI,
     functionName: "withdraw",
@@ -82,7 +78,7 @@ export function WithdrawTransaction({
     writeContract: contractWriteWrite,
     status: contractWriteStatus,
     data: contractWriteData,
-  } = useWriteContract(prepareWrite.config);
+  } = useWriteContract();
 
   useEffect(() => {
     if (contractWriteStatus === "success" && contractWriteData) {
@@ -171,7 +167,7 @@ export function WithdrawTransaction({
               onClick={() => {
                 if (!contractWriteWrite) return;
                 setIsWalletOpen(true);
-                contractWriteWrite(prepareWrite.config);
+                contractWriteWrite(prepareWrite.data!.request);
               }}
               disabled={isWalletOpen}
               fullWidth={isMobile}

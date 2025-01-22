@@ -1,4 +1,4 @@
-import { useWriteContract, useNetwork, usePrepareContractWrite } from "wagmi";
+import { useWriteContract, useAccount, useSimulateContract } from "wagmi";
 
 import Button from "@/app/core/components/Button";
 
@@ -94,15 +94,15 @@ export function CastVote({
   const { setModal } = useModal();
   const writeIsEnabled = !!(vote.reduce((acc, num) => (acc += num), 0) > 0);
 
-  const { chain: activeChain } = useNetwork();
+  const { chain: activeChain } = useAccount();
   const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
   const distributorAddress = config.DISBURSER.address;
 
   const {
-    config: prepareConfig,
+    data: prepareConfig,
     status: prepareConfigStatus,
     error: prepareConfigError,
-  } = usePrepareContractWrite({
+  } = useSimulateContract({
     address: distributorAddress,
     abi: DISTRIBUTOR_ABI,
     functionName: "castVote",
@@ -117,7 +117,7 @@ export function CastVote({
     data: writeData,
     isError: writeIsError,
     error: writeError,
-  } = useWriteContract(prepareConfig);
+  } = useWriteContract();
 
   useEffect(() => {
     (async () => {
@@ -193,7 +193,7 @@ export function CastVote({
               type: "VOTE_TRANSACTION",
               hash: "",
             });
-            writeContract(prepareConfig);
+            writeContract(prepareConfig!.request);
           }}
           disabled={
             !userCanVote || !writeIsEnabled || prepareConfigStatus !== "success"
