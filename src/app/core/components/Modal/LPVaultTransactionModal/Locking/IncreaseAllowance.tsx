@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useWriteContract, usePrepareContractWrite } from "wagmi";
+import { useWriteContract, useSimulateContract } from "wagmi";
 
 import Button from "@/app/core/components/Button";
 import { useIsMobile } from "@/app/core/hooks/useIsMobile";
@@ -35,8 +35,8 @@ export function IncreaseAllowance({
   const {
     status: prepareWriteStatus,
     error: prepareWriteError,
-    config: prepareWriteConfig,
-  } = usePrepareContractWrite({
+    data: prepareWriteConfig,
+  } = useSimulateContract({
     address: chainConfig.BUTTER.address,
     abi: ERC20_ABI,
     functionName: "approve",
@@ -56,7 +56,7 @@ export function IncreaseAllowance({
     writeContract: contractWriteWrite,
     status: contractWriteStatus,
     data: contractWriteData,
-  } = useWriteContract(prepareWriteConfig);
+  } = useWriteContract();
 
   useEffect(() => {
     if (contractWriteStatus === "success" && contractWriteData) {
@@ -105,7 +105,7 @@ export function IncreaseAllowance({
     <Button
       onClick={() => {
         if (!contractWriteWrite) return;
-        contractWriteWrite(prepareWriteConfig);
+        contractWriteWrite(prepareWriteConfig!.request);
         setIsWalletOpen(true);
       }}
       disabled={isWalletOpen}

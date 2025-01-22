@@ -4,7 +4,7 @@ import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
 import { LockingDeposit, LockingEvent } from "./lockingReducer";
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
 import { getConfig } from "@/chainConfig";
-import { useWriteContract, usePrepareContractWrite } from "wagmi";
+import { useWriteContract, useSimulateContract } from "wagmi";
 import { BUTTERED_BREAD_ABI } from "@/abi";
 import { useModal } from "@/app/core/context/ModalContext";
 import { formatUnits } from "viem";
@@ -41,8 +41,8 @@ export function Lock({
   const {
     status: prepareWriteStatus,
     error: prepareWriteError,
-    config: prepareWriteConfig,
-  } = usePrepareContractWrite({
+    data: prepareWriteConfig,
+  } = useSimulateContract({
     address: chainConfig.BUTTERED_BREAD.address,
     abi: BUTTERED_BREAD_ABI,
     functionName: "deposit",
@@ -59,7 +59,7 @@ export function Lock({
     writeContract: contractWriteWrite,
     status: contractWriteStatus,
     data: contractWriteData,
-  } = useWriteContract(prepareWriteConfig);
+  } = useWriteContract();
 
   useEffect(() => {
     if (contractWriteStatus === "success" && contractWriteData) {
@@ -135,7 +135,7 @@ export function Lock({
       onClick={() => {
         if (!contractWriteWrite) return;
         setIsWalletOpen(true);
-        contractWriteWrite(prepareWriteConfig);
+        contractWriteWrite(prepareWriteConfig!.request);
       }}
       disabled={isWalletOpen}
       fullWidth={isMobile}
