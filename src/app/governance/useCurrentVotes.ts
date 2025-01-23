@@ -4,7 +4,7 @@ import { getConfig } from "@/chainConfig";
 import { DISTRIBUTOR_ABI } from "@/abi";
 import { useQuery } from "react-query";
 import { Hex } from "viem";
-import { useNetwork } from "wagmi";
+import { useAccount } from "wagmi";
 
 type VoteLogData = {
   blockTimestamp: Hex;
@@ -16,7 +16,7 @@ type VoteLogData = {
 };
 
 export function useCurrentVotes(lastClaimedBlockNumber: bigint | null) {
-  const { chain: activeChain } = useNetwork();
+  const { chain: activeChain } = useAccount();
   const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
   const distributorAddress = config.DISBURSER.address;
   const publicClient = getPublicClient();

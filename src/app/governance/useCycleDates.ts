@@ -1,7 +1,7 @@
 import { DISTRIBUTOR_ABI } from "@/abi";
 import { getConfig } from "@/chainConfig";
 import { useEffect, useState } from "react";
-import { useBlockNumber, useNetwork } from "wagmi";
+import { useBlockNumber, useAccount } from "wagmi";
 import { add, sub } from "date-fns";
 import { CycleLengthState } from "./useCycleLength";
 import { useLastClaimedBlockNumber } from "./useLastClaimedBlockNumber";
@@ -28,7 +28,7 @@ export function useCycleDates(cycleLength: CycleLengthState) {
     status: "LOADING",
   });
 
-  const { chain: activeChain } = useNetwork();
+  const { chain: activeChain } = useAccount();
   const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
 
   const { lastClaimedBlocknumber } = useLastClaimedBlockNumber();

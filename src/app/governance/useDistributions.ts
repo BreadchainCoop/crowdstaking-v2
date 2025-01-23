@@ -2,11 +2,11 @@ import { getPublicClient } from "@wagmi/core";
 
 import { getConfig } from "@/chainConfig";
 import { useQuery } from "react-query";
-import { useNetwork } from "wagmi";
+import { useAccount } from "wagmi";
 import { formatUnits, parseAbiItem } from "viem";
 
 export function useDistributions() {
-  const { chain: activeChain } = useNetwork();
+  const { chain: activeChain } = useAccount();
   const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
   const publicClient = getPublicClient();
 
