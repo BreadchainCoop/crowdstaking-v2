@@ -1,7 +1,7 @@
 "use client";
 import { ReactNode } from "react";
 
-import { WagmiProvider } from "@/app/core/hooks/WagmiProvider/WagmiProvider";
+import { WagmiProviderWrapper } from "@/app/core/hooks/WagmiProvider/WagmiProviderWrapper";
 import { TokenBalancesProvider } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
 import { ConnectedUserProvider } from "@/app/core/hooks/useConnectedUser";
 import { TransactionsProvider } from "@/app/core/context/TransactionsContext/TransactionsContext";
@@ -27,7 +27,7 @@ export function AppProvider({
   useSentry();
 
   return (
-    <WagmiProvider>
+    <WagmiProviderWrapper>
       <ConnectedUserProvider features={features}>
         <QueryClientProvider client={queryClient}>
           <TokenBalancesProvider>
@@ -40,6 +40,6 @@ export function AppProvider({
           <ReactQueryDevtools initialIsOpen={true} />
         </QueryClientProvider>
       </ConnectedUserProvider>
-    </WagmiProvider>
+    </WagmiProviderWrapper>
   );
 }
