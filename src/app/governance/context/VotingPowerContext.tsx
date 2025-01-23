@@ -5,9 +5,10 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useAccount, useQuery } from "wagmi";
+import { useAccount } from "wagmi";
 import { multicall } from "@wagmi/core";
 import { Hex } from "viem";
+import { useQuery } from "@tanstack/react-query";
 
 import { getConfig } from "@/chainConfig";
 import { DISTRIBUTOR_ABI } from "@/abi";
@@ -52,33 +53,36 @@ export function VotingPowerProvider({
   const { chainId } = useAccount();
   const config = getConfig(chainId || "DEFAULT");
 
-  const { data, status, error } = useQuery(["vpMulticall"], async () => {
-    return await multicall({
-      contracts: [
-        {
-          address: config.DISBURSER.address,
-          abi: DISTRIBUTOR_ABI,
-          functionName: "getVotingPowerForPeriod",
-          args: [
-            config.BREAD.address,
-            previousCycleStartingBlock,
-            lastClaimedBlocknumber,
-            account,
-          ],
-        },
-        {
-          address: config.DISBURSER.address,
-          abi: DISTRIBUTOR_ABI,
-          functionName: "getVotingPowerForPeriod",
-          args: [
-            config.BUTTERED_BREAD.address,
-            previousCycleStartingBlock,
-            lastClaimedBlocknumber,
-            account,
-          ],
-        },
-      ],
-    });
+  const { data, status, error } = useQuery({
+    queryKey: ["vpMulticall"],
+    queryFn: async () => {
+      return await multicall({
+        contracts: [
+          {
+            address: config.DISBURSER.address,
+            abi: DISTRIBUTOR_ABI,
+            functionName: "getVotingPowerForPeriod",
+            args: [
+              config.BREAD.address,
+              previousCycleStartingBlock,
+              lastClaimedBlocknumber,
+              account,
+            ],
+          },
+          {
+            address: config.DISBURSER.address,
+            abi: DISTRIBUTOR_ABI,
+            functionName: "getVotingPowerForPeriod",
+            args: [
+              config.BUTTERED_BREAD.address,
+              previousCycleStartingBlock,
+              lastClaimedBlocknumber,
+              account,
+            ],
+          },
+        ],
+      });
+    },
   });
 
   useEffect(() => {
@@ -96,12 +100,14 @@ export function VotingPowerProvider({
       data[1].result !== undefined
     ) {
       const cycleLength = lastClaimedBlocknumber - previousCycleStartingBlock;
-      const breadResult = data[0].result / cycleLength;
-      const butteredBreadResult = data[1].result / cycleLength;
-
+      const breadResult = undefined;
+      const butteredBreadResult = undefined;
+      // const breadResult = data[0].result / cycleLength;
+      // const butteredBreadResult = data[1].result / cycleLength;
+      debugger;
       setVotingPowerState(() => ({
-        bread: { status: "success", value: breadResult },
-        butteredBread: { status: "success", value: butteredBreadResult },
+        bread: { status: "error" },
+        butteredBread: { status: "error" },
       }));
     }
   }, [data, status, error, lastClaimedBlocknumber, previousCycleStartingBlock]);

@@ -2,7 +2,7 @@ import { getPublicClient } from "@wagmi/core";
 
 import { getConfig } from "@/chainConfig";
 import { DISTRIBUTOR_ABI } from "@/abi";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Hex } from "viem";
 import { useAccount } from "wagmi";
 
@@ -22,7 +22,7 @@ export function useCurrentVotes(lastClaimedBlockNumber: bigint | null) {
   const publicClient = getPublicClient();
 
   return useQuery({
-    queryKey: "getVotesForCurrentRound",
+    queryKey: ["getVotesForCurrentRound"],
     refetchInterval: 500,
     enabled: !!lastClaimedBlockNumber,
     queryFn: async () => {

@@ -1,7 +1,7 @@
 import { getPublicClient } from "@wagmi/core";
 
 import { getConfig } from "@/chainConfig";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useAccount } from "wagmi";
 import { formatUnits, parseAbiItem } from "viem";
 
@@ -11,7 +11,7 @@ export function useDistributions() {
   const publicClient = getPublicClient();
 
   return useQuery({
-    queryKey: "getDistributions",
+    queryKey: ["getDistributions"],
     refetchInterval: 1000,
     queryFn: async () => {
       // const logs = await publicClient.getContractEvents({
