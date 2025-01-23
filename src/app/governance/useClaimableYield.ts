@@ -2,12 +2,12 @@ import { BREAD_ABI } from "@/abi";
 import { getConfig } from "@/chainConfig";
 import { useEffect, useState } from "react";
 import { formatUnits } from "viem";
-import { useReadContract, useNetwork } from "wagmi";
+import { useReadContract, useAccount } from "wagmi";
 
 export function useClaimableYield() {
   const [claimableYield, setClaimableYield] = useState<number | null>(null);
 
-  const { chain: activeChain } = useNetwork();
+  const { chain: activeChain } = useAccount();
 
   const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
   const breadAddress = config.BREAD.address;
