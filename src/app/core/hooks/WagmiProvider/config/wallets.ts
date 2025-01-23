@@ -1,12 +1,13 @@
+import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import {
   frameWallet,
   injectedWallet,
   metaMaskWallet,
+  rainbowWallet,
   walletConnectWallet,
   rabbyWallet,
   coinbaseWallet,
 } from "@rainbow-me/rainbowkit/wallets";
-import { Chain } from "wagmi";
 
 export function getWallets(chains: Chain[], projectId: string) {
   return [
