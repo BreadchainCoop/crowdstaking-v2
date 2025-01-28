@@ -38,7 +38,7 @@ export function LiquidityBanner() {
         rel="noopener noreferrer"
       >
         <BannerCardLarge>
-          <div className="w-[3rem] p-[0.4rem] rounded-full bg-[#F5DDF1] dark:bg-breadgray-toast shadow-[0_4px_10px_0px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_4px_0px_rgba(0,0,0,0.25)]">
+          <div className="w-[3rem] p-[0.4rem] rounded-full bg-[#F5DDF1] text-breadgray-ultra-white dark:bg-breadgray-toast shadow-[0_4px_10px_0px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_4px_0px_rgba(0,0,0,0.25)]">
             <LiquidBreadIcon />
           </div>
           <BannerLargeTextContainer>
@@ -76,7 +76,7 @@ export function LiquidityBanner() {
           <BannerHighlight
             variant="pink"
             featureIcon={
-              <div className="size-6 p-[0.2rem] rounded-full bg-[#F5DDF1] dark:bg-breadgray-toast shadow-[0_4px_10px_0px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_4px_0px_rgba(0,0,0,0.25)]">
+              <div className="size-6 p-[0.2rem] rounded-full text-breadgray-light-grey dark:text-white bg-breadgray-ultra-white dark:bg-breadgray-toast shadow-[0_4px_10px_0px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_4px_0px_rgba(0,0,0,0.25)]">
                 <LiquidBreadIcon />
               </div>
             }
@@ -122,7 +122,7 @@ export function LiquidBreadIcon() {
       </mask>
       <path
         d="M7.00879 13.103H8.34212V11.8954L7.1405 11.7762L7.00879 13.103ZM28.7129 13.1236L28.6474 11.7919L27.3796 11.8543V13.1236H28.7129ZM3.33333 7.56522C3.33333 5.22801 5.22801 3.33333 7.56522 3.33333V0.666667C3.75525 0.666667 0.666667 3.75525 0.666667 7.56522H3.33333ZM7.1405 11.7762C5.00338 11.564 3.33333 9.75882 3.33333 7.56522H0.666667C0.666667 11.1432 3.38954 14.0836 6.87708 14.4298L7.1405 11.7762ZM8.34212 25.6521V13.103H5.67546V25.6521H8.34212ZM13.9653 31.2753C10.8597 31.2753 8.34212 28.7577 8.34212 25.6521H5.67546C5.67546 30.2305 9.38695 33.942 13.9653 33.942V31.2753ZM21.7564 31.2753H13.9653V33.942H21.7564V31.2753ZM27.3796 25.6521C27.3796 28.7577 24.862 31.2753 21.7564 31.2753V33.942C26.3348 33.942 30.0463 30.2305 30.0463 25.6521H27.3796ZM27.3796 13.1236V25.6521H30.0463V13.1236H27.3796ZM32.6667 7.56522C32.6667 9.83111 30.8852 11.6817 28.6474 11.7919L28.7785 14.4553C32.4294 14.2756 35.3333 11.26 35.3333 7.56522L32.6667 7.56522ZM28.4348 3.33333C30.772 3.33333 32.6667 5.22801 32.6667 7.56522L35.3333 7.56522C35.3333 3.75525 32.2447 0.666667 28.4348 0.666667V3.33333ZM7.56522 3.33333L28.4348 3.33333V0.666667L7.56522 0.666667V3.33333Z"
-        fill="#FFFFFF"
+        className="fill-current"
         mask={`url(#path-1-outside-1_2_128_${iconId})`}
       />
       <mask
