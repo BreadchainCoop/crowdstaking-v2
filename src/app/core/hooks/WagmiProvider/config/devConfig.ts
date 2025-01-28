@@ -74,16 +74,7 @@ const connectors = connectorsForWallets([
 ]);
 
 const config = createConfig({
-  connectors: [
-    ...connectors(),
-    new SafeConnector({
-      chains,
-      options: {
-        allowedDomains: [/app.safe.global$/],
-        debug: false,
-      },
-    }),
-  ],
+  connectors,
   publicClient,
 });
 
