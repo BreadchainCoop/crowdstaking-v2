@@ -1,4 +1,5 @@
 import { Hex } from "viem";
+import { BREAD_ADDRESS, BUTTERED_BREAD_ADDRESS } from "./constants";
 
 let DISTRIBUTOR_DEPLOYED = { ADDRESS: "0x" };
 let BUTTERED_BREAD_DEPLOYED = { ADDRESS: "0x" };
@@ -32,8 +33,6 @@ export interface ChainConfiguration {
     address: Hex;
   };
 }
-
-export const BREAD_ADDRESS = "0xa555d5344f6FB6c65da19e403Cb4c1eC4a1a5Ee3";
 
 export interface IConfig {
   [chainId: number]: ChainConfiguration;
@@ -70,13 +69,13 @@ const gnosis: ChainConfiguration = {
   BREAD: {
     symbol: "BREAD",
     decimals: 18,
-    address: "0xa555d5344f6FB6c65da19e403Cb4c1eC4a1a5Ee3",
+    address: BREAD_ADDRESS,
   },
   DISBURSER: {
     address: "0xeE95A62b749d8a2520E0128D9b3aCa241269024b",
   },
   BUTTERED_BREAD: {
-    address: "0x680B581605DC0A6902735a80dE35Cb0Ef6E90865",
+    address: BUTTERED_BREAD_ADDRESS,
   },
   BUTTER: {
     address: "0xf3d8f3de71657d342db60dd714c8a2ae37eac6b4",
@@ -93,7 +92,7 @@ const anvil: ChainConfiguration = {
   BREAD: {
     symbol: "BREAD",
     decimals: 18,
-    address: "0xa555d5344f6FB6c65da19e403Cb4c1eC4a1a5Ee3",
+    address: BREAD_ADDRESS,
   },
   DISBURSER: {
     address:

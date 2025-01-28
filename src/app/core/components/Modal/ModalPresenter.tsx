@@ -3,6 +3,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { AnimatePresence, motion } from "framer-motion";
 import { useModal } from "@/app/core/context/ModalContext";
 import { ConfirmRecastModal } from "./ConfirmRecastModal";
+import { ConfirmBurnModal } from "./ConfirmBurnModal";
 import { ModalOverlay } from "./ModalUI";
 import { VoteTransactionModal } from "./TransactionModal/VoteTransactionModal";
 import { BakeryTransactionModal } from "./TransactionModal/BakeryTransactionModal";
@@ -27,6 +28,8 @@ export function ModalPresenter() {
                       return <BakeryTransactionModal modalState={modalState} />;
                     case "VOTE_TRANSACTION":
                       return <VoteTransactionModal modalState={modalState} />;
+                    case "CONFIRM_BURN":
+                      return <ConfirmBurnModal modalState={modalState} />;
                     case "CONFIRM_RECAST":
                       return <ConfirmRecastModal setModal={setModal} />;
                     case "LP_VAULT_TRANSACTION":

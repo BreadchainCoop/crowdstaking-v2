@@ -22,13 +22,19 @@ export const ButtonSizes = {
 
 export const ButtonVariants = {
   primary:
-    "bg-breadviolet-shaded dark:bg-breadpink-shaded text-breadgray-ultra-white dark:text-breadgray-og-dark disabled:bg-opacity-60",
+    "bg-breadviolet-shaded text-breadgray-ultra-white \
+    dark:bg-breadpink-shaded dark:text-breadgray-og-dark \
+    enabled:dark:hover:bg-breadpink-pink enabled:hover:bg-breadviolet-violet \
+    disabled:bg-opacity-60",
   secondary:
     "bg-[#FFCCF1] dark:bg-[#402639] text-breadpink-400 dark:text-breadpink-shaded border-2 border-[#FFCCF1] dark:border-[#402639] hover:border-breadpink-400 dark:hover:border-breadpink-shaded hover:transition-[border]",
   danger:
     "bg-status-danger-light dark:bg-status-danger text-breadgray-ultra-white dark:text-breadgray-grey100 bg-opacity-85 hover:bg-opacity-100",
   cancel:
-    "border border-2 border-status-danger-light dark:border-status-danger hover:bg-status-danger-light dark:bg-status-danger dark:hover:bg-status-danger dark:bg-opacity-10 dark:hover:bg-opacity-10 text-status-danger-light dark:text-status-danger dark:hover:text-status-danger border border-2 border-status-danger dark:border-opacity-0 hover:border-opacity-100 transition-all hover:text-breadgray-ultra-white",
+    "text-status-danger-light  transition-all bg-status-danger-light-alpha \
+      disabled:text-opacity-50 \
+      enabled:hover:outline enabled:hover:outline-2 enabled:hover:outline-status-danger-alpha \
+      dark:bg-status-danger dark:bg-opacity-10 dark:text-status-danger",
 };
 
 const Button = forwardRef(

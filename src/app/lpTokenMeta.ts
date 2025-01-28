@@ -1,4 +1,5 @@
 import { Hex } from "viem";
+import { BUTTERED_BREAD_ADDRESS } from "@/constants";
 
 export type LPTokenMeta = {
   tokenName: string;
@@ -14,7 +15,7 @@ export const lpTokenMeta: {
     tokenName: "BREAD/WXDAI LP",
     poolName: "BREAD/WXDAI",
     inspectContract:
-      "https://gnosisscan.io/address/DEPLOYED_CONTRACT_ADDRESS#code",
+      "https://gnosisscan.io/address/" + BUTTERED_BREAD_ADDRESS + "#code",
     visitPool: "https://curve.fi/#/xdai/pools/factory-stable-ng-15",
   },
 };

@@ -46,147 +46,149 @@ export function VotingPowerPanel() {
   };
 
   return (
-    <div className="w-full md:w-[380px] m-auto">
-      <CardBox>
-        <div className="p-4 flex flex-col items-center gap-4">
-          <h2 className="font-medium text-xl leading-none dark:text-breadgray-light-grey">
-            MY VOTING POWER
-          </h2>
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-2 items-center">
-              <div className="font-bold text-3xl w-full leading-none text-breadgray-grey100 dark:text-breadgray-ultra-white">
-                {votingPower &&
-                votingPower.bread.status === "success" &&
-                votingPower.butteredBread.status === "success" ? (
-                  renderFormattedDecimalNumber(
-                    formatBalance(
-                      Number(
-                        votingPower.bread.value +
-                          votingPower.butteredBread.value
-                      ) /
-                        10 ** 18,
+    <div className="col-span-12 lg:col-span-4 row-start-2 lg:row-start-1 lg:row-span-2">
+      <div className="justify-center lg:block lg:w-full">
+        <CardBox>
+          <div className="p-4 flex flex-col items-center gap-4">
+            <h2 className="font-medium text-xl leading-none dark:text-breadgray-light-grey">
+              MY VOTING POWER
+            </h2>
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-2 items-center">
+                <div className="font-bold text-3xl w-full leading-none text-breadgray-grey100 dark:text-breadgray-ultra-white">
+                  {votingPower &&
+                  votingPower.bread.status === "success" &&
+                  votingPower.butteredBread.status === "success" ? (
+                    renderFormattedDecimalNumber(
+                      formatBalance(
+                        Number(
+                          votingPower.bread.value +
+                            votingPower.butteredBread.value
+                        ) /
+                          10 ** 18,
+                        1
+                      ),
+                      <FistIcon bg="burnt" />
+                    )
+                  ) : (
+                    <div className="flex justify-center items-center">
+                      <FistIcon bg="burnt" />
+                      <span className="ms-2">-</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 font-medium text-xs text-breadgray-rye dark:text-breadgray-grey">
+                <span className="pb-1">Accessible voting power</span>
+                <Tooltip>
+                  Your total available voting power for the current voting cycle
+                  #{distributions ? distributions.length + 1 + "." : "-"}
+                </Tooltip>
+              </div>
+            </div>
+
+            {/* voting power grid */}
+            <div className="w-full grid grid-cols-[repeat(2, max-content)] gap-3">
+              <DividerWithText text="Breakdown" />
+
+              <p className="text-breadgray-rye dark:text-breadgray-grey">
+                Voting power from locked LP
+              </p>
+
+              <span className="font-bold text-breadgray-grey100 dark:text-breadgray-white text-right">
+                {votingPower && votingPower.butteredBread.status === "success"
+                  ? formatBalance(
+                      Number(votingPower.butteredBread.value) / 10 ** 18,
                       1
-                    ),
-                    <FistIcon bg="burnt" />
-                  )
-                ) : (
-                  <div className="flex justify-center items-center">
-                    <FistIcon bg="burnt" />
-                    <span className="ms-2">-</span>
-                  </div>
-                )}
+                    )
+                  : "-"}
+              </span>
+
+              <p className="text-breadgray-rye dark:text-breadgray-grey">
+                Voting power from $BREAD
+              </p>
+              <span className="text-right font-bold text-breadgray-grey100 dark:text-breadgray-white">
+                {votingPower && votingPower.bread.status === "success"
+                  ? formatBalance(Number(votingPower.bread.value) / 10 ** 18, 1)
+                  : "-"}
+              </span>
+              <DividerWithText text="Source(s)" />
+
+              <p className="text-breadgray-rye dark:text-breadgray-grey">
+                Total locked LP tokens
+              </p>
+
+              <span className="text-right font-bold text-breadpink-100">
+                {vaultTokenBalance &&
+                vaultTokenBalance.butter.status === "success"
+                  ? formatBalance(
+                      Number(vaultTokenBalance.butter.value) / 10 ** 18,
+                      0
+                    )
+                  : "-"}
+              </span>
+
+              {user.status === "CONNECTED" && (
+                <>
+                  <p className="text-breadgray-rye dark:text-breadgray-grey">
+                    Total $BREAD baked
+                  </p>
+
+                  <span className="font-bold text-breadgray-grey100 dark:text-breadgray-white text-right">
+                    {BREAD && BREAD.status === "SUCCESS"
+                      ? formatBalance(parseFloat(BREAD.value), 2)
+                      : "-"}
+                  </span>
+                </>
+              )}
+
+              {user.status === "CONNECTED" ? (
+                <>
+                  <DividerWithText text="Future voting power" />
+
+                  <p className="text-breadgray-rye dark:text-breadgray-grey">
+                    <div className="flex items-center gap-2">
+                      <span className="pb-1">Pending voting power</span>
+                      <Tooltip>
+                        The voting power you will receive in the next voting
+                        cycle.
+                      </Tooltip>
+                    </div>
+                  </p>
+
+                  <span className="text-right w-27 font-bold text-breadgray-rye dark:text-breadgray-grey">
+                    <PendingVotingPowerDisplay user={user} />
+                  </span>
+                </>
+              ) : (
+                <></>
+              )}
+
+              {user.status === "CONNECTED" ? (
+                <></>
+              ) : (
+                <div className="col-span-2 pt-3">
+                  <AccountMenu size="large" fullWidth>
+                    Connect
+                  </AccountMenu>
+                </div>
+              )}
+            </div>
+            <a
+              className="flex items-center gap-2 text-sm font-medium pt-4 text-breadgray-grey100 hover:text-breadpink-shaded dark:text-breadgray-ultra-white"
+              href="https://breadchain.notion.site/BREAD-Voting-Power-UI-0f2d350320b94e4ba9aeec2ef6fdcb84"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              How does this work?
+              <div className="text-breadpink-shaded">
+                <LinkIcon />
               </div>
-            </div>
-
-            <div className="flex items-center gap-2 font-medium text-xs text-breadgray-rye dark:text-breadgray-grey">
-              <span className="pb-1">Accessible voting power</span>
-              <Tooltip>
-                Your total available voting power for the current voting cycle #
-                {distributions ? distributions.length + 1 + "." : "-"}
-              </Tooltip>
-            </div>
+            </a>
           </div>
-
-          {/* voting power grid */}
-          <div className="w-full grid grid-cols-[repeat(2, max-content)] gap-3">
-            <DividerWithText text="Breakdown" />
-
-            <p className="text-breadgray-rye dark:text-breadgray-grey">
-              Voting power from locked LP
-            </p>
-
-            <span className="font-bold text-breadgray-grey100 dark:text-breadgray-white text-right">
-              {votingPower && votingPower.butteredBread.status === "success"
-                ? formatBalance(
-                    Number(votingPower.butteredBread.value) / 10 ** 18,
-                    1
-                  )
-                : "-"}
-            </span>
-
-            <p className="text-breadgray-rye dark:text-breadgray-grey">
-              Voting power from $BREAD
-            </p>
-            <span className="text-right font-bold text-breadgray-grey100 dark:text-breadgray-white">
-              {votingPower && votingPower.bread.status === "success"
-                ? formatBalance(Number(votingPower.bread.value) / 10 ** 18, 1)
-                : "-"}
-            </span>
-            <DividerWithText text="Source(s)" />
-
-            <p className="text-breadgray-rye dark:text-breadgray-grey">
-              Total locked LP tokens
-            </p>
-
-            <span className="text-right font-bold text-breadpink-100">
-              {vaultTokenBalance &&
-              vaultTokenBalance.butter.status === "success"
-                ? formatBalance(
-                    Number(vaultTokenBalance.butter.value) / 10 ** 18,
-                    0
-                  )
-                : "-"}
-            </span>
-
-            {user.status === "CONNECTED" && (
-              <>
-                <p className="text-breadgray-rye dark:text-breadgray-grey">
-                  Total $BREAD baked
-                </p>
-
-                <span className="font-bold text-breadgray-grey100 dark:text-breadgray-white text-right">
-                  {BREAD && BREAD.status === "SUCCESS"
-                    ? formatBalance(parseFloat(BREAD.value), 2)
-                    : "-"}
-                </span>
-              </>
-            )}
-
-            {user.status === "CONNECTED" ? (
-              <>
-                <DividerWithText text="Future voting power" />
-
-                <p className="text-breadgray-rye dark:text-breadgray-grey">
-                  <div className="flex items-center gap-2">
-                    <span className="pb-1">Pending voting power</span>
-                    <Tooltip>
-                      The voting power you will receive in the next voting
-                      cycle.
-                    </Tooltip>
-                  </div>
-                </p>
-
-                <span className="text-right w-32 font-bold text-breadgray-rye dark:text-breadgray-grey">
-                  <PendingVotingPowerDisplay user={user} />
-                </span>
-              </>
-            ) : (
-              <></>
-            )}
-
-            {user.status === "CONNECTED" ? (
-              <></>
-            ) : (
-              <div className="col-span-2 pt-3">
-                <AccountMenu size="large" fullWidth>
-                  Connect
-                </AccountMenu>
-              </div>
-            )}
-          </div>
-          <a
-            className="flex items-center gap-2 text-sm font-medium pt-4 text-breadgray-grey100 hover:text-breadpink-shaded dark:text-breadgray-ultra-white"
-            href="https://breadchain.notion.site/BREAD-Voting-Power-UI-0f2d350320b94e4ba9aeec2ef6fdcb84"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            How does this work?
-            <div className="text-breadpink-shaded">
-              <LinkIcon />
-            </div>
-          </a>
-        </div>
-      </CardBox>
+        </CardBox>
+      </div>
     </div>
   );
 }

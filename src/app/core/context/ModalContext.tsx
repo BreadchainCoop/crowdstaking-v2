@@ -6,6 +6,13 @@ export type RecastModalState = {
   isConfirmed: boolean;
 };
 
+export type ConfirmBurnModalState = {
+  type: "CONFIRM_BURN";
+  breadValue: string;
+  xdaiValue: string;
+  write: Function | undefined;
+};
+
 export type VoteModalState = {
   type: "VOTE_TRANSACTION";
   hash: string | null;
@@ -26,6 +33,7 @@ export type ModalState =
   | BakeryTransactionModalState
   | VoteModalState
   | RecastModalState
+  | ConfirmBurnModalState
   | LPVaultTransactionModalState
   | null;
 export type ModalContext = {

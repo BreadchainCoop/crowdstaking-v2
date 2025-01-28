@@ -56,15 +56,13 @@
   .dark .guild-logo-dark {
     display: block;
   }
-  .supply-text-gradient {
+
+  .bread-pink-text-gradient {
     background: linear-gradient(
-      230deg,
-      #b72085 9.16%,
-      #cd19aa 16.07%,
-      #c463ca 35.44%,
-      #f5ac37 50.56%,
-      #f9c625 73.38%,
-      #ffe70f 95.3%
+      81.66deg,
+      #fc6baa 6.39%,
+      #d158d7 57.5%,
+      #af2cec 100.16%
     );
     background-clip: text;
     -webkit-background-clip: text;

@@ -1,7 +1,7 @@
 import { createWalletClient, custom } from "viem";
 import { mainnet } from "viem/chains";
-
 import { useEffect, useState } from "react";
+import { BREAD_ADDRESS } from "@/constants";
 
 export function useWatchAsset() {
   const [isComplete, setIsComplete] = useState(true);
@@ -22,7 +22,7 @@ export function useWatchAsset() {
         await walletClient.watchAsset({
           type: "ERC20",
           options: {
-            address: "0xa555d5344f6FB6c65da19e403Cb4c1eC4a1a5Ee3",
+            address: BREAD_ADDRESS,
             decimals: 18,
             symbol: "BREAD",
           },

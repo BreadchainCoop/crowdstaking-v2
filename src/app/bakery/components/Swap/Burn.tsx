@@ -1,6 +1,5 @@
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { parseEther } from "viem";
-
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
 import { BREAD_ABI } from "@/abi";
 import Button from "@/app/core/components/Button";
@@ -11,6 +10,8 @@ import { useEffect, useState } from "react";
 import SafeAppsSDK from "@safe-global/safe-apps-sdk/dist/src/sdk";
 import { TransactionStatus } from "@safe-global/safe-apps-sdk";
 import { useModal } from "@/app/core/context/ModalContext";
+import { ExternalLink } from "@/app/core/components/ExternalLink";
+import SwapBreadButton from "@/app/bakery/components/Swap/SwapBreadButton";
 
 export default function Burn({
   user,
@@ -25,10 +26,8 @@ export default function Burn({
 }) {
   const { transactionsState, transactionsDispatch } = useTransactions();
   const [buttonIsEnabled, setButtonIsEnabled] = useState(false);
-  const { setModal } = useModal();
-
   const { BREAD } = getConfig(user.chain.id);
-
+  const { setModal } = useModal();
   const debouncedValue = useDebounce(inputValue, 500);
 
   const parsedValue = parseEther(
@@ -114,26 +113,22 @@ export default function Burn({
 
   return (
     <div className="relative">
+      <div className="group">
+        <SwapBreadButton withRecommended={true} />
+      </div>
+      <div className="m-3"></div>
       <Button
         fullWidth={true}
         size="xl"
+        variant={"cancel"}
         disabled={!buttonIsEnabled}
         onClick={() => {
-          if (!write) return;
-          transactionsDispatch({
-            type: "NEW",
-            payload: {
-              data: {
-                type: "BURN",
-                value: debouncedValue,
-              },
-            },
-          });
           setModal({
-            type: "BAKERY_TRANSACTION",
-            hash: null,
+            type: "CONFIRM_BURN",
+            breadValue: inputValue,
+            xdaiValue: debouncedValue,
+            write: write,
           });
-          write();
         }}
       >
         Burn
