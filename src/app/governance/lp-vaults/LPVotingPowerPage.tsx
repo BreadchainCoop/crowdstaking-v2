@@ -21,7 +21,7 @@ export function LPVotingPowerPage() {
   // Update localStorage to persist the accordion state between renders
   useEffect(() => {
     setLocalStorage("lpAccordionValue", accordionState);
-  }, [accordionState]);
+  }, [accordionState, setLocalStorage]);
 
   return (
     <div className="w-full lg:max-w-[67rem] m-auto px-4 md:px-8 grid gap-4">
