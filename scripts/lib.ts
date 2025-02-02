@@ -16,21 +16,12 @@ import {
   walletActions,
 } from "viem";
 import { foundry } from "viem/chains";
+import { BREAD_ADDRESS, BUTTER_ADDRESS } from "../src/constants";
 
-export const anvilConfig = getConfig(31337);
-
-export const anvilAccounts: Array<Hex> = [
-  // mock wallet 2
-  // "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
-  "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
-  "0x90f79bf6eb2c4f870365e785982e1f101e93b906",
-  "0x15d34aaf54267db7d7c367839aaf71a00a2c6a65",
-  "0x9965507d1a55bcc2695c58ba16fb37d819b0a4dc",
-  "0x976ea74026e726554db657fa54763abd0c3a0aa9",
-  "0x14dc79964da2c08b23698b3d3cc7ca32193d9955",
-  "0x23618e81e3f5cdf7f54c3d65f7fbc0abf5b21e8f",
-  "0xa0ee7a142d267c1f36714e4a8f75612f20a79720",
-];
+// Wrapped into a function so we do not initialize on import, before all contracts are deployed
+export function getAnvilConfig() {
+  return getConfig(31337);
+}
 
 export const DEV_ACCOUNT = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
 const BUTTER_WHALE = "0xc2fB4B3EA53E10c88D193E709A81C4dc7aEC902e" as Hex;
@@ -62,7 +53,7 @@ export async function bakeBread(
   try {
     const hash = await testClient.writeContract({
       account: account,
-      address: anvilConfig.BREAD.address,
+      address: BREAD_ADDRESS,
       abi: BREAD_ABI,
       functionName: "mint",
       // mint is a payable function so we pass the value like this
@@ -100,7 +91,7 @@ export async function fundLpTokens(account: Hex = DEV_ACCOUNT) {
 
   await testClient.writeContract({
     account: BUTTER_WHALE,
-    address: anvilConfig.BUTTER.address,
+    address: BUTTER_ADDRESS,
     abi: ERC20_ABI,
     functionName: "transfer",
     // this isn't a payable function so we pass the value as an argument
@@ -114,7 +105,7 @@ export async function balanceOf(anvilAccount: Hex) {
   });
 
   const res = await publicClient.readContract({
-    address: anvilConfig.BREAD.address,
+    address: getAnvilConfig().BREAD.address,
     abi: BREAD_ABI,
     functionName: "balanceOf",
     args: [anvilAccount],
@@ -136,7 +127,7 @@ export async function castVote(account: Hex = DEV_ACCOUNT) {
 
   try {
     const hash = await testClient.writeContract({
-      address: anvilConfig.DISBURSER.address,
+      address: getAnvilConfig().DISBURSER.address,
       abi: DISTRIBUTOR_ABI,
       functionName: "castVote",
       account: account,
@@ -171,7 +162,7 @@ export async function castVote(account: Hex = DEV_ACCOUNT) {
 
 export async function getCurrentDistribution() {
   const res = await publicClient.readContract({
-    address: anvilConfig.DISBURSER.address,
+    address: getAnvilConfig().DISBURSER.address,
     abi: DISTRIBUTOR_ABI,
     functionName: "getCurrentVotingDistribution",
   });
@@ -186,7 +177,7 @@ export async function setClaimer(newClaimer: Hex) {
 
   try {
     const hash = await testClient.writeContract({
-      address: anvilConfig.BREAD.address,
+      address: getAnvilConfig().BREAD.address,
       abi: BREAD_ABI,
       functionName: "setYieldClaimer",
       account: BREAD_OWNER,
@@ -211,10 +202,10 @@ export async function lockLpTokens(account: Hex = DEV_ACCOUNT) {
   try {
     const hash = await testClient.writeContract({
       account: account,
-      address: anvilConfig.BUTTER.address,
+      address: getAnvilConfig().BUTTER.address,
       abi: ERC20_ABI,
       functionName: "approve",
-      args: [anvilConfig.BUTTERED_BREAD.address, parseUnits("5000", 18)],
+      args: [getAnvilConfig().BUTTERED_BREAD.address, parseUnits("5000", 18)],
     });
 
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
@@ -231,10 +222,10 @@ export async function lockLpTokens(account: Hex = DEV_ACCOUNT) {
   try {
     const hash = await testClient.writeContract({
       account: account,
-      address: anvilConfig.BUTTERED_BREAD.address,
+      address: getAnvilConfig().BUTTERED_BREAD.address,
       abi: BUTTERED_BREAD_ABI,
       functionName: "deposit",
-      args: [anvilConfig.BUTTER.address, parseUnits("5000", 18)],
+      args: [getAnvilConfig().BUTTER.address, parseUnits("5000", 18)],
     });
 
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
@@ -257,7 +248,7 @@ export async function distributeYield(account: Hex = DEV_ACCOUNT) {
   try {
     const hash = await testClient.writeContract({
       account: account,
-      address: anvilConfig.DISBURSER.address,
+      address: getAnvilConfig().DISBURSER.address,
       abi: DISTRIBUTOR_ABI,
       functionName: "distributeYield",
     });

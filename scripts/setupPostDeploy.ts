@@ -2,13 +2,13 @@ import {
   setClaimer,
   castVote,
   lockLpTokens,
-  anvilConfig,
+  getAnvilConfig,
   distributeYield,
   mineBlocks,
 } from "./lib";
 
 async function main() {
-  const DISTRIBUTOR_ADDRESS = anvilConfig.DISBURSER.address;
+  const DISTRIBUTOR_ADDRESS = getAnvilConfig().DISBURSER.address;
   if (DISTRIBUTOR_ADDRESS === "0x")
     throw new Error("invalid DISTRIBUTOR_ADDRESS");
 
