@@ -13,6 +13,15 @@ $ cd contracts
 $ forge install
 ```
 
+### Create .env.local file
+```sh
+$ cp .env.example .env.local
+```
+
+### Obtain necessary API keys
+1. [Alchemy](https://www.alchemy.com) is used to resolve ENS domains. Copy the API key into `NEXT_PUBLIC_ALCHEMY_MAINNET_API_KEY` variable in `.env.local`.
+2. [Reown](https://cloud.reown.com) is used for WalletConnect functionality. Create an "Appkit" and copy the project id into `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID` variable in `.env.local`.
+
 ### Start local node
 
 [Anvil](https://book.getfoundry.sh/reference/anvil/) starts a local fork from the most recent block based on the rpc url provided. The chain id is used to identify the anvil network in the app config. Block time is 5 seconds to match gnosis chain.
@@ -23,9 +32,11 @@ $ anvil --fork-url https://rpc.gnosis.gateway.fm --chain-id 31337 --block-time 5
 
 ### Setup wallet
 
-We also need a wallet for working locally. To set this up take the private key for the first wallet in the list displayed when you start anvil and add this account to metamask. This is the `DEV_ACCOUNT` address in the setup script.
+1. We need a wallet for working locally. To set this up take the private key for the first wallet in the list displayed when you start anvil and add this account to metamask. This is the `DEV_ACCOUNT` address in the setup script.
 
-Because of how the distributor contract works the developer wallet needs to hold some bread before we deploy the contracts for us to be able to vote. The setup script takes care of this as well as funding the wallet with LP tokens which is needed for the LP locking feature.
+2. Add the Anvil RPC url to metamask: `http://127.0.0.1:8545` with chain id `31337`
+
+3. Because of how the distributor contract works the developer wallet needs to hold some bread before we deploy the contracts for us to be able to vote. The setup script takes care of this as well as funding the wallet with LP tokens which is needed for the LP locking feature.
 
 ```sh
 $ pnpm run chain:setup
