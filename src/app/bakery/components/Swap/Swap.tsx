@@ -13,8 +13,8 @@ import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBa
 import Burn from "./Burn";
 import { Address } from "viem";
 import { InsufficentBalance } from "./InsufficentBalance";
-import { LiquidityBanner } from "../LiquidityBanner/LiquidityBanner";
-import { BridgeBanner } from "../BridgeBanner/BridgeBanner";
+import { LiquidityBanner } from "../Banners/LiquidityBanner";
+import { BridgeBanner } from "../Banners/BridgeBanner";
 import { TotalSupply } from "../TotalSupply";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
 

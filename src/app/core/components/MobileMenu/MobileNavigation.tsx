@@ -44,8 +44,8 @@ export function MobileNavigation({ handleNavToggle }: IProps) {
             >
               <g opacity="0.5">
                 <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
                   d="M19 4H21V6H19V4ZM17 8V6H19V8H17ZM15 8H17V10H15V8ZM15 8H13V6H15V8ZM3 6H11V8H3V6ZM11 16H3V18H11V16ZM18 18V16H20V14H18V16H16V14H14V16H16V18H14V20H16V18H18ZM18 18V20H20V18H18Z"
                 />
               </g>
@@ -66,8 +66,8 @@ export function MobileNavigation({ handleNavToggle }: IProps) {
             >
               <g opacity="0.5">
                 <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
                   d="M4 5H20V6H21V7H22V17H21H20V18V19H17V18H12H7V19H6H5H4V18V17H3H2V7H3V6H4V5ZM20 12H14V13H13V14H12H11V13H10V12H4V13V14V15V16H7H8H9H10H11H12H13H20V12ZM20 10V7H13V10H12H11V7H4V8V9V10H11V11V12H12H13V11V10H20Z"
                 />
               </g>
