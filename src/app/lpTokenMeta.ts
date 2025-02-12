@@ -1,5 +1,5 @@
 import { Hex } from "viem";
-import { BUTTERED_BREAD_ADDRESS } from "@/constants";
+import { BUTTER_ADDRESS, BUTTERED_BREAD_ADDRESS } from "@/constants";
 
 export type LPTokenMeta = {
   tokenName: string;
@@ -11,7 +11,7 @@ export type LPTokenMeta = {
 export const lpTokenMeta: {
   [key: Hex]: LPTokenMeta;
 } = {
-  "0xf3d8f3de71657d342db60dd714c8a2ae37eac6b4": {
+  [BUTTER_ADDRESS]: {
     tokenName: "BREAD/WXDAI LP",
     poolName: "BREAD/WXDAI",
     inspectContract:
