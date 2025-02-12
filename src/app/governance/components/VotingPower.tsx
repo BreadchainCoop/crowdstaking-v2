@@ -1,12 +1,13 @@
 import clsx from "clsx";
 
 import { CheckIcon } from "@/app/core/components/Icons/CheckIcon";
-import { formatBalance, formatDate } from "@/app/core/util/formatter";
+import { formatBalance } from "@/app/core/util/formatter";
 import { TConnectedUserState } from "@/app/core/hooks/useConnectedUser";
-import { CycleDatesState } from "../useCycleDates";
+import { CycleDatesSuccess } from "../useCycleDates";
 import { CycleLengthSuccess } from "../useCycleLength";
 import { FistIcon } from "@/app/core/components/Icons/FistIcon";
 import { formatUnits } from "viem";
+import { differenceInDays } from "date-fns";
 
 export function VotingPower({
   minRequiredVotingPower,
@@ -23,7 +24,7 @@ export function VotingPower({
   userVotingPower: bigint | null;
   userHasVoted: boolean;
   userCanVote: boolean;
-  cycleDates: CycleDatesState;
+  cycleDates: CycleDatesSuccess;
   cycleLength: CycleLengthSuccess;
   user: TConnectedUserState;
   distributeEqually: () => void;
@@ -87,7 +88,9 @@ function NotEnoughPower() {
   );
 }
 
-function UserHasVoted({ cycleDates }: { cycleDates: CycleDatesState }) {
+function UserHasVoted({ cycleDates }: { cycleDates: CycleDatesSuccess }) {
+  const days = differenceInDays(cycleDates.end, Date.now());
+
   return (
     <div className={clsx(widgetBaseClasses, "border-status-success")}>
       <div className="flex gap-4">
@@ -100,17 +103,7 @@ function UserHasVoted({ cycleDates }: { cycleDates: CycleDatesState }) {
       </div>
       <div>
         <span className="dark:text-breadgray-grey">Next round: </span>
-        {(() => {
-          switch (cycleDates.status) {
-            case "LOADING":
-              return <span>--/--/--</span>;
-            case "SUCCESS":
-              return <span>{formatDate(cycleDates.end)}</span>;
-            case "ERROR":
-            default:
-              throw new Error("Invalid status!");
-          }
-        })()}
+        <span>In {days} {days === 1 ? "day" : "days"}</span>
       </div>
     </div>
   );
