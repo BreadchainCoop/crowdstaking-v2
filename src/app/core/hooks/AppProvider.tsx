@@ -12,10 +12,7 @@ import { useSentry } from "./useSentry";
 
 import { ModalProvider } from "../context/ModalContext";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-const queryClient = new QueryClient();
 
 export function AppProvider({
   children,
@@ -29,16 +26,14 @@ export function AppProvider({
   return (
     <WagmiProviderWrapper>
       <ConnectedUserProvider features={features}>
-        <QueryClientProvider client={queryClient}>
-          <TokenBalancesProvider>
-            <ToastProvider>
-              <TransactionsProvider>
-                <ModalProvider>{children}</ModalProvider>
-              </TransactionsProvider>
-            </ToastProvider>
-          </TokenBalancesProvider>
-          <ReactQueryDevtools initialIsOpen={true} />
-        </QueryClientProvider>
+        <TokenBalancesProvider>
+          <ToastProvider>
+            <TransactionsProvider>
+              <ModalProvider>{children}</ModalProvider>
+            </TransactionsProvider>
+          </ToastProvider>
+        </TokenBalancesProvider>
+        <ReactQueryDevtools initialIsOpen={true} />
       </ConnectedUserProvider>
     </WagmiProviderWrapper>
   );
