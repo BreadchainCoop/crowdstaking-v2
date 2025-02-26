@@ -5,7 +5,7 @@ import { getConfig } from "@/chainConfig";
 import { PageGrid } from "@/app/governance/components/PageGrid";
 import { VotingPowerPanel } from "@/app/governance/boosters/components/VotingPowerPanel";
 import { BoosterCard } from "@/app/governance/boosters/components/BoosterCard";
-import { boostData } from "@/app/governance/boosters/data/BoostData";
+import { boostData, mapBoostToCardProps } from "@/app/governance/boosters/data/BoostData";
 
 export function BoosterPage() {
   const { user } = useConnectedUser();
@@ -51,23 +51,7 @@ function TitleSection() {
 function BoosterList() {
   return (
       boostData.map((boost, index) => {
-        const now = new Date();
-        const timeDifference = boost.expiration.getTime() - now.getTime();
-        const daysUntilExpiration = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
-
-        return (
-          <BoosterCard
-            key={index}
-            iconName={boost.iconName}
-            boosterName={boost.boosterName}
-            verified={boost.verified}
-            boostAmmount={boost.boostAmmount}
-            boostAmmountSubtitle={boost.boostAmmountSubtitle}
-            description={boost.description}
-            expiration={daysUntilExpiration}
-            expirationUrgent={boost.expirationUrgent}
-          />
-        );
+        return (<BoosterCard key={index} boost={boost} {...mapBoostToCardProps(boost)} />);
       })
   );
 }

@@ -2,8 +2,10 @@ import { ReactElement } from "react";
 import { CheckIcon } from "@/app/core/components/Icons/CheckIcon";
 import Tooltip from "@/app/core/components/Tooltip";
 import BoosterIcon, { IconName } from "@/app/governance/boosters/components/BoosterIcon";
+import { Boost } from "@/app/governance/boosters/data/BoostData";
 
 export function BoosterCard({
+    boost,
     iconName,
     boosterName,
     verified,
@@ -13,6 +15,7 @@ export function BoosterCard({
     expiration,
     expirationUrgent = false,
 }:{
+    boost: Boost;
     iconName: string;
     boosterName: string;
     verified: boolean;
@@ -39,7 +42,7 @@ export function BoosterCard({
     )
 }
 
-function header(iconName: string, boosterName: string, verified: boolean): ReactElement {
+export function header(iconName: string, boosterName: string, verified: boolean): ReactElement {
     return(
         <div className="w-full pb-6 flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -71,7 +74,7 @@ function verifiedBadge(verified: boolean): ReactElement {
     )
 }
 
-function boostPowerSection(ammount: string, subtitle: string): ReactElement {
+export function boostPowerSection(ammount: string, subtitle: string): ReactElement {
     return (
         <div className="
             h-[145px] w-full relative
@@ -102,7 +105,7 @@ function getIcon(iconName: string): ReactElement {
     return <BoosterIcon name={randomIconName} className="flex-shrink-0 bg-breadgray-charcoal"></BoosterIcon>
 }
 
-function viewButton(verified: boolean): ReactElement {
+export function viewButton(verified: boolean): ReactElement {
     const buttonStyles = verified
       ? "bg-[rgba(152,151,151,0.1)] dark:bg-breadgray-charcoal text-status-success" // Verified
       : "bg-[#FFCCF1] dark:bg-[#402639] text-breadviolet-violet dark:text-breadpink-shaded"; // Not verified
@@ -134,7 +137,7 @@ function viewButton(verified: boolean): ReactElement {
   }
   
 
-function expiry(
+export function expiry(
     expiration: number | undefined, 
     expirationUrgent: boolean,
     tooltipContent: string

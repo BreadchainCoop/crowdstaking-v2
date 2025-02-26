@@ -1,4 +1,4 @@
-interface Boost {
+export interface Boost {
     iconName: string;
     boosterName: string;
     verified: boolean;
@@ -21,6 +21,40 @@ interface BoostRequirement {
     name: string;
     achieved: boolean;
 }
+
+// Mapping Boost to view properties
+export function mapBoostToCardProps(boost: Boost) {
+    const now = new Date();
+    const timeDifference = boost.expiration.getTime() - now.getTime();
+    const daysUntilExpiration = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+    
+    return {
+      iconName: boost.iconName,
+      boosterName: boost.boosterName,
+      verified: boost.verified,
+      boostAmmount: boost.boostAmmount,
+      boostAmmountSubtitle: boost.boostAmmountSubtitle,
+      description: boost.description,
+      expiration: daysUntilExpiration,
+      expirationUrgent: boost.expirationUrgent,
+    };
+  }
+  
+  export function mapBoostToDetailedCardProps(boost: Boost, onApply: () => void, onShare: () => void) {
+    // Start with the basic card props
+    const baseProps = mapBoostToCardProps(boost);
+    
+    // Add the detailed props
+    return {
+      ...baseProps,
+      progress: boost.progress,
+      requirements: boost.requirements,
+      onApplyBoost: onApply,
+      onShareBoost: onShare,
+    };
+  }
+
+// Mock data
 
 const boostData: Boost[] = [
     {
