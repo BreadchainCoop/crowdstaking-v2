@@ -138,7 +138,11 @@ export const breadAbi = [
         internalType: "address",
       },
       { name: "salt", type: "bytes32", internalType: "bytes32" },
-      { name: "extensions", type: "uint256[]", internalType: "uint256[]" },
+      {
+        name: "extensions",
+        type: "uint256[]",
+        internalType: "uint256[]",
+      },
     ],
     stateMutability: "view",
   },
@@ -233,7 +237,11 @@ export const breadAbi = [
     type: "function",
     name: "setYieldClaimer",
     inputs: [
-      { name: "_yieldClaimer", type: "address", internalType: "address" },
+      {
+        name: "_yieldClaimer",
+        type: "address",
+        internalType: "address",
+      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
