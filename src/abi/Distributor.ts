@@ -29,6 +29,13 @@ export const distributorAbi = [
   },
   {
     type: "function",
+    name: "acceptOwnership",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "accountLastVoted",
     inputs: [{ name: "", type: "address", internalType: "address" }],
     outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
@@ -36,8 +43,44 @@ export const distributorAbi = [
   },
   {
     type: "function",
+    name: "addMultiplier",
+    inputs: [
+      {
+        name: "_multiplier",
+        type: "address",
+        internalType: "contract IMultiplier",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "allowlistedMultipliers",
+    inputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    outputs: [
+      { name: "", type: "address", internalType: "contract IMultiplier" },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "castVote",
     inputs: [{ name: "_points", type: "uint256[]", internalType: "uint256[]" }],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "castVoteWithMultipliers",
+    inputs: [
+      { name: "_points", type: "uint256[]", internalType: "uint256[]" },
+      {
+        name: "_multiplierIndices",
+        type: "uint256[]",
+        internalType: "uint256[]",
+      },
+    ],
     outputs: [],
     stateMutability: "nonpayable",
   },
@@ -88,6 +131,34 @@ export const distributorAbi = [
   },
   {
     type: "function",
+    name: "getTotalMultipliers",
+    inputs: [{ name: "_user", type: "address", internalType: "address" }],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getTotalMultipliers",
+    inputs: [
+      { name: "_user", type: "address", internalType: "address" },
+      {
+        name: "_multiplierIndexes",
+        type: "uint256[]",
+        internalType: "uint256[]",
+      },
+    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getValidMultiplierIndexes",
+    inputs: [{ name: "_user", type: "address", internalType: "address" }],
+    outputs: [{ name: "", type: "uint256[]", internalType: "uint256[]" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "getVotingPowerForPeriod",
     inputs: [
       {
@@ -107,11 +178,7 @@ export const distributorAbi = [
     name: "initialize",
     inputs: [
       { name: "_bread", type: "address", internalType: "address" },
-      {
-        name: "_butteredBread",
-        type: "address",
-        internalType: "address",
-      },
+      { name: "_butteredBread", type: "address", internalType: "address" },
       { name: "_precision", type: "uint256", internalType: "uint256" },
       {
         name: "_minRequiredVotingPower",
@@ -165,6 +232,13 @@ export const distributorAbi = [
   },
   {
     type: "function",
+    name: "pendingOwner",
+    inputs: [],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "previousCycleStartingBlock",
     inputs: [],
     outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
@@ -211,6 +285,19 @@ export const distributorAbi = [
     inputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     outputs: [{ name: "", type: "address", internalType: "address" }],
     stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "removeMultiplier",
+    inputs: [
+      {
+        name: "_multiplier",
+        type: "address",
+        internalType: "contract IMultiplier",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -269,7 +356,7 @@ export const distributorAbi = [
   },
   {
     type: "function",
-    name: "setyieldFixedSplitDivisor",
+    name: "setYieldFixedSplitDivisor",
     inputs: [
       {
         name: "_yieldFixedSplitDivisor",
@@ -328,6 +415,51 @@ export const distributorAbi = [
         type: "uint64",
         indexed: false,
         internalType: "uint64",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "MultiplierAdded",
+    inputs: [
+      {
+        name: "multiplier",
+        type: "address",
+        indexed: true,
+        internalType: "contract IMultiplier",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "MultiplierRemoved",
+    inputs: [
+      {
+        name: "multiplier",
+        type: "address",
+        indexed: true,
+        internalType: "contract IMultiplier",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "OwnershipTransferStarted",
+    inputs: [
+      {
+        name: "previousOwner",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "newOwner",
+        type: "address",
+        indexed: true,
+        internalType: "address",
       },
     ],
     anonymous: false,
@@ -408,6 +540,9 @@ export const distributorAbi = [
   { type: "error", name: "ExceedsMaxPoints", inputs: [] },
   { type: "error", name: "IncorrectNumberOfProjects", inputs: [] },
   { type: "error", name: "InvalidInitialization", inputs: [] },
+  { type: "error", name: "InvalidMultiplierIndex", inputs: [] },
+  { type: "error", name: "MultiplierAlreadyAllowlisted", inputs: [] },
+  { type: "error", name: "MultiplierNotAllowlisted", inputs: [] },
   { type: "error", name: "MustBeGreaterThanZero", inputs: [] },
   { type: "error", name: "NotInitializing", inputs: [] },
   {

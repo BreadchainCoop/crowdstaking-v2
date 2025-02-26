@@ -16,6 +16,13 @@ export const butteredBreadAbi = [
   },
   {
     type: "function",
+    name: "acceptOwnership",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "accountToLPBalance",
     inputs: [
       { name: "_account", type: "address", internalType: "address" },
@@ -60,6 +67,43 @@ export const butteredBreadAbi = [
   },
   {
     type: "function",
+    name: "balanceOfLP",
+    inputs: [
+      { name: "_holder", type: "address", internalType: "address" },
+      { name: "_lp", type: "address", internalType: "address" },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "tuple",
+        internalType: "struct IButteredBread.LPData",
+        components: [
+          { name: "balance", type: "uint256", internalType: "uint256" },
+          {
+            name: "scalingFactor",
+            type: "uint256",
+            internalType: "uint256",
+          },
+        ],
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "bread",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "contract IERC20Votes",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "checkpoints",
     inputs: [
       { name: "account", type: "address", internalType: "address" },
@@ -95,7 +139,7 @@ export const butteredBreadAbi = [
   {
     type: "function",
     name: "delegate",
-    inputs: [{ name: "delegatee", type: "address", internalType: "address" }],
+    inputs: [{ name: "", type: "address", internalType: "address" }],
     outputs: [],
     stateMutability: "nonpayable",
   },
@@ -145,7 +189,11 @@ export const butteredBreadAbi = [
         internalType: "address",
       },
       { name: "salt", type: "bytes32", internalType: "bytes32" },
-      { name: "extensions", type: "uint256[]", internalType: "uint256[]" },
+      {
+        name: "extensions",
+        type: "uint256[]",
+        internalType: "uint256[]",
+      },
     ],
     stateMutability: "view",
   },
@@ -182,6 +230,11 @@ export const butteredBreadAbi = [
         type: "tuple",
         internalType: "struct IButteredBread.InitData",
         components: [
+          {
+            name: "breadToken",
+            type: "address",
+            internalType: "address",
+          },
           {
             name: "liquidityPools",
             type: "address[]",
@@ -251,6 +304,13 @@ export const butteredBreadAbi = [
   },
   {
     type: "function",
+    name: "pendingOwner",
+    inputs: [],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "renounceOwnership",
     inputs: [],
     outputs: [],
@@ -269,6 +329,13 @@ export const butteredBreadAbi = [
     inputs: [],
     outputs: [{ name: "", type: "string", internalType: "string" }],
     stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "syncDelegation",
+    inputs: [],
+    outputs: [],
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -317,7 +384,32 @@ export const butteredBreadAbi = [
   },
   {
     type: "event",
-    name: "AddButter",
+    name: "Approval",
+    inputs: [
+      {
+        name: "owner",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "spender",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "value",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "ButterAdded",
     inputs: [
       {
         name: "_account",
@@ -342,22 +434,22 @@ export const butteredBreadAbi = [
   },
   {
     type: "event",
-    name: "Approval",
+    name: "ButterRemoved",
     inputs: [
       {
-        name: "owner",
+        name: "_account",
         type: "address",
-        indexed: true,
+        indexed: false,
         internalType: "address",
       },
       {
-        name: "spender",
+        name: "_lp",
         type: "address",
-        indexed: true,
+        indexed: false,
         internalType: "address",
       },
       {
-        name: "value",
+        name: "_amount",
         type: "uint256",
         indexed: false,
         internalType: "uint256",
@@ -436,7 +528,7 @@ export const butteredBreadAbi = [
   },
   {
     type: "event",
-    name: "OwnershipTransferred",
+    name: "OwnershipTransferStarted",
     inputs: [
       {
         name: "previousOwner",
@@ -455,25 +547,19 @@ export const butteredBreadAbi = [
   },
   {
     type: "event",
-    name: "RemoveButter",
+    name: "OwnershipTransferred",
     inputs: [
       {
-        name: "_account",
+        name: "previousOwner",
         type: "address",
-        indexed: false,
+        indexed: true,
         internalType: "address",
       },
       {
-        name: "_lp",
+        name: "newOwner",
         type: "address",
-        indexed: false,
+        indexed: true,
         internalType: "address",
-      },
-      {
-        name: "_amount",
-        type: "uint256",
-        indexed: false,
-        internalType: "uint256",
       },
     ],
     anonymous: false,
@@ -503,6 +589,7 @@ export const butteredBreadAbi = [
     ],
     anonymous: false,
   },
+  { type: "error", name: "AmountZero", inputs: [] },
   { type: "error", name: "CheckpointUnorderedInsertion", inputs: [] },
   { type: "error", name: "ECDSAInvalidSignature", inputs: [] },
   {
@@ -585,6 +672,7 @@ export const butteredBreadAbi = [
   },
   { type: "error", name: "InvalidInitialization", inputs: [] },
   { type: "error", name: "InvalidValue", inputs: [] },
+  { type: "error", name: "NonDelegatable", inputs: [] },
   { type: "error", name: "NonTransferable", inputs: [] },
   { type: "error", name: "NotAllowListed", inputs: [] },
   { type: "error", name: "NotInitializing", inputs: [] },
@@ -598,6 +686,7 @@ export const butteredBreadAbi = [
     name: "OwnableUnauthorizedAccount",
     inputs: [{ name: "account", type: "address", internalType: "address" }],
   },
+  { type: "error", name: "ReentrancyGuardReentrantCall", inputs: [] },
   {
     type: "error",
     name: "SafeCastOverflowedUintDowncast",
@@ -606,7 +695,8 @@ export const butteredBreadAbi = [
       { name: "value", type: "uint256", internalType: "uint256" },
     ],
   },
-  { type: "error", name: "Unset", inputs: [] },
+  { type: "error", name: "TransferFailed", inputs: [] },
+  { type: "error", name: "UnsetVariable", inputs: [] },
   {
     type: "error",
     name: "VotesExpiredSignature",
