@@ -45,9 +45,14 @@ export function BoosterCard({
     )
 }
 
-export function header(iconName: string, boosterName: string, verified: boolean): ReactElement {
+export function header(
+    iconName: string, 
+    boosterName: string, 
+    verified: boolean, 
+    extraItem?: ReactElement | null
+): ReactElement {
     return(
-        <div className="w-full pb-6 flex items-center justify-between">
+        <div className="w-full pb-6 flex items-center justify-between space-x-3">
             <div className="flex items-center space-x-3">
                 {getIcon(iconName)}
                 <span className="
@@ -57,8 +62,9 @@ export function header(iconName: string, boosterName: string, verified: boolean)
                     ">
                     {boosterName}
                 </span>
+                {extraItem && (verifiedBadge(verified))}
             </div>
-            {verifiedBadge(verified)}
+            {extraItem ? (extraItem) : (verifiedBadge(verified))}
         </div>
     )
 }
@@ -68,7 +74,7 @@ function verifiedBadge(verified: boolean): ReactElement {
     return (
         <div className={`
             leading-none 
-            ml-[12px] py-[4px] px-[6px] rounded-full 
+            py-[4px] px-[6px] rounded-full 
             text-[12px] font-semibold 
             ${colorClass}
             `}>
