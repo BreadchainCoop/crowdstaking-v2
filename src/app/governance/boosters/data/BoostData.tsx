@@ -40,7 +40,7 @@ export function mapBoostToCardProps(boost: Boost) {
     };
   }
   
-  export function mapBoostToDetailedCardProps(boost: Boost, onApply: () => void, onShare: () => void) {
+  export function mapBoostToDetailedCardProps(boost: Boost) {
     // Start with the basic card props
     const baseProps = mapBoostToCardProps(boost);
     
@@ -48,9 +48,7 @@ export function mapBoostToCardProps(boost: Boost) {
     return {
       ...baseProps,
       progress: boost.progress,
-      requirements: boost.requirements,
-      onApplyBoost: onApply,
-      onShareBoost: onShare,
+      requirements: boost.requirements
     };
   }
 

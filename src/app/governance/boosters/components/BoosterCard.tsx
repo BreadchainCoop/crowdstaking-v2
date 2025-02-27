@@ -4,6 +4,8 @@ import Tooltip from "@/app/core/components/Tooltip";
 import BoosterIcon, { IconName } from "@/app/governance/boosters/components/BoosterIcon";
 import { Boost } from "@/app/governance/boosters/data/BoostData";
 import { useModal } from "@/app/core/context/ModalContext";
+import { DetailedBoosterCard } from "./DetailedBoosterCard";
+import { mapBoostToDetailedCardProps } from "../data/BoostData"
 
 export function BoosterCard({
     boost,
@@ -49,11 +51,10 @@ function presentModalButton(boost: Boost) {
     const openModal = () => {
         setModal({
             type: "GENERIC_MODAL",
+            showCloseButton: false,
+            includeContainerStyling: false,
             children: (
-                <div>
-                    <h1>{boost.boosterName}</h1>
-                    <h2 onClick={() => (setModal(null))}>Go Away</h2>
-                </div>
+                <DetailedBoosterCard close={()=>(setModal(null))} {...mapBoostToDetailedCardProps(boost) } />
             )
         })
     }

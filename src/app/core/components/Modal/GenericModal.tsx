@@ -2,9 +2,13 @@
 import { ModalContainer } from "./ModalUI";
 import { GenericModalState } from "../../context/ModalContext";
 
-export function GenericModal({ modalState }: { modalState: GenericModalState }) {
+export function GenericModal({ 
+    modalState
+}: { 
+    modalState: GenericModalState
+}) {
   return (
-    <ModalContainer>
+    <ModalContainer showCloseButton={modalState.showCloseButton} includeContainerStyling={modalState.includeContainerStyling}>
       {modalState.children}
     </ModalContainer>
   );

@@ -31,6 +31,8 @@ export type LPVaultTransactionModalState = {
 
 export type GenericModalState = {
   type: "GENERIC_MODAL";
+  showCloseButton: Boolean;
+  includeContainerStyling: Boolean;
   children: ReactElement;
 }
 
