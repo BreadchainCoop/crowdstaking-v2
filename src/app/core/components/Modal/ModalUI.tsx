@@ -9,13 +9,22 @@ import { TTransactionStatus } from "../../context/TransactionsContext/Transactio
 
 export const ModalContainer = forwardRef(
   (
-    { children, ...props }: { children: ReactNode },
+    { 
+      children, 
+      showCloseButton = true,
+      includeContainerStyling = true,
+      ...props 
+    }: { 
+      children: ReactNode;
+      showCloseButton?: Boolean;
+      includeContainerStyling?: Boolean;
+    },
     ref: Ref<HTMLDivElement>
   ) => {
     return (
       <div
         ref={ref}
-        className="h-screen fixed w-screen top-0 p-2 flex justify-center items-center z-40 pointer-events-none"
+        className="h-screen max-h-[100vh] overflow-y-auto fixed w-screen top-0 p-2 flex justify-center items-center z-40 pointer-events-none"
         {...props}
       >
         <motion.section
@@ -23,7 +32,7 @@ export const ModalContainer = forwardRef(
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 8, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="w-[30rem] flex flex-col items-center rounded dark:bg-opacity-100 p-4 bg-breadgray-ultra-white border border-breadgray-light-grey dark:border-none dark:bg-breadgray-charcoal relative pointer-events-auto"
+          className={"pointer-events-auto" + (includeContainerStyling ? " max-w-[30rem] flex flex-col items-center rounded dark:bg-opacity-100 p-4 bg-breadgray-ultra-white border border-breadgray-light-grey dark:border-none dark:bg-breadgray-charcoal relative" : "")}
         >
           <DialogPrimitiveClose className="absolute top-0 right-0 w-10 h-10 p-3">
             <CloseIcon />
