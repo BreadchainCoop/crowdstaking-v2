@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { getConfig } from "@/chainConfig";
 import { PageGrid } from "@/app/governance/components/PageGrid";
-import { VotingPowerPanel } from "@/app/governance/boosters/components/VotingPowerPanel";
-import { BoosterCard } from "@/app/governance/boosters/components/BoosterCard";
-import { boostData, mapBoostToCardProps } from "@/app/governance/boosters/data/BoostData";
+import { VotingPowerPanel } from "./components/VotingPowerPanel";
+import { BoosterCard } from "./components/BoosterCard";
+import { boostData, mapBoostToCardProps } from "./data/BoostData";
+import Button from "@/app/core/components/Button";
 
 export function BoosterPage() {
   const { user } = useConnectedUser();

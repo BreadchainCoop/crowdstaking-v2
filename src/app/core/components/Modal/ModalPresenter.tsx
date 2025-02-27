@@ -8,6 +8,7 @@ import { ModalOverlay } from "./ModalUI";
 import { VoteTransactionModal } from "./TransactionModal/VoteTransactionModal";
 import { BakeryTransactionModal } from "./TransactionModal/BakeryTransactionModal";
 import { LPVaultTransactionModal } from "./LPVaultTransactionModal/LPVaultTransactionModal";
+import { GenericModal } from "./GenericModal";
 
 export function ModalPresenter() {
   const { modalState, setModal } = useModal();
@@ -36,6 +37,8 @@ export function ModalPresenter() {
                       return (
                         <LPVaultTransactionModal modalState={modalState} />
                       );
+                    case "GENERIC_MODAL":
+                      return (<GenericModal modalState={modalState}/>)
                     default:
                       throw new Error(
                         "unhandled modalState.type in switch statement"

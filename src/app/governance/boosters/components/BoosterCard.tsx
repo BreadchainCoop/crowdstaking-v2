@@ -3,6 +3,7 @@ import { CheckIcon } from "@/app/core/components/Icons/CheckIcon";
 import Tooltip from "@/app/core/components/Tooltip";
 import BoosterIcon, { IconName } from "@/app/governance/boosters/components/BoosterIcon";
 import { Boost } from "@/app/governance/boosters/data/BoostData";
+import { useModal } from "@/app/core/context/ModalContext";
 
 export function BoosterCard({
     boost,
@@ -36,10 +37,32 @@ export function BoosterCard({
             {header(iconName, boosterName, verified)}
             {boostPowerSection(boostAmmount, boostAmmountSubtitle)}
             <p className="my-[24px]" >{description}</p>
-            {viewButton(verified)}
+            {presentModalButton(boost)}
+            {viewButton(verified, ()=>(alert(verified ? "Oh YEAH! VIP" : "Oh you're interested are ya?")))}
             {expiry(expiration, expirationUrgent, "Helpful information loading...")}
         </div>
     )
+}
+
+function presentModalButton(boost: Boost) {
+    const { setModal } = useModal();
+    const openModal = () => {
+        setModal({
+            type: "GENERIC_MODAL",
+            children: (
+                <div>
+                    <h1>{boost.boosterName}</h1>
+                    <h2 onClick={() => (setModal(null))}>Go Away</h2>
+                </div>
+            )
+        })
+    }
+    return <button 
+        onClick={openModal}
+        className="w-full px-4 py-2 bg-green-500 text-white rounded"
+        >
+            Open Custom Modal
+    </button>
 }
 
 export function header(iconName: string, boosterName: string, verified: boolean): ReactElement {
@@ -105,18 +128,14 @@ function getIcon(iconName: string): ReactElement {
     return <BoosterIcon name={randomIconName} className="flex-shrink-0 bg-breadgray-charcoal"></BoosterIcon>
 }
 
-export function viewButton(verified: boolean): ReactElement {
+export function viewButton(verified: boolean, onClick: ()=>void): ReactElement {
     const buttonStyles = verified
       ? "bg-[rgba(152,151,151,0.1)] dark:bg-breadgray-charcoal text-status-success" // Verified
       : "bg-[#FFCCF1] dark:bg-[#402639] text-breadviolet-violet dark:text-breadpink-shaded"; // Not verified
   
-    const handleClick = () => {
-      alert(verified ? "Oh YEAH! VIP" : "Oh you're interested are ya?");
-    };
-  
     return (
       <button
-        onClick={handleClick}
+        onClick={onClick}
         className={`
           w-full h-[50px] mb-[10px] rounded-[10px]
           flex items-center justify-center

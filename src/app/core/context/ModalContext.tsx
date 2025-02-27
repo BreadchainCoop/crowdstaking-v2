@@ -1,5 +1,5 @@
 import { TransactionType } from "@/app/governance/lp-vaults/components/VaultPanel";
-import { type ReactNode, createContext, useContext, useState } from "react";
+import { ReactElement, type ReactNode, createContext, useContext, useState } from "react";
 
 export type RecastModalState = {
   type: "CONFIRM_RECAST";
@@ -29,12 +29,18 @@ export type LPVaultTransactionModalState = {
   parsedValue: bigint;
 };
 
+export type GenericModalState = {
+  type: "GENERIC_MODAL";
+  children: ReactElement;
+}
+
 export type ModalState =
   | BakeryTransactionModalState
   | VoteModalState
   | RecastModalState
   | ConfirmBurnModalState
   | LPVaultTransactionModalState
+  | GenericModalState
   | null;
 export type ModalContext = {
   modalState: ModalState;
