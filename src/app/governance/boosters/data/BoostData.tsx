@@ -1,4 +1,8 @@
-export interface Boost {
+// Boost is just an example interface, to be replaced by whatever 
+// aggregate of data sources end up being needed. 
+// As long as the mapping functions can still map the real data 
+// sources to the input props, all will be well.
+export interface Boost { 
     iconName: string;
     boosterName: string;
     verified: boolean;
@@ -11,13 +15,13 @@ export interface Boost {
     requirements: BoostRequirement[];
 }
 
-interface BoostProgress {
+export interface BoostProgress {
     name: string;
     subtitle: string;
     achieved: boolean;
 }
 
-interface BoostRequirement {
+export interface BoostRequirement {
     name: string;
     achieved: boolean;
 }
@@ -53,7 +57,6 @@ export function mapBoostToCardProps(boost: Boost) {
   }
 
 // Mock data
-
 const boostData: Boost[] = [
     {
         iconName: "star",

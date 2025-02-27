@@ -115,6 +115,7 @@ function getIcon(iconName: string): ReactElement {
 }
 
 function viewButton(verified: boolean, boost: Boost): ReactElement {
+    // Fancy button content
     const verifiedButtonContent = (
         <div className="flex items-center justify-center gap-2">
             <div className="w-[20px] text-status-success"><CheckIcon /></div>
@@ -125,6 +126,8 @@ function viewButton(verified: boolean, boost: Boost): ReactElement {
     const buttonStyles = verified
       ? "bg-[rgba(152,151,151,0.1)] dark:bg-breadgray-charcoal text-status-success" // Verified
       : "bg-[#FFCCF1] dark:bg-[#402639] text-breadviolet-violet dark:text-breadpink-shaded"; // Not verified
+
+    // Fancy modal functionality
     const { setModal } = useModal();
     const openModal = () => {
         setModal({
@@ -139,6 +142,8 @@ function viewButton(verified: boolean, boost: Boost): ReactElement {
             )
         })
     }
+
+    // Shove it all in the fancy reusable button
     return (boosterCardButton(
         openModal,
         buttonStyles, 
