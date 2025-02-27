@@ -39,31 +39,10 @@ export function BoosterCard({
             {header(iconName, boosterName, verified)}
             {boostPowerSection(boostAmmount, boostAmmountSubtitle)}
             <p className="my-[24px]" >{description}</p>
-            {presentModalButton(boost)}
-            {viewButton(verified, ()=>(alert(verified ? "Oh YEAH! VIP" : "Oh you're interested are ya?")))}
+            {viewButton(verified, boost)}
             {expiry(expiration, expirationUrgent, "Helpful information loading...")}
         </div>
     )
-}
-
-function presentModalButton(boost: Boost) {
-    const { setModal } = useModal();
-    const openModal = () => {
-        setModal({
-            type: "GENERIC_MODAL",
-            showCloseButton: false,
-            includeContainerStyling: false,
-            children: (
-                <DetailedBoosterCard close={()=>(setModal(null))} {...mapBoostToDetailedCardProps(boost) } />
-            )
-        })
-    }
-    return <button 
-        onClick={openModal}
-        className="w-full px-4 py-2 bg-green-500 text-white rounded"
-        >
-            Open Custom Modal
-    </button>
 }
 
 export function header(iconName: string, boosterName: string, verified: boolean): ReactElement {
@@ -129,32 +108,56 @@ function getIcon(iconName: string): ReactElement {
     return <BoosterIcon name={randomIconName} className="flex-shrink-0 bg-breadgray-charcoal"></BoosterIcon>
 }
 
-export function viewButton(verified: boolean, onClick: ()=>void): ReactElement {
-    const buttonStyles = verified
-      ? "bg-[rgba(152,151,151,0.1)] dark:bg-breadgray-charcoal text-status-success" // Verified
-      : "bg-[#FFCCF1] dark:bg-[#402639] text-breadviolet-violet dark:text-breadpink-shaded"; // Not verified
-  
-    return (
-      <button
-        onClick={onClick}
-        className={`
-          w-full h-[50px] mb-[10px] rounded-[10px]
-          flex items-center justify-center
-          ${buttonStyles}
-        `}
-      >
-        {verified ? (
-          <div className="flex items-center justify-center gap-2">
+function viewButton(verified: boolean, boost: Boost): ReactElement {
+    const verifiedButtonContent = (
+        <div className="flex items-center justify-center gap-2">
             <div className="w-[20px] text-status-success"><CheckIcon /></div>
             <span className="font-semibold text-[20px]">Verified</span>
             <span className="font-normal text-[16px] dark:text-breadpink-shaded">view</span>
-          </div>
-        ) : (
-          <span className="font-semibold text-[20px]">View</span>
-        )}
-      </button>
-    );
-  }
+        </div>
+    )
+    const buttonStyles = verified
+      ? "bg-[rgba(152,151,151,0.1)] dark:bg-breadgray-charcoal text-status-success" // Verified
+      : "bg-[#FFCCF1] dark:bg-[#402639] text-breadviolet-violet dark:text-breadpink-shaded"; // Not verified
+    const { setModal } = useModal();
+    const openModal = () => {
+        setModal({
+            type: "GENERIC_MODAL",
+            showCloseButton: false,
+            includeContainerStyling: false,
+            children: (
+                <DetailedBoosterCard 
+                    close={()=>(setModal(null))}
+                    {...mapBoostToDetailedCardProps(boost)} 
+                />
+            )
+        })
+    }
+    return (boosterCardButton(
+        openModal,
+        buttonStyles, 
+        verified ? verifiedButtonContent : "View" 
+    ));
+}
+
+export function boosterCardButton(
+    action: (()=>void), 
+    styles: String,
+    content: String | ReactElement, 
+): ReactElement {
+    return (
+        <button
+          onClick={()=>(action())}
+          className={`
+            w-full h-[50px] mb-[10px] rounded-[10px]
+            flex items-center justify-center
+            ${styles}
+          `}
+        >
+          {typeof content === 'string' ? (<span className="font-semibold text-[20px]">{content}</span>) : (content)}
+        </button>
+      );
+}
   
 
 export function expiry(

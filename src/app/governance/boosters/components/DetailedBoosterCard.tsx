@@ -1,5 +1,7 @@
 import { ReactElement } from "react";
-import { header, boostPowerSection, viewButton, expiry} from "@/app/governance/boosters/components/BoosterCard";
+import { header, boostPowerSection, boosterCardButton, expiry} from "@/app/governance/boosters/components/BoosterCard";
+
+const buttonStyle = "bg-[#FFCCF1] dark:bg-[#402639] text-breadviolet-violet dark:text-breadpink-shaded"
 
 export function DetailedBoosterCard({
     iconName,
@@ -33,8 +35,17 @@ export function DetailedBoosterCard({
             {header(iconName, boosterName, verified)}
             {boostPowerSection(boostAmmount, boostAmmountSubtitle)}
             <p className="my-[24px]" >{description}</p>
-            {viewButton(verified, close)} // Temp code to test modal
+            {buttons()}
             {expiry(expiration, expirationUrgent, "Helpful information loading...")}
         </div>
     )
 }
+
+function buttons(): ReactElement {
+    return (
+      <>
+        {boosterCardButton(close, buttonStyle, "Accept")}
+        {boosterCardButton(close, buttonStyle, "Decline")}
+      </>
+    );
+  }

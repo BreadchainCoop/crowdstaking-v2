@@ -16,8 +16,8 @@ export const ModalContainer = forwardRef(
       ...props 
     }: { 
       children: ReactNode;
-      showCloseButton: Boolean;
-      includeContainerStyling: Boolean;
+      showCloseButton?: Boolean;
+      includeContainerStyling?: Boolean;
     },
     ref: Ref<HTMLDivElement>
   ) => {
