@@ -1,8 +1,9 @@
-import { ReactElement } from "react";
+import React, { ReactElement } from "react";
 import { header, boostPowerSection, boosterCardButton, expiry} from "@/app/governance/boosters/components/BoosterCard";
 import { BoostProgress, BoostRequirement } from "../data/BoostData"
 import CloseIcon from "@/app/core/components/Icons/CloseIcon";
-import { CheckIcon } from "@/app/core/components/Icons/CheckIcon";
+import CheckDoubleIcon from "@/app/core/components/Icons/CheckDouble";
+
 
 export function DetailedBoosterCard({
     iconName,
@@ -25,8 +26,8 @@ export function DetailedBoosterCard({
     description: string;
     expiration: number | undefined;
     expirationUrgent: boolean;
-    progress: BoostProgress, // TODO: avoid sending in Domain models
-    requirements: [BoostRequirement],
+    progress: BoostProgress[], // TODO: avoid sending in Domain models
+    requirements: BoostRequirement[],
     close: ()=>void;
 }) {
     return (
@@ -39,7 +40,7 @@ export function DetailedBoosterCard({
         ">
             {header(iconName, boosterName, verified, closeIcon(close))}
             {boostPowerSection(boostAmmount, boostAmmountSubtitle)}
-            {detailsSection(description, requirements)}
+            {detailsSection(description, requirements, progress)}
             {buttons()}
             {expiry(expiration, expirationUrgent, "Helpful information loading...")}
         </div>
@@ -53,7 +54,6 @@ function closeIcon(close: ()=>void): ReactElement {
 function buttons(): ReactElement {
     const buttonStyleVerify = "bg-[#FFCCF1] dark:bg-[#402639] text-breadviolet-violet dark:text-breadpink-shaded"
     const buttonStyleGet = "text-[#FFCCF1] dark:text-[#402639] bg-breadviolet-violet dark:bg-breadpink-shaded"
-
     return (
       <>
         {boosterCardButton(close, buttonStyleGet, "Get")}
@@ -62,12 +62,15 @@ function buttons(): ReactElement {
     );
 }
 
-function detailsSection(description: String, requirements: [BoostRequirement]): ReactElement {
+function detailsSection(description: String, requirements: BoostRequirement[], progress: BoostProgress[]): ReactElement {
     return(
         <div className="px-[20px] flex flex-col gap-[24px] my-[24px]">
+            {(progress.length > 0) && boostProgress(progress)}
             <div className="flex flex-col gap-[8px]">
-                {requirements.map((item, index)=>(
-                    requirement(item.name, item.achieved)
+                {requirements.map((item)=>(
+                  <React.Fragment key={item.name}>
+                    {requirement(item.name, item.achieved)}
+                  </React.Fragment>
                 ))}
             </div>
             <p>{description}</p>
@@ -75,11 +78,46 @@ function detailsSection(description: String, requirements: [BoostRequirement]): 
     )
 }
 
+function boostProgress(progress: BoostProgress[]): ReactElement {
+  let numberItems = progress.length
+  let numberCompleted = progress.findIndex(item => item.achieved === false)
+  if (numberCompleted == -1) { numberCompleted = numberItems }
+  const percentComplete = numberItems > 0 ? (numberCompleted / numberItems) * 100 : 5;
+  return(
+    <div className="flex flex-col gap-4">
+      {/* Progress bar */}
+      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div 
+          className="h-full bg-green-500 rounded-full transition-all duration-300"
+          style={{ width: `${percentComplete}%` }}
+        />
+      </div>
+      
+      {/* Sequential items display */}
+      <div className="flex flex-row w-full justify-between">
+        {progress.map((item, index) => (
+          <div 
+            key={index} 
+            className={`flex flex-col items-center text-center max-w-[100px] ${
+              index < numberCompleted ? 'text-green-600' : 'text-gray-400'
+            }`}
+          >
+            <div className="font-medium text-sm">{item.name}</div>
+            {item.subtitle && (
+              <div className="text-xs">{item.subtitle}</div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function requirement(text: String, complete: Boolean): ReactElement {
     return(
         <div className="flex flex-row gap-2 justify-start items-center">
             {complete ? 
-                <span className="w-[18px] h-[20px] text-status-success ml-[4px] mt-[5px]">{CheckIcon()}</span> : 
+                <span className="w-[21px] h-[21px] text-status-success ml-[3px] mt-[2px]">{CheckDoubleIcon()}</span> : 
                 <span className="w-[24px] h-[24px] text-status-danger">{CloseIcon()}</span>
             }
             <span className="text-breadgray-og-dark dark:text-breadgray-ultra-white mb-[-2px]">{text}</span>
