@@ -9,6 +9,7 @@ import { createWalletClient } from "viem";
 import { Wallet, WalletDetailsParams } from "@rainbow-me/rainbowkit";
 import { rainbowWallet, injectedWallet } from "@rainbow-me/rainbowkit/wallets";
 import { CreateConnectorFn } from "@wagmi/core";
+import { hashFn } from "@wagmi/core/query";
 
 const WALLET_CONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
@@ -57,7 +58,13 @@ const foundry: Chain = {
   testnet: true,
 };
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      queryKeyHashFn: hashFn,
+    },
+  },
+});
 const projectId = WALLET_CONNECT_PROJECT_ID;
 
 const customConnector: CreateConnectorFn = () => {
