@@ -74,14 +74,28 @@ const boostData: Boost[] = [
                 achieved: true
             },
             {
-                name: "Final Goal",
-                subtitle: "Complete a mainnet transaction over 1 ETH",
-                achieved: false
+                name: "Lift Server",
+                subtitle: "Raise it up high",
+                achieved: true
+            },
+            {
+              name: "Puncture Bank",
+              subtitle: "Use pointy object",
+              achieved: true
+            },
+            {
+              name: "Final Goal",
+              subtitle: "Complete a mainnet transaction over 1 ETH",
+              achieved: false
             }
         ],
         requirements: [
             {
                 name: "Verify a wallet address",
+                achieved: true
+            },
+            {
+                name: "Be covered in eth",
                 achieved: true
             },
             {

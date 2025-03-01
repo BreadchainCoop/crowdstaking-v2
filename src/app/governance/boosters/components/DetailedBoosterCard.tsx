@@ -1,81 +1,81 @@
 import React, { ReactElement } from "react";
-import { header, boostPowerSection, boosterCardButton, expiry} from "@/app/governance/boosters/components/BoosterCard";
+import { header, boostPowerSection, boosterCardButton, expiry } from "@/app/governance/boosters/components/BoosterCard";
 import { BoostProgress, BoostRequirement } from "../data/BoostData"
 import CloseIcon from "@/app/core/components/Icons/CloseIcon";
 import CheckDoubleIcon from "@/app/core/components/Icons/CheckDouble";
 
 
 export function DetailedBoosterCard({
-    iconName,
-    boosterName,
-    verified,
-    boostAmmount,
-    boostAmmountSubtitle,
-    description,
-    expiration,
-    expirationUrgent = false,
-    progress,
-    requirements,
-    close,
-}:{
-    iconName: string;
-    boosterName: string;
-    verified: boolean;
-    boostAmmount: string;
-    boostAmmountSubtitle: string;
-    description: string;
-    expiration: number | undefined;
-    expirationUrgent: boolean;
-    progress: BoostProgress[], // TODO: avoid sending in Domain models
-    requirements: BoostRequirement[],
-    close: ()=>void;
+  iconName,
+  boosterName,
+  verified,
+  boostAmmount,
+  boostAmmountSubtitle,
+  description,
+  expiration,
+  expirationUrgent = false,
+  progress,
+  requirements,
+  close,
+}: {
+  iconName: string;
+  boosterName: string;
+  verified: boolean;
+  boostAmmount: string;
+  boostAmmountSubtitle: string;
+  description: string;
+  expiration: number | undefined;
+  expirationUrgent: boolean;
+  progress: BoostProgress[], // TODO: avoid sending in Domain models
+  requirements: BoostRequirement[],
+  close: () => void;
 }) {
-    return (
-        <div className="
+  return (
+    <div className="
         w-[512px] flex flex-col justify-center items-center justify-between
         rounded-[15px] p-[20px]
         border border-breadgray-light-grey dark:border-breadgray-burnt 
         bg-breadgray-ultra-white dark:bg-breadgray-grey200
         text-breadgray-rye dark:text-breadgray-grey
         ">
-            {header(iconName, boosterName, verified, closeIcon(close))}
-            {boostPowerSection(boostAmmount, boostAmmountSubtitle)}
-            {detailsSection(description, requirements, progress)}
-            {buttons()}
-            {expiry(expiration, expirationUrgent, "Helpful information loading...")}
-        </div>
-    )
+      {header(iconName, boosterName, verified, closeIcon(close))}
+      {boostPowerSection(boostAmmount, boostAmmountSubtitle)}
+      {detailsSection(description, requirements, progress)}
+      {buttons()}
+      {expiry(expiration, expirationUrgent, "Helpful information loading...")}
+    </div>
+  )
 }
 
-function closeIcon(close: ()=>void): ReactElement {
-    return <button onClick={close} className="w-[24px] h-[24px]">{CloseIcon()}</button>
+function closeIcon(close: () => void): ReactElement {
+  return <button onClick={close} className="w-[24px] h-[24px]">{CloseIcon()}</button>
 }
 
 function buttons(): ReactElement {
-    const buttonStyleVerify = "bg-[#FFCCF1] dark:bg-[#402639] text-breadviolet-violet dark:text-breadpink-shaded"
-    const buttonStyleGet = "text-[#FFCCF1] dark:text-[#402639] bg-breadviolet-violet dark:bg-breadpink-shaded"
-    return (
-      <>
-        {boosterCardButton(close, buttonStyleGet, "Get")}
-        {boosterCardButton(close, buttonStyleVerify, "Verify")}
-      </>
-    );
+  const buttonStyleVerify = "bg-[#FFCCF1] dark:bg-[#402639] text-breadviolet-violet dark:text-breadpink-shaded"
+  const buttonStyleGet = "text-[#FFCCF1] dark:text-[#402639] bg-breadviolet-violet dark:bg-breadpink-shaded"
+  return (
+    <>
+      {boosterCardButton(close, buttonStyleGet, "Get")}
+      {boosterCardButton(close, buttonStyleVerify, "Verify")}
+    </>
+  );
 }
 
 function detailsSection(description: String, requirements: BoostRequirement[], progress: BoostProgress[]): ReactElement {
-    return(
-        <div className="px-[20px] flex flex-col gap-[24px] my-[24px]">
-            {(progress.length > 0) && boostProgress(progress)}
-            <div className="flex flex-col gap-[8px]">
-                {requirements.map((item)=>(
-                  <React.Fragment key={item.name}>
-                    {requirement(item.name, item.achieved)}
-                  </React.Fragment>
-                ))}
-            </div>
-            <p>{description}</p>
-        </div>
-    )
+  return (
+    <div className="px-[20px] flex flex-col gap-[24px] my-[24px]">
+      {(progress.length > 0) && boostProgress(progress)}
+      <div className="flex flex-col gap-[8px]">
+        {requirements.map((item) => (
+          <React.Fragment key={item.name}>
+            {requirement(item.name, item.achieved)}
+          </React.Fragment>
+        ))}
+      </div>
+      <p>{description}</p>
+    </div>
+  )
 }
 
 function boostProgress(progress: BoostProgress[]): ReactElement {
@@ -83,44 +83,66 @@ function boostProgress(progress: BoostProgress[]): ReactElement {
   let numberCompleted = progress.findIndex(item => item.achieved === false)
   if (numberCompleted == -1) { numberCompleted = numberItems }
   const percentComplete = numberItems > 0 ? (numberCompleted / numberItems) * 100 : 5;
-  return(
+  return (
     <div className="flex flex-col gap-4">
-      {/* Progress bar */}
-      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-        <div 
-          className="h-full bg-green-500 rounded-full transition-all duration-300"
-          style={{ width: `${percentComplete}%` }}
-        />
-      </div>
-      
+      {progressBar(percentComplete)}
       {/* Sequential items display */}
-      <div className="flex flex-row w-full justify-between">
+      <div className="flex flex-row w-full justify-around">
         {progress.map((item, index) => (
-          <div 
-            key={index} 
-            className={`flex flex-col items-center text-center max-w-[100px] ${
-              index < numberCompleted ? 'text-green-600' : 'text-gray-400'
-            }`}
-          >
-            <div className="font-medium text-sm">{item.name}</div>
-            {item.subtitle && (
-              <div className="text-xs">{item.subtitle}</div>
-            )}
-          </div>
+          <React.Fragment key="index">
+            {progressText(item.name, item.subtitle)}
+          </React.Fragment>
         ))}
       </div>
     </div>
   )
 }
 
+function progressText(title: String, subtitle: String): ReactElement {
+  return (
+    <div className="
+      max-w-[100px] 
+      flex flex-col items-center text-center 
+      text-gray-400
+    ">
+      <div className="font-semibold text-[16px] mb-[4px] text-breadgray-pitchblack dark:text-breadgray-ultra-white">{title}</div>
+      {subtitle && (
+        <div className="text-[10px] text-breadgray-rye dark:text-breadgray">{subtitle}</div>
+      )}
+    </div>
+  )
+}
+
+function progressBar(percentComplete: Number): ReactElement {
+  return (
+    <div className="
+        w-full h-[16px] rounded-full
+        bg-breadpink-shaded/10 
+      ">
+      <div // This inner container creates a clipping mask for the filled section, prevents over-filling at 100%
+        className="
+            h-[12px] m-[2px] rounded-full
+            relative overflow-hidden"
+      >
+        <div
+          className="
+              h-full absolute top-0 left-0 
+              bg-breadviolet-shaded rounded-full"
+          style={{ width: `${percentComplete}%` }}
+        />
+      </div>
+    </div>
+  )
+}
+
 function requirement(text: String, complete: Boolean): ReactElement {
-    return(
-        <div className="flex flex-row gap-2 justify-start items-center">
-            {complete ? 
-                <span className="w-[21px] h-[21px] text-status-success ml-[3px] mt-[2px]">{CheckDoubleIcon()}</span> : 
-                <span className="w-[24px] h-[24px] text-status-danger">{CloseIcon()}</span>
-            }
-            <span className="text-breadgray-og-dark dark:text-breadgray-ultra-white mb-[-2px]">{text}</span>
-        </div>
-    )
+  return (
+    <div className="flex flex-row gap-2 justify-start items-center">
+      {complete ?
+        <span className="w-[21px] h-[21px] text-status-success ml-[3px] mt-[2px]">{CheckDoubleIcon()}</span> :
+        <span className="w-[24px] h-[24px] text-status-danger">{CloseIcon()}</span>
+      }
+      <span className="text-breadgray-og-dark dark:text-breadgray-ultra-white mb-[-2px]">{text}</span>
+    </div>
+  )
 }
