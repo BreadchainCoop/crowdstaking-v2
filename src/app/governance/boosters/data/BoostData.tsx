@@ -1,3 +1,5 @@
+import { ProgressItem } from "../components/DetailedBoosterCard"
+
 // Boost is just an example interface, to be replaced by whatever 
 // aggregate of data sources end up being needed. 
 // As long as the mapping functions can still map the real data 
@@ -47,12 +49,14 @@ export function mapBoostToCardProps(boost: Boost) {
   export function mapBoostToDetailedCardProps(boost: Boost) {
     // Start with the basic card props
     const baseProps = mapBoostToCardProps(boost);
-    
+    const progress = boost.progress.map(item =>({title: item.name, subtitle: item.subtitle, achieved: item.achieved}))
+    const requirements = boost.requirements.map(item =>({title: item.name, subtitle: null, achieved: item.achieved}))
+
     // Add the detailed props
     return {
       ...baseProps,
-      progress: boost.progress,
-      requirements: boost.requirements
+      progress: progress,
+      requirements: requirements
     };
   }
 

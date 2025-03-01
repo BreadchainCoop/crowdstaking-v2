@@ -1,9 +1,13 @@
 import React, { ReactElement } from "react";
 import { header, boostPowerSection, boosterCardButton, expiry } from "@/app/governance/boosters/components/BoosterCard";
-import { BoostProgress, BoostRequirement } from "../data/BoostData"
 import CloseIcon from "@/app/core/components/Icons/CloseIcon";
 import CheckDoubleIcon from "@/app/core/components/Icons/CheckDouble";
 
+export interface ProgressItem {
+  title: string;
+  subtitle: string | null;
+  achieved: boolean;
+}
 
 export function DetailedBoosterCard({
   iconName,
@@ -26,8 +30,8 @@ export function DetailedBoosterCard({
   description: string;
   expiration: number | undefined;
   expirationUrgent: boolean;
-  progress: BoostProgress[], // TODO: avoid sending in Domain models
-  requirements: BoostRequirement[],
+  progress: ProgressItem[],
+  requirements: ProgressItem[],
   close: () => void;
 }) {
   return (
@@ -62,23 +66,19 @@ function buttons(): ReactElement {
   );
 }
 
-function detailsSection(description: String, requirements: BoostRequirement[], progress: BoostProgress[]): ReactElement {
+function detailsSection(description: String, requirements: ProgressItem[], progress: ProgressItem[]): ReactElement {
   return (
     <div className="px-[20px] flex flex-col gap-[24px] my-[24px]">
       {(progress.length > 0) && boostProgress(progress)}
-      <div className="flex flex-col gap-[8px]">
-        {requirements.map((item) => (
-          <React.Fragment key={item.name}>
-            {requirement(item.name, item.achieved)}
-          </React.Fragment>
-        ))}
-      </div>
+      {(requirements.length > 0) && requirementsList(requirements)}
       <p>{description}</p>
     </div>
   )
 }
 
-function boostProgress(progress: BoostProgress[]): ReactElement {
+// Displays the horizontal progress bar with text beneath it
+// Note, this component expects Boost Progress to be ordered with completed items at the start.
+function boostProgress(progress: ProgressItem[]): ReactElement {
   let numberItems = progress.length
   let numberCompleted = progress.findIndex(item => item.achieved === false)
   if (numberCompleted == -1) { numberCompleted = numberItems }
@@ -90,7 +90,7 @@ function boostProgress(progress: BoostProgress[]): ReactElement {
       <div className="flex flex-row w-full justify-around">
         {progress.map((item, index) => (
           <React.Fragment key="index">
-            {progressText(item.name, item.subtitle)}
+            {progressText(item.title, item.subtitle)}
           </React.Fragment>
         ))}
       </div>
@@ -98,7 +98,7 @@ function boostProgress(progress: BoostProgress[]): ReactElement {
   )
 }
 
-function progressText(title: String, subtitle: String): ReactElement {
+function progressText(title: String, subtitle: String | null): ReactElement {
   return (
     <div className="
       max-w-[100px] 
@@ -135,6 +135,19 @@ function progressBar(percentComplete: Number): ReactElement {
   )
 }
 
+function requirementsList(requirements: ProgressItem[]): ReactElement {
+  return (
+    <div className="flex flex-col gap-[8px]">
+        {requirements.map((item) => (
+          <React.Fragment key={item.title}>
+            {requirement(item.title, item.achieved)}
+          </React.Fragment>
+        ))}
+    </div>
+  )
+}
+
+// Displays a requirement line item, with the tick or cross icon next to it
 function requirement(text: String, complete: Boolean): ReactElement {
   return (
     <div className="flex flex-row gap-2 justify-start items-center">
