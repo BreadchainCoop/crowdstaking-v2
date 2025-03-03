@@ -5,6 +5,7 @@ import {
   walletConnectWallet,
   rabbyWallet,
   coinbaseWallet,
+  safeWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 
 export function getWallets() {
@@ -15,5 +16,6 @@ export function getWallets() {
     frameWallet,
     rabbyWallet,
     coinbaseWallet,
+    safeWallet,
   ];
 }

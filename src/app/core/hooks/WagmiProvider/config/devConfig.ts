@@ -1,8 +1,8 @@
 import { http } from "wagmi";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
-import { mainnet, sepolia, foundry, gnosis } from "wagmi/chains";
+import { sepolia, foundry, gnosis } from "wagmi/chains";
 import { createConnector } from "@wagmi/core";
-import { createWalletClient } from "viem";
+import { defineChain, createWalletClient } from "viem";
 import { Wallet, WalletDetailsParams } from "@rainbow-me/rainbowkit";
 import { CreateConnectorFn } from "@wagmi/core";
 import { getWallets } from "./wallets";
@@ -35,23 +35,21 @@ if (!WALLET_CONNECT_PROJECT_ID)
 //   testnet: true,
 // } as const satisfies Chain;
 
-const chains = [
-  {
-    ...foundry,
-    id: 31337,
-    contracts: {
-      multicall3: {
-        address: "0xcA11bde05977b3631167028862bE2a173976CA11",
-        blockCreated: 21_022_491,
-      },
+const foundryChain = defineChain({
+  ...foundry,
+  id: 31337,
+  contracts: {
+    multicall3: {
+      address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      blockCreated: 21_022_491,
     },
   },
-  {
-    ...gnosis,
-    iconUrl: "gnosis_icon.svg",
-  },
-  sepolia,
-];
+});
+
+const gnosisChain = defineChain({
+  ...gnosis,
+  iconUrl: "gnosis_icon.svg",
+});
 
 const devAccount = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
 
@@ -118,7 +116,7 @@ export const customWallet = (): Wallet => ({
 const config = getDefaultConfig({
   appName: "Breadchain Crowdstaking",
   projectId: WALLET_CONNECT_PROJECT_ID,
-  chains: [gnosis, sepolia, foundry],
+  chains: [gnosisChain, sepolia, foundryChain],
   wallets: [
     {
       groupName: "Recommended",
