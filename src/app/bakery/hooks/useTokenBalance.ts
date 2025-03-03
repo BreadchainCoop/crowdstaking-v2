@@ -17,7 +17,6 @@ export function useTokenBalance(
     abi: ERC20_ABI,
     functionName: "balanceOf",
     args: [holderAddress],
-    watch: true,
   });
 
   const value = data ? formatUnits(data, 18).toString() : "0";
