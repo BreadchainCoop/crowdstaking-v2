@@ -3,7 +3,7 @@ import { parseEther } from "viem";
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
 import { BREAD_ABI } from "@/abi";
 import Button from "@/app/core/components/Button";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import useDebounce from "@/app/bakery/hooks/useDebounce";
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
 import { useEffect, useState } from "react";
@@ -26,7 +26,7 @@ export default function Burn({
 }) {
   const { transactionsState, transactionsDispatch } = useTransactions();
   const [buttonIsEnabled, setButtonIsEnabled] = useState(false);
-  const { BREAD } = getConfig(user.chain.id);
+  const { BREAD } = getChain(user.chain.id);
   const { setModal } = useModal();
   const debouncedValue = useDebounce(inputValue, 500);
 

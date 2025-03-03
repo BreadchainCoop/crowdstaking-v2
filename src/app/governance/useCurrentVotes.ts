@@ -1,6 +1,7 @@
 import { getPublicClient } from "@wagmi/core";
+import { getChain } from "@/chainConfig";
 
-import { getConfig } from "@/chainConfig";
+import { getConfig } from "@/app/core/hooks/WagmiProvider/config/getConfig";
 import { DISTRIBUTOR_ABI } from "@/abi";
 import { useQuery } from "@tanstack/react-query";
 import { Hex } from "viem";
@@ -17,9 +18,11 @@ type VoteLogData = {
 
 export function useCurrentVotes(lastClaimedBlockNumber: bigint | null) {
   const { chain: activeChain } = useAccount();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const distributorAddress = config.DISBURSER.address;
-  const publicClient = getPublicClient();
+  const chainConfig = activeChain
+    ? getChain(activeChain.id)
+    : getChain("DEFAULT");
+  const distributorAddress = chainConfig.DISBURSER.address;
+  const publicClient = getPublicClient(getConfig().config);
 
   return useQuery({
     queryKey: ["getVotesForCurrentRound"],

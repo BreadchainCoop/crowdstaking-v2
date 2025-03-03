@@ -2,7 +2,7 @@
 import { BREAD_ABI, DISTRIBUTOR_ABI } from "@/abi";
 import Button from "@/app/core/components/Button";
 import { projectsMeta } from "@/app/projectsMeta";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { useEffect } from "react";
 import { formatUnits, Hex } from "viem";
 import {
@@ -14,8 +14,10 @@ import {
 
 export function Diagnostics() {
   const { chain: activeChain } = useAccount();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const distributorAddress = config.DISBURSER.address;
+  const chainConfig = activeChain
+    ? getChain(activeChain.id)
+    : getChain("DEFAULT");
+  const distributorAddress = chainConfig.DISBURSER.address;
 
   const {
     data: prepareConfig,
@@ -61,8 +63,10 @@ export function Diagnostics() {
 
 function ProjectDisplay({ account }: { account: Hex }) {
   const { chain: activeChain } = useAccount();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const breadAddress = config.BREAD.address;
+  const chainConfig = activeChain
+    ? getChain(activeChain.id)
+    : getChain("DEFAULT");
+  const breadAddress = chainConfig.BREAD.address;
 
   const { data: breadBalanceData, status: breadBalanceStatus } =
     useReadContract({

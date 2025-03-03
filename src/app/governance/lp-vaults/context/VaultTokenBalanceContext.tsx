@@ -12,7 +12,7 @@ import {
   TUserConnected,
   useConnectedUser,
 } from "@/app/core/hooks/useConnectedUser";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { BUTTERED_BREAD_ABI } from "@/abi";
 
 type VaultTokenBalanceLoading = {
@@ -74,13 +74,13 @@ function ProviderWithUser({
       butter: { status: "loading" },
     });
 
-  const config = getConfig(user.chain.id);
+  const chainConfig = getChain(user.chain.id);
 
   const { data, status, error } = useReadContract({
-    address: config.BUTTERED_BREAD.address,
+    address: chainConfig.BUTTERED_BREAD.address,
     abi: BUTTERED_BREAD_ABI,
     functionName: "accountToLPBalance",
-    args: [user.address, config.BUTTER.address],
+    args: [user.address, chainConfig.BUTTER.address],
   });
 
   useEffect(() => {

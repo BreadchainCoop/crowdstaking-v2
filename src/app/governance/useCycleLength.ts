@@ -1,5 +1,5 @@
 import { DISTRIBUTOR_ABI } from "@/abi";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { useEffect, useState } from "react";
 import { useReadContract, useAccount } from "wagmi";
 
@@ -25,8 +25,10 @@ export function useCycleLength() {
   });
 
   const { chain: activeChain } = useAccount();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const distributorAddress = config.DISBURSER.address;
+  const chainConfig = activeChain
+    ? getChain(activeChain.id)
+    : getChain("DEFAULT");
+  const distributorAddress = chainConfig.DISBURSER.address;
 
   const {
     data: cycleLengthData,

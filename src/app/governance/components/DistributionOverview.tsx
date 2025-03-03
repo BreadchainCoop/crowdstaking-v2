@@ -10,7 +10,7 @@ import { useReadContract, useAccount } from "wagmi";
 import { ERC20_ABI, SDAI_ADAPTOR_ABI } from "@/abi";
 import { useEffect, useMemo, useState } from "react";
 import { differenceInDays, differenceInHours, format } from "date-fns";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { formatUnits } from "viem";
 import clsx from "clsx";
 
@@ -24,7 +24,9 @@ export function DistributionOverview({
   const { claimableYield } = useClaimableYield();
   const { chain: activeChain } = useAccount();
   const [dsrAPY, setDsrAPY] = useState("");
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
+  const chainConfig = activeChain
+    ? getChain(activeChain.id)
+    : getChain("DEFAULT");
   const [yieldIncrement, setYieldIncrement] = useState(0);
 
   const {
@@ -32,7 +34,7 @@ export function DistributionOverview({
     error: apyError,
     status: apyStatus,
   } = useReadContract({
-    address: config.SDAI_ADAPTOR.address,
+    address: chainConfig.SDAI_ADAPTOR.address,
     abi: SDAI_ADAPTOR_ABI,
     functionName: "vaultAPY",
   });
@@ -42,7 +44,7 @@ export function DistributionOverview({
     status: totalSupplyStatus,
     error: totalSupplyError,
   } = useReadContract({
-    address: config.BREAD.address,
+    address: chainConfig.BREAD.address,
     abi: ERC20_ABI,
     functionName: "totalSupply",
   });

@@ -3,7 +3,7 @@ import Button from "@/app/core/components/Button";
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
 import { LockingDeposit, LockingEvent } from "./lockingReducer";
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { useWriteContract, useSimulateContract } from "wagmi";
 import { BUTTERED_BREAD_ABI } from "@/abi";
 import { useModal } from "@/app/core/context/ModalContext";
@@ -25,7 +25,7 @@ export function Lock({
 }) {
   const { transactionsState, transactionsDispatch } = useTransactions();
   const [isWalletOpen, setIsWalletOpen] = useState(false);
-  const chainConfig = getConfig(user.chain.id);
+  const chainConfig = getChain(user.chain.id);
   const { setModal } = useModal();
   const isMobile = useIsMobile();
 

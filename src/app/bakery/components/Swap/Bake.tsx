@@ -3,7 +3,7 @@ import { parseEther } from "viem";
 
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
 import Button from "@/app/core/components/Button";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { BREAD_ABI } from "@/abi";
 import useDebounce from "@/app/bakery/hooks/useDebounce";
 
@@ -29,7 +29,7 @@ export default function Bake({
 
   const { setModal } = useModal();
 
-  const { BREAD } = getConfig(user.chain.id);
+  const { BREAD } = getChain(user.chain.id);
 
   const debouncedValue = useDebounce(inputValue, 500);
 

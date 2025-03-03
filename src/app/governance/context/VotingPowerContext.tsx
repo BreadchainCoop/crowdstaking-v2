@@ -9,8 +9,9 @@ import { useAccount } from "wagmi";
 import { multicall } from "@wagmi/core";
 import { Hex } from "viem";
 import { useQuery } from "@tanstack/react-query";
+import { getConfig } from "@/app/core/hooks/WagmiProvider/config/getConfig";
 
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { DISTRIBUTOR_ABI } from "@/abi";
 
 export type VpTokenLoading = {
@@ -51,30 +52,30 @@ export function VotingPowerProvider({
     butteredBread: { status: "loading" },
   });
   const { chainId } = useAccount();
-  const config = getConfig(chainId || "DEFAULT");
+  const chainConfig = getChain(chainId || "DEFAULT");
 
   const { data, status, error } = useQuery({
     queryKey: ["vpMulticall"],
     queryFn: async () => {
-      return await multicall({
+      return await multicall(getConfig().config, {
         contracts: [
           {
-            address: config.DISBURSER.address,
+            address: chainConfig.DISBURSER.address,
             abi: DISTRIBUTOR_ABI,
             functionName: "getVotingPowerForPeriod",
             args: [
-              config.BREAD.address,
+              chainConfig.BREAD.address,
               previousCycleStartingBlock,
               lastClaimedBlocknumber,
               account,
             ],
           },
           {
-            address: config.DISBURSER.address,
+            address: chainConfig.DISBURSER.address,
             abi: DISTRIBUTOR_ABI,
             functionName: "getVotingPowerForPeriod",
             args: [
-              config.BUTTERED_BREAD.address,
+              chainConfig.BUTTERED_BREAD.address,
               previousCycleStartingBlock,
               lastClaimedBlocknumber,
               account,

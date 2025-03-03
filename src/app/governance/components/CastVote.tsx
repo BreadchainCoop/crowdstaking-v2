@@ -2,7 +2,7 @@ import { useWriteContract, useAccount, useSimulateContract } from "wagmi";
 
 import Button from "@/app/core/components/Button";
 
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { DISTRIBUTOR_ABI } from "@/abi";
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
 import { ReactNode, useEffect, useState } from "react";
@@ -95,8 +95,10 @@ export function CastVote({
   const writeIsEnabled = !!(vote.reduce((acc, num) => (acc += num), 0) > 0);
 
   const { chain: activeChain } = useAccount();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const distributorAddress = config.DISBURSER.address;
+  const chainConfig = activeChain
+    ? getChain(activeChain.id)
+    : getChain("DEFAULT");
+  const distributorAddress = chainConfig.DISBURSER.address;
 
   const {
     data: prepareConfig,

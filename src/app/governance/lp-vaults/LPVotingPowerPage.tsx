@@ -4,14 +4,14 @@ import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { VaultPanel } from "./components/VaultPanel";
 import { VotingPowerPanel } from "./components/VotingPowerPanel";
 import { Accordion } from "@radix-ui/react-accordion";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import useLocalStorage from "@/app/core/hooks/useLocalStorage";
 import { PageGrid } from "@/app/governance/components/PageGrid";
 import { LiquidityBanner } from "@/app/bakery/components/Banners/LiquidityBanner";
 
 export function LPVotingPowerPage() {
   const { user } = useConnectedUser();
-  const config = getConfig(
+  const chainConfig = getChain(
     user.status === "CONNECTED" ? user.chain.id : "DEFAULT"
   );
   const [setLocalStorage, getLocalStorage] = useLocalStorage();
@@ -46,7 +46,7 @@ export function LPVotingPowerPage() {
           type="single"
           collapsible
         >
-          <VaultPanel tokenAddress={config.BUTTER.address} />
+          <VaultPanel tokenAddress={chainConfig.BUTTER.address} />
         </Accordion>
       </div>
     </section>

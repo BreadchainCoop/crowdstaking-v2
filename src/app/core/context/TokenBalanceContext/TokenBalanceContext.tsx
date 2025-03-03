@@ -6,7 +6,7 @@ import {
   useState,
   useMemo,
 } from "react";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { TUserConnected, useConnectedUser } from "../../hooks/useConnectedUser";
 import { useBlockNumber, useBalance, useReadContract } from "wagmi";
 import { ERC20_ABI } from "@/abi";
@@ -72,7 +72,7 @@ function ProviderWithUser({
     refetchBalanceOf();
   }, [blockNumber]);
 
-  const config = getConfig(user.chain.id);
+  const config = getChain(user.chain.id);
   // BREAD balance
   const {
     data: breadBalanceData,

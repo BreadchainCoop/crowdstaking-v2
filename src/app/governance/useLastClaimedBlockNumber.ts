@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useReadContract, useAccount } from "wagmi";
 
 import { DISTRIBUTOR_ABI } from "@/abi";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 
 export function useLastClaimedBlockNumber() {
   const [lastClaimedBlocknumber, setLastClaimedBlockNumber] = useState<
@@ -10,7 +10,7 @@ export function useLastClaimedBlockNumber() {
   >(null);
 
   const { chain: activeChain } = useAccount();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
+  const config = activeChain ? getChain(activeChain.id) : getChain("DEFAULT");
   const distributorAddress = config.DISBURSER.address;
 
   const {

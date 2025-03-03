@@ -7,7 +7,7 @@ import React, {
   ReactNode,
 } from "react";
 import { useAccount, useReadContract } from "wagmi";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { formatBalance } from "@/app/core/util/formatter";
 import { formatUnits } from "viem";
 import { ERC20_ABI } from "@/abi";
@@ -52,13 +52,15 @@ const ProjectsProvider = ({
     status: "LOADING",
   });
   const { chain: activeChain } = useAccount();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const distributorAddress = config.DISBURSER.address;
+  const chainConfig = activeChain
+    ? getChain(activeChain.id)
+    : getChain("DEFAULT");
+  const distributorAddress = chainConfig.DISBURSER.address;
 
   // BREAD token balance
   const { data: breadBalanceData, status: breadBalanceStatus } =
     useReadContract({
-      address: config.BREAD.address,
+      address: chainConfig.BREAD.address,
       abi: ERC20_ABI,
       functionName: "balanceOf",
       args: [address],

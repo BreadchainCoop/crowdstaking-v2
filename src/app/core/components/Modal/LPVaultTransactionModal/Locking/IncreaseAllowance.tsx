@@ -6,7 +6,7 @@ import { useIsMobile } from "@/app/core/hooks/useIsMobile";
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
 import { LockingAllowance, LockingEvent } from "./lockingReducer";
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { ERC20_ABI } from "@/abi";
 
 export function IncreaseAllowance({
@@ -20,7 +20,7 @@ export function IncreaseAllowance({
 }) {
   const { transactionsDispatch, transactionsState } = useTransactions();
   const [isWalletOpen, setIsWalletOpen] = useState(false);
-  const chainConfig = getConfig(user.chain.id);
+  const chainConfig = getChain(user.chain.id);
   const isMobile = useIsMobile();
 
   useEffect(() => {

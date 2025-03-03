@@ -7,9 +7,11 @@ import {
   useMemo,
   useState,
 } from "react";
-import { type Chain, useAccount } from "wagmi";
+import { useAccount } from "wagmi";
+import { type Chain } from "viem";
+
 import {
-  getConfig,
+  getChain,
   isChainSupported,
   type ChainConfiguration,
 } from "@/chainConfig";
@@ -79,7 +81,7 @@ function ConnectedUserProvider({
   useEffect(() => {
     const config =
       activeChain && isChainSupported(activeChain.id)
-        ? getConfig(activeChain.id)
+        ? getChain(activeChain.id)
         : false;
 
     if (activeConnector && activeChain && accountAddress && isConnected) {

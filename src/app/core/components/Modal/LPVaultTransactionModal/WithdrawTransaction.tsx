@@ -9,7 +9,7 @@ import {
   LPVaultTransactionModalState,
   useModal,
 } from "@/app/core/context/ModalContext";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { useIsMobile } from "@/app/core/hooks/useIsMobile";
 
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
@@ -35,7 +35,7 @@ export function WithdrawTransaction({
   const { setModal } = useModal();
   const [isWalletOpen, setIsWalletOpen] = useState(false);
   const isMobile = useIsMobile();
-  const chainConfig = getConfig(user.chain.id);
+  const chainConfig = getChain(user.chain.id);
   const [withdrawState, withdrawDispatch] = useReducer(withdrawReducer, {
     status: "idle",
   });
