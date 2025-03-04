@@ -8,11 +8,9 @@ export function useVaultAPY() {
     ? getChain(activeChain.id)
     : getChain("DEFAULT");
 
-  const { data: vaultAPYData, status: vaultAPYStatus } = useReadContract({
+  return useReadContract({
     address: chainConfig.SDAI_ADAPTOR.address,
     abi: SDAI_ADAPTOR_ABI,
     functionName: "vaultAPY",
   });
-
-  return { vaultAPYData, vaultAPYStatus };
 }
