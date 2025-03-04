@@ -1,12 +1,9 @@
 import { http } from "wagmi";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { sepolia, foundry, gnosis } from "wagmi/chains";
-import { createConnector } from "@wagmi/core";
-import { defineChain, createWalletClient } from "viem";
-import { Wallet, WalletDetailsParams } from "@rainbow-me/rainbowkit";
-import { CreateConnectorFn } from "@wagmi/core";
+import { defineChain } from "viem";
 import { getWallets } from "./wallets";
-// import { type Chain } from "viem";
+import { mockWallet } from "./mockWallet";
 
 const WALLET_CONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
@@ -51,68 +48,6 @@ const gnosisChain = defineChain({
   iconUrl: "gnosis_icon.svg",
 });
 
-const devAccount = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
-
-const customConnector: CreateConnectorFn = () => {
-  return {
-    id: "custom-wallet",
-    name: "Custom Wallet",
-    type: "custom" as const,
-    connect: async () => ({
-      accounts: [devAccount],
-      chainId: foundry.id,
-    }),
-    disconnect: async () => {
-      console.log("Disconnected from custom wallet");
-    },
-    getAccounts: async () => {
-      return [devAccount];
-    },
-    getChainId: async () => {
-      return foundry.id;
-    },
-    isAuthorized: async () => {
-      return true;
-    },
-    onAccountsChanged: (accounts: string[]) => {
-      console.log("Accounts changed:", accounts);
-    },
-    onDisconnect: () => {
-      console.log("Disconnected");
-    },
-    getWalletClient: async () =>
-      createWalletClient({
-        account: {
-          address: devAccount,
-          type: "json-rpc",
-        },
-        chain: foundry,
-        transport: http("http://localhost:8545"),
-      }),
-    getProvider: async () => {
-      return { provider: http("http://localhost:8545") };
-    },
-    onChainChanged: (chainId: string) => {
-      console.log("Chain changed:", chainId);
-    },
-  };
-};
-
-export const customWallet = (): Wallet => ({
-  id: "custom-dev-wallet",
-  name: "Development Wallet",
-  iconUrl: "https://my-image.xyz",
-  iconBackground: "#0c2f78",
-  hidden: () => false,
-  createConnector: (
-    walletDetails: WalletDetailsParams // Combine types
-  ) =>
-    createConnector((config) => ({
-      ...customConnector(config),
-      ...walletDetails,
-    })),
-});
-
 const config = getDefaultConfig({
   appName: "Breadchain Crowdstaking",
   projectId: WALLET_CONNECT_PROJECT_ID,
@@ -120,7 +55,7 @@ const config = getDefaultConfig({
   wallets: [
     {
       groupName: "Recommended",
-      wallets: [...getWallets(), customWallet],
+      wallets: [...getWallets(), mockWallet(foundryChain)],
     },
   ],
   transports: {
