@@ -11,8 +11,6 @@ export function TotalSupply() {
     address: BREAD_ADDRESS,
     abi: ERC20_ABI,
     functionName: "totalSupply",
-    watch: true,
-    cacheTime: 6_000,
   });
 
   return (
