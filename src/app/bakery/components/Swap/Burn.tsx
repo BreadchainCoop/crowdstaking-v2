@@ -127,7 +127,7 @@ export default function Burn({
             type: "CONFIRM_BURN",
             breadValue: inputValue,
             xdaiValue: debouncedValue,
-            write: writeContract(prepareConfig!.request),
+            write: () => writeContract(prepareConfig!.request),
           });
         }}
       >
