@@ -32,7 +32,7 @@ const projectId = NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
 const config = getDefaultConfig({
   appName: "Breadchain Crowdstaking",
   projectId: projectId,
-  chains: [gnosisChain, ...sepoliaChain],
+  chains: [mainnet, gnosisChain, ...sepoliaChain],
   wallets: [
     {
       groupName: "Recommended",
