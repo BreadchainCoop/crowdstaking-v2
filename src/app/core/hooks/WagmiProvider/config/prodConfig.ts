@@ -1,5 +1,5 @@
 import { mainnet, gnosis, sepolia } from "wagmi/chains";
-import { http } from "@wagmi/core";
+import { http } from "wagmi";
 import { defineChain } from "viem";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { getWallets } from "./wallets";
@@ -18,6 +18,12 @@ const gnosisChain = defineChain({
   iconUrl: "gnosis_icon.svg",
 });
 
+const httpProvider = http(
+  process.env.NEXT_PUBLIC_TESTNET === "true"
+    ? sepolia.rpcUrls.default.http[0]
+    : NEXT_PUBLIC_QUIKNODE_URL
+);
+
 const sepoliaChain =
   process.env.NEXT_PUBLIC_TESTNET === "true" ? [sepolia] : [];
 
@@ -34,12 +40,9 @@ const config = getDefaultConfig({
     },
   ],
   transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http(
-      process.env.NEXT_PUBLIC_TESTNET === "true"
-        ? sepolia.rpcUrls.default.http[0]
-        : NEXT_PUBLIC_QUIKNODE_URL
-    ),
+    [mainnet.id]: httpProvider,
+    [sepolia.id]: httpProvider,
+    [gnosis.id]: httpProvider,
   },
 });
 
