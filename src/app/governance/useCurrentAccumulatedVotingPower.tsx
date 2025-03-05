@@ -8,7 +8,7 @@ export function useCurrentAccumulatedVotingPower(user: TUserConnected) {
   const chainConfig = getChain(user.chain.id);
   const { data: blockNumber } = useBlockNumber({ watch: true });
 
-  const { data, refetch, isError, isLoading } = useReadContract({
+  const { data, refetch, status, isError, isLoading } = useReadContract({
     address: chainConfig.DISBURSER.address,
     abi: DISTRIBUTOR_ABI,
     functionName: "getCurrentAccumulatedVotingPower",
@@ -28,6 +28,7 @@ export function useCurrentAccumulatedVotingPower(user: TUserConnected) {
   return {
     data,
     refetchVotingPower,
+    status,
     isError,
     isLoading,
   };
