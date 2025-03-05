@@ -1,27 +1,28 @@
 import { useEffect, useState } from "react";
-import { useContractRead, useNetwork } from "wagmi";
+import { useReadContract, useAccount } from "wagmi";
 
 import { DISTRIBUTOR_ABI } from "@/abi";
-import { getConfig } from "@/chainConfig";
-import { formatUnits } from "viem";
+import { getChain } from "@/chainConfig";
 
 export function useLastClaimedBlockNumber() {
   const [lastClaimedBlocknumber, setLastClaimedBlockNumber] = useState<
     bigint | null
   >(null);
 
-  const { chain: activeChain } = useNetwork();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
+  const { chain: activeChain } = useAccount();
+  const config = activeChain ? getChain(activeChain.id) : getChain("DEFAULT");
   const distributorAddress = config.DISBURSER.address;
 
   const {
     data: lastClaimedBlockNumberData,
     status: lastClaimedBlockNumberStatus,
-  } = useContractRead({
+  } = useReadContract({
     address: distributorAddress,
     abi: DISTRIBUTOR_ABI,
     functionName: "lastClaimedBlockNumber",
-    enabled: distributorAddress !== "0x",
+    query: {
+      enabled: distributorAddress !== "0x",
+    },
   });
 
   useEffect(() => {

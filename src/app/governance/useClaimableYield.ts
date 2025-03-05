@@ -1,24 +1,26 @@
 import { BREAD_ABI } from "@/abi";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { useEffect, useState } from "react";
 import { formatUnits } from "viem";
-import { useContractRead, useNetwork } from "wagmi";
+import { useReadContract, useAccount } from "wagmi";
 
 export function useClaimableYield() {
   const [claimableYield, setClaimableYield] = useState<number | null>(null);
 
-  const { chain: activeChain } = useNetwork();
+  const { chain: activeChain } = useAccount();
 
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const breadAddress = config.BREAD.address;
+  const chainConfig = activeChain
+    ? getChain(activeChain.id)
+    : getChain("DEFAULT");
+  const breadAddress = chainConfig.BREAD.address;
 
-  const { data, status, error } = useContractRead({
+  const { data, status, error } = useReadContract({
     address: breadAddress,
     abi: BREAD_ABI,
     functionName: "yieldAccrued",
-    watch: true,
-    enabled: breadAddress !== "0x",
-    cacheTime: 2_000,
+    query: {
+      enabled: breadAddress !== "0x",
+    },
   });
 
   useEffect(() => {

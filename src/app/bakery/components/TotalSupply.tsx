@@ -2,17 +2,15 @@
 import { ERC20_ABI } from "@/abi";
 import { formatSupply } from "@/app/core/util/formatter";
 import { formatUnits } from "viem";
-import { useContractRead } from "wagmi";
+import { useReadContract } from "wagmi";
 import { GradientLinkBadge } from "@/app/core/components/Badge/Badge";
 import { BREAD_ADDRESS } from "@/constants";
 
 export function TotalSupply() {
-  const { data, status } = useContractRead({
+  const { data, status } = useReadContract({
     address: BREAD_ADDRESS,
     abi: ERC20_ABI,
     functionName: "totalSupply",
-    watch: true,
-    cacheTime: 6_000,
   });
 
   return (

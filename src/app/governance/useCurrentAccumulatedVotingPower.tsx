@@ -1,17 +1,35 @@
-import { useContractRead } from "wagmi";
+import { useEffect } from "react";
+import { useBlockNumber, useReadContract } from "wagmi";
 import { TUserConnected } from "../core/hooks/useConnectedUser";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { DISTRIBUTOR_ABI } from "@/abi";
 
 export function useCurrentAccumulatedVotingPower(user: TUserConnected) {
-  const config = getConfig(user.chain.id);
+  const chainConfig = getChain(user.chain.id);
+  const { data: blockNumber } = useBlockNumber({ watch: true });
 
-  return useContractRead({
-    address: config.DISBURSER.address,
+  const { data, refetch, status, isError, isLoading } = useReadContract({
+    address: chainConfig.DISBURSER.address,
     abi: DISTRIBUTOR_ABI,
     functionName: "getCurrentAccumulatedVotingPower",
     args: [user.address],
-    watch: true,
-    cacheTime: 5_000,
   });
+
+  const refetchVotingPower = () => {
+    if (user.status === "CONNECTED") {
+      refetch();
+    }
+  };
+
+  useEffect(() => {
+    refetchVotingPower();
+  }, [blockNumber]);
+
+  return {
+    data,
+    refetchVotingPower,
+    status,
+    isError,
+    isLoading,
+  };
 }

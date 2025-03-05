@@ -5,12 +5,12 @@ import { useClaimableYield } from "../useClaimableYield";
 import { LinkIcon } from "@/app/core/components/Icons/LinkIcon";
 import Tooltip from "@/app/core/components/Tooltip";
 import { CardBox } from "@/app/core/components/CardBox";
-import { useContractRead, useNetwork } from "wagmi";
+import { useReadContract, useAccount } from "wagmi";
 
 import { ERC20_ABI, SDAI_ADAPTOR_ABI } from "@/abi";
 import { useEffect, useMemo, useState } from "react";
 import { differenceInDays, differenceInHours, format } from "date-fns";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { formatUnits } from "viem";
 import clsx from "clsx";
 
@@ -22,17 +22,19 @@ export function DistributionOverview({
   distributions: void[] | undefined;
 }) {
   const { claimableYield } = useClaimableYield();
-  const { chain: activeChain } = useNetwork();
+  const { chain: activeChain } = useAccount();
   const [dsrAPY, setDsrAPY] = useState("");
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
+  const chainConfig = activeChain
+    ? getChain(activeChain.id)
+    : getChain("DEFAULT");
   const [yieldIncrement, setYieldIncrement] = useState(0);
 
   const {
     data: apyData,
     error: apyError,
     status: apyStatus,
-  } = useContractRead({
-    address: config.SDAI_ADAPTOR.address,
+  } = useReadContract({
+    address: chainConfig.SDAI_ADAPTOR.address,
     abi: SDAI_ADAPTOR_ABI,
     functionName: "vaultAPY",
   });
@@ -41,12 +43,10 @@ export function DistributionOverview({
     data: totalSupplyData,
     status: totalSupplyStatus,
     error: totalSupplyError,
-  } = useContractRead({
-    address: config.BREAD.address,
+  } = useReadContract({
+    address: chainConfig.BREAD.address,
     abi: ERC20_ABI,
     functionName: "totalSupply",
-    watch: true,
-    cacheTime: 6_000,
   });
 
   const yieldPerHour = useMemo(() => {

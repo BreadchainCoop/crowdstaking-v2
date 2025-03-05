@@ -6,9 +6,9 @@ import {
   useState,
   useMemo,
 } from "react";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { TUserConnected, useConnectedUser } from "../../hooks/useConnectedUser";
-import { useBalance, useContractRead } from "wagmi";
+import { useBlockNumber, useBalance, useReadContract } from "wagmi";
 import { ERC20_ABI } from "@/abi";
 import { formatUnits } from "viem";
 
@@ -61,21 +61,29 @@ function ProviderWithUser({
 }) {
   const [breadBalanceState, setBreadBalanceState] =
     useState<TTokenBalanceState>({ status: "LOADING" });
+  const { data: blockNumber } = useBlockNumber({ watch: true });
 
   const [xdaiBalanceState, setXdaiBalanceState] = useState<TTokenBalanceState>({
     status: "LOADING",
   });
 
-  const config = getConfig(user.chain.id);
+  useEffect(() => {
+    refetchUseBalance();
+    refetchBalanceOf();
+  }, [blockNumber]);
+
+  const config = getChain(user.chain.id);
   // BREAD balance
-  const { data: breadBalanceData, status: breadBalanceStatus } =
-    useContractRead({
-      address: config.BREAD.address,
-      abi: ERC20_ABI,
-      functionName: "balanceOf",
-      args: [user.address],
-      watch: true,
-    });
+  const {
+    data: breadBalanceData,
+    status: breadBalanceStatus,
+    refetch: refetchBalanceOf,
+  } = useReadContract({
+    address: config.BREAD.address,
+    abi: ERC20_ABI,
+    functionName: "balanceOf",
+    args: [user.address],
+  });
 
   useEffect(() => {
     if (breadBalanceStatus === "error") {
@@ -99,9 +107,9 @@ function ProviderWithUser({
     data: xDAIBalanceData,
     status: xDAIBalanceStatus,
     error: xDAIBalanceError,
+    refetch: refetchUseBalance,
   } = useBalance({
     address: user.address,
-    watch: true,
   });
 
   useEffect(() => {

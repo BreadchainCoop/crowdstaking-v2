@@ -2,36 +2,38 @@
 import { BREAD_ABI, DISTRIBUTOR_ABI } from "@/abi";
 import Button from "@/app/core/components/Button";
 import { projectsMeta } from "@/app/projectsMeta";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { useEffect } from "react";
 import { formatUnits, Hex } from "viem";
 import {
-  useContractRead,
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
+  useReadContract,
+  useWriteContract,
+  useAccount,
+  useSimulateContract,
 } from "wagmi";
 
 export function Diagnostics() {
-  const { chain: activeChain } = useNetwork();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const distributorAddress = config.DISBURSER.address;
+  const { chain: activeChain } = useAccount();
+  const chainConfig = activeChain
+    ? getChain(activeChain.id)
+    : getChain("DEFAULT");
+  const distributorAddress = chainConfig.DISBURSER.address;
 
   const {
-    config: prepareConfig,
+    data: prepareConfig,
     status: prepareStatus,
     error: prepareError,
-  } = usePrepareContractWrite({
+  } = useSimulateContract({
     address: distributorAddress,
     abi: DISTRIBUTOR_ABI,
     functionName: "distributeYield",
   });
 
   const {
-    write,
+    writeContract,
     data: distributeYieldData,
     status: distributeYieldStatus,
-  } = useContractWrite(prepareConfig);
+  } = useWriteContract();
 
   useEffect(() => {
     if (prepareError) {
@@ -44,7 +46,7 @@ export function Diagnostics() {
       <div>
         <Button
           onClick={() => {
-            write?.();
+            writeContract?.(prepareConfig!.request);
           }}
         >
           Distribute Yield
@@ -60,17 +62,18 @@ export function Diagnostics() {
 }
 
 function ProjectDisplay({ account }: { account: Hex }) {
-  const { chain: activeChain } = useNetwork();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const breadAddress = config.BREAD.address;
+  const { chain: activeChain } = useAccount();
+  const chainConfig = activeChain
+    ? getChain(activeChain.id)
+    : getChain("DEFAULT");
+  const breadAddress = chainConfig.BREAD.address;
 
   const { data: breadBalanceData, status: breadBalanceStatus } =
-    useContractRead({
+    useReadContract({
       address: breadAddress,
       abi: BREAD_ABI,
       functionName: "balanceOf",
       args: [account],
-      watch: true,
     });
 
   return (

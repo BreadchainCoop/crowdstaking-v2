@@ -1,8 +1,8 @@
 import { ReactNode, useEffect, useReducer } from "react";
-import { useContractRead } from "wagmi";
+import { useReadContract } from "wagmi";
 import clsx from "clsx";
 
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { ERC20_ABI } from "@/abi";
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
 import { LPVaultTransactionModalState } from "@/app/core/context/ModalContext";
@@ -27,19 +27,18 @@ export function LockingTransaction({
   user: TUserConnected;
   modalState: LPVaultTransactionModalState;
 }) {
-  const chainConfig = getConfig(user.chain.id);
+  const chainConfig = getChain(user.chain.id);
   const [lockingState, lockingDispatch] = useReducer(lockingReducer, {
     depositAmount: modalState.parsedValue,
     status: "loading",
   });
 
   const { status: userAllowanceStatus, data: userAllowanceData } =
-    useContractRead({
+    useReadContract({
       address: chainConfig.BUTTER.address,
       abi: ERC20_ABI,
       functionName: "allowance",
       args: [user.address, chainConfig.BUTTERED_BREAD.address],
-      watch: true,
     });
 
   useEffect(() => {

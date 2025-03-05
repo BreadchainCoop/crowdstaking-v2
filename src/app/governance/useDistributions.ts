@@ -1,17 +1,19 @@
 import { getPublicClient } from "@wagmi/core";
-
-import { getConfig } from "@/chainConfig";
-import { useQuery } from "react-query";
-import { useNetwork } from "wagmi";
+import { getChain } from "@/chainConfig";
+import { getConfig } from "@/app/core/hooks/WagmiProvider/config/getConfig";
+import { useQuery } from "@tanstack/react-query";
+import { useAccount } from "wagmi";
 import { formatUnits, parseAbiItem } from "viem";
 
 export function useDistributions() {
-  const { chain: activeChain } = useNetwork();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const publicClient = getPublicClient();
+  const { chain: activeChain } = useAccount();
+  const chainConfig = activeChain
+    ? getChain(activeChain.id)
+    : getChain("DEFAULT");
+  const publicClient = getPublicClient(getConfig().config);
 
   return useQuery({
-    queryKey: "getDistributions",
+    queryKey: ["getDistributions"],
     refetchInterval: 1000,
     queryFn: async () => {
       // const logs = await publicClient.getContractEvents({
@@ -23,7 +25,7 @@ export function useDistributions() {
       // });
 
       const logs = await publicClient.getLogs({
-        address: config.DISBURSER.address,
+        address: chainConfig.DISBURSER.address,
         event: parseAbiItem(
           "event YieldDistributed(uint256, uint256, uint256[])"
         ),

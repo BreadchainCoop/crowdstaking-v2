@@ -1,10 +1,11 @@
 import { getPublicClient } from "@wagmi/core";
+import { getChain } from "@/chainConfig";
 
-import { getConfig } from "@/chainConfig";
+import { getConfig } from "@/app/core/hooks/WagmiProvider/config/getConfig";
 import { DISTRIBUTOR_ABI } from "@/abi";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Hex } from "viem";
-import { useNetwork } from "wagmi";
+import { useAccount } from "wagmi";
 
 type VoteLogData = {
   blockTimestamp: Hex;
@@ -16,13 +17,15 @@ type VoteLogData = {
 };
 
 export function useCurrentVotes(lastClaimedBlockNumber: bigint | null) {
-  const { chain: activeChain } = useNetwork();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const distributorAddress = config.DISBURSER.address;
-  const publicClient = getPublicClient();
+  const { chain: activeChain } = useAccount();
+  const chainConfig = activeChain
+    ? getChain(activeChain.id)
+    : getChain("DEFAULT");
+  const distributorAddress = chainConfig.DISBURSER.address;
+  const publicClient = getPublicClient(getConfig().config);
 
   return useQuery({
-    queryKey: "getVotesForCurrentRound",
+    queryKey: ["getVotesForCurrentRound"],
     refetchInterval: 500,
     enabled: !!lastClaimedBlockNumber,
     queryFn: async () => {

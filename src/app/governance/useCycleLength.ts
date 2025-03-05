@@ -1,7 +1,7 @@
 import { DISTRIBUTOR_ABI } from "@/abi";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { useEffect, useState } from "react";
-import { useContractRead, useNetwork } from "wagmi";
+import { useReadContract, useAccount } from "wagmi";
 
 export type CycleLengthState =
   | CycleLengthLoading
@@ -24,15 +24,17 @@ export function useCycleLength() {
     status: "LOADING",
   });
 
-  const { chain: activeChain } = useNetwork();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const distributorAddress = config.DISBURSER.address;
+  const { chain: activeChain } = useAccount();
+  const chainConfig = activeChain
+    ? getChain(activeChain.id)
+    : getChain("DEFAULT");
+  const distributorAddress = chainConfig.DISBURSER.address;
 
   const {
     data: cycleLengthData,
     status: cycleLengthStatus,
     error: cycleLengthError,
-  } = useContractRead({
+  } = useReadContract({
     address: distributorAddress,
     abi: DISTRIBUTOR_ABI,
     functionName: "cycleLength",

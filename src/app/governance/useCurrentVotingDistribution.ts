@@ -1,8 +1,8 @@
 import { DISTRIBUTOR_ABI } from "@/abi";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { useEffect, useState } from "react";
 import { Hex } from "viem";
-import { useContractRead, useNetwork } from "wagmi";
+import { useReadContract, useAccount } from "wagmi";
 
 export type CurrentVotingDistributionState =
   | CurrentVotingDistributionLoading
@@ -26,21 +26,23 @@ export function useCurrentVotingDistribution() {
       status: "LOADING",
     });
 
-  const { chain: activeChain } = useNetwork();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const distriubutorAddress = config.DISBURSER.address;
+  const { chain: activeChain } = useAccount();
+  const chainConfig = activeChain
+    ? getChain(activeChain.id)
+    : getChain("DEFAULT");
+  const distriubutorAddress = chainConfig.DISBURSER.address;
 
   const {
     data: currentVotingDistributionData,
     status: currentVotingDistributionStatus,
     error: currentVotingDistributionError,
-  } = useContractRead({
+  } = useReadContract({
     address: distriubutorAddress,
     abi: DISTRIBUTOR_ABI,
     functionName: "getCurrentVotingDistribution",
-    watch: true,
-    enabled: distriubutorAddress !== "0x",
-    cacheTime: 2_000,
+    query: {
+      enabled: distriubutorAddress !== "0x",
+    },
   });
 
   useEffect(() => {

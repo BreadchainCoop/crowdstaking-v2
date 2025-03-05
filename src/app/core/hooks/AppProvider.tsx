@@ -1,7 +1,7 @@
 "use client";
 import { ReactNode } from "react";
 
-import { WagmiProvider } from "@/app/core/hooks/WagmiProvider/WagmiProvider";
+import { WagmiProviderWrapper } from "@/app/core/hooks/WagmiProvider/WagmiProviderWrapper";
 import { TokenBalancesProvider } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
 import { ConnectedUserProvider } from "@/app/core/hooks/useConnectedUser";
 import { TransactionsProvider } from "@/app/core/context/TransactionsContext/TransactionsContext";
@@ -12,10 +12,7 @@ import { useSentry } from "./useSentry";
 
 import { ModalProvider } from "../context/ModalContext";
 
-import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
-
-const queryClient = new QueryClient();
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export function AppProvider({
   children,
@@ -27,19 +24,17 @@ export function AppProvider({
   useSentry();
 
   return (
-    <WagmiProvider>
+    <WagmiProviderWrapper>
       <ConnectedUserProvider features={features}>
-        <QueryClientProvider client={queryClient}>
-          <TokenBalancesProvider>
-            <ToastProvider>
-              <TransactionsProvider>
-                <ModalProvider>{children}</ModalProvider>
-              </TransactionsProvider>
-            </ToastProvider>
-          </TokenBalancesProvider>
-          <ReactQueryDevtools initialIsOpen={true} />
-        </QueryClientProvider>
+        <TokenBalancesProvider>
+          <ToastProvider>
+            <TransactionsProvider>
+              <ModalProvider>{children}</ModalProvider>
+            </TransactionsProvider>
+          </ToastProvider>
+        </TokenBalancesProvider>
+        <ReactQueryDevtools initialIsOpen={true} />
       </ConnectedUserProvider>
-    </WagmiProvider>
+    </WagmiProviderWrapper>
   );
 }

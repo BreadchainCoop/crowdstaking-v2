@@ -1,15 +1,19 @@
 import { DISTRIBUTOR_ABI } from "@/abi";
-import { getConfig } from "@/chainConfig";
-import { useContractRead, useNetwork } from "wagmi";
+import { getChain } from "@/chainConfig";
+import { useReadContract, useAccount } from "wagmi";
 
 export function usePreviousCycleStartingBlock() {
-  const { chain: activeChain } = useNetwork();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
+  const { chain: activeChain } = useAccount();
+  const chainConfig = activeChain
+    ? getChain(activeChain.id)
+    : getChain("DEFAULT");
 
-  return useContractRead({
-    address: config.DISBURSER.address,
+  return useReadContract({
+    address: chainConfig.DISBURSER.address,
     abi: DISTRIBUTOR_ABI,
     functionName: "previousCycleStartingBlock",
-    enabled: true,
+    query: {
+      enabled: true,
+    },
   });
 }
