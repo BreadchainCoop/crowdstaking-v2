@@ -40,7 +40,7 @@ const config = getDefaultConfig({
     },
   ],
   transports: {
-    [mainnet.id]: httpProvider,
+    [mainnet.id]: http(),
     [sepolia.id]: httpProvider,
     [gnosis.id]: httpProvider,
   },
