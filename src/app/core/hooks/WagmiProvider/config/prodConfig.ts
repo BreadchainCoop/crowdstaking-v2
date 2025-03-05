@@ -1,4 +1,4 @@
-import { mainnet, gnosis, sepolia } from "wagmi/chains";
+import { gnosis, sepolia } from "wagmi/chains";
 import { http } from "wagmi";
 import { defineChain } from "viem";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
@@ -32,7 +32,7 @@ const projectId = NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
 const config = getDefaultConfig({
   appName: "Breadchain Crowdstaking",
   projectId: projectId,
-  chains: [mainnet, gnosisChain, ...sepoliaChain],
+  chains: [gnosisChain, ...sepoliaChain],
   wallets: [
     {
       groupName: "Recommended",
@@ -40,9 +40,8 @@ const config = getDefaultConfig({
     },
   ],
   transports: {
-    [mainnet.id]: http(),
+    [gnosis.id]: http(),
     [sepolia.id]: httpProvider,
-    [gnosis.id]: httpProvider,
   },
 });
 
