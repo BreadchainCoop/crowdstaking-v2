@@ -3,7 +3,10 @@ import { useEffect, useState } from "react";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { getConfig } from "@/chainConfig";
 import { PageGrid } from "@/app/governance/components/PageGrid";
-import { VotingPowerPanel } from "@/app/governance/boosters/components/VotingPowerPanel";
+import { VotingPowerPanel } from "./components/VotingPowerPanel";
+import { BoosterCard } from "./components/BoosterCard";
+import { boostData, mapBoostToCardProps } from "./data/BoostData";
+import Button from "@/app/core/components/Button";
 
 export function BoosterPage() {
   const { user } = useConnectedUser();
@@ -17,11 +20,13 @@ export function BoosterPage() {
         <div className="col-span-12 lg:col-span-8 row-start-1 row-span-1">
           <TitleSection />
         </div>
-
         <VotingPowerPanel />
       </PageGrid>
       <div className="w-full pt-6">
-        <h2 className="font-bold text-xl">All boosters</h2>
+        <h2 className="font-bold text-xl">All boosters?</h2>
+        <div className="grid md:grid-cols-3 gap-4 items-start">
+          {BoosterList()}
+        </div>
       </div>
     </section>
   );
@@ -41,5 +46,13 @@ function TitleSection() {
         </p>
       </div>
     </div>
+  );
+}
+
+function BoosterList() {
+  return (
+      boostData.map((boost, index) => {
+        return (<BoosterCard key={index} boost={boost} {...mapBoostToCardProps(boost)} />);
+      })
   );
 }
