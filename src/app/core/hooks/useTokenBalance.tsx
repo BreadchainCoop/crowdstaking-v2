@@ -6,7 +6,7 @@ import { ERC20_ABI } from "@/abi";
 
 export function useTokenBalance(user: TConnectedUserState, tokenAddress: Hex) {
   const { data: blockNumber } = useBlockNumber({ watch: true });
-  const { data, refetch, isError, isLoading } = useReadContract({
+  const { data, refetch, status, isError, isLoading } = useReadContract({
     address: tokenAddress,
     abi: ERC20_ABI,
     functionName: "balanceOf",
@@ -29,6 +29,7 @@ export function useTokenBalance(user: TConnectedUserState, tokenAddress: Hex) {
   return {
     data,
     refetchTokenBalance,
+    status,
     isError,
     isLoading,
   };
