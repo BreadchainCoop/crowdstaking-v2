@@ -1,4 +1,4 @@
-import { http } from "wagmi";
+import { http } from "@wagmi/core";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { sepolia, foundry, gnosis } from "wagmi/chains";
 import { defineChain } from "viem";

@@ -1,5 +1,5 @@
 import { mainnet, gnosis, sepolia } from "wagmi/chains";
-import { http } from "wagmi";
+import { http } from "@wagmi/core";
 import { defineChain } from "viem";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { getWallets } from "./wallets";

@@ -1,4 +1,4 @@
-import { http } from "wagmi";
+import { http } from "@wagmi/core";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { hardhat } from "wagmi/chains";
 import { getWallets } from "./wallets";

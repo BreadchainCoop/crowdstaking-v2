@@ -1,7 +1,7 @@
 import { Wallet, WalletDetailsParams } from "@rainbow-me/rainbowkit";
 import { createConnector, CreateConnectorFn } from "@wagmi/core";
 import { type Chain, createWalletClient } from "viem";
-import { http } from "wagmi";
+import { http } from "@wagmi/core";
 
 const devAccount = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
 
