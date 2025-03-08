@@ -7,7 +7,7 @@ import {
   transactionIcons,
   TransactionValue,
 } from "../ModalUI";
-import { TTransactionStatus } from "../../../context/TransactionsContext/TransactionsReducer";
+import { TTransactionData, TTransactionStatus } from "../../../context/TransactionsContext/TransactionsReducer";
 import {
   TokenLabelContainer,
   TokenLabelText,
@@ -18,10 +18,17 @@ import { useTransactions } from "@/app/core/context/TransactionsContext/Transact
 import { BakeryTransactionModalState } from "@/app/core/context/ModalContext";
 import { ReactNode } from "react";
 
-const modalHeaderText = {
-  BAKE: "Baking Bread",
-  BURN: "Burning Bread",
-};
+function makeHeaderText(modalType: "BAKE" | "BURN", status: TTransactionStatus) {
+  if (modalType === "BAKE") {
+    if (status === "CONFIRMED") {
+      return "Buns are out!"
+    } else {
+      return "Baking Bread"
+    }
+  } else {
+    return "Burning Bread"
+  }
+}
 
 const modalAdviceText: {
   [key in TTransactionStatus]: string;
@@ -68,18 +75,18 @@ export function BakeryTransactionModal({
 
   const txStatus = transaction.status as TTransactionStatus;
 
-  let content: ReactNode
+  let bottomContent: ReactNode
   if (transaction.status === 'PREPARED') {
-    content = <ModalAdviceText>
+    bottomContent = <ModalAdviceText>
       {modalAdviceText[transaction.status]}
     </ModalAdviceText>
   } else if (transaction.status === 'CONFIRMED') {
-    content = <>
+    bottomContent = <>
       <ModalAdviceText>{modalAdviceText[txStatus]}</ModalAdviceText>
       <ShareButtons bakeValue={transaction.data.value} />
     </>
   } else {
-    content = <>
+    bottomContent = <>
       <ModalAdviceText>{modalAdviceText[txStatus]}</ModalAdviceText>
       {transaction.status !== "SAFE_SUBMITTED" && (
         <ExplorerLink
@@ -91,7 +98,7 @@ export function BakeryTransactionModal({
 
   return (
     <ModalContainer>
-      <ModalHeading>{modalHeaderText[transaction.data.type]}</ModalHeading>
+      <ModalHeading>{makeHeaderText(transaction.data.type, txStatus)}</ModalHeading>
       <ModalContent>
         {transactionIcons[txStatus]}
         <div className="flex gap-2 items-center justify-center">
@@ -103,7 +110,7 @@ export function BakeryTransactionModal({
             <TokenLabelText>BREAD</TokenLabelText>
           </TokenLabelContainer>
         </div>
-        {content}
+        {bottomContent}
       </ModalContent>
     </ModalContainer>
   );

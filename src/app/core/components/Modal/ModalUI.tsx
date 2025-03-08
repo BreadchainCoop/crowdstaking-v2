@@ -92,7 +92,7 @@ https://app.breadchain.xyz`
         onClick={shareOnX}
       >
         Share on <img
-          className="inline m-1"
+          className="inline ml-1"
           src="/x_logo_white.png"
           width={20}
           height={20}
@@ -106,7 +106,7 @@ https://app.breadchain.xyz`
         onClick={shareOnW}
       >
         Share on <img
-          className="inline m-1"
+          className="inline ml-1"
           src="/warpcast_logo_round.png"
           width={20}
           height={20}
