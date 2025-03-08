@@ -84,6 +84,7 @@ export function BakeryTransactionModal({
     bottomContent = <>
       <ModalAdviceText>{modalAdviceText[txStatus]}</ModalAdviceText>
       <ShareButtons bakeValue={transaction.data.value} />
+      <div className="mb-1 h-0"></div>
     </>
   } else {
     bottomContent = <>

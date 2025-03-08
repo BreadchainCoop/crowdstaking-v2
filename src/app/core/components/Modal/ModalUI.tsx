@@ -68,7 +68,7 @@ export function ShareButtons({ bakeValue }: { bakeValue: string }) {
   function makeText(platform: 'X' | 'Warpcast') {
     return `I just baked some BREAD to help fund on-chain post-capitalism thanks to ${platform === 'X' ? '@breadchain_' : 'breadchain.xyz'}!
 
-I grew the bakery to ${bakeValue} BREAD! bread \u{1F35E} \u{1F35E} \u{1F35E}
+I grew the bakery to ${bakeValue} BREAD! \u{1F35E} \u{1F35E} \u{1F35E}
 
 https://app.breadchain.xyz`
   }
