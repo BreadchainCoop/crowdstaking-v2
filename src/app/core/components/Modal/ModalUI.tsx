@@ -91,7 +91,13 @@ https://app.breadchain.xyz`
         variant="secondary"
         onClick={shareOnX}
       >
-        Share on X
+        Share on <img
+          className="inline m-1"
+          src="/x_logo_white.png"
+          width={20}
+          height={20}
+          alt="X logo"
+        />
       </Button>
       <Button
         fullWidth={true}
@@ -99,7 +105,13 @@ https://app.breadchain.xyz`
         variant="secondary"
         onClick={shareOnW}
       >
-        Share on W
+        Share on <img
+          className="inline m-1"
+          src="/warpcast_logo_round.png"
+          width={20}
+          height={20}
+          alt="Warpcast logo"
+        />
       </Button>
 
     </div>
