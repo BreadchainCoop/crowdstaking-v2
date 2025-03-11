@@ -6,7 +6,6 @@ import { formatBalance } from "../../util/formatter";
 import { motion } from "framer-motion";
 import { Spinner } from "../Icons/Spinner";
 import { TTransactionStatus } from "../../context/TransactionsContext/TransactionsReducer";
-import Button from "../Button";
 
 export const ModalContainer = forwardRef(
   (
@@ -61,60 +60,6 @@ export function ModalAdviceText({ children }: { children: ReactNode }) {
     <p className="max-w-xs text-lg leading-normal text-breadgray-burnt dark:text-breadgray-light-grey text-center pt-4 pb-2">
       {children}
     </p>
-  );
-}
-
-export function ShareButtons({ bakeValue }: { bakeValue: string }) {
-  function makeText(platform: 'X' | 'Warpcast') {
-    return `I just baked some BREAD to help fund on-chain post-capitalism thanks to ${platform === 'X' ? '@breadchain_' : 'breadchain.xyz'}!
-
-I grew the bakery to ${bakeValue} BREAD! \u{1F35E} \u{1F35E} \u{1F35E}
-
-https://app.breadchain.xyz`
-  }
-
-  const xText = encodeURIComponent(makeText('X'))
-  const wText = encodeURIComponent(makeText('Warpcast'))
-
-  const shareOnX = () => {
-    window.open(`https://twitter.com/intent/tweet?text=${xText}`, '_blank')
-  }
-  const shareOnW = () => {
-    window.open(`https://warpcast.com/~/compose?text=${wText}`, '_blank')
-  }
-
-  return (
-    <div className="w-full flex flex-col gap-4">
-      <Button
-        fullWidth={true}
-        size="large"
-        variant="secondary"
-        onClick={shareOnX}
-      >
-        Share on <img
-          className="inline ml-1"
-          src="/x_logo_white.png"
-          width={20}
-          height={20}
-          alt="X logo"
-        />
-      </Button>
-      <Button
-        fullWidth={true}
-        size="large"
-        variant="secondary"
-        onClick={shareOnW}
-      >
-        Share on <img
-          className="inline ml-1"
-          src="/warpcast_logo_round.png"
-          width={20}
-          height={20}
-          alt="Warpcast logo"
-        />
-      </Button>
-
-    </div>
   );
 }
 
