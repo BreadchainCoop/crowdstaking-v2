@@ -138,7 +138,6 @@ export function BakeryTransactionModal({
     </ModalAdviceText>
   } else if (transaction.status === 'CONFIRMED') {
     bottomContent = <>
-      <ModalAdviceText>{modalAdviceText[txStatus]}</ModalAdviceText>
       <ShareButtons bakeValue={transaction.data.value} />
       <div className="mb-1 h-0"></div>
     </>
@@ -153,12 +152,14 @@ export function BakeryTransactionModal({
     </>
   }
 
+
   return (
     <ModalContainer>
       <ModalHeading>{makeHeaderText(transaction.data.type, txStatus)}</ModalHeading>
       <ModalContent>
         {transactionIcons[txStatus]}
-        <div className="flex gap-2 items-center justify-center">
+        {transaction.status === 'CONFIRMED' && <ModalAdviceText>{modalAdviceText[txStatus]}</ModalAdviceText>}
+        <div className={`${transaction.status === 'CONFIRMED' ? 'mb-4' : ''} flex gap-2 items-center justify-center`}>
           <TransactionValue
             value={transaction.data.value ? transaction.data.value : "0"}
           />
