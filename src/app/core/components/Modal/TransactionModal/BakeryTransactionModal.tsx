@@ -16,7 +16,12 @@ import { BreadIcon } from "../../Icons/TokenIcons";
 import { ExplorerLink } from "../../ExplorerLink";
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
 import { BakeryTransactionModalState } from "@/app/core/context/ModalContext";
+import { useContractRead } from "wagmi";
+import { BREAD_ADDRESS } from "@/constants";
+import { ERC20_ABI } from "@/abi";
 import { ReactNode } from "react";
+import { formatSupply } from "@/app/core/util/formatter";
+import { formatUnits } from "viem";
 
 function makeHeaderText(modalType: "BAKE" | "BURN", status: TTransactionStatus) {
   if (modalType === "BAKE") {
@@ -41,11 +46,11 @@ const modalAdviceText: {
 };
 
 
-function ShareButtons({ bakeValue }: { bakeValue: string }) {
+function ShareButtons({ newSupply }: { newSupply: number | null }) {
   function makeText(platform: 'X' | 'Warpcast') {
     return `I just baked some BREAD to help fund on-chain post-capitalism thanks to ${platform === 'X' ? '@breadchain_' : 'breadchain.xyz'}!
 
-I grew the bakery to ${bakeValue} BREAD! \u{1F35E} \u{1F35E} \u{1F35E}
+I grew the bakery to ${newSupply ? formatSupply(newSupply) : ''} BREAD! \u{1F35E} \u{1F35E} \u{1F35E}
 
 https://app.breadchain.xyz`
   }
@@ -67,6 +72,7 @@ https://app.breadchain.xyz`
         size="large"
         variant="secondary"
         onClick={shareOnX}
+        disabled={newSupply === null}
       >
         Share on <img
           className="inline ml-1"
@@ -81,6 +87,7 @@ https://app.breadchain.xyz`
         size="large"
         variant="secondary"
         onClick={shareOnW}
+        disabled={newSupply === null}
       >
         Share on <img
           className="inline ml-1"
@@ -101,6 +108,14 @@ export function BakeryTransactionModal({
 }: {
   modalState: BakeryTransactionModalState;
 }) {
+  const { data: supply, status: supplyTxStatus } = useContractRead({
+    address: BREAD_ADDRESS,
+    abi: ERC20_ABI,
+    functionName: "totalSupply",
+    watch: true,
+    cacheTime: 6_000,
+  });
+
   const { transactionsState } = useTransactions();
 
   const transaction = transactionsState.new
@@ -131,6 +146,8 @@ export function BakeryTransactionModal({
 
   const txStatus = transaction.status as TTransactionStatus;
 
+  const newSupply = supplyTxStatus === "success" ? Number(Number(transaction.data.value).toFixed()) + parseInt(formatUnits(supply, 18)) : null
+
   let bottomContent: ReactNode
   if (transaction.status === 'PREPARED') {
     bottomContent = <ModalAdviceText>
@@ -138,7 +155,7 @@ export function BakeryTransactionModal({
     </ModalAdviceText>
   } else if (transaction.status === 'CONFIRMED') {
     bottomContent = <>
-      <ShareButtons bakeValue={transaction.data.value} />
+      <ShareButtons newSupply={newSupply} />
       <div className="mb-1 h-0"></div>
     </>
   } else {
