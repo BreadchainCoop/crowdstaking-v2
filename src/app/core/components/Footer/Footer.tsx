@@ -2,7 +2,6 @@ import Image from "next/image";
 
 import type { ReactNode } from "react";
 import { LogoSVG } from "../Icons/Logo";
-import { WRAPPER_CLASSES } from "../../util/classes";
 import clsx from "clsx";
 import { MirrorIcon } from "../Icons/social";
 import DiscordIcon from "../Icons/social/DiscordIcon";
