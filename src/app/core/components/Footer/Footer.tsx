@@ -13,10 +13,7 @@ export function Footer() {
   return (
     <footer className="border-t-[0.16rem] border-breadviolet-shaded">
       <div
-        className={clsx(
-          "w-full flex flex-col gap-8 lg:gap-0 lg:flex-row justify-between items-center py-8",
-          WRAPPER_CLASSES
-        )}
+        className="w-full flex flex-col gap-8 lg:gap-0 lg:flex-row justify-between items-center pt-6 pb-8 px-8"
       >
         {/* branding */}
         <div className="flex flex-col gap-1">
@@ -31,57 +28,65 @@ export function Footer() {
           </span>
         </div>
         {/* navigation */}
-        <nav className="flex flex-col gap-6 lg:flex-row items-center">
-          <div className="flex items-center justify-center gap-6 lg:gap-4 w-full lg:w-auto">
-            <FooterLink
-              href="https://twitter.com/breadchain_"
-              className="text-breadgray-grey100 dark:text-breadgray-ultra-white"
-            >
-              <svg
-                className="w-full h-full p-0.5 fill-current"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+        <div className="flex flex-col -mb-6">
+          <nav className="flex flex-col gap-6 lg:flex-row items-center">
+            <div className="flex items-center justify-center gap-6 lg:gap-4 w-full lg:w-auto">
+              <FooterLink
+                href="https://twitter.com/breadchain_"
+                className="text-breadgray-grey100 dark:text-breadgray-ultra-white"
               >
-                <path d="M15.7512 0H18.818L12.1179 8.47179L20 20H13.8284L8.99458 13.0082L3.46359 20H0.394938L7.5613 10.9385L0 0H6.32828L10.6976 6.39077L15.7512 0ZM14.6748 17.9692H16.3742L5.4049 1.9241H3.58133L14.6748 17.9692Z" />
-              </svg>
-            </FooterLink>
-            <FooterLink href="https://breadchain.mirror.xyz/">
-              <MirrorIcon />
-            </FooterLink>
-            <FooterLink
-              href="https://cryptoleftists.xyz"
-              className="text-breadgray-grey100 dark:text-breadgray-ultra-white"
-            >
-              <DiscordIcon />
-            </FooterLink>
-            <FooterLink
-              href="https://github.com/BreadchainCoop"
-              className="text-breadgray-grey100 dark:text-breadgray-ultra-white"
-            >
-              <GithubIcon />
-            </FooterLink>
-            <FooterLink
-              href="https://guild.xyz/breadchain"
-              className="text-breadgray-grey100 dark:text-breadgray-ultra-white"
-            >
-              <Image
-                className="guild-logo"
-                src="/guild_logo.png"
-                alt="Guild Logo"
-                width={38}
-                height={36.42}
-              />
+                <svg
+                  className="w-full h-full p-0.5 fill-current"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M15.7512 0H18.818L12.1179 8.47179L20 20H13.8284L8.99458 13.0082L3.46359 20H0.394938L7.5613 10.9385L0 0H6.32828L10.6976 6.39077L15.7512 0ZM14.6748 17.9692H16.3742L5.4049 1.9241H3.58133L14.6748 17.9692Z" />
+                </svg>
+              </FooterLink>
+              <FooterLink href="https://breadchain.mirror.xyz/">
+                <MirrorIcon />
+              </FooterLink>
+              <FooterLink
+                href="https://cryptoleftists.xyz"
+                className="text-breadgray-grey100 dark:text-breadgray-ultra-white"
+              >
+                <DiscordIcon />
+              </FooterLink>
+              <FooterLink
+                href="https://github.com/BreadchainCoop"
+                className="text-breadgray-grey100 dark:text-breadgray-ultra-white"
+              >
+                <GithubIcon />
+              </FooterLink>
+              <FooterLink
+                href="https://guild.xyz/breadchain"
+                className="text-breadgray-grey100 dark:text-breadgray-ultra-white"
+              >
+                <Image
+                  className="guild-logo"
+                  src="/guild_logo.png"
+                  alt="Guild Logo"
+                  width={38}
+                  height={36.42}
+                />
 
-              <Image
-                className="guild-logo-dark"
-                src="/guild_logo_dark.png"
-                alt="Guild Logo"
-                width={38}
-                height={36.42}
-              />
-            </FooterLink>
+                <Image
+                  className="guild-logo-dark"
+                  src="/guild_logo_dark.png"
+                  alt="Guild Logo"
+                  width={38}
+                  height={36.42}
+                />
+              </FooterLink>
+            </div>
+          </nav>
+          <div className="text-breadgray-grey100 dark:text-breadgray-grey text-xs mt-3">
+            Creative Common 2025
           </div>
+        </div>
+        {/* copyright */}
+        <div className="flex flex-row gap-4">
           <a
             href="https://opencollective.com/breadchain-cooperative"
             target="_blank"
@@ -104,13 +109,20 @@ export function Footer() {
               <LinkIcon />
             </span>
           </a>
-        </nav>
-        {/* copyright */}
-        <span className="text-breadgray-grey100 dark:text-breadgray-grey">
-          Creative Commons {new Date().getFullYear()}
-        </span>
+          <a
+            href="https://dune.com/breadchain_cooperative/breadchain"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-row items-center"
+          >
+            <span className="pr-2">Analytics</span>
+            <span className="text-breadpink-shaded">
+              <LinkIcon />
+            </span>
+          </a>
+        </div>
       </div>
-    </footer>
+    </footer >
   );
 }
 
