@@ -1,5 +1,15 @@
 # Crowdstaking
 
+### Terminology
+
+These few terms are used throughout the codebase.
+
+- *BREAD* - xDAI derrived yield-bearing token.
+- *Baking* - converting xDAI into BREAD.
+- *Buttering* - converting BREAD to Curve LP tokens.
+- *Buttered BREAD* - LP tokens from buttering staked to be used for voting.
+
+## Development Setup
 With foundry, nodejs etc installed
 
 ### Install dependencies
