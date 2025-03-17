@@ -108,7 +108,7 @@ export function BakeryTransactionModal({
 }: {
   modalState: BakeryTransactionModalState;
 }) {
-  const { data: supply, status: supplyTxStatus } = useContractRead({
+  const { data: supply } = useContractRead({
     address: BREAD_ADDRESS,
     abi: ERC20_ABI,
     functionName: "totalSupply",
@@ -146,7 +146,7 @@ export function BakeryTransactionModal({
 
   const txStatus = transaction.status as TTransactionStatus;
 
-  const newSupply = supplyTxStatus === "success" ? Number(Number(transaction.data.value).toFixed()) + parseInt(formatUnits(supply, 18)) : null
+  const newSupply = supply !== undefined ? Number(Number(transaction.data.value).toFixed()) + parseInt(formatUnits(supply, 18)) : null
 
   let bottomContent: ReactNode
   if (transaction.status === 'PREPARED') {
