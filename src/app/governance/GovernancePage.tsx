@@ -22,6 +22,11 @@ import { projectsMeta } from "../projectsMeta";
 import { PageGrid } from "./components/PageGrid";
 import { ProjectsProvider } from "@/app/core/context/ProjectContext/ProjectContext";
 import { useVotingPower } from "./context/VotingPowerContext";
+import { useIsMobile } from "@/app/core/hooks/useIsMobile";
+import {
+  VotingHistoryMobile,
+  VotingHistoryDesktop,
+} from "./components/VotingHistory";
 
 export function GovernancePage() {
   const { user, isSafe } = useConnectedUser();
@@ -31,6 +36,7 @@ export function GovernancePage() {
   const { castVote } = useCastVote(user, lastClaimedBlocknumber);
   const { minRequiredVotingPower } = useMinRequiredVotingPower();
   const { data: distributionsData } = useDistributions();
+  const isMobile = useIsMobile();
 
   const userVotingPower = useVotingPower();
 
@@ -202,100 +208,110 @@ export function GovernancePage() {
     );
 
   return (
-    <section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
-      <PageGrid>
-        <div className="col-span-12 lg:col-span-8 row-start-1 row-span-1">
-          <h3 className="text-3xl font-bold text-breadgray-grey100 dark:text-breadgray-ultra-white">
-            Bread Governance
-          </h3>
-          <p className="pt-4 text-lg max-w-xl text-breadgray-rye dark:text-breadgray-light-grey">
-            Distribute your voting power across the various projects in the
-            Breadchain Network to influence how much yield is given to each. The
-            actual distribution will be made at the end of the month based on
-            all votes received.
-          </p>
-        </div>
+    <>
+      <section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
+        <PageGrid>
+          <div className="col-span-12 lg:col-span-8 row-start-1 row-span-1">
+            <h3 className="text-3xl font-bold text-breadgray-grey100 dark:text-breadgray-ultra-white">
+              Bread Governance
+            </h3>
+            <p className="pt-4 text-lg max-w-xl text-breadgray-rye dark:text-breadgray-light-grey">
+              Distribute your voting power across the various projects in the
+              Breadchain Network to influence how much yield is given to each.
+              The actual distribution will be made at the end of the month based
+              on all votes received.
+            </p>
+          </div>
 
-        <DistributionOverview
-          cycleDates={cycleDates}
-          distributions={distributionsData}
-        />
-
-        <div className="max-w-md m-auto col-span-12 row-start-3 row-span-1 lg:row-start-3 lg:col-start-9 lg:col-span-4 h-full flex flex-col gap-4">
-          <ResultsPanel distribution={currentVotingDistribution} />
-          <InfoCallout />
-        </div>
-
-        <div className="col-span-12 row-start-4 lg:col-start-1 lg:col-span-8 lg:row-start-2">
-          <VotingPower
-            minRequiredVotingPower={minRequiredVotingPower}
-            userVotingPower={totalUserVotingPower}
-            userHasVoted={userHasVoted}
+          <DistributionOverview
             cycleDates={cycleDates}
-            cycleLength={cycleLength}
-            userCanVote={userCanVote}
-            user={user}
-            distributeEqually={distributeEqually}
-            isRecasting={isRecasting}
+            distributions={distributionsData}
           />
-        </div>
-        <div className="col-span-12 row-start-5 lg:col-start-1 lg:col-span-8 lg:row-start-3 grid grid-cols-1 gap-3">
-          {currentVotingDistribution.data[0]
-            .map((account, i) => ({
-              account,
-              castPoints: currentVotingDistribution.data[1][i],
-            }))
-            .toSorted((a, b) => {
-              return (
-                projectsMeta[a.account].order - projectsMeta[b.account].order
-              );
-            })
-            .map((project, i) => {
-              return (
-                <div key={`project_row_${project.account}`}>
-                  <ProjectsProvider
-                    cycleLength={cycleLength.data}
-                    address={project.account}
-                  >
-                    <ProjectRow address={project.account}>
-                      {!isRecasting && castVote.data ? (
-                        <VoteDisplay
-                          points={castVote.data[project.account]}
-                          percentage={
-                            (castVote.data[project.account] / castTotalPoints) *
-                              100 || 0
-                          }
-                        />
-                      ) : (
-                        <VoteForm
-                          value={voteFormState.projects[project.account]}
-                          updateValue={updateValue}
-                          address={project.account}
-                          totalPoints={voteFormState.totalPoints}
-                          user={user}
-                          userCanVote={userCanVote}
-                        />
-                      )}
-                    </ProjectRow>
-                  </ProjectsProvider>
-                </div>
-              );
-            })}
-          <CastVotePanel
-            user={user}
-            userVote={Object.keys(voteFormState.projects).map(
-              (account) => voteFormState.projects[account as Hex]
-            )}
-            userHasVoted={userHasVoted}
-            userCanVote={userCanVote}
-            isSafe={isSafe}
-            isRecasting={isRecasting}
-            setIsRecasting={setIsRecasting}
-            resetFormState={resetFormState}
-          />
-        </div>
-      </PageGrid>
-      {/* <Diagnostics /> */}
-    </section>
+
+          <div className="max-w-md m-auto col-span-12 row-start-3 row-span-1 lg:row-start-3 lg:col-start-9 lg:col-span-4 h-full flex flex-col gap-4">
+            <ResultsPanel distribution={currentVotingDistribution} />
+            <InfoCallout />
+          </div>
+
+          <div className="col-span-12 row-start-4 lg:col-start-1 lg:col-span-8 lg:row-start-2">
+            <VotingPower
+              minRequiredVotingPower={minRequiredVotingPower}
+              userVotingPower={totalUserVotingPower}
+              userHasVoted={userHasVoted}
+              cycleDates={cycleDates}
+              cycleLength={cycleLength}
+              userCanVote={userCanVote}
+              user={user}
+              distributeEqually={distributeEqually}
+              isRecasting={isRecasting}
+            />
+          </div>
+          <div className="col-span-12 row-start-5 lg:col-start-1 lg:col-span-8 lg:row-start-3 grid grid-cols-1 gap-3">
+            {currentVotingDistribution.data[0]
+              .map((account, i) => ({
+                account,
+                castPoints: currentVotingDistribution.data[1][i],
+              }))
+              .toSorted((a, b) => {
+                return (
+                  projectsMeta[a.account].order - projectsMeta[b.account].order
+                );
+              })
+              .map((project, i) => {
+                return (
+                  <div key={`project_row_${project.account}`}>
+                    <ProjectsProvider
+                      cycleLength={cycleLength.data}
+                      address={project.account}
+                    >
+                      <ProjectRow address={project.account}>
+                        {!isRecasting && castVote.data ? (
+                          <VoteDisplay
+                            points={castVote.data[project.account]}
+                            percentage={
+                              (castVote.data[project.account] /
+                                castTotalPoints) *
+                                100 || 0
+                            }
+                          />
+                        ) : (
+                          <VoteForm
+                            value={voteFormState.projects[project.account]}
+                            updateValue={updateValue}
+                            address={project.account}
+                            totalPoints={voteFormState.totalPoints}
+                            user={user}
+                            userCanVote={userCanVote}
+                          />
+                        )}
+                      </ProjectRow>
+                    </ProjectsProvider>
+                  </div>
+                );
+              })}
+            <CastVotePanel
+              user={user}
+              userVote={Object.keys(voteFormState.projects).map(
+                (account) => voteFormState.projects[account as Hex]
+              )}
+              userHasVoted={userHasVoted}
+              userCanVote={userCanVote}
+              isSafe={isSafe}
+              isRecasting={isRecasting}
+              setIsRecasting={setIsRecasting}
+              resetFormState={resetFormState}
+            />
+          </div>
+        </PageGrid>
+        {/* <Diagnostics /> */}
+      </section>
+      <section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
+        <PageGrid>
+          <div className="col-span-12 row-start-1 row-span-1">
+            {isMobile ? <VotingHistoryMobile /> : <VotingHistoryDesktop />}
+          </div>
+        </PageGrid>
+      </section>
+    </>
   );
 }
