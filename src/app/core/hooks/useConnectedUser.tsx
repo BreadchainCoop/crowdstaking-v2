@@ -50,6 +50,7 @@ const ConnectedUserContext = createContext<{
     features: {
       governancePage: false,
       breadCounter: false,
+      votingHistory: false,
       recastVote: false,
       lpVaults: false,
     },

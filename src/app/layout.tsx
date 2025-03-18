@@ -18,6 +18,7 @@ const features = {
   governancePage: parseFeatureVar(process.env.FEATURE_GOVERNANCE),
   breadCounter: parseFeatureVar(process.env.FEATURE_BREAD_COUNTER),
   recastVote: parseFeatureVar(process.env.FEATURE_RECAST_VOTE),
+  votingHistory: parseFeatureVar(process.env.FEATURE_VOTING_HISTORY),
   lpVaults: parseFeatureVar(process.env.FEATURE_LP_VAULTS),
 };
 
