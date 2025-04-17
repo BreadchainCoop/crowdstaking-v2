@@ -73,7 +73,7 @@ export function ModalContent({ children }: { children: ReactNode }) {
 
 export function ModalAdviceText({ children }: { children: ReactNode }) {
   return (
-    <p className="max-w-xs text-lg leading-normal text-breadgray-burnt dark:text-breadgray-light-grey text-center pt-4 pb-2">
+    <p className="max-w-xs text-lg leading-normal text-breadgray-rye dark:text-breadgray-grey text-center pt-4 pb-2">
       {children}
     </p>
   );
