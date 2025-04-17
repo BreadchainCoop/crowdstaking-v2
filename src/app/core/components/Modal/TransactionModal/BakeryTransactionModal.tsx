@@ -26,7 +26,7 @@ import { useBlockNumber } from "wagmi";
 import { AddTokenButton } from "../../Header/AddTokenButton";
 import { useVaultAPY } from "@/app/core/hooks/useVaultAPY";
 import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
-import { renderFormattedDecimalNumber } from "@/app/core/util/render-formatted-decimal-number";
+import { renderFormattedDecimalNumber } from "@/app/core/util/formatter";
 import { LinkIcon } from "../../Icons/LinkIcon";
 function makeHeaderText(
   modalType: "BAKE" | "BURN",
@@ -52,9 +52,7 @@ function modalAdviceText(
     SUBMITTED: "Waiting for on-chain confimation",
     SAFE_SUBMITTED: "Safe Transaction Submitted",
     CONFIRMED:
-      modalType === "BAKE"
-        ? "You successfully baked"
-        : "Transaction Confirmed",
+      modalType === "BAKE" ? "You successfully baked" : "Transaction Confirmed",
     REVERTED: "Transaction Reverted",
   };
   return text[status];
@@ -165,6 +163,12 @@ export function BakeryTransactionModal({
 
   const txStatus = transaction.status as TTransactionStatus;
 
+  const calculateAnnualFundingValue = (breadValue: string, APY: bigint) => {
+    const calculatedValue =
+      parseFloat(breadValue) * Number(formatUnits(APY, 18));
+    return formatBalance(calculatedValue, 2);
+  };
+
   function newSupply(amount: string) {
     if (
       supply === undefined ||
@@ -191,8 +195,11 @@ export function BakeryTransactionModal({
     APY !== undefined &&
     BREAD?.status === "SUCCESS"
   ) {
-    totalBreadCoop = formatCoopValue(BREAD.value, APY);
-    additionalBreadCoop = formatCoopValue(transaction.data.value, APY);
+    totalBreadCoop = calculateAnnualFundingValue(BREAD.value, APY);
+    additionalBreadCoop = calculateAnnualFundingValue(
+      transaction.data.value,
+      APY
+    );
     pastBreadCoop = formatBalance(
       parseFloat(totalBreadCoop) - parseFloat(additionalBreadCoop),
       2
@@ -200,10 +207,7 @@ export function BakeryTransactionModal({
   }
 
   let middleContent: ReactNode;
-  if (
-    transaction.status === "CONFIRMED" &&
-    transaction.data.type === "BAKE"
-  ) {
+  if (transaction.status === "CONFIRMED" && transaction.data.type === "BAKE") {
     middleContent = (
       <>
         <BakedBreadCoopInfo
@@ -217,8 +221,8 @@ export function BakeryTransactionModal({
             <InfoBoxSvg />
           </div>
           <p className="text-breadgray-rye dark:text-breadgray-light-grey">
-            Baking $BREAD increases crucial funding for our
-            post-capitalist cooperatives.{" "}
+            Baking $BREAD increases crucial funding for our post-capitalist
+            cooperatives.{" "}
             <a
               href="https://breadchain.notion.site/4d496b311b984bd9841ef9c192b9c1c7?v=2eb1762e6b83440f8b0556c9917f86ca"
               target="_blank"
@@ -277,11 +281,12 @@ export function BakeryTransactionModal({
             transaction.status === "CONFIRMED" ? "mb-4" : ""
           } flex gap-2 items-center justify-center`}
         >
-          {transaction.status === "CONFIRMED" && transaction.data.type === "BAKE" && (
-            <span>
-              <BreadIcon />
-            </span>
-          )}
+          {transaction.status === "CONFIRMED" &&
+            transaction.data.type === "BAKE" && (
+              <span>
+                <BreadIcon />
+              </span>
+            )}
           <TransactionValue
             value={transaction.data.value ? transaction.data.value : "0"}
           />
@@ -365,15 +370,11 @@ const BakedBreadCoopInfoItem = ({
         <div className="inline-flex items-center justify-center">
           <span
             className={`inline-flex items-center justify-center ${
-              type === "additional"
-                ? "bread-pink-text-gradient"
-                : ""
+              type === "additional" ? "bread-pink-text-gradient" : ""
             }`}
           >
             {type === "additional" && <span>+</span>}
-            <span className="px-1">
-              {renderFormattedDecimalNumber(amount)}
-            </span>
+            <span className="px-1">{renderFormattedDecimalNumber(amount)}</span>
           </span>
         </div>
       </p>
@@ -397,12 +398,3 @@ const InfoBoxSvg = () => (
     />
   </svg>
 );
-
-const formatCoopValue = (breadValue: string, APY: bigint) => {
-  const calculatedValue =
-    parseFloat(breadValue) * Number(formatUnits(APY, 18));
-
-  const roundedValue = Number(calculatedValue.toFixed(2));
-
-  return formatBalance(roundedValue, 2);
-};

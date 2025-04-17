@@ -10,7 +10,7 @@ import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBa
 import { BreadIcon } from "@/app/core/components/Icons/TokenIcons";
 import { formatBalance } from "@/app/core/util/formatter";
 import { HeartIcon } from "@/app/core/components/Icons/HeartIcon";
-import { renderFormattedDecimalNumber } from "@/app/core/util/render-formatted-decimal-number";
+import { renderFormattedDecimalNumber } from "@/app/core/util/formatter";
 import { formatUnits } from "viem";
 
 interface MenuDetailsProps {
