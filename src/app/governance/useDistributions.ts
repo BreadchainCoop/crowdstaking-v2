@@ -1,59 +1,111 @@
-import { getPublicClient } from "@wagmi/core";
-import { getConfig } from "@/app/core/hooks/WagmiProvider/config/getConfig";
-import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 import { useQuery } from "@tanstack/react-query";
-import { formatUnits, parseAbiItem } from "viem";
+import { GraphQLClient } from "graphql-request";
+import { formatUnits } from "viem";
+import { useEffect, useState } from "react";
+import { projectsMeta } from "@/app/projectsMeta";
+import { Hex } from "viem";
+import { SUBGRAPH_QUERY_URL } from "@/constants";
 
-export function useDistributions() {
-  const chainConfig = useActiveChain();
-  const publicClient = getPublicClient(getConfig().config);
+interface YieldDistribution {
+  id: string;
+  yield: string;
+  totalVotes: string;
+  timestamp: string;
+  projectDistributions: Array<string>;
+}
 
-  return useQuery({
-    queryKey: ["getDistributions"],
-    refetchInterval: 1000,
-    queryFn: async () => {
-      // const logs = await publicClient.getContractEvents({
-      //   address: distributorAddress,
-      //   abi: DISTRIBUTOR_ABI,
-      //   // eventName: "YieldDistributed",
-      //   fromBlock: BigInt(34695057),
-      //   toBlock: "latest",
-      // });
+interface QueryResponse {
+  yieldDistributeds: YieldDistribution[];
+}
 
-      const logs = await publicClient.getLogs({
-        address: chainConfig.DISBURSER.address,
-        event: parseAbiItem(
-          "event YieldDistributed(uint256, uint256, uint256[])"
-        ),
-        // args: {
-        //   from: "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
-        //   to: "0xa5cc3c03994db5b0d9a5eedd10cabab0813678ac",
-        // },
-        fromBlock: BigInt(34695057),
-        toBlock: "latest",
-      });
+interface CycleDistribution {
+  cycleNumber: number;
+  totalYield: number;
+  distributionDate: string;
+  projectDistributions: Array<{
+    projectAddress: Hex;
+    governancePayment: number;
+    percentVotes: number;
+    flatPayment: number;
+  }>;
+}
 
-      return logs.map((log) => {
-        const [totalYield, totalVotes, distributions] = log.args;
-        if (!totalYield || !totalVotes || !distributions) {
-          throw new Error("error in distribution events response");
-        }
-
-        const votesTotal = formatUnits(totalVotes, 18);
-
-        const baseYield = Number(formatUnits(totalYield, 18)) / 2;
-
-        // console.log("yield: ", formatUnits(totalYield, 18));
-        // console.log("total votes: ", formatUnits(totalVotes, 18));
-        distributions.forEach((d) => {
-          const percent =
-            (Number(formatUnits(d, 18)) / Number(votesTotal)) * 100;
-
-          const payment = baseYield * percent;
-          // console.log("payment: ", payment);
-          // console.log("percent: ", percent);
-        });
-      });
+export function useDistributions(index: number = 0) {
+  const API_KEY = process.env.SUBGRAPH_API_KEY;
+  const [cycleDistribution, setCycleDistribution] =
+    useState<CycleDistribution | null>(null);
+  const client = new GraphQLClient(SUBGRAPH_QUERY_URL, {
+    headers: {
+      Authorization: `Bearer ${API_KEY}`,
     },
   });
+  const { data, status } = useQuery<QueryResponse>({
+    queryKey: ["subgraphs", index],
+    async queryFn() {
+      return await client.request(`
+        query {
+          yieldDistributeds(orderBy: timestamp, orderDirection: desc) {
+            id
+            yield
+            totalVotes
+            timestamp
+            projectDistributions
+          }
+        }
+      `);
+    },
+  });
+
+  useEffect(() => {
+    console.log(data);
+    const yieldDistribution = data?.yieldDistributeds[index];
+    debugger;
+    if (yieldDistribution) {
+      const cycleDistribution: CycleDistribution = {
+        cycleNumber: data?.yieldDistributeds.length - index,
+        totalYield: 0,
+        distributionDate: "",
+        projectDistributions: [],
+      };
+
+      const distributionDate = new Date(
+        Number(yieldDistribution.timestamp) * 1000
+      ).toLocaleDateString();
+
+      const totalYield = yieldDistribution.yield;
+      const totalVotes = formatUnits(BigInt(yieldDistribution.totalVotes), 18);
+      const baseYield = Number(formatUnits(BigInt(totalYield), 18)) / 2;
+
+      cycleDistribution.totalYield = Number(totalYield);
+      cycleDistribution.distributionDate = distributionDate;
+
+      yieldDistribution.projectDistributions.forEach(
+        (projectDistribution, index) => {
+          const projectAddress = Object.entries(projectsMeta).find(
+            ([_, p]) => p.ydIndex === index
+          )?.[0];
+
+          const percent =
+            Number(formatUnits(BigInt(projectDistribution), 18)) /
+            Number(totalVotes);
+          console.log(percent);
+          const governancePayment = baseYield * percent;
+          cycleDistribution.projectDistributions.push({
+            projectAddress: projectAddress as Hex,
+            governancePayment: governancePayment,
+            percentVotes: percent,
+            flatPayment:
+              baseYield / yieldDistribution.projectDistributions.length,
+          });
+        }
+      );
+
+      setCycleDistribution(cycleDistribution);
+    }
+  }, [data, status, index]);
+
+  return {
+    cycleDistribution,
+    totalDistributions: data?.yieldDistributeds.length,
+  };
 }

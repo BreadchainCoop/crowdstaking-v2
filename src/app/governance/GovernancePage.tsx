@@ -35,7 +35,7 @@ export function GovernancePage() {
   const { cycleLength } = useCycleLength();
   const { castVote } = useCastVote(user, lastClaimedBlocknumber);
   const { minRequiredVotingPower } = useMinRequiredVotingPower();
-  const { data: distributionsData } = useDistributions();
+  const { cycleDistribution, totalDistributions } = useDistributions(0); // pass in the desired index; 0 returns the latest cycle
   const isMobile = useIsMobile();
 
   const userVotingPower = useVotingPower();
@@ -225,7 +225,7 @@ export function GovernancePage() {
 
           <DistributionOverview
             cycleDates={cycleDates}
-            distributions={distributionsData}
+            distributions={totalDistributions}
           />
 
           <div className="max-w-md m-auto col-span-12 row-start-3 row-span-1 lg:row-start-3 lg:col-start-9 lg:col-span-4 h-full flex flex-col gap-4">
@@ -308,7 +308,11 @@ export function GovernancePage() {
       <section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
         <PageGrid>
           <div className="col-span-12 row-start-1 row-span-1">
-            {isMobile ? <VotingHistoryMobile /> : <VotingHistoryDesktop />}
+            {isMobile ? (
+              <VotingHistoryMobile cycleDistribution={cycleDistribution} />
+            ) : (
+              <VotingHistoryDesktop cycleDistribution={cycleDistribution} />
+            )}
           </div>
         </PageGrid>
       </section>

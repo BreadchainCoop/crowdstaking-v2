@@ -59,6 +59,9 @@ importers:
       framer-motion:
         specifier: ^10.16.4
         version: 10.18.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      graphql-request:
+        specifier: ^7.1.2
+        version: 7.1.2(graphql@16.10.0)
       nanoid:
         specifier: ^5.0.7
         version: 5.0.7
@@ -1144,6 +1147,11 @@ packages:
 
   '@floating-ui/utils@0.2.8':
     resolution: {integrity: sha512-kym7SodPp8/wloecOpcmSnWJsK7M0E5Wg8UcFA+uO4B9s5d0ywXOEro/8HM9x0rW+TljRzul/14UYz3TleT3ig==}
+
+  '@graphql-typed-document-node/core@3.2.0':
+    resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -4129,6 +4137,15 @@ packages:
 
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
+
+  graphql-request@7.1.2:
+    resolution: {integrity: sha512-+XE3iuC55C2di5ZUrB4pjgwe+nIQBuXVIK9J98wrVwojzDW3GMdSBZfxUk8l4j9TieIpjpggclxhNEU9ebGF8w==}
+    peerDependencies:
+      graphql: 14 - 16
+
+  graphql@16.10.0:
+    resolution: {integrity: sha512-AjqGKbDGUFRKIRCP9tCKiIGHyriz2oHEbPIbEtcSLSs4YjReZOIPQQWek4+6hjw62H9QShXHyaGivGiYVLeYFQ==}
+    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
 
   gunzip-maybe@1.4.2:
     resolution: {integrity: sha512-4haO1M4mLO91PW57BMsDFf75UmwoRX0GkdD+Faw+Lr+r/OZrOCS0pIBwOL1xCKQqnQzbNFGgK2V2CpBUPeFNTw==}
@@ -7638,6 +7655,10 @@ snapshots:
       '@floating-ui/utils': 0.2.8
 
   '@floating-ui/utils@0.2.8': {}
+
+  '@graphql-typed-document-node/core@3.2.0(graphql@16.10.0)':
+    dependencies:
+      graphql: 16.10.0
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
@@ -11748,6 +11769,13 @@ snapshots:
   graceful-fs@4.2.11: {}
 
   graphemer@1.4.0: {}
+
+  graphql-request@7.1.2(graphql@16.10.0):
+    dependencies:
+      '@graphql-typed-document-node/core': 3.2.0(graphql@16.10.0)
+      graphql: 16.10.0
+
+  graphql@16.10.0: {}
 
   gunzip-maybe@1.4.2:
     dependencies:
