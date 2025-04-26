@@ -31,7 +31,7 @@ interface CycleDistribution {
 }
 
 export function useDistributions(index: number = 0) {
-  const API_KEY = process.env.SUBGRAPH_API_KEY;
+  const API_KEY = process.env.NEXT_PUBLIC_SUBGRAPH_API_KEY;
   const [cycleDistribution, setCycleDistribution] =
     useState<CycleDistribution | null>(null);
   const client = new GraphQLClient(SUBGRAPH_QUERY_URL, {
@@ -59,7 +59,7 @@ export function useDistributions(index: number = 0) {
   useEffect(() => {
     console.log(data);
     const yieldDistribution = data?.yieldDistributeds[index];
-    debugger;
+    // debugger;
     if (yieldDistribution) {
       const cycleDistribution: CycleDistribution = {
         cycleNumber: data?.yieldDistributeds.length - index,
