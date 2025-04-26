@@ -22,11 +22,7 @@ import { projectsMeta } from "../projectsMeta";
 import { PageGrid } from "./components/PageGrid";
 import { ProjectsProvider } from "@/app/core/context/ProjectContext/ProjectContext";
 import { useVotingPower } from "./context/VotingPowerContext";
-import { useIsMobile } from "@/app/core/hooks/useIsMobile";
-import {
-  VotingHistoryMobile,
-  VotingHistoryDesktop,
-} from "./components/VotingHistory";
+import { VotingHistory } from "./components/VotingHistory";
 
 export function GovernancePage() {
   const { user, isSafe } = useConnectedUser();
@@ -36,7 +32,6 @@ export function GovernancePage() {
   const { castVote } = useCastVote(user, lastClaimedBlocknumber);
   const { minRequiredVotingPower } = useMinRequiredVotingPower();
   const { cycleDistribution, totalDistributions } = useDistributions(0); // pass in the desired index; 0 returns the latest cycle
-  const isMobile = useIsMobile();
 
   const userVotingPower = useVotingPower();
 
@@ -308,11 +303,7 @@ export function GovernancePage() {
       <section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
         <PageGrid>
           <div className="col-span-12 row-start-1 row-span-1">
-            {isMobile ? (
-              <VotingHistoryMobile cycleDistribution={cycleDistribution} />
-            ) : (
-              <VotingHistoryDesktop cycleDistribution={cycleDistribution} />
-            )}
+            <VotingHistory cycleDistribution={cycleDistribution} />
           </div>
         </PageGrid>
       </section>
