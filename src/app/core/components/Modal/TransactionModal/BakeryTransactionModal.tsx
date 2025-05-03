@@ -360,10 +360,10 @@ const BakedBreadCoopInfoItem = ({
 }) => {
   return (
     <div className="flex items-center justify-between mb-2">
-      <p className="text-sm leading-normal text-breadgray-rye dark:text-breadgray-grey font-normal w-full">
+      <p className="text-sm leading-normal text-breadgray-rye dark:text-breadgray-grey font-normal w-full max-w-72">
         {label}
       </p>
-      <p className="flex items-center justify-end w-full max-w-max">
+      <p className="flex items-center justify-start flex-1">
         <span className="mr-2">
           <BreadIcon />
         </span>
