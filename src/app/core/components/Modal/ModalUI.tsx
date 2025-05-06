@@ -33,7 +33,7 @@ export const ModalContainer = forwardRef(
           exit={{ y: 8, opacity: 0 }}
           transition={{ duration: 0.2 }}
           className={
-            "pointer-events-auto" +
+            "pointer-events-auto max-height-[100vh]" +
             (includeContainerStyling
               ? " w-[30rem] flex flex-col items-center rounded dark:bg-opacity-100 p-4 bg-breadgray-ultra-white border border-breadgray-light-grey dark:border-none dark:bg-breadgray-charcoal relative"
               : "")
@@ -98,7 +98,7 @@ export const ModalOverlay = forwardRef((props, ref: Ref<HTMLDivElement>) => {
         animate={{ opacity: 0.9 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="z-40 fixed top-0 bg-[#F0F0F0] dark:bg-neutral-900 transition-opacity opacity-90 dark:opacity-70 h-screen w-screen"
+        className="z-[80] fixed top-0 bg-[#F0F0F0] dark:bg-neutral-900 transition-opacity opacity-90 dark:opacity-70 h-screen w-screen"
       />
     </div>
   );
