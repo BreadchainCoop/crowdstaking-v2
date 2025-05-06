@@ -32,38 +32,28 @@ export function VotingHistory({
   return (
     <>
       <header>
-        <h2 className="text-breadgray-pitchblack dark:text-breadgray-ultra-white text-lg md:text-[2rem]">
-          Past Cycle
+        <h2 className="pb-2 text-breadgray-pitchblack dark:text-breadgray-ultra-white text-lg font-bold tracking-wider md:text-[2rem]">
+          Last cycle
         </h2>
         <p className="text-breadgray-rye dark:text-breadgray-light-grey text-xl">
           These are the results of the previous voting cycle #
           {cycleDistribution.cycleNumber}.
         </p>
-        <p className="text-breadgray-rye dark:text-breadgray-grey">
-          Distribution date:{" "}
-          {format(
-            new Date(cycleDistribution.distributionDate),
-            "MMM d, yyyy"
-          )}
+        <p className="pt-6 text-center text-breadgray-rye dark:text-breadgray-grey">
+          Ended on{" "}
+          {format(new Date(cycleDistribution.distributionDate), "MMM d, yyyy")}
         </p>
       </header>
       <div>
         <div className="my-3 md:flex md:flex-row-reverse md:gap-4">
-          <div className="py-3 border rounded-[0.625rem] flex flex-col items-center justify-center mb-1 md:flex-1 md:mb-0">
+          <div className="py-3 dark:bg-breadgray-charcoal bg-breadgray-ultra-white border border-breadgray-light-grey dark:border-breadgray-rye rounded-[0.625rem] flex flex-col items-center justify-center mb-1 md:flex-1 md:mb-0">
             <div className="flex items-center justify-center mb-1 text-breadgray-pitchblack dark:text-breadgray-ultra-white">
               <span className="mr-1">
                 <BreadIcon />
               </span>
               <p className="text-2xl font-semibold">
                 {formatBalance(
-                  Number(
-                    formatUnits(
-                      BigInt(
-                        cycleDistribution.totalYield
-                      ),
-                      18
-                    )
-                  ),
+                  Number(formatUnits(BigInt(cycleDistribution.totalYield), 18)),
                   2
                 )}
               </p>
@@ -72,7 +62,7 @@ export function VotingHistory({
               Total yield distributed
             </p>
           </div>
-          <div className="py-3 border rounded-[0.625rem] flex flex-col items-center justify-center md:flex-1">
+          <div className="py-3 mt-2 border border-breadgray-light-grey dark:border-breadgray-rye rounded-[0.625rem] flex flex-col items-center justify-center md:flex-1">
             <div className="md:hidden">
               <p className="text-2xl font-semibold text-breadgray-pitchblack dark:text-breadgray-ultra-white">
                 #{cycleDistribution.cycleNumber}
@@ -91,32 +81,30 @@ export function VotingHistory({
             </div>
           </div>
         </div>
-        <div className="p-3 border border-breadgray-rye rounded-[0.625rem] mt-1 md:px-8 md:py-4">
-          <h3 className="text-breadgray-pitchblack dark:text-breadgray-ultra-white md:text-breadgray-rye dark:md:text-breadgray-grey text-center md:font-medium md:text-left md:mb-2">
-            HOW YIELD IS DISTRIBUTED
+        <div className="p-3 border border-breadgray-light-grey dark:border-breadgray-rye rounded-[0.625rem] mt-1 md:px-8 md:py-4">
+          <h3 className="pb-2 md:uppercase text-breadgray-pitchblack dark:text-breadgray-ultra-white md:text-breadgray-rye dark:md:text-breadgray-grey text-center md:font-medium md:text-left md:mb-2">
+            How yield is distributed
           </h3>
           <div className="md:flex md:items-center md:justify-center md:gap-4">
             <div className="mb-4 md:flex-1 md:flex md:items-center md:mb-0">
-              <div className="hidden md:inline-block md:rounded md:w-1 md:h-8 md:bg-breadpink-500 md:mr-2" />
+              <div className="hidden md:inline-block md:rounded md:w-1 md:h-12 md:bg-breadpink-500 md:mr-2" />
               <div>
                 <p className="font-bold text-breadgray-pitchblack dark:text-breadgray-ultra-white">
                   Solidarity Amount
                 </p>
-                <p className="text-breadgray-rye dark:text-breadgray-grey md:dark:text-breadgray-white text-xs font-medium">
-                  50% of the total yield is distributed
-                  equally.
+                <p className="pt-1 text-breadgray-rye dark:text-breadgray-grey md:dark:text-breadgray-white text-sm font-medium">
+                  50% of the total yield is distributed equally.
                 </p>
               </div>
             </div>
             <div className="md:flex-1 md:flex md:items-center">
-              <div className="hidden md:inline-block md:rounded md:w-1 md:h-8 md:bg-breadpink-500 md:mr-2" />
+              <div className="hidden md:inline-block md:rounded md:w-1 md:h-12 md:bg-breadpink-500 md:mr-2" />
               <div>
                 <p className="font-bold text-breadgray-pitchblack dark:text-breadgray-ultra-white">
                   Democratic Amount
                 </p>
-                <p className="text-breadgray-rye dark:text-breadgray-grey md:dark:text-breadgray-white text-xs font-medium">
-                  50% of the total yield is distributed by
-                  vote.
+                <p className="pt-1 text-breadgray-rye dark:text-breadgray-grey md:dark:text-breadgray-white text-sm font-medium">
+                  50% of the total yield is distributed by vote.
                 </p>
               </div>
             </div>
@@ -136,9 +124,7 @@ function VotingHistoryDetail({
   const isMobile = useIsMobile();
 
   if (isMobile)
-    return (
-      <VotingHistoryDetailMobile cycleDistribution={cycleDistribution} />
-    );
+    return <VotingHistoryDetailMobile cycleDistribution={cycleDistribution} />;
 
   return <VotingHistoryDetailDesktop cycleDistribution={cycleDistribution} />;
 }
@@ -178,8 +164,8 @@ function VotingHistoryDetailMobile({
                 value={project.projectAddress}
                 className="border border-breadgray-grey rounded-[0.625rem] py-2 px-4 mb-4 last:mb-0"
               >
-                <Accordion.Trigger className="flex items-center justify-between w-full text-breadgray-pitchblack">
-                  <span className="inline-flex items-center justify-start w-5/6">
+                <Accordion.Trigger className="flex items-center justify-between w-full text-breadgray-pitchblack dark:text-breadgray-ultra-white group">
+                  <span className="inline-flex items-center justify-start w-4/6">
                     <img
                       src={meta.logoSrc}
                       className="w-6 h-6 rounded-full mr-2"
@@ -187,7 +173,7 @@ function VotingHistoryDetailMobile({
                     />
                     <span className="">{meta.name}</span>
                   </span>
-                  <span className="inline-flex items-center justify-start w-1/6">
+                  <span className="inline-flex items-center justify-end w-2/6">
                     <span className="inline-flex items-center justify-center">
                       <span className="mr-2">
                         <BreadIcon />
@@ -195,15 +181,31 @@ function VotingHistoryDetailMobile({
                       <span className="font-bold">
                         {formatted.totalPayment}
                       </span>
+                      <span>
+                        <div className="size-6  ms-2 text-breadgray-grey100 dark:text-breadgray-ultra-white">
+                          <svg
+                            className="w-full h-full fill-current group-data-[state=open]:rotate-180"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              clipRule="evenodd"
+                              d="M7 8H5V10H7V12H9V14H11V16H13V14H15V12H17V10H19V8H17V10H15V12H13V14H11V12H9V10H7V8Z"
+                            />
+                          </svg>
+                        </div>
+                      </span>
                     </span>
                     <span></span>
                   </span>
                 </Accordion.Trigger>
                 <Accordion.Content className="text-breadgray-rye dark:text-breadgray-grey">
                   <div className="border border-breadgray-light-grey p-2 rounded-[0.3125rem] mt-6 mb-3">
-                    <p className="mb-4 font-medium">
-                      Amount breakdown
-                    </p>
+                    <p className="mb-4 font-medium">Amount breakdown</p>
                     <div className="flex items-center justify-between mb-3">
                       <p>Democratic amount</p>
                       <div className="inline-flex items-center justify-end">
@@ -211,9 +213,7 @@ function VotingHistoryDetailMobile({
                           <BreadIcon />
                         </span>
                         <span className="text-breadgray-pitchblack dark:text-breadgray-ultra-white font-bold">
-                          {
-                            formatted.governancePayment
-                          }
+                          {formatted.governancePayment}
                         </span>
                       </div>
                     </div>
@@ -277,70 +277,64 @@ function VotingHistoryDetailDesktop({
             </tr>
           </thead>
           <tbody>
-            {cycleDistribution.projectDistributions.map(
-              (project) => {
-                const formatted = formatProjectPayment(
-                  project,
-                  cycleDistribution.totalYield
-                );
+            {cycleDistribution.projectDistributions.map((project) => {
+              const formatted = formatProjectPayment(
+                project,
+                cycleDistribution.totalYield
+              );
 
-                const meta =
-                  projectsMeta[project.projectAddress];
+              const meta = projectsMeta[project.projectAddress];
 
-                return (
-                  <tr
-                    key={project.projectAddress}
-                    className="text-breadgray-pitchblack dark:text-breadgray-ultra-white"
-                  >
-                    <td className="py-4 px-2">
-                      <div className="flex items-center gap-3">
-                        <span>
-                          <img
-                            src={meta.logoSrc}
-                            className="w-6 h-6 rounded-full"
-                            alt={`${meta.name}'s logo`}
-                          />
-                        </span>
-                        <span className="font-normal text-lg">
-                          {meta.name}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="py-4 px-2">
-                      <span className="block font-medium text-xl text-center">
-                        {formatted.percentVotes}%
+              return (
+                <tr
+                  key={project.projectAddress}
+                  className="text-breadgray-pitchblack dark:text-breadgray-ultra-white"
+                >
+                  <td className="py-4 px-2">
+                    <div className="flex items-center gap-3">
+                      <span>
+                        <img
+                          src={meta.logoSrc}
+                          className="w-6 h-6 rounded-full"
+                          alt={`${meta.name}'s logo`}
+                        />
                       </span>
-                    </td>
-                    <td className="py-4 px-2">
-                      <div className="flex flex-col gap-1 w-9/12 mx-auto">
-                        <div className="h-2 bg-breadgray-charcoal rounded-full w-full relative">
-                          <div
-                            className="absolute top-0 left-0 h-full rounded-full bg-[linear-gradient(to_right,#D04EC5_60%,#FF99E2)]"
-                            style={{
-                              width: `${formatted.percentOfYield}%`,
-                            }}
-                          />
-                        </div>
-                        <span className="text-sm font-medium">
-                          {formatted.percentOfYield}%
-                          of total yield
-                        </span>
+                      <span className="font-normal text-lg">{meta.name}</span>
+                    </div>
+                  </td>
+                  <td className="py-4 px-2">
+                    <span className="block font-medium text-xl text-center">
+                      {formatted.percentVotes}%
+                    </span>
+                  </td>
+                  <td className="py-4 px-2">
+                    <div className="flex flex-col gap-1 w-9/12 mx-auto">
+                      <div className="h-2 bg-breadgray-charcoal rounded-full w-full relative">
+                        <div
+                          className="absolute top-0 left-0 h-full rounded-full bg-[linear-gradient(to_right,#D04EC5_60%,#FF99E2)]"
+                          style={{
+                            width: `${formatted.percentOfYield}%`,
+                          }}
+                        />
                       </div>
-                    </td>
-                    <td className="py-4 px-2">
-                      <div className="flex items-center justify-end gap-2">
-                        <span className="w-8 inline-block">
-                          <BreadIcon />
-                        </span>
-                        <span className="font-medium text-lg">
-                          {formatted.totalPayment}
-                        </span>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              }
-            )}
+                      <span className="text-sm font-medium">
+                        {formatted.percentOfYield}% of total yield
+                      </span>
+                    </div>
+                  </td>
+                  <td className="py-4 px-2">
+                    <div className="flex items-center justify-end gap-2">
+                      <span className="w-8 inline-block">
+                        <BreadIcon />
+                      </span>
+                      <span className="font-medium text-lg">
+                        {formatted.totalPayment}
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
