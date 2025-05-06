@@ -24,7 +24,7 @@ export const ModalContainer = forwardRef(
     return (
       <div
         ref={ref}
-        className="h-screen max-h-[100vh] overflow-y-auto fixed w-screen top-0 p-2 flex justify-center items-center z-40 pointer-events-none"
+        className="h-screen max-h-[100vh] fixed w-screen top-0 p-2 grid place-items-center z-40 pointer-events-none"
         {...props}
       >
         <motion.section
@@ -33,7 +33,7 @@ export const ModalContainer = forwardRef(
           exit={{ y: 8, opacity: 0 }}
           transition={{ duration: 0.2 }}
           className={
-            "pointer-events-auto" +
+            "pointer-events-auto max-h-[calc(100vh-1rem)] overflow-y-auto mt-4" +
             (includeContainerStyling
               ? " w-[30rem] flex flex-col items-center rounded dark:bg-opacity-100 p-4 bg-breadgray-ultra-white border border-breadgray-light-grey dark:border-none dark:bg-breadgray-charcoal relative"
               : "")

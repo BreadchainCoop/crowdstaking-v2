@@ -19,10 +19,15 @@ import { BakeryTransactionModalState } from "@/app/core/context/ModalContext";
 import { BREAD_ADDRESS } from "@/constants";
 import { ERC20_ABI } from "@/abi";
 import { ReactNode } from "react";
-import { formatSupply } from "@/app/core/util/formatter";
+import { formatBalance, formatSupply } from "@/app/core/util/formatter";
 import { formatUnits } from "viem";
 import { useRefetchOnBlockChange } from "@/app/core/hooks/useRefetchOnBlockChange";
 import { useBlockNumber } from "wagmi";
+import { AddTokenButton } from "../../Header/AddTokenButton";
+import { useVaultAPY } from "@/app/core/hooks/useVaultAPY";
+import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
+import { renderFormattedDecimalNumber } from "@/app/core/util/formatter";
+import { LinkIcon } from "../../Icons/LinkIcon";
 function makeHeaderText(
   modalType: "BAKE" | "BURN",
   status: TTransactionStatus
@@ -47,9 +52,7 @@ function modalAdviceText(
     SUBMITTED: "Waiting for on-chain confimation",
     SAFE_SUBMITTED: "Safe Transaction Submitted",
     CONFIRMED:
-      modalType === "BAKE"
-        ? "You have successfully baked"
-        : "Transaction Confirmed",
+      modalType === "BAKE" ? "You successfully baked" : "Transaction Confirmed",
     REVERTED: "Transaction Reverted",
   };
   return text[status];
@@ -121,6 +124,8 @@ export function BakeryTransactionModal({
 }: {
   modalState: BakeryTransactionModalState;
 }) {
+  const { data: APY } = useVaultAPY();
+  const { BREAD } = useTokenBalances();
   const { data: supply } = useRefetchOnBlockChange(
     BREAD_ADDRESS,
     ERC20_ABI,
@@ -158,6 +163,12 @@ export function BakeryTransactionModal({
 
   const txStatus = transaction.status as TTransactionStatus;
 
+  const calculateAnnualFundingValue = (breadValue: string, APY: bigint) => {
+    const calculatedValue =
+      parseFloat(breadValue) * Number(formatUnits(APY, 18));
+    return formatBalance(calculatedValue, 2);
+  };
+
   function newSupply(amount: string) {
     if (
       supply === undefined ||
@@ -175,6 +186,57 @@ export function BakeryTransactionModal({
     return Number(Number(amount).toFixed()) + parseInt(formatUnits(supply, 18));
   }
 
+  let pastBreadCoop = "0.00";
+  let additionalBreadCoop = "0.00";
+  let totalBreadCoop = "0.00";
+
+  if (
+    transaction.status === "CONFIRMED" &&
+    APY !== undefined &&
+    BREAD?.status === "SUCCESS"
+  ) {
+    totalBreadCoop = calculateAnnualFundingValue(BREAD.value, APY);
+    additionalBreadCoop = calculateAnnualFundingValue(
+      transaction.data.value,
+      APY
+    );
+    pastBreadCoop = formatBalance(
+      parseFloat(totalBreadCoop) - parseFloat(additionalBreadCoop),
+      2
+    );
+  }
+
+  let middleContent: ReactNode;
+  if (transaction.status === "CONFIRMED" && transaction.data.type === "BAKE") {
+    middleContent = (
+      <>
+        <BakedBreadCoopInfo
+          txHash={transaction.hash!}
+          pastBreadCoop={pastBreadCoop}
+          additionalBreadCoop={additionalBreadCoop}
+          totalBreadCoop={totalBreadCoop}
+        />
+        <div className="mt-2 border border-status-success flex items-start justify-start rounded-xl p-4">
+          <div className="text-ultra-white mr-2">
+            <InfoBoxSvg />
+          </div>
+          <p className="text-breadgray-rye dark:text-breadgray-light-grey">
+            Baking $BREAD increases crucial funding for our post-capitalist
+            cooperatives.{" "}
+            <a
+              href="https://breadchain.notion.site/4d496b311b984bd9841ef9c192b9c1c7?v=2eb1762e6b83440f8b0556c9917f86ca"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-breadpink-shaded font-semibold border-b-2 border-dotted border-current"
+            >
+              How does this work?
+            </a>
+          </p>
+        </div>
+      </>
+    );
+  }
+
   let bottomContent: ReactNode;
   if (transaction.status === "PREPARED") {
     bottomContent = (
@@ -189,7 +251,7 @@ export function BakeryTransactionModal({
     bottomContent = (
       <>
         <ShareButtons newSupply={newSupply(transaction.data.value)} />
-        <div className="mb-1 h-0"></div>
+        <AddTokenButton className="!bg-transparent border-0" />
       </>
     );
   } else {
@@ -219,16 +281,120 @@ export function BakeryTransactionModal({
             transaction.status === "CONFIRMED" ? "mb-4" : ""
           } flex gap-2 items-center justify-center`}
         >
+          {transaction.status === "CONFIRMED" &&
+            transaction.data.type === "BAKE" && (
+              <span>
+                <BreadIcon />
+              </span>
+            )}
           <TransactionValue
             value={transaction.data.value ? transaction.data.value : "0"}
           />
-          <TokenLabelContainer>
-            <BreadIcon />
-            <TokenLabelText>BREAD</TokenLabelText>
-          </TokenLabelContainer>
+          {transaction.data.type !== "BAKE" && (
+            <TokenLabelContainer>
+              <BreadIcon />
+              <TokenLabelText>BREAD</TokenLabelText>
+            </TokenLabelContainer>
+          )}
         </div>
+        {middleContent}
         {bottomContent}
       </ModalContent>
     </ModalContainer>
   );
 }
+
+const BakedBreadCoopInfo = ({
+  txHash,
+  pastBreadCoop,
+  additionalBreadCoop,
+  totalBreadCoop,
+}: {
+  txHash: string;
+  pastBreadCoop: string;
+  additionalBreadCoop: string;
+  totalBreadCoop: string;
+}) => {
+  return (
+    <div className="w-full border border-breadgray-rye rounded-xl py-4 px-4">
+      <BakedBreadCoopInfoItem
+        label="Past annual Bread Coop funding"
+        amount={pastBreadCoop}
+        type="past"
+      />
+      <BakedBreadCoopInfoItem
+        label="Additional annual Bread Coop funding"
+        amount={additionalBreadCoop}
+        type="additional"
+      />
+      <BakedBreadCoopInfoItem
+        label="Total annual Bread Coop funding"
+        amount={totalBreadCoop}
+        type="total"
+      />
+      <p className="text-center mt-4 max-w-max mx-auto">
+        <a
+          href={`https://gnosisscan.io/tx/${txHash}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm flex items-center justify-center gap-1 text-breadpink-shaded"
+        >
+          <span className="mr-1">View on Gnosisscan</span>
+          <span>
+            <LinkIcon />
+          </span>
+        </a>
+      </p>
+    </div>
+  );
+};
+
+const BakedBreadCoopInfoItem = ({
+  label,
+  amount,
+  type,
+}: {
+  label: string;
+  amount: string;
+  type: "past" | "additional" | "total";
+}) => {
+  return (
+    <div className="flex items-center justify-between mb-2">
+      <p className="text-sm leading-normal text-breadgray-rye dark:text-breadgray-grey font-normal w-full max-w-72">
+        {label}
+      </p>
+      <p className="flex items-center justify-start flex-1">
+        <span className="mr-2">
+          <BreadIcon />
+        </span>
+        <div className="inline-flex items-center justify-center">
+          <span
+            className={`inline-flex items-center justify-center ${
+              type === "additional" ? "bread-pink-text-gradient" : ""
+            }`}
+          >
+            {type === "additional" && <span>+</span>}
+            <span className="px-1">{renderFormattedDecimalNumber(amount)}</span>
+          </span>
+        </div>
+      </p>
+    </div>
+  );
+};
+
+const InfoBoxSvg = () => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M2.99951 3H4.99951V21H2.99951V3ZM18.9998 3.00003H5V5.00003H18.9998V19H5V21H19V21H20.9998V3H18.9998V3.00003ZM10.9998 9.00009H12.9998V7.00009H10.9998V9.00009ZM12.9998 17H10.9998V11H12.9998V17Z"
+      fill="currentcolor"
+    />
+  </svg>
+);
