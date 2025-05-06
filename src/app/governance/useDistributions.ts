@@ -59,7 +59,7 @@ export function useDistributions(index: number = 0) {
   useEffect(() => {
     console.log(data);
     const yieldDistribution = data?.yieldDistributeds[index];
-    // debugger;
+
     if (yieldDistribution) {
       const cycleDistribution: CycleDistribution = {
         cycleNumber: data?.yieldDistributeds.length - index,
