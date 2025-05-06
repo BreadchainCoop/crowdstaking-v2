@@ -24,7 +24,7 @@ export const ModalContainer = forwardRef(
     return (
       <div
         ref={ref}
-        className="h-screen max-h-[100vh] overflow-y-auto fixed w-screen top-0 p-2 flex justify-center items-center z-40 pointer-events-none"
+        className="h-screen max-h-[100vh] fixed w-screen top-0 p-2 grid place-items-center z-40 pointer-events-none"
         {...props}
       >
         <motion.section
@@ -33,7 +33,7 @@ export const ModalContainer = forwardRef(
           exit={{ y: 8, opacity: 0 }}
           transition={{ duration: 0.2 }}
           className={
-            "pointer-events-auto max-height-[100vh]" +
+            "pointer-events-auto max-h-[calc(100vh-1rem)] overflow-y-auto mt-4" +
             (includeContainerStyling
               ? " w-[30rem] flex flex-col items-center rounded dark:bg-opacity-100 p-4 bg-breadgray-ultra-white border border-breadgray-light-grey dark:border-none dark:bg-breadgray-charcoal relative"
               : "")
@@ -73,7 +73,7 @@ export function ModalContent({ children }: { children: ReactNode }) {
 
 export function ModalAdviceText({ children }: { children: ReactNode }) {
   return (
-    <p className="max-w-xs text-lg leading-normal text-breadgray-rye dark:text-breadgray-grey text-center pt-4 pb-2">
+    <p className="max-w-xs text-lg leading-normal text-breadgray-burnt dark:text-breadgray-light-grey text-center pt-4 pb-2">
       {children}
     </p>
   );
@@ -98,7 +98,7 @@ export const ModalOverlay = forwardRef((props, ref: Ref<HTMLDivElement>) => {
         animate={{ opacity: 0.9 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="z-[80] fixed top-0 bg-[#F0F0F0] dark:bg-neutral-900 transition-opacity opacity-90 dark:opacity-70 h-screen w-screen"
+        className="z-40 fixed top-0 bg-[#F0F0F0] dark:bg-neutral-900 transition-opacity opacity-90 dark:opacity-70 h-screen w-screen"
       />
     </div>
   );
