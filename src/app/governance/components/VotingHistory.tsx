@@ -48,35 +48,30 @@ export function VotingHistory({
         <div className="my-3 md:flex md:flex-row-reverse md:gap-4">
           <div className="py-3 dark:bg-breadgray-charcoal bg-breadgray-ultra-white border border-breadgray-light-grey dark:border-breadgray-rye rounded-[0.625rem] flex flex-col items-center justify-center mb-1 md:flex-1 md:mb-0">
             <div className="flex items-center justify-center mb-1 text-breadgray-pitchblack dark:text-breadgray-ultra-white">
-              <span className="mr-1">
-                <BreadIcon />
-              </span>
-              <p className="text-2xl font-semibold">
-                {formatBalance(
-                  Number(formatUnits(BigInt(cycleDistribution.totalYield), 18)),
-                  2
-                )}
-              </p>
+              <div className="flex flex-col items-center">
+                <p className="text-breadgray-rye dark:text-breadgray-ultra-white text-[1rem] dark:md:text-breadgray-grey md:uppercase">
+                  Total yield distributed
+                </p>
+                <p className="text-2xl gap-2 font-semibold inline-flex items-center">
+                  <BreadIcon />
+                  {formatBalance(
+                    Number(
+                      formatUnits(BigInt(cycleDistribution.totalYield), 18)
+                    ),
+                    2
+                  )}
+                </p>
+              </div>
             </div>
-            <p className="text-breadgray-rye dark:text-breadgray-ultra-white text-[1rem] dark:md:text-breadgray-grey md:uppercase">
-              Total yield distributed
-            </p>
           </div>
-          <div className="py-3 mt-2 border border-breadgray-light-grey dark:border-breadgray-rye rounded-[0.625rem] flex flex-col items-center justify-center md:flex-1">
-            <div className="md:hidden">
-              <p className="text-2xl font-semibold text-breadgray-pitchblack dark:text-breadgray-ultra-white">
-                #{cycleDistribution.cycleNumber}
+
+          <div className="py-3 mt-2 md:mt-0 border border-breadgray-light-grey dark:border-breadgray-rye rounded-[0.625rem] flex flex-col items-center justify-center md:flex-1">
+            <div className="">
+              <p className="text-breadgray-rye text-center dark:text-breadgray-ultra-white text-[1rem] dark:md:text-breadgray-grey md:uppercase">
+                Last cycle
               </p>
-              <p className="text-breadgray-rye dark:text-breadgray-ultra-white text-[1rem]">
-                Cycle
-              </p>
-            </div>
-            <div className="hidden md:block">
-              <p className="text-2xl font-semibold text-breadgray-pitchblack dark:text-breadgray-ultra-white">
+              <p className="text-2xl gap-2 font-semibold inline-flex items-center">
                 Cycle #{cycleDistribution.cycleNumber}
-              </p>
-              <p className="text-[1rem] text-breadgray-rye dark:text-breadgray-grey">
-                LAST CYCLE
               </p>
             </div>
           </div>
@@ -173,34 +168,37 @@ function VotingHistoryDetailMobile({
                     />
                     <span className="">{meta.name}</span>
                   </span>
-                  <span className="inline-flex items-center justify-end w-2/6">
-                    <span className="inline-flex items-center justify-center">
+                  <span className="inline-flex items-center justify-end w-1/6">
+                    <span className="inline-flex justify-start items-center w-16">
                       <span className="mr-2">
                         <BreadIcon />
                       </span>
-                      <span className="font-bold">
-                        {formatted.totalPayment}
-                      </span>
-                      <span>
-                        <div className="size-6  ms-2 text-breadgray-grey100 dark:text-breadgray-ultra-white">
-                          <svg
-                            className="w-full h-full fill-current group-data-[state=open]:rotate-180"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              clipRule="evenodd"
-                              d="M7 8H5V10H7V12H9V14H11V16H13V14H15V12H17V10H19V8H17V10H15V12H13V14H11V12H9V10H7V8Z"
-                            />
-                          </svg>
-                        </div>
+                      <span className="inline-flex w-20">
+                        <span className="font-bold">
+                          {formatted.totalPayment}
+                        </span>
                       </span>
                     </span>
-                    <span></span>
+                  </span>
+                  <span className="inline-flex justify-end w-1/6">
+                    <span>
+                      <div className="size-6 ms-2 text-breadgray-grey100 dark:text-breadgray-ultra-white">
+                        <svg
+                          className="w-full h-full fill-current group-data-[state=open]:rotate-180"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M7 8H5V10H7V12H9V14H11V16H13V14H15V12H17V10H19V8H17V10H15V12H13V14H11V12H9V10H7V8Z"
+                          />
+                        </svg>
+                      </div>
+                    </span>
                   </span>
                 </Accordion.Trigger>
                 <Accordion.Content className="text-breadgray-rye dark:text-breadgray-grey">
@@ -322,8 +320,8 @@ function VotingHistoryDetailDesktop({
                       </span>
                     </div>
                   </td>
-                  <td className="py-4 px-2">
-                    <div className="flex items-center justify-end gap-2">
+                  <td className="py-4 ps-12">
+                    <div className="flex items-center justify-start gap-2">
                       <span className="w-8 inline-block">
                         <BreadIcon />
                       </span>
