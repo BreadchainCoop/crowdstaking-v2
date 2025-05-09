@@ -23,7 +23,7 @@ export function VotingPowerPanel() {
 
   const votingPower = useVotingPower();
   const vaultTokenBalance = useVaultTokenBalance();
-  const { data: distributions } = useDistributions();
+  const { totalDistributions } = useDistributions();
   const { BREAD } = useTokenBalances();
 
   const renderFormattedDecimalNumber = (
@@ -83,7 +83,7 @@ export function VotingPowerPanel() {
                 <span className="pb-1">Accessible voting power</span>
                 <Tooltip>
                   Your total available voting power for the current voting cycle
-                  #{distributions ? distributions.length + 1 + "." : "-"}
+                  #{totalDistributions ? totalDistributions + 1 + "." : "-"}
                 </Tooltip>
               </div>
             </div>
