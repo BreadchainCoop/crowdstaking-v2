@@ -20,6 +20,29 @@ interface ProjectDistribution {
   flatPayment: number;
 }
 
+function TopCard({
+  children,
+  title,
+}: {
+  children: React.ReactNode;
+  title: string;
+}) {
+  return (
+    <div className="py-3  border border-breadgray-light-grey dark:border-breadgray-rye rounded-[0.625rem] flex flex-col items-center justify-center mb-1 md:flex-1 md:mb-0">
+      <div className="flex items-center justify-center mb-1 text-breadgray-pitchblack dark:text-breadgray-ultra-white">
+        <div className="flex flex-col gap-2 items-center">
+          <p className="text-breadgray-rye md:text-[20px] text-[16px] dark:text-breadgray-ultra-white text-[1rem] dark:md:text-breadgray-grey md:uppercase">
+            {title}
+          </p>
+          <p className="gap-2 md:text-[38px] text-[24px] font-semibold inline-flex items-center">
+            {children}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function VotingHistory({
   cycleDistribution,
 }: {
@@ -39,55 +62,37 @@ export function VotingHistory({
           These are the results of the previous voting cycle #
           {cycleDistribution.cycleNumber}.
         </p>
-        <p className="pt-6 text-center text-breadgray-rye dark:text-breadgray-grey">
+        <p className="pt-6 text-left text-breadgray-rye dark:text-breadgray-grey">
           Ended on{" "}
           {format(new Date(cycleDistribution.distributionDate), "MMM d, yyyy")}
         </p>
       </header>
       <div>
         <div className="my-3 md:flex md:flex-row-reverse md:gap-4">
-          <div className="py-3 dark:bg-breadgray-charcoal bg-breadgray-ultra-white border border-breadgray-light-grey dark:border-breadgray-rye rounded-[0.625rem] flex flex-col items-center justify-center mb-1 md:flex-1 md:mb-0">
-            <div className="flex items-center justify-center mb-1 text-breadgray-pitchblack dark:text-breadgray-ultra-white">
-              <div className="flex flex-col items-center">
-                <p className="text-breadgray-rye dark:text-breadgray-ultra-white text-[1rem] dark:md:text-breadgray-grey md:uppercase">
-                  Total yield distributed
-                </p>
-                <p className="text-2xl gap-2 font-semibold inline-flex items-center">
-                  <BreadIcon />
-                  {formatBalance(
-                    Number(
-                      formatUnits(BigInt(cycleDistribution.totalYield), 18)
-                    ),
-                    2
-                  )}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="py-3 mt-2 md:mt-0 border border-breadgray-light-grey dark:border-breadgray-rye rounded-[0.625rem] flex flex-col items-center justify-center md:flex-1">
-            <div className="">
-              <p className="text-breadgray-rye text-center dark:text-breadgray-ultra-white text-[1rem] dark:md:text-breadgray-grey md:uppercase">
-                Last cycle
-              </p>
-              <p className="text-2xl gap-2 font-semibold inline-flex items-center">
-                Cycle #{cycleDistribution.cycleNumber}
-              </p>
-            </div>
-          </div>
+          <TopCard title="Total yield distributed">
+            <BreadIcon />
+            {formatBalance(
+              Number(formatUnits(BigInt(cycleDistribution.totalYield), 18)),
+              2
+            )}
+          </TopCard>
+          <TopCard title="Last cycle">
+            Cycle #{cycleDistribution.cycleNumber}
+          </TopCard>
         </div>
+
         <div className="p-3 border border-breadgray-light-grey dark:border-breadgray-rye rounded-[0.625rem] mt-1 md:px-8 md:py-4">
-          <h3 className="pb-2 md:uppercase text-breadgray-pitchblack dark:text-breadgray-ultra-white md:text-breadgray-rye dark:md:text-breadgray-grey text-center md:font-medium md:text-left md:mb-2">
+          <h3 className="pb-2 md:uppercase md:text-[20px] text-[16px] text-breadgray-pitchblack dark:text-breadgray-ultra-white md:text-breadgray-rye dark:md:text-breadgray-grey text-center md:font-medium md:text-left md:mb-2">
             How yield is distributed
           </h3>
           <div className="md:flex md:items-center md:justify-center md:gap-4">
             <div className="mb-4 md:flex-1 md:flex md:items-center md:mb-0">
               <div className="hidden md:inline-block md:rounded md:w-1 md:h-12 md:bg-breadpink-500 md:mr-2" />
               <div>
-                <p className="font-bold text-breadgray-pitchblack dark:text-breadgray-ultra-white">
+                <p className="font-bold md:text-[20px] text-[16px] text-breadgray-pitchblack dark:text-breadgray-ultra-white">
                   Solidarity Amount
                 </p>
-                <p className="pt-1 text-breadgray-rye dark:text-breadgray-grey md:dark:text-breadgray-white text-sm font-medium">
+                <p className="pt-1 md:text-[16px] text-[12px] text-breadgray-rye dark:text-breadgray-grey md:dark:text-breadgray-white text-sm font-medium">
                   50% of the total yield is distributed equally.
                 </p>
               </div>
@@ -95,10 +100,10 @@ export function VotingHistory({
             <div className="md:flex-1 md:flex md:items-center">
               <div className="hidden md:inline-block md:rounded md:w-1 md:h-12 md:bg-breadpink-500 md:mr-2" />
               <div>
-                <p className="font-bold text-breadgray-pitchblack dark:text-breadgray-ultra-white">
+                <p className="font-bold md:text-[20px] text-[16px] text-breadgray-pitchblack dark:text-breadgray-ultra-white">
                   Democratic Amount
                 </p>
-                <p className="pt-1 text-breadgray-rye dark:text-breadgray-grey md:dark:text-breadgray-white text-sm font-medium">
+                <p className="pt-1 md:text-[16px] text-[12px] text-breadgray-rye dark:text-breadgray-grey md:dark:text-breadgray-white text-sm font-medium">
                   50% of the total yield is distributed by vote.
                 </p>
               </div>
