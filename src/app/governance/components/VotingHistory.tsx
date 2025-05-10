@@ -121,19 +121,29 @@ function VotingHistoryDetail({
 }: {
   cycleDistribution: CycleDistribution;
 }) {
+  const projects = [...cycleDistribution.projectDistributions];
+  const formattedProjects = [...projects].map(project => ({
+    formatted: formatProjectPayment(project, cycleDistribution.totalYield),
+    project
+  }));
+  const sortedProjects = formattedProjects.toSorted((a, b) => Number(b.formatted.totalPayment) - Number(a.formatted.totalPayment));
+
   const isMobile = useIsMobile();
 
   if (isMobile)
-    return <VotingHistoryDetailMobile cycleDistribution={cycleDistribution} />;
+    return <VotingHistoryDetailMobile sortedProjects={sortedProjects} />;
 
-  return <VotingHistoryDetailDesktop cycleDistribution={cycleDistribution} />;
+  return <VotingHistoryDetailDesktop sortedProjects={sortedProjects} />;
 }
 
-function VotingHistoryDetailMobile({
-  cycleDistribution,
-}: {
-  cycleDistribution: CycleDistribution;
-}) {
+interface Details {
+  sortedProjects: {
+    formatted: ReturnType<typeof formatProjectPayment>
+    project: ProjectDistribution;
+  }[]
+}
+
+function VotingHistoryDetailMobile({ sortedProjects }: Details) {
   return (
     <div className="mt-4">
       <div className="w-4/6 mx-auto h-[0.0625rem] my-6 bg-breadgray-grey dark:bg-breadgray-rye" />
@@ -145,17 +155,10 @@ function VotingHistoryDetailMobile({
         <Accordion.Root
           className="AccordionRoot"
           type="single"
-          defaultValue={
-            cycleDistribution.projectDistributions[0].projectAddress
-          }
+          defaultValue={sortedProjects[0].project.projectAddress}
           collapsible
         >
-          {cycleDistribution.projectDistributions.map((project) => {
-            const formatted = formatProjectPayment(
-              project,
-              cycleDistribution.totalYield
-            );
-
+          {sortedProjects.map(({formatted, project}) => {
             const meta = projectsMeta[project.projectAddress];
 
             return (
@@ -254,11 +257,7 @@ function VotingHistoryDetailMobile({
   );
 }
 
-function VotingHistoryDetailDesktop({
-  cycleDistribution,
-}: {
-  cycleDistribution: CycleDistribution;
-}) {
+function VotingHistoryDetailDesktop({ sortedProjects }: Details) {
   return (
     <div className="mt-4 p-3 border border-breadgray-rye rounded-[0.625rem]">
       <div className="overflow-x-auto">
@@ -280,13 +279,9 @@ function VotingHistoryDetailDesktop({
             </tr>
           </thead>
           <tbody>
-            {cycleDistribution.projectDistributions.map((project) => {
-              const formatted = formatProjectPayment(
-                project,
-                cycleDistribution.totalYield
-              );
-
+            {sortedProjects.map(({formatted, project}) => {
               const meta = projectsMeta[project.projectAddress];
+              const vote = Number(formatted.percentVotes);
 
               return (
                 <tr
@@ -312,11 +307,12 @@ function VotingHistoryDetailDesktop({
                   </td>
                   <td className="py-4 px-2">
                     <div className="flex flex-col gap-1 w-9/12 mx-auto">
-                      <div className="h-2 bg-breadgray-charcoal rounded-full w-full relative">
+                      <div className="h-4 p-1 bg-breadgray-charcoal rounded-full w-full relative flex items-center justify-start">
                         <div
-                          className="absolute top-0 left-0 h-full rounded-full bg-[linear-gradient(to_right,#D04EC5_60%,#FF99E2)]"
+                          className="h-2 rounded-full"
                           style={{
-                            width: `${formatted.percentOfYield}%`,
+                            width: `${50 + vote}%`,
+                            background: `linear-gradient(to right, #D04EC5 0% ${100 - vote}%, #FF99E2 ${100 - vote}%)`
                           }}
                         />
                       </div>
