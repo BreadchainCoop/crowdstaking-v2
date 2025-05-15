@@ -20,7 +20,7 @@ export function DistributionOverview({
   distributions,
 }: {
   cycleDates: CycleDatesState;
-  distributions: void[] | undefined;
+  distributions: number | undefined;
 }) {
   const { claimableYield } = useClaimableYield();
   const { chain: activeChain } = useAccount();
@@ -168,9 +168,7 @@ export function DistributionOverview({
               <div className="flex w-full gap-2">
                 <p className="grow text-breadgray-rye dark:text-breadgray-grey">
                   Voting cycle #
-                  {distributions == undefined
-                    ? "--"
-                    : distributions.length + 11}
+                  {distributions == undefined ? "--" : distributions + 1}
                 </p>
                 {cycleDates.status === "LOADING" ? (
                   <span>--</span>
