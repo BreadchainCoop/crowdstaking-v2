@@ -4,7 +4,7 @@ import {
   DISTRIBUTOR_ABI,
   ERC20_ABI,
 } from "../src/abi";
-import { getConfig } from "../src/chainConfig";
+import { getChain } from "../src/chainConfig";
 import {
   Hex,
   TransactionReceipt,
@@ -20,7 +20,7 @@ import { BREAD_ADDRESS, BUTTER_ADDRESS } from "../src/constants";
 
 // Wrapped into a function so we do not initialize on import, before all contracts are deployed
 export function getAnvilConfig() {
-  return getConfig(31337);
+  return getChain(31337);
 }
 
 export const DEV_ACCOUNT = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";

@@ -1,9 +1,9 @@
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { useWriteContract, useSimulateContract } from "wagmi";
 import { parseEther } from "viem";
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
 import { BREAD_ABI } from "@/abi";
 import Button from "@/app/core/components/Button";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import useDebounce from "@/app/bakery/hooks/useDebounce";
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
 import { useEffect, useState } from "react";
@@ -26,7 +26,7 @@ export default function Burn({
 }) {
   const { transactionsState, transactionsDispatch } = useTransactions();
   const [buttonIsEnabled, setButtonIsEnabled] = useState(false);
-  const { BREAD } = getConfig(user.chain.id);
+  const { BREAD } = getChain(user.chain.id);
   const { setModal } = useModal();
   const debouncedValue = useDebounce(inputValue, 500);
 
@@ -35,15 +35,17 @@ export default function Burn({
   );
 
   const {
-    config: prepareConfig,
+    data: prepareConfig,
     status: prepareStatus,
     error: prepareError,
-  } = usePrepareContractWrite({
+  } = useSimulateContract({
     address: BREAD.address,
     abi: BREAD_ABI,
     functionName: "burn",
     args: [parsedValue, user.address],
-    enabled: parseFloat(debouncedValue) > 0,
+    query: {
+      enabled: parseFloat(debouncedValue) > 0,
+    },
   });
 
   useEffect(() => {
@@ -55,29 +57,27 @@ export default function Burn({
   }, [debouncedValue, prepareStatus, setButtonIsEnabled]);
 
   const {
-    write,
-    isLoading: writeIsLoading,
+    writeContract,
+    isPending: writeIsLoading,
     isError: writeIsError,
     error: writeError,
     isSuccess: writeIsSuccess,
     data: writeData,
-  } = useContractWrite(prepareConfig);
+  } = useWriteContract();
 
   useEffect(() => {
     (async () => {
-      if (!writeData?.hash) return;
-      if (
-        transactionsState.submitted.find((tx) => tx.hash === writeData.hash)
-      ) {
+      if (!writeData) return;
+      if (transactionsState.submitted.find((tx) => tx.hash === writeData)) {
         return;
       }
       if (isSafe) {
         const safeSdk = new SafeAppsSDK();
-        const tx = await safeSdk.txs.getBySafeTxHash(writeData.hash);
+        const tx = await safeSdk.txs.getBySafeTxHash(writeData);
         if (tx.txStatus === TransactionStatus.AWAITING_CONFIRMATIONS) {
           transactionsDispatch({
             type: "SET_SAFE_SUBMITTED",
-            payload: { hash: writeData.hash },
+            payload: { hash: writeData },
           });
           setModal({
             type: "BAKERY_TRANSACTION",
@@ -89,11 +89,11 @@ export default function Burn({
       // not safe
       transactionsDispatch({
         type: "SET_SUBMITTED",
-        payload: { hash: writeData.hash },
+        payload: { hash: writeData },
       });
       setModal({
         type: "BAKERY_TRANSACTION",
-        hash: writeData.hash,
+        hash: writeData,
       });
       clearInputValue();
     })();
@@ -127,7 +127,7 @@ export default function Burn({
             type: "CONFIRM_BURN",
             breadValue: inputValue,
             xdaiValue: debouncedValue,
-            write: write,
+            write: () => writeContract(prepareConfig!.request),
           });
         }}
       >

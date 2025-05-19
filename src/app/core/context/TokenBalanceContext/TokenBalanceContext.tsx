@@ -6,13 +6,19 @@ import {
   useState,
   useMemo,
 } from "react";
-import { getConfig } from "@/chainConfig";
-import { TUserConnected, useConnectedUser } from "../../hooks/useConnectedUser";
-import { useBalance, useContractRead } from "wagmi";
+import { getChain } from "@/chainConfig";
+import {
+  useRefetchOnBlockChangeForUser,
+  useRefetchBalanceOnBlockChange,
+} from "@/app/core/hooks/useRefetchOnBlockChange";
+import {
+  TUserConnected,
+  useConnectedUser,
+} from "@/app/core/hooks/useConnectedUser";
 import { ERC20_ABI } from "@/abi";
 import { formatUnits } from "viem";
 
-export type TSupportedTokenKeys = "xDAI" | "BREAD";
+export type TSupportedTokenKeys = "xDAI" | "BREAD" | "BUTTER";
 
 export type TTokenBalanceState =
   | {
@@ -34,6 +40,7 @@ export type TTokenBalancesState = {
 const initialState = {
   xDAI: null,
   BREAD: null,
+  BUTTER: null,
 };
 
 const TokenBalancesContext = createContext<TTokenBalancesState>(initialState);
@@ -66,25 +73,31 @@ function ProviderWithUser({
     status: "LOADING",
   });
 
-  const config = getConfig(user.chain.id);
+  const [butterBalanceState, setButterBalanceState] =
+    useState<TTokenBalanceState>({
+      status: "LOADING",
+    });
+
+  const config = getChain(user.chain.id);
   // BREAD balance
   const { data: breadBalanceData, status: breadBalanceStatus } =
-    useContractRead({
-      address: config.BREAD.address,
-      abi: ERC20_ABI,
-      functionName: "balanceOf",
-      args: [user.address],
-      watch: true,
-    });
+    useRefetchOnBlockChangeForUser(
+      user.address,
+      config.BREAD.address,
+      ERC20_ABI,
+      "balanceOf",
+      [user.address]
+    );
 
   useEffect(() => {
     if (breadBalanceStatus === "error") {
       console.error("bread balance error!");
     }
     if (breadBalanceStatus === "success") {
-      const value = breadBalanceData
-        ? formatUnits(breadBalanceData, 18).toString()
-        : "0";
+      const value =
+        typeof breadBalanceData === "bigint"
+          ? formatUnits(breadBalanceData, 18).toString()
+          : "0";
 
       setBreadBalanceState({
         status: "SUCCESS",
@@ -99,10 +112,7 @@ function ProviderWithUser({
     data: xDAIBalanceData,
     status: xDAIBalanceStatus,
     error: xDAIBalanceError,
-  } = useBalance({
-    address: user.address,
-    watch: true,
-  });
+  } = useRefetchBalanceOnBlockChange(user.address);
 
   useEffect(() => {
     if (xDAIBalanceStatus === "success" && xDAIBalanceData) {
@@ -117,12 +127,41 @@ function ProviderWithUser({
     }
   }, [xDAIBalanceData, xDAIBalanceStatus, xDAIBalanceError]);
 
+  // BUTTER balance
+  const { data: butterBalanceData, status: butterBalanceStatus } =
+    useRefetchOnBlockChangeForUser(
+      user.address,
+      config.BUTTER.address,
+      ERC20_ABI,
+      "balanceOf",
+      [user.address]
+    );
+
+  useEffect(() => {
+    if (butterBalanceStatus === "error") {
+      console.error("butter balance error!");
+    }
+    if (butterBalanceStatus === "success") {
+      const value =
+        typeof butterBalanceData === "bigint"
+          ? formatUnits(butterBalanceData, 18).toString()
+          : "0";
+
+      setButterBalanceState({
+        status: "SUCCESS",
+        tokenName: "BUTTER",
+        value,
+      });
+    }
+  }, [butterBalanceData, butterBalanceStatus]);
+
   const value = useMemo(
     () => ({
       xDAI: xdaiBalanceState,
       BREAD: breadBalanceState,
+      BUTTER: butterBalanceState,
     }),
-    [breadBalanceState, xdaiBalanceState]
+    [breadBalanceState, xdaiBalanceState, butterBalanceState]
   );
 
   return (

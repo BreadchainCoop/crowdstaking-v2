@@ -6,13 +6,13 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useContractRead } from "wagmi";
+import { useRefetchOnBlockChangeForUser } from "@/app/core/hooks/useRefetchOnBlockChange";
 
 import {
   TUserConnected,
   useConnectedUser,
 } from "@/app/core/hooks/useConnectedUser";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { BUTTERED_BREAD_ABI } from "@/abi";
 
 type VaultTokenBalanceLoading = {
@@ -74,26 +74,26 @@ function ProviderWithUser({
       butter: { status: "loading" },
     });
 
-  const config = getConfig(user.chain.id);
+  const chainConfig = getChain(user.chain.id);
 
-  const { data, status, error } = useContractRead({
-    address: config.BUTTERED_BREAD.address,
-    abi: BUTTERED_BREAD_ABI,
-    functionName: "accountToLPBalance",
-    args: [user.address, config.BUTTER.address],
-    watch: true,
-  });
+  const { data, status } = useRefetchOnBlockChangeForUser(
+    user.address,
+    chainConfig.BUTTERED_BREAD.address,
+    BUTTERED_BREAD_ABI,
+    "accountToLPBalance",
+    [user.address, chainConfig.BUTTER.address]
+  );
 
   useEffect(() => {
     if (status === "success" && data !== undefined) {
       setVotingPowerState({
         butter: {
           status: "success",
-          value: data,
+          value: data as bigint,
         },
       });
     }
-  }, [status, data, error]);
+  }, [status, data]);
 
   return (
     <VaultTokenBalanceContext.Provider value={votingPowerState}>

@@ -1,8 +1,8 @@
-import { DISTRIBUTOR_ABI } from "@/abi";
-import { getConfig } from "@/chainConfig";
 import { useEffect, useState } from "react";
+import { useActiveChain } from "@/app/core/hooks/useActiveChain";
+import { useRefetchOnBlockChange } from "@/app/core/hooks/useRefetchOnBlockChange";
 import { Hex } from "viem";
-import { useContractRead, useNetwork } from "wagmi";
+import { DISTRIBUTOR_ABI } from "@/abi";
 
 export type CurrentVotingDistributionState =
   | CurrentVotingDistributionLoading
@@ -21,27 +21,26 @@ export type CurrentVotingDistributionError = {
 };
 
 export function useCurrentVotingDistribution() {
+  const chainConfig = useActiveChain();
+  const distributorAddress = chainConfig.DISBURSER.address;
   const [currentVotingDistribution, setCurrentVotingDistribution] =
     useState<CurrentVotingDistributionState>({
       status: "LOADING",
     });
 
-  const { chain: activeChain } = useNetwork();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const distriubutorAddress = config.DISBURSER.address;
-
   const {
     data: currentVotingDistributionData,
     status: currentVotingDistributionStatus,
     error: currentVotingDistributionError,
-  } = useContractRead({
-    address: distriubutorAddress,
-    abi: DISTRIBUTOR_ABI,
-    functionName: "getCurrentVotingDistribution",
-    watch: true,
-    enabled: distriubutorAddress !== "0x",
-    cacheTime: 2_000,
-  });
+  } = useRefetchOnBlockChange(
+    distributorAddress,
+    DISTRIBUTOR_ABI,
+    "getCurrentVotingDistribution",
+    [],
+    {
+      enabled: distributorAddress !== "0x",
+    }
+  );
 
   useEffect(() => {
     if (

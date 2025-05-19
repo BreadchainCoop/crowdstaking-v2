@@ -35,6 +35,11 @@ export type TTransactionSuccess = {
   data: TTransactionData;
   hash: TTransactionHash;
 };
+export type TTransactionPrepared = {
+  status: "PREPARED";
+  data: TTransactionData;
+  hash: TTransactionHash;
+};
 export type TTransactionReverted = {
   status: "REVERTED";
   data: TTransactionData;
@@ -49,6 +54,7 @@ export type TSafeTransactionSubmitted = {
 export type TTransaction =
   | TTransactionSubmitted
   | TTransactionSuccess
+  | TTransactionPrepared
   | TTransactionReverted
   | TSafeTransactionSubmitted;
 

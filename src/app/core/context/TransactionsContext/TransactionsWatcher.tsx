@@ -3,7 +3,7 @@ import {
   TTransactionSubmitted,
   TTransactionsDispatch,
 } from "./TransactionsReducer";
-import { useWaitForTransaction } from "wagmi";
+import { useWaitForTransactionReceipt } from "wagmi";
 import { useToast } from "../ToastContext/ToastContext";
 import { useAudio } from "../../hooks/useAudio/useAudio";
 
@@ -18,7 +18,7 @@ export function TransactionWatcher({
   const { toastDispatch } = useToast();
   const { playSound } = useAudio({ src: "/cookies.mp3" });
 
-  const { data: waitData } = useWaitForTransaction({ hash });
+  const { data: waitData } = useWaitForTransactionReceipt({ hash });
 
   useEffect(() => {
     toastDispatch({
@@ -33,10 +33,6 @@ export function TransactionWatcher({
     if (waitData.status === "success") {
       transactionsDispatch({ type: "SET_SUCCESS", payload: { hash } });
       if (transaction.data.type === "BAKE") playSound();
-      toastDispatch({
-        type: "NEW",
-        payload: { toastType: "CONFIRMED", txHash: hash },
-      });
     }
     if (waitData.status === "reverted") {
       transactionsDispatch({ type: "SET_REVERTED", payload: { hash } });

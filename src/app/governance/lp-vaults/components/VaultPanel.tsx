@@ -17,7 +17,7 @@ import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
 import { WXDAIIcon, BreadIcon } from "@/app/core/components/Icons/TokenIcons";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
 import { LinkIcon } from "@/app/core/components/Icons/LinkIcon";
-import { useTokenBalance } from "@/app/core/hooks/useTokenBalance";
+import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
 import { lpTokenMeta } from "@/app/lpTokenMeta";
 import { GradientBorder } from "@/app/core/components/GradientBorder";
 import { WXDaiBreadIcon } from "@/app/core/components/Modal/LPVaultTransactionModal/VPRate";
@@ -36,7 +36,7 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
   const { user } = useConnectedUser();
   const { transactionsState } = useTransactions();
 
-  const lpTokenBalance = useTokenBalance(user, tokenAddress);
+  const { BUTTER: lpTokenBalance } = useTokenBalances();
   const vaultTokenBalance = useVaultTokenBalance();
 
   useEffect(() => {
@@ -106,12 +106,9 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
             <div className="flex w-full md:w-auto pr-2 gap-4 items-center mt-4 md:mt-0 order-3 md:order-2 flex-wrap">
               <div className="flex w-full md:w-auto justify-between gap-2 items-center px-4 md:px-2 mb-2 md:mb-0">
                 <div>Unlocked LP tokens:</div>
-                {lpTokenBalance.status === "success" ? (
+                {lpTokenBalance?.status === "SUCCESS" ? (
                   <span className="font-bold text-breadgray-grey100 dark:text-breadgray-ultra-white">
-                    {formatBalance(
-                      Number(formatUnits(lpTokenBalance.data as bigint, 18)),
-                      0
-                    )}
+                    {lpTokenBalance.value}
                   </span>
                 ) : (
                   <span className="ml-auto">-</span>
@@ -284,20 +281,13 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                   {transactionType === "LOCK" ? (
                     <>
                       <span>Unlocked LP tokens: </span>
-                      {lpTokenBalance.status === "success"
-                        ? formatBalance(
-                            Number(
-                              formatUnits(lpTokenBalance.data as bigint, 18)
-                            ),
-                            0
-                          )
+                      {lpTokenBalance?.status === "SUCCESS"
+                        ? lpTokenBalance.value
                         : "-"}
                       <MaxButton
                         onClick={() => {
-                          if (lpTokenBalance.status !== "success") return;
-                          setInputValue(
-                            formatUnits(lpTokenBalance.data as bigint, 18)
-                          );
+                          if (lpTokenBalance?.status !== "SUCCESS") return;
+                          setInputValue(lpTokenBalance.value);
                         }}
                       >
                         Max.
@@ -327,10 +317,8 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                   disabled={
                     (transactionType === "LOCK" && !(Number(inputValue) > 0)) ||
                     (transactionType === "LOCK" &&
-                      !(
-                        Number(inputValue) <=
-                        Number(formatUnits(lpTokenBalance.data as bigint, 18))
-                      )) ||
+                      lpTokenBalance?.status === "SUCCESS" &&
+                      !(Number(inputValue) <= Number(lpTokenBalance.value))) ||
                     (transactionType === "UNLOCK" &&
                       vaultTokenBalance?.butter.status === "success" &&
                       !(Number(vaultTokenBalance?.butter.value) > 0))

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { useWriteContract, useSimulateContract } from "wagmi";
 
 import Button from "@/app/core/components/Button";
 import { useIsMobile } from "@/app/core/hooks/useIsMobile";
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
 import { LockingAllowance, LockingEvent } from "./lockingReducer";
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { ERC20_ABI } from "@/abi";
 
 export function IncreaseAllowance({
@@ -20,7 +20,7 @@ export function IncreaseAllowance({
 }) {
   const { transactionsDispatch, transactionsState } = useTransactions();
   const [isWalletOpen, setIsWalletOpen] = useState(false);
-  const chainConfig = getConfig(user.chain.id);
+  const chainConfig = getChain(user.chain.id);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -35,8 +35,8 @@ export function IncreaseAllowance({
   const {
     status: prepareWriteStatus,
     error: prepareWriteError,
-    config: prepareWriteConfig,
-  } = usePrepareContractWrite({
+    data: prepareWriteConfig,
+  } = useSimulateContract({
     address: chainConfig.BUTTER.address,
     abi: ERC20_ABI,
     functionName: "approve",
@@ -53,20 +53,20 @@ export function IncreaseAllowance({
   }, [prepareWriteStatus, prepareWriteError]);
 
   const {
-    write: contractWriteWrite,
+    writeContract: contractWriteWrite,
     status: contractWriteStatus,
     data: contractWriteData,
-  } = useContractWrite(prepareWriteConfig);
+  } = useWriteContract();
 
   useEffect(() => {
     if (contractWriteStatus === "success" && contractWriteData) {
       transactionsDispatch({
         type: "SET_SUBMITTED",
-        payload: { hash: contractWriteData.hash },
+        payload: { hash: contractWriteData },
       });
       lockingDispatch({
         type: "TRANSACTION_SUBMITTED",
-        payload: { hash: contractWriteData.hash },
+        payload: { hash: contractWriteData },
       });
     }
     if (contractWriteStatus === "error") {
@@ -105,7 +105,7 @@ export function IncreaseAllowance({
     <Button
       onClick={() => {
         if (!contractWriteWrite) return;
-        contractWriteWrite();
+        contractWriteWrite(prepareWriteConfig!.request);
         setIsWalletOpen(true);
       }}
       disabled={isWalletOpen}

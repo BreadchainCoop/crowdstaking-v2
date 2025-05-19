@@ -3,8 +3,8 @@ import Button from "@/app/core/components/Button";
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
 import { LockingDeposit, LockingEvent } from "./lockingReducer";
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
-import { getConfig } from "@/chainConfig";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import { getChain } from "@/chainConfig";
+import { useWriteContract, useSimulateContract } from "wagmi";
 import { BUTTERED_BREAD_ABI } from "@/abi";
 import { useModal } from "@/app/core/context/ModalContext";
 import { formatUnits } from "viem";
@@ -25,7 +25,7 @@ export function Lock({
 }) {
   const { transactionsState, transactionsDispatch } = useTransactions();
   const [isWalletOpen, setIsWalletOpen] = useState(false);
-  const chainConfig = getConfig(user.chain.id);
+  const chainConfig = getChain(user.chain.id);
   const { setModal } = useModal();
   const isMobile = useIsMobile();
 
@@ -41,8 +41,8 @@ export function Lock({
   const {
     status: prepareWriteStatus,
     error: prepareWriteError,
-    config: prepareWriteConfig,
-  } = usePrepareContractWrite({
+    data: prepareWriteConfig,
+  } = useSimulateContract({
     address: chainConfig.BUTTERED_BREAD.address,
     abi: BUTTERED_BREAD_ABI,
     functionName: "deposit",
@@ -56,20 +56,20 @@ export function Lock({
   }, [prepareWriteStatus, prepareWriteError]);
 
   const {
-    write: contractWriteWrite,
+    writeContract: contractWriteWrite,
     status: contractWriteStatus,
     data: contractWriteData,
-  } = useContractWrite(prepareWriteConfig);
+  } = useWriteContract();
 
   useEffect(() => {
     if (contractWriteStatus === "success" && contractWriteData) {
       transactionsDispatch({
         type: "SET_SUBMITTED",
-        payload: { hash: contractWriteData.hash },
+        payload: { hash: contractWriteData },
       });
       lockingDispatch({
         type: "TRANSACTION_SUBMITTED",
-        payload: { hash: contractWriteData.hash },
+        payload: { hash: contractWriteData },
       });
       setIsWalletOpen(false);
     }
@@ -135,7 +135,7 @@ export function Lock({
       onClick={() => {
         if (!contractWriteWrite) return;
         setIsWalletOpen(true);
-        contractWriteWrite();
+        contractWriteWrite(prepareWriteConfig!.request);
       }}
       disabled={isWalletOpen}
       fullWidth={isMobile}

@@ -2,15 +2,16 @@ import { BreadIcon } from "@/app/core/components/Icons/TokenIcons";
 import { formatBalance } from "@/app/core/util/formatter";
 import { CycleDatesState } from "../useCycleDates";
 import { useClaimableYield } from "../useClaimableYield";
+import { useRefetchOnBlockChange } from "@/app/core/hooks/useRefetchOnBlockChange";
 import { LinkIcon } from "@/app/core/components/Icons/LinkIcon";
 import Tooltip from "@/app/core/components/Tooltip";
 import { CardBox } from "@/app/core/components/CardBox";
-import { useContractRead, useNetwork } from "wagmi";
+import { useReadContract, useAccount } from "wagmi";
 
 import { ERC20_ABI, SDAI_ADAPTOR_ABI } from "@/abi";
 import { useEffect, useMemo, useState } from "react";
 import { differenceInDays, differenceInHours, format } from "date-fns";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { formatUnits } from "viem";
 import clsx from "clsx";
 
@@ -22,32 +23,30 @@ export function DistributionOverview({
   distributions: void[] | undefined;
 }) {
   const { claimableYield } = useClaimableYield();
-  const { chain: activeChain } = useNetwork();
+  const { chain: activeChain } = useAccount();
   const [dsrAPY, setDsrAPY] = useState("");
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
+  const chainConfig = activeChain
+    ? getChain(activeChain.id)
+    : getChain("DEFAULT");
   const [yieldIncrement, setYieldIncrement] = useState(0);
 
   const {
     data: apyData,
     error: apyError,
     status: apyStatus,
-  } = useContractRead({
-    address: config.SDAI_ADAPTOR.address,
+  } = useReadContract({
+    address: chainConfig.SDAI_ADAPTOR.address,
     abi: SDAI_ADAPTOR_ABI,
     functionName: "vaultAPY",
   });
 
-  const {
-    data: totalSupplyData,
-    status: totalSupplyStatus,
-    error: totalSupplyError,
-  } = useContractRead({
-    address: config.BREAD.address,
-    abi: ERC20_ABI,
-    functionName: "totalSupply",
-    watch: true,
-    cacheTime: 6_000,
-  });
+  const { data: totalSupplyData, status: totalSupplyStatus } =
+    useRefetchOnBlockChange(
+      chainConfig.BREAD.address,
+      ERC20_ABI,
+      "totalSupply",
+      []
+    );
 
   const yieldPerHour = useMemo(() => {
     if (
@@ -169,7 +168,9 @@ export function DistributionOverview({
               <div className="flex w-full gap-2">
                 <p className="grow text-breadgray-rye dark:text-breadgray-grey">
                   Voting cycle #
-                  {distributions == undefined ? "--" : distributions.length + 1}
+                  {distributions == undefined
+                    ? "--"
+                    : distributions.length + 11}
                 </p>
                 {cycleDates.status === "LOADING" ? (
                   <span>--</span>

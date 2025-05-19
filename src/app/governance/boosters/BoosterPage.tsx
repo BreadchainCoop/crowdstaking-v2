@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
-import { getConfig } from "@/chainConfig";
 import { PageGrid } from "@/app/governance/components/PageGrid";
 import { VotingPowerPanel } from "./components/VotingPowerPanel";
 import { BoosterCard } from "./components/BoosterCard";
@@ -10,9 +9,6 @@ import Button from "@/app/core/components/Button";
 
 export function BoosterPage() {
   const { user } = useConnectedUser();
-  const config = getConfig(
-    user.status === "CONNECTED" ? user.chain.id : "DEFAULT"
-  );
 
   return (
     <section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">

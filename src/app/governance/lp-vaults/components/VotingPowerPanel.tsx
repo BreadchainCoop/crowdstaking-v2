@@ -177,7 +177,7 @@ export function VotingPowerPanel() {
             </div>
             <a
               className="flex items-center gap-2 text-sm font-medium pt-4 text-breadgray-grey100 hover:text-breadpink-shaded dark:text-breadgray-ultra-white"
-              href="https://breadchain.notion.site/BREAD-Voting-Power-UI-0f2d350320b94e4ba9aeec2ef6fdcb84"
+              href="https://breadchain.notion.site/Voting-Power-LP-Vaults-15e0ad9b12798026a4e6cb917c3137a5?pvs=74"
               target="_blank"
               rel="noopener noreferrer"
             >

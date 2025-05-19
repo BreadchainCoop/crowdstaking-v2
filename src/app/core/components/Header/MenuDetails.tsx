@@ -10,6 +10,7 @@ import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBa
 import { BreadIcon } from "@/app/core/components/Icons/TokenIcons";
 import { formatBalance } from "@/app/core/util/formatter";
 import { HeartIcon } from "@/app/core/components/Icons/HeartIcon";
+import { renderFormattedDecimalNumber } from "@/app/core/util/formatter";
 import { formatUnits } from "viem";
 
 interface MenuDetailsProps {
@@ -21,23 +22,6 @@ export function MenuDetails({ address }: MenuDetailsProps) {
   const { BREAD } = useTokenBalances();
   const { data: apyData, error: apyError, status: apyStatus } = useVaultAPY();
   const gnosisLink = "https://gnosisscan.io/address/";
-
-  const renderFormattedDecimalNumber = (number: string) => {
-    const part1 = number.split(".")[0];
-    const part2 = number.split(".")[1];
-
-    return (
-      <div className="w-full text-end flex tracking-wider text-lg text-breadgray-grey100 dark:text-breadgray-ultra-white leading-none">
-        <div className=" flex gap-2 font-bold justify-end">
-          <span>{part1}</span>
-        </div>
-        <div>.</div>
-        <div className="text-sm font-semibold leading-[1.1] self-end">
-          {part2}
-        </div>
-      </div>
-    );
-  };
 
   return (
     <div className="flex flex-col gap-4">

@@ -1,13 +1,12 @@
-import { getConfig } from "@/chainConfig";
-import { useContractRead, useNetwork } from "wagmi";
+import { useReadContract } from "wagmi";
 import { SDAI_ADAPTOR_ABI } from "@/abi";
+import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 
 export function useVaultAPY() {
-  const { chain: activeChain } = useNetwork();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
+  const chainConfig = useActiveChain();
 
-  return useContractRead({
-    address: config.SDAI_ADAPTOR.address,
+  return useReadContract({
+    address: chainConfig.SDAI_ADAPTOR.address,
     abi: SDAI_ADAPTOR_ABI,
     functionName: "vaultAPY",
   });

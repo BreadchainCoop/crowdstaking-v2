@@ -9,12 +9,12 @@ import { TTransactionStatus } from "../../context/TransactionsContext/Transactio
 
 export const ModalContainer = forwardRef(
   (
-    { 
-      children, 
+    {
+      children,
       showCloseButton = true,
       includeContainerStyling = true,
-      ...props 
-    }: { 
+      ...props
+    }: {
       children: ReactNode;
       showCloseButton?: Boolean;
       includeContainerStyling?: Boolean;
@@ -24,7 +24,7 @@ export const ModalContainer = forwardRef(
     return (
       <div
         ref={ref}
-        className="h-screen max-h-[100vh] overflow-y-auto fixed w-screen top-0 p-2 flex justify-center items-center z-40 pointer-events-none"
+        className="h-screen max-h-[100vh] fixed w-screen top-0 p-2 grid place-items-center z-40 pointer-events-none"
         {...props}
       >
         <motion.section
@@ -32,7 +32,12 @@ export const ModalContainer = forwardRef(
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 8, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className={"pointer-events-auto" + (includeContainerStyling ? " max-w-[30rem] flex flex-col items-center rounded dark:bg-opacity-100 p-4 bg-breadgray-ultra-white border border-breadgray-light-grey dark:border-none dark:bg-breadgray-charcoal relative" : "")}
+          className={
+            "pointer-events-auto max-h-[calc(100vh-1rem)] overflow-y-auto mt-4" +
+            (includeContainerStyling
+              ? " w-[30rem] flex flex-col items-center rounded dark:bg-opacity-100 p-4 bg-breadgray-ultra-white border border-breadgray-light-grey dark:border-none dark:bg-breadgray-charcoal relative"
+              : "")
+          }
         >
           {showCloseButton && (
             <DialogPrimitiveClose className="absolute top-0 right-0 w-10 h-10 p-3">

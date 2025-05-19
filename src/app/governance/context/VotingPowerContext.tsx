@@ -5,11 +5,13 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useNetwork, useQuery } from "wagmi";
+import { useAccount } from "wagmi";
 import { multicall } from "@wagmi/core";
 import { Hex } from "viem";
+import { useQuery } from "@tanstack/react-query";
+import { getConfig } from "@/app/core/hooks/WagmiProvider/config/getConfig";
 
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { DISTRIBUTOR_ABI } from "@/abi";
 
 export type VpTokenLoading = {
@@ -49,36 +51,39 @@ export function VotingPowerProvider({
     bread: { status: "loading" },
     butteredBread: { status: "loading" },
   });
-  const network = useNetwork();
-  const config = getConfig(network.chain?.id || "DEFAULT");
+  const { chainId } = useAccount();
+  const chainConfig = getChain(chainId || "DEFAULT");
 
-  const { data, status, error } = useQuery(["vpMulticall"], async () => {
-    return await multicall({
-      contracts: [
-        {
-          address: config.DISBURSER.address,
-          abi: DISTRIBUTOR_ABI,
-          functionName: "getVotingPowerForPeriod",
-          args: [
-            config.BREAD.address,
-            previousCycleStartingBlock,
-            lastClaimedBlocknumber,
-            account,
-          ],
-        },
-        {
-          address: config.DISBURSER.address,
-          abi: DISTRIBUTOR_ABI,
-          functionName: "getVotingPowerForPeriod",
-          args: [
-            config.BUTTERED_BREAD.address,
-            previousCycleStartingBlock,
-            lastClaimedBlocknumber,
-            account,
-          ],
-        },
-      ],
-    });
+  const { data, status, error } = useQuery({
+    queryKey: ["vpMulticall"],
+    queryFn: async () => {
+      return await multicall(getConfig().config, {
+        contracts: [
+          {
+            address: chainConfig.DISBURSER.address,
+            abi: DISTRIBUTOR_ABI,
+            functionName: "getVotingPowerForPeriod",
+            args: [
+              chainConfig.BREAD.address,
+              previousCycleStartingBlock,
+              lastClaimedBlocknumber,
+              account,
+            ],
+          },
+          {
+            address: chainConfig.DISBURSER.address,
+            abi: DISTRIBUTOR_ABI,
+            functionName: "getVotingPowerForPeriod",
+            args: [
+              chainConfig.BUTTERED_BREAD.address,
+              previousCycleStartingBlock,
+              lastClaimedBlocknumber,
+              account,
+            ],
+          },
+        ],
+      });
+    },
   });
 
   useEffect(() => {

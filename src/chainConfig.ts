@@ -1,6 +1,9 @@
 import { Hex } from "viem";
-import { BREAD_ADDRESS, BUTTER_ADDRESS, BUTTERED_BREAD_ADDRESS } from "./constants";
-
+import {
+  BREAD_ADDRESS,
+  BUTTER_ADDRESS,
+  BUTTERED_BREAD_ADDRESS,
+} from "./constants";
 
 interface IToken {
   address: Hex;
@@ -98,11 +101,13 @@ function makeAllConfigs() {
     },
     DISBURSER: {
       address:
-        (!!DISTRIBUTOR_DEPLOYED && (DISTRIBUTOR_DEPLOYED.ADDRESS as Hex)) || "0x",
+        (!!DISTRIBUTOR_DEPLOYED && (DISTRIBUTOR_DEPLOYED.ADDRESS as Hex)) ||
+        "0x",
     },
     BUTTERED_BREAD: {
       address:
-        (!!BUTTERED_BREAD_DEPLOYED && (BUTTERED_BREAD_DEPLOYED.ADDRESS as Hex)) ||
+        (!!BUTTERED_BREAD_DEPLOYED &&
+          (BUTTERED_BREAD_DEPLOYED.ADDRESS as Hex)) ||
         "0x",
     },
     BUTTER: {
@@ -138,7 +143,7 @@ function makeAllConfigs() {
   };
 }
 
-export function getConfig(id: number | "DEFAULT"): ChainConfiguration {
+export function getChain(id: number | "DEFAULT"): ChainConfiguration {
   const { developmentConfig, stagingConfig, prodConfig } = makeAllConfigs();
   if (process.env.NODE_ENV === "development") {
     return developmentConfig[id] || developmentConfig["DEFAULT"];

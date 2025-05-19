@@ -1,21 +1,19 @@
-import { useContractWrite, useNetwork, usePrepareContractWrite } from "wagmi";
-
+import { ReactNode, useEffect } from "react";
 import Button from "@/app/core/components/Button";
-
-import { getConfig } from "@/chainConfig";
-import { DISTRIBUTOR_ABI } from "@/abi";
+import { AccountMenu } from "@/app/core/components/Header/AccountMenu";
+import { CheckIcon } from "@/app/core/components/Icons/CheckIcon";
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
-import { ReactNode, useEffect, useState } from "react";
+import { useModal } from "@/app/core/context/ModalContext";
+import { useActiveChain } from "@/app/core/hooks/useActiveChain";
+import { useChainModal } from "@rainbow-me/rainbowkit";
+import { useWriteContract, useSimulateContract } from "wagmi";
 import SafeAppsSDK from "@safe-global/safe-apps-sdk/dist/src/sdk";
 import { TransactionStatus } from "@safe-global/safe-apps-sdk/dist/src/types";
 import {
   TConnectedUserState,
   TUserConnected,
 } from "@/app/core/hooks/useConnectedUser";
-import { AccountMenu } from "@/app/core/components/Header/AccountMenu";
-import { CheckIcon } from "@/app/core/components/Icons/CheckIcon";
-import { useChainModal } from "@rainbow-me/rainbowkit";
-import { useModal } from "@/app/core/context/ModalContext";
+import { DISTRIBUTOR_ABI } from "@/abi";
 
 export function CastVotePanel({
   user,
@@ -94,53 +92,52 @@ export function CastVote({
   const { setModal } = useModal();
   const writeIsEnabled = !!(vote.reduce((acc, num) => (acc += num), 0) > 0);
 
-  const { chain: activeChain } = useNetwork();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const distributorAddress = config.DISBURSER.address;
+  const chainConfig = useActiveChain();
+  const distributorAddress = chainConfig.DISBURSER.address;
 
   const {
-    config: prepareConfig,
+    data: prepareConfig,
     status: prepareConfigStatus,
     error: prepareConfigError,
-  } = usePrepareContractWrite({
+  } = useSimulateContract({
     address: distributorAddress,
     abi: DISTRIBUTOR_ABI,
     functionName: "castVote",
     args: [vote.map((num) => BigInt(num))],
-    enabled: writeIsEnabled && distributorAddress !== "0x",
+    query: {
+      enabled: writeIsEnabled && distributorAddress !== "0x",
+    },
   });
 
   const {
-    write,
+    writeContract,
     data: writeData,
     isError: writeIsError,
     error: writeError,
-  } = useContractWrite(prepareConfig);
+  } = useWriteContract();
 
   useEffect(() => {
     (async () => {
-      if (!writeData?.hash) return;
-      if (
-        transactionsState.submitted.find((tx) => tx.hash === writeData.hash)
-      ) {
+      if (!writeData) return;
+      if (transactionsState.submitted.find((tx) => tx.hash === writeData)) {
         return;
       }
       if (isSafe) {
         const safeSdk = new SafeAppsSDK();
-        const tx = await safeSdk.txs.getBySafeTxHash(writeData.hash);
+        const tx = await safeSdk.txs.getBySafeTxHash(writeData);
         if (tx.txStatus === TransactionStatus.AWAITING_CONFIRMATIONS) {
           transactionsDispatch({
             type: "SET_SAFE_SUBMITTED",
-            payload: { hash: writeData.hash },
+            payload: { hash: writeData },
           });
-          setModal({ type: "VOTE_TRANSACTION", hash: writeData.hash });
+          setModal({ type: "VOTE_TRANSACTION", hash: writeData });
           setIsRecasting(false);
           return;
         }
         if (tx.txStatus === TransactionStatus.SUCCESS) {
           transactionsDispatch({
             type: "SET_SUBMITTED",
-            payload: { hash: writeData.hash },
+            payload: { hash: writeData },
           });
           setIsRecasting(false);
           return;
@@ -149,9 +146,9 @@ export function CastVote({
       // not safe
       transactionsDispatch({
         type: "SET_SUBMITTED",
-        payload: { hash: writeData.hash },
+        payload: { hash: writeData },
       });
-      setModal({ type: "VOTE_TRANSACTION", hash: writeData.hash });
+      setModal({ type: "VOTE_TRANSACTION", hash: writeData });
       setIsRecasting(false);
     })();
   }, [
@@ -176,7 +173,7 @@ export function CastVote({
           fullWidth
           size="large"
           onClick={() => {
-            if (!write) return;
+            if (!writeContract) return;
             if (prepareConfigStatus !== "success") {
               console.log("castVote tx prepare failed: ", prepareConfigError);
               return;
@@ -193,7 +190,7 @@ export function CastVote({
               type: "VOTE_TRANSACTION",
               hash: "",
             });
-            write();
+            writeContract(prepareConfig!.request);
           }}
           disabled={
             !userCanVote || !writeIsEnabled || prepareConfigStatus !== "success"

@@ -1,23 +1,20 @@
 import { useEffect, useState } from "react";
-import { useContractRead, useNetwork } from "wagmi";
-
+import { useReadContract } from "wagmi";
 import { DISTRIBUTOR_ABI } from "@/abi";
-import { getConfig } from "@/chainConfig";
 import { formatUnits } from "viem";
+import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 
 export function useMinRequiredVotingPower() {
+  const chainConfig = useActiveChain();
+  const distributorAddress = chainConfig.DISBURSER.address;
   const [minRequiredVotingPower, setMinRequiredVotingPower] = useState<
     number | null
   >(null);
 
-  const { chain: activeChain } = useNetwork();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const distributorAddress = config.DISBURSER.address;
-
   const {
     data: minRequiredVotingPowerData,
     status: minRequiredVotingPowerStatus,
-  } = useContractRead({
+  } = useReadContract({
     address: distributorAddress,
     abi: DISTRIBUTOR_ABI,
     functionName: "minRequiredVotingPower",

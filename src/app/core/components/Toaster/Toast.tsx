@@ -52,7 +52,7 @@ export function Toast({
 
 export function ToastContainer({ children }: { children: ReactNode }) {
   return (
-    <ol className="w-full absolute top-0 right-0 z-10">
+    <ol className="w-full absolute top-0 right-0 z-50">
       <div className="w-full max-w-6xl m-auto px-4 md:px-8 flex flex-col items-end gap-2">
         {children}
       </div>

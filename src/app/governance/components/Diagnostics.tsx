@@ -2,36 +2,30 @@
 import { BREAD_ABI, DISTRIBUTOR_ABI } from "@/abi";
 import Button from "@/app/core/components/Button";
 import { projectsMeta } from "@/app/projectsMeta";
-import { getConfig } from "@/chainConfig";
 import { useEffect } from "react";
+import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 import { formatUnits, Hex } from "viem";
-import {
-  useContractRead,
-  useContractWrite,
-  useNetwork,
-  usePrepareContractWrite,
-} from "wagmi";
+import { useReadContract, useWriteContract, useSimulateContract } from "wagmi";
 
 export function Diagnostics() {
-  const { chain: activeChain } = useNetwork();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const distributorAddress = config.DISBURSER.address;
+  const chainConfig = useActiveChain();
+  const distributorAddress = chainConfig.DISBURSER.address;
 
   const {
-    config: prepareConfig,
+    data: prepareConfig,
     status: prepareStatus,
     error: prepareError,
-  } = usePrepareContractWrite({
+  } = useSimulateContract({
     address: distributorAddress,
     abi: DISTRIBUTOR_ABI,
     functionName: "distributeYield",
   });
 
   const {
-    write,
+    writeContract,
     data: distributeYieldData,
     status: distributeYieldStatus,
-  } = useContractWrite(prepareConfig);
+  } = useWriteContract();
 
   useEffect(() => {
     if (prepareError) {
@@ -44,7 +38,7 @@ export function Diagnostics() {
       <div>
         <Button
           onClick={() => {
-            write?.();
+            writeContract?.(prepareConfig!.request);
           }}
         >
           Distribute Yield
@@ -60,17 +54,15 @@ export function Diagnostics() {
 }
 
 function ProjectDisplay({ account }: { account: Hex }) {
-  const { chain: activeChain } = useNetwork();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const breadAddress = config.BREAD.address;
+  const chainConfig = useActiveChain();
+  const breadAddress = chainConfig.BREAD.address;
 
   const { data: breadBalanceData, status: breadBalanceStatus } =
-    useContractRead({
+    useReadContract({
       address: breadAddress,
       abi: BREAD_ABI,
       functionName: "balanceOf",
       args: [account],
-      watch: true,
     });
 
   return (

@@ -1,19 +1,16 @@
-import { formatUnits, Hex } from "viem";
+import { formatUnits } from "viem";
 import Button from "../../Button";
 import { ModalContent, ModalHeading, StatusMessage } from "../LPModalUI";
 import { useEffect, useReducer, useState } from "react";
-import {
-  useContractRead,
-  useContractWrite,
-  usePrepareContractWrite,
-} from "wagmi";
+import { useRefetchOnBlockChangeForUser } from "@/app/core/hooks/useRefetchOnBlockChange";
+import { useWriteContract, useSimulateContract } from "wagmi";
 import { BUTTERED_BREAD_ABI } from "@/abi";
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
 import {
   LPVaultTransactionModalState,
   useModal,
 } from "@/app/core/context/ModalContext";
-import { getConfig } from "@/chainConfig";
+import { getChain } from "@/chainConfig";
 import { useIsMobile } from "@/app/core/hooks/useIsMobile";
 
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
@@ -39,7 +36,7 @@ export function WithdrawTransaction({
   const { setModal } = useModal();
   const [isWalletOpen, setIsWalletOpen] = useState(false);
   const isMobile = useIsMobile();
-  const chainConfig = getConfig(user.chain.id);
+  const chainConfig = getChain(user.chain.id);
   const [withdrawState, withdrawDispatch] = useReducer(withdrawReducer, {
     status: "idle",
   });
@@ -53,22 +50,25 @@ export function WithdrawTransaction({
     });
   }, [transactionsDispatch]);
 
-  const lockedBalance = useContractRead({
-    address: chainConfig.BUTTERED_BREAD.address,
-    abi: BUTTERED_BREAD_ABI,
-    functionName: "accountToLPBalance",
-    args: [user.address, chainConfig.BUTTER.address],
-    watch: true,
-  });
+  const { status: lockedBalanceStatus, data: lockedBalance } =
+    useRefetchOnBlockChangeForUser(
+      user.address,
+      chainConfig.BUTTERED_BREAD.address,
+      BUTTERED_BREAD_ABI,
+      "accountToLPBalance",
+      [user.address, chainConfig.BUTTER.address]
+    );
 
-  const prepareWrite = usePrepareContractWrite({
+  const prepareWrite = useSimulateContract({
     address: chainConfig.BUTTERED_BREAD.address,
     abi: BUTTERED_BREAD_ABI,
     functionName: "withdraw",
     args: [chainConfig.BUTTER.address, modalState.parsedValue],
-    enabled:
-      lockedBalance.status === "success" &&
-      modalState.parsedValue <= (lockedBalance.data as bigint),
+    query: {
+      enabled:
+        lockedBalanceStatus === "success" &&
+        modalState.parsedValue <= (lockedBalance as bigint),
+    },
   });
 
   useEffect(() => {
@@ -78,20 +78,20 @@ export function WithdrawTransaction({
   }, [prepareWrite]);
 
   const {
-    write: contractWriteWrite,
+    writeContract: contractWriteWrite,
     status: contractWriteStatus,
     data: contractWriteData,
-  } = useContractWrite(prepareWrite.config);
+  } = useWriteContract();
 
   useEffect(() => {
     if (contractWriteStatus === "success" && contractWriteData) {
       transactionsDispatch({
         type: "SET_SUBMITTED",
-        payload: { hash: contractWriteData.hash },
+        payload: { hash: contractWriteData },
       });
       withdrawDispatch({
         type: "TRANSACTION_SUBMITTED",
-        payload: { hash: contractWriteData.hash },
+        payload: { hash: contractWriteData },
       });
       setIsWalletOpen(false);
     }
@@ -170,7 +170,7 @@ export function WithdrawTransaction({
               onClick={() => {
                 if (!contractWriteWrite) return;
                 setIsWalletOpen(true);
-                contractWriteWrite();
+                contractWriteWrite(prepareWrite.data!.request);
               }}
               disabled={isWalletOpen}
               fullWidth={isMobile}

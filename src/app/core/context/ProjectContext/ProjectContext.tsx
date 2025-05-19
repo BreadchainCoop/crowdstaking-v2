@@ -6,8 +6,9 @@ import React, {
   useMemo,
   ReactNode,
 } from "react";
-import { useNetwork, useContractRead } from "wagmi";
-import { getConfig } from "@/chainConfig";
+import { useAccount, useReadContract } from "wagmi";
+import { getChain } from "@/chainConfig";
+import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 import { formatBalance } from "@/app/core/util/formatter";
 import { formatUnits } from "viem";
 import { ERC20_ABI } from "@/abi";
@@ -46,23 +47,21 @@ const ProjectsProvider = ({
   cycleLength,
   address,
 }: ProjectProviderProps) => {
+  const chainConfig = useActiveChain();
+  const distributorAddress = chainConfig.DISBURSER.address;
   const [breadBalanceState, setBreadBalanceState] =
     useState<TContractDataState>({ status: "LOADING" });
   const [votingPowerState, setVotingPowerState] = useState<TContractDataState>({
     status: "LOADING",
   });
-  const { chain: activeChain } = useNetwork();
-  const config = activeChain ? getConfig(activeChain.id) : getConfig("DEFAULT");
-  const distributorAddress = config.DISBURSER.address;
 
   // BREAD token balance
   const { data: breadBalanceData, status: breadBalanceStatus } =
-    useContractRead({
-      address: config.BREAD.address,
+    useReadContract({
+      address: chainConfig.BREAD.address,
       abi: ERC20_ABI,
       functionName: "balanceOf",
       args: [address],
-      watch: true,
     });
 
   // Current voting power
@@ -70,7 +69,7 @@ const ProjectsProvider = ({
     data: currentVotingPowerData,
     status: currentVotingPowerStatus,
     error: currentVotingPowerError,
-  } = useContractRead({
+  } = useReadContract({
     address: distributorAddress,
     abi: DISTRIBUTOR_ABI,
     functionName: "getCurrentVotingPower",

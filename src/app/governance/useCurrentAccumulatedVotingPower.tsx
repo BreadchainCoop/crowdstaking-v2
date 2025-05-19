@@ -1,17 +1,21 @@
-import { useContractRead } from "wagmi";
-import { TUserConnected } from "../core/hooks/useConnectedUser";
-import { getConfig } from "@/chainConfig";
+import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
+import { getChain } from "@/chainConfig";
 import { DISTRIBUTOR_ABI } from "@/abi";
+import { useRefetchOnBlockChangeForUser } from "@/app/core/hooks/useRefetchOnBlockChange";
 
 export function useCurrentAccumulatedVotingPower(user: TUserConnected) {
-  const config = getConfig(user.chain.id);
+  const chainConfig = getChain(user.chain.id);
 
-  return useContractRead({
-    address: config.DISBURSER.address,
-    abi: DISTRIBUTOR_ABI,
-    functionName: "getCurrentAccumulatedVotingPower",
-    args: [user.address],
-    watch: true,
-    cacheTime: 5_000,
-  });
+  const { data, status } = useRefetchOnBlockChangeForUser(
+    user.address,
+    chainConfig.DISBURSER.address,
+    DISTRIBUTOR_ABI,
+    "getCurrentAccumulatedVotingPower",
+    [user.address]
+  );
+
+  return {
+    data,
+    status,
+  };
 }

@@ -2,16 +2,15 @@ import Button from "@/app/core/components/Button/Button";
 import { LinkIcon } from "@/app/core/components/Icons/LinkIcon";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
 import { ReactNode } from "react";
+import { CURVE_SWAP_URL } from "@/constants";
 
 export default function SwapBreadButton({
   withRecommended,
 }: {
   withRecommended: boolean;
 }) {
-  const swapLink = "https://curve.fi/#/xdai/pools/factory-stable-ng-15/swap";
-
   return (
-    <ExternalLink href={swapLink}>
+    <ExternalLink href={CURVE_SWAP_URL}>
       {withRecommended && (
         <div
           id="text"

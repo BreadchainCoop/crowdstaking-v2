@@ -2,18 +2,18 @@
 import { ERC20_ABI } from "@/abi";
 import { formatSupply } from "@/app/core/util/formatter";
 import { formatUnits } from "viem";
-import { useContractRead } from "wagmi";
+import { useRefetchOnBlockChange } from "@/app/core/hooks/useRefetchOnBlockChange";
+import { useReadContract } from "wagmi";
 import { GradientLinkBadge } from "@/app/core/components/Badge/Badge";
 import { BREAD_ADDRESS } from "@/constants";
 
 export function TotalSupply() {
-  const { data, status } = useContractRead({
-    address: BREAD_ADDRESS,
-    abi: ERC20_ABI,
-    functionName: "totalSupply",
-    watch: true,
-    cacheTime: 6_000,
-  });
+  const { data, status } = useRefetchOnBlockChange(
+    BREAD_ADDRESS,
+    ERC20_ABI,
+    "totalSupply",
+    []
+  );
 
   return (
     <div className="flex justify-center pb-2 text-xl tracking-widest">
@@ -24,7 +24,9 @@ export function TotalSupply() {
         }
       >
         <span className="font-bold">
-          {data ? formatSupply(parseInt(formatUnits(data, 18))) : "--.--"}
+          {data
+            ? formatSupply(parseInt(formatUnits(data as bigint, 18)))
+            : "--.--"}
         </span>
         <span className="ms-2 me-1">$BREAD baked</span>
       </GradientLinkBadge>
