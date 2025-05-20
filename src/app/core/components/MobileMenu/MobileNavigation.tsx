@@ -75,6 +75,29 @@ export function MobileNavigation({ handleNavToggle }: IProps) {
             </svg>
 
             <span>Vaults</span>
+          </Link>{" "}
+          <Link
+            href="/governance/boosters"
+            onClick={() => handleNavToggle()}
+            className="text-neutral-900 dark:text-breadgray-rye dark:hover:text-breadgray-light-grey flex gap-2 items-center justify-end px-2"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              className="fill-current"
+            >
+              <g opacity="0.5">
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M14 6H20H22V8V14H20V10H18V8H14V6ZM16 12V10H18V12H16ZM14 14V12H16V14H14ZM12 14H14V16H12V14ZM10 12H12V14H10V12ZM8 12V10H10V12H8ZM6 14V12H8V14H6ZM4 16V14H6V16H4ZM4 16V18H2V16H4Z"
+                />
+              </g>
+            </svg>
+
+            <span>Boosters</span>
           </Link>
         </>
       )}
