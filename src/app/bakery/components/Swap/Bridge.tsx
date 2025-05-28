@@ -4,7 +4,7 @@ import type { WidgetConfig } from "@lifi/widget";
 import { LiFiWidget, WidgetSkeleton } from "@lifi/widget";
 import { ClientOnly } from "./ClientOnly";
 
-export function Widget() {
+export function Bridge() {
   const config = {
     appearance: "light",
     theme: {
