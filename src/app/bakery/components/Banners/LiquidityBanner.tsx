@@ -115,8 +115,8 @@ export function LiquidBreadIcon() {
       >
         <rect fill="white" width="36" height="34" />
         <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M7.56522 2C4.49163 2 2 4.49163 2 7.56522C2 10.451 4.19646 12.8238 7.00879 13.103V25.6521C7.00879 29.4941 10.1233 32.6087 13.9653 32.6087H21.7564C25.5984 32.6087 28.7129 29.4941 28.7129 25.6521V13.1236C31.6573 12.9787 34 10.5455 34 7.56522C34 4.49163 31.5084 2 28.4348 2L7.56522 2Z"
         />
       </mask>
@@ -135,8 +135,8 @@ export function LiquidBreadIcon() {
         height="31"
       >
         <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M7.56522 2C4.49163 2 2 4.49163 2 7.56522C2 10.451 4.19646 12.8238 7.00879 13.103V25.6521C7.00879 29.4941 10.1233 32.6087 13.9653 32.6087H21.7564C25.5984 32.6087 28.7129 29.4941 28.7129 25.6521V13.1236C31.6573 12.9787 34 10.5455 34 7.56522C34 4.49163 31.5084 2 28.4348 2L7.56522 2Z"
           fill={`url(#paint0_linear_2_128_${iconId})`}
         />
@@ -162,8 +162,8 @@ export function LiquidBreadIcon() {
           y2="6.77695"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#D04EC5" />
-          <stop offset="1" stop-color="#ED7BC7" />
+          <stop stopColor="#D04EC5" />
+          <stop offset="1" stopColor="#ED7BC7" />
         </linearGradient>
         <linearGradient
           id={`paint1_linear_2_128_${iconId}`}
@@ -173,9 +173,9 @@ export function LiquidBreadIcon() {
           y2="-23.4653"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#FC6BAA" />
-          <stop offset="0.545065" stop-color="#D158D7" />
-          <stop offset="1" stop-color="#AF2CEC" />
+          <stop stopColor="#FC6BAA" />
+          <stop offset="0.545065" stopColor="#D158D7" />
+          <stop offset="1" stopColor="#AF2CEC" />
         </linearGradient>
       </defs>
     </svg>

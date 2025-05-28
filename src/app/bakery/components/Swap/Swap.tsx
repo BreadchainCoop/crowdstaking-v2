@@ -17,8 +17,10 @@ import { LiquidityBanner } from "../Banners/LiquidityBanner";
 import { BridgeBanner } from "../Banners/BridgeBanner";
 import { TotalSupply } from "../TotalSupply";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
+import { clsx } from "clsx";
+// import { Bridge } from "./Bridge";
 
-export type TSwapMode = "BAKE" | "BURN";
+export type TSwapMode = "BAKE" | "BURN" | "BRIDGE";
 
 export type TSwapState = {
   mode: TSwapMode;
@@ -60,8 +62,12 @@ export function Swap() {
   };
 
   const handleSwapReverse = () => {
+    const modes: TSwapMode[] = ["BAKE", "BURN", "BRIDGE"];
+    const currentIndex = modes.indexOf(swapState.mode);
+    const nextIndex = (currentIndex + 1) % modes.length;
+
     setSwapState((state) => ({
-      mode: state.mode === "BAKE" ? "BURN" : "BAKE",
+      mode: modes[nextIndex],
       value: "",
     }));
   };
@@ -80,21 +86,19 @@ export function Swap() {
     }));
   };
 
-  const renderActive = () => {
-    return (
-      <h3 className="text-2xl inline font-medium py-0 me-2 px-4 rounded-[10px] bg-breadpink-700/10 dark:bg-none text-breadpink-500 dark:text-breadpink-shaded border border-breadpink-shaded ">
-        <span>{swapState.mode === "BAKE" ? "Bake" : "Burn"}</span>
-      </h3>
-    );
-  };
-
-  const renderInactive = () => {
+  const renderModeButton = (mode: TSwapMode) => {
+    const isActive = swapState.mode === mode;
     return (
       <h3
-        onClick={handleSwapReverse}
-        className="text-2xl inline font-medium hover:cursor-pointer me-2 px-4 rounded-[10px] hover:text-breadpink-500 hover:bg-breadpink-700/10 hover:dark:text-breadpink-shaded"
+        onClick={isActive ? undefined : handleSwapReverse}
+        className={clsx(
+          "text-2xl inline font-medium py-0 me-2 px-4 rounded-[10px]",
+          isActive
+            ? "bg-breadpink-700/10 dark:bg-none text-breadpink-500 dark:text-breadpink-shaded border border-breadpink-shaded"
+            : "hover:cursor-pointer hover:text-breadpink-500 hover:bg-breadpink-700/10 hover:dark:text-breadpink-shaded"
+        )}
       >
-        <span>{swapState.mode === "BAKE" ? "Burn" : "Bake"}</span>
+        <span>{mode.charAt(0) + mode.slice(1).toLowerCase()} sdsd</span>
       </h3>
     );
   };
@@ -105,19 +109,10 @@ export function Swap() {
       <div className="w-full p-2 sm:p-4">
         <div className="w-full max-w-[30rem] p-3 m-auto relative rounded-xl swap-drop-shadow bg-breadgray-ultra-white dark:bg-breadgray-grey200 border-breadgray-burnt flex flex-col items-center">
           <div className="w-full drop-shadow-swap">
-            <div className="w-full ">
-              {swapState.mode === "BAKE" && (
-                <span>
-                  {renderActive()}
-                  {renderInactive()}
-                </span>
-              )}
-              {swapState.mode === "BURN" && (
-                <span>
-                  {renderInactive()}
-                  {renderActive()}
-                </span>
-              )}
+            <div className="w-full">
+              {["BAKE", "BURN", "BRIDGE"].map((mode) => (
+                <div key={mode}>{renderModeButton(mode as TSwapMode)}</div>
+              ))}
             </div>
             <div className="relative w-full my-2 flex flex-col gap-1">
               <FromPanel
@@ -167,22 +162,30 @@ export function Swap() {
                     parseFloat(swapState.value || "0") <=
                     parseFloat(sourceToken.value);
 
-                  if (balanceIsSufficent)
-                    return swapState.mode === "BAKE" ? (
-                      <Bake
-                        user={user}
-                        clearInputValue={clearInputValue}
-                        inputValue={swapState.value}
-                        isSafe={isSafe}
-                      />
-                    ) : (
-                      <Burn
-                        user={user}
-                        clearInputValue={clearInputValue}
-                        inputValue={swapState.value}
-                        isSafe={isSafe}
-                      />
-                    );
+                  if (balanceIsSufficent) {
+                    switch (swapState.mode) {
+                      case "BAKE":
+                        return (
+                          <Bake
+                            user={user}
+                            clearInputValue={clearInputValue}
+                            inputValue={swapState.value}
+                            isSafe={isSafe}
+                          />
+                        );
+                      case "BURN":
+                        return (
+                          <Burn
+                            user={user}
+                            clearInputValue={clearInputValue}
+                            inputValue={swapState.value}
+                            isSafe={isSafe}
+                          />
+                        );
+                      case "BRIDGE":
+                        return "asd";
+                    }
+                  }
 
                   return <InsufficentBalance />;
               }
