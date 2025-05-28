@@ -20,6 +20,7 @@ const features = {
   recastVote: parseFeatureVar(process.env.FEATURE_RECAST_VOTE),
   votingHistory: parseFeatureVar(process.env.FEATURE_VOTING_HISTORY),
   lpVaults: parseFeatureVar(process.env.FEATURE_LP_VAULTS),
+  bridge: parseFeatureVar(process.env.FEATURE_BRIDGE),
 };
 
 export type Features = {

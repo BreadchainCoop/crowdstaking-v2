@@ -35,6 +35,7 @@ export function useCycleLength() {
     address: distributorAddress,
     abi: DISTRIBUTOR_ABI,
     functionName: "cycleLength",
+    chainId: chainConfig.ID
   });
 
   useEffect(() => {

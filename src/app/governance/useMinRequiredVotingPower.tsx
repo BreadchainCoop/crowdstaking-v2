@@ -18,6 +18,7 @@ export function useMinRequiredVotingPower() {
     address: distributorAddress,
     abi: DISTRIBUTOR_ABI,
     functionName: "minRequiredVotingPower",
+    chainId: chainConfig.ID
   });
 
   useEffect(() => {

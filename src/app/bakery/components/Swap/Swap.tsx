@@ -17,8 +17,9 @@ import { LiquidityBanner } from "../Banners/LiquidityBanner";
 import { BridgeBanner } from "../Banners/BridgeBanner";
 import { TotalSupply } from "../TotalSupply";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
+import { Bridge } from "./Bridge";
 
-export type TSwapMode = "BAKE" | "BURN";
+export type TSwapMode = "BAKE" | "BURN" | "BRIDGE";
 
 export type TSwapState = {
   mode: TSwapMode;
@@ -80,24 +81,10 @@ export function Swap() {
     }));
   };
 
-  const renderActive = () => {
-    return (
-      <h3 className="text-2xl inline font-medium py-0 me-2 px-4 rounded-[10px] bg-breadpink-700/10 dark:bg-none text-breadpink-500 dark:text-breadpink-shaded border border-breadpink-shaded ">
-        <span>{swapState.mode === "BAKE" ? "Bake" : "Burn"}</span>
-      </h3>
-    );
-  };
-
-  const renderInactive = () => {
-    return (
-      <h3
-        onClick={handleSwapReverse}
-        className="text-2xl inline font-medium hover:cursor-pointer me-2 px-4 rounded-[10px] hover:text-breadpink-500 hover:bg-breadpink-700/10 hover:dark:text-breadpink-shaded"
-      >
-        <span>{swapState.mode === "BAKE" ? "Burn" : "Bake"}</span>
-      </h3>
-    );
-  };
+  const activeClasses =
+    "text-2xl inline font-medium py-0 me-2 px-4 rounded-[10px] bg-breadpink-700/10 dark:bg-none text-breadpink-500 dark:text-breadpink-shaded border border-breadpink-shaded";
+  const inactiveClasses =
+    "text-2xl inline font-medium hover:cursor-pointer me-2 px-4 rounded-[10px] hover:text-breadpink-500 hover:bg-breadpink-700/10 hover:dark:text-breadpink-shaded";
 
   return (
     <>
@@ -106,87 +93,119 @@ export function Swap() {
         <div className="w-full max-w-[30rem] p-3 m-auto relative rounded-xl swap-drop-shadow bg-breadgray-ultra-white dark:bg-breadgray-grey200 border-breadgray-burnt flex flex-col items-center">
           <div className="w-full drop-shadow-swap">
             <div className="w-full ">
-              {swapState.mode === "BAKE" && (
-                <span>
-                  {renderActive()}
-                  {renderInactive()}
-                </span>
-              )}
-              {swapState.mode === "BURN" && (
-                <span>
-                  {renderInactive()}
-                  {renderActive()}
-                </span>
-              )}
+              <span>
+                <h3
+                  onClick={() => setSwapState({ mode: "BAKE", value: "" })}
+                  className={
+                    swapState.mode === "BAKE" ? activeClasses : inactiveClasses
+                  }
+                >
+                  Bake
+                </h3>
+                <h3
+                  onClick={() => setSwapState({ mode: "BURN", value: "" })}
+                  className={
+                    swapState.mode === "BURN" ? activeClasses : inactiveClasses
+                  }
+                >
+                  Burn
+                </h3>
+                {user.features.bridge && (
+                  <h3
+                    onClick={() => setSwapState({ mode: "BRIDGE", value: "" })}
+                    className={
+                      swapState.mode === "BRIDGE"
+                        ? activeClasses
+                        : inactiveClasses
+                    }
+                  >
+                    Bridge
+                  </h3>
+                )}
+              </span>
             </div>
             <div className="relative w-full my-2 flex flex-col gap-1">
-              <FromPanel
-                inputValue={swapState.value}
-                swapMode={swapState.mode}
-                handleBalanceClick={handleBalanceClick}
-                handleInputChange={handleInputChange}
-                tokenBalance={swapState.mode === "BAKE" ? xDAI : BREAD}
-              />
-              <SwapReverse onClick={handleSwapReverse} />
-              <ToPanel
-                swapMode={swapState.mode}
-                inputValue={swapState.value}
-                tokenBalance={swapState.mode === "BURN" ? xDAI : BREAD}
-              />
+              {user.features.bridge && swapState.mode === "BRIDGE" && (
+                <Bridge />
+              )}
+              {(swapState.mode === "BAKE" || swapState.mode === "BURN") && (
+                <>
+                  <FromPanel
+                    inputValue={swapState.value}
+                    swapMode={swapState.mode}
+                    handleBalanceClick={handleBalanceClick}
+                    handleInputChange={handleInputChange}
+                    tokenBalance={swapState.mode === "BAKE" ? xDAI : BREAD}
+                  />
+                  <SwapReverse onClick={handleSwapReverse} />
+                  <ToPanel
+                    swapMode={swapState.mode}
+                    inputValue={swapState.value}
+                    tokenBalance={swapState.mode === "BURN" ? xDAI : BREAD}
+                  />
+                </>
+              )}
             </div>
           </div>
           <div className="w-full">
-            {(() => {
-              switch (user.status) {
-                case "LOADING":
-                  return <ButtonShell />;
-                case "NOT_CONNECTED":
-                  return (
-                    <AccountMenu fullWidth={true} size="large">
-                      Connect
-                    </AccountMenu>
-                  );
-                case "UNSUPPORTED_CHAIN":
-                  return (
-                    <Button
-                      fullWidth={true}
-                      size="large"
-                      variant="danger"
-                      onClick={() => openChainModal?.()}
-                    >
-                      Change network
-                    </Button>
-                  );
-                case "CONNECTED":
-                  const sourceToken = swapState.mode === "BAKE" ? xDAI : BREAD;
+            {swapState.mode === "BRIDGE" && <></>}
+            {(swapState.mode === "BAKE" || swapState.mode === "BURN") && (
+              <>
+                {(() => {
+                  switch (user.status) {
+                    case "LOADING":
+                      return <ButtonShell />;
+                    case "NOT_CONNECTED":
+                      return (
+                        <AccountMenu fullWidth={true} size="large">
+                          Connect
+                        </AccountMenu>
+                      );
+                    case "UNSUPPORTED_CHAIN":
+                      return (
+                        <Button
+                          fullWidth={true}
+                          size="large"
+                          variant="danger"
+                          onClick={() => openChainModal?.()}
+                        >
+                          Change network
+                        </Button>
+                      );
+                    case "CONNECTED":
+                      const sourceToken =
+                        swapState.mode === "BAKE" ? xDAI : BREAD;
 
-                  if (!sourceToken) return <ButtonShell />;
-                  if (sourceToken.status !== "SUCCESS") return <ButtonShell />;
+                      if (!sourceToken) return <ButtonShell />;
+                      if (sourceToken.status !== "SUCCESS")
+                        return <ButtonShell />;
 
-                  const balanceIsSufficent =
-                    parseFloat(swapState.value || "0") <=
-                    parseFloat(sourceToken.value);
+                      const balanceIsSufficent =
+                        parseFloat(swapState.value || "0") <=
+                        parseFloat(sourceToken.value);
 
-                  if (balanceIsSufficent)
-                    return swapState.mode === "BAKE" ? (
-                      <Bake
-                        user={user}
-                        clearInputValue={clearInputValue}
-                        inputValue={swapState.value}
-                        isSafe={isSafe}
-                      />
-                    ) : (
-                      <Burn
-                        user={user}
-                        clearInputValue={clearInputValue}
-                        inputValue={swapState.value}
-                        isSafe={isSafe}
-                      />
-                    );
+                      if (balanceIsSufficent)
+                        return swapState.mode === "BAKE" ? (
+                          <Bake
+                            user={user}
+                            clearInputValue={clearInputValue}
+                            inputValue={swapState.value}
+                            isSafe={isSafe}
+                          />
+                        ) : (
+                          <Burn
+                            user={user}
+                            clearInputValue={clearInputValue}
+                            inputValue={swapState.value}
+                            isSafe={isSafe}
+                          />
+                        );
 
-                  return <InsufficentBalance />;
-              }
-            })()}
+                      return <InsufficentBalance />;
+                  }
+                })()}
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -1,10 +1,11 @@
-import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
+import { TUnsupportedChain, TUserConnected } from "@/app/core/hooks/useConnectedUser";
 import { getChain } from "@/chainConfig";
 import { DISTRIBUTOR_ABI } from "@/abi";
 import { useRefetchOnBlockChangeForUser } from "@/app/core/hooks/useRefetchOnBlockChange";
+import { useActiveChain } from "../core/hooks/useActiveChain";
 
-export function useCurrentAccumulatedVotingPower(user: TUserConnected) {
-  const chainConfig = getChain(user.chain.id);
+export function useCurrentAccumulatedVotingPower(user: TUserConnected | TUnsupportedChain) {
+  const chainConfig = useActiveChain()
 
   const { data, status } = useRefetchOnBlockChangeForUser(
     user.address,

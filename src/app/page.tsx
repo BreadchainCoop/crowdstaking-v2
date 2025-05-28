@@ -1,17 +1,10 @@
 // "use client";
-import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { type Metadata } from "next";
 
 import { AppTitle } from "./bakery/components/AppTitle";
-
-const Swap = dynamic(() => import("./bakery/components/Swap/Swap"), {
-  ssr: false,
-});
-
-const FAQ = dynamic(() => import("./bakery/components/FAQ/FAQ"), {
-  ssr: false,
-});
+import FAQWrapper from "./components/FAQWrapper";
+import SwapWrapper from "./components/SwapWrapper";
 
 export const metadata: Metadata = {
   title: "Bread Crowdstaking",
@@ -24,12 +17,10 @@ export default function Home() {
       <AppTitle />
       <div className="min-h-[38rem] min-h-sm:h-[44rem]">
         <Suspense>
-          <Swap />
+          <SwapWrapper />
         </Suspense>
       </div>
-      <Suspense>
-        <FAQ />
-      </Suspense>
+      <FAQWrapper />
     </>
   );
 }
