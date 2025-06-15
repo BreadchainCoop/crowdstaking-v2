@@ -1,7 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { GraphQLClient } from "graphql-request";
 import { formatUnits } from "viem";
-import { useEffect, useState } from "react";
 import { projectsMeta } from "@/app/projectsMeta";
 import { Hex } from "viem";
 import { SUBGRAPH_QUERY_URL } from "@/constants";
@@ -32,14 +31,13 @@ interface CycleDistribution {
 
 export function useDistributions(index: number = 0) {
   const API_KEY = process.env.NEXT_PUBLIC_SUBGRAPH_API_KEY;
-  const [cycleDistribution, setCycleDistribution] =
-    useState<CycleDistribution | null>(null);
   const client = new GraphQLClient(SUBGRAPH_QUERY_URL, {
     headers: {
       Authorization: `Bearer ${API_KEY}`,
     },
   });
-  const { data, status } = useQuery<QueryResponse>({
+  const { data } = useQuery<QueryResponse>({
+    placeholderData: keepPreviousData,
     queryKey: ["subgraphs", index],
     async queryFn() {
       return await client.request(`
@@ -55,54 +53,44 @@ export function useDistributions(index: number = 0) {
       `);
     },
   });
+  let cycleDistribution: CycleDistribution | null = null;
 
-  useEffect(() => {
-    console.log(data);
-    const yieldDistribution = data?.yieldDistributeds[index];
+  const yieldDistribution = data?.yieldDistributeds[index];
 
-    if (yieldDistribution) {
-      const cycleDistribution: CycleDistribution = {
-        cycleNumber: data?.yieldDistributeds.length - index,
-        totalYield: 0,
-        distributionDate: "",
-        projectDistributions: [],
-      };
+  if (yieldDistribution) {
+    const totalYield = yieldDistribution.yield;
+    const totalVotes = formatUnits(BigInt(yieldDistribution.totalVotes), 18);
+    const baseYield = Number(formatUnits(BigInt(totalYield), 18)) / 2;
+    const projectDistributions: CycleDistribution["projectDistributions"] = [];
 
-      const distributionDate = new Date(
-        Number(yieldDistribution.timestamp) * 1000
-      ).toLocaleDateString();
+    yieldDistribution.projectDistributions.forEach(
+      (projectDistribution, index) => {
+        const projectAddress = Object.entries(projectsMeta).find(
+          ([_, p]) => p.ydIndex === index
+        )?.[0];
 
-      const totalYield = yieldDistribution.yield;
-      const totalVotes = formatUnits(BigInt(yieldDistribution.totalVotes), 18);
-      const baseYield = Number(formatUnits(BigInt(totalYield), 18)) / 2;
+        const percent =
+          Number(formatUnits(BigInt(projectDistribution), 18)) /
+          Number(totalVotes);
+        console.log(percent);
+        const governancePayment = baseYield * percent;
+        projectDistributions.push({
+          projectAddress: projectAddress as Hex,
+          governancePayment: governancePayment,
+          percentVotes: percent,
+          flatPayment:
+            baseYield / yieldDistribution.projectDistributions.length,
+        });
+      }
+    );
 
-      cycleDistribution.totalYield = Number(totalYield);
-      cycleDistribution.distributionDate = distributionDate;
-
-      yieldDistribution.projectDistributions.forEach(
-        (projectDistribution, index) => {
-          const projectAddress = Object.entries(projectsMeta).find(
-            ([_, p]) => p.ydIndex === index
-          )?.[0];
-
-          const percent =
-            Number(formatUnits(BigInt(projectDistribution), 18)) /
-            Number(totalVotes);
-          console.log(percent);
-          const governancePayment = baseYield * percent;
-          cycleDistribution.projectDistributions.push({
-            projectAddress: projectAddress as Hex,
-            governancePayment: governancePayment,
-            percentVotes: percent,
-            flatPayment:
-              baseYield / yieldDistribution.projectDistributions.length,
-          });
-        }
-      );
-
-      setCycleDistribution(cycleDistribution);
+    cycleDistribution = {
+      cycleNumber: data?.yieldDistributeds.length - index,
+      totalYield: Number(totalYield),
+      distributionDate: new Date(Number(yieldDistribution.timestamp) * 1000).toLocaleDateString(),
+      projectDistributions
     }
-  }, [data, status, index]);
+  }
 
   return {
     cycleDistribution,

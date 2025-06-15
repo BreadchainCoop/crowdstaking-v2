@@ -14,14 +14,14 @@ import { differenceInDays, differenceInHours, format } from "date-fns";
 import { getChain } from "@/chainConfig";
 import { formatUnits } from "viem";
 import clsx from "clsx";
+import { useDistributions } from '../useDistributions';
 
 export function DistributionOverview({
   cycleDates,
-  distributions,
 }: {
   cycleDates: CycleDatesState;
-  distributions: number | undefined;
 }) {
+  const { totalDistributions: distributions } = useDistributions(0);
   const { claimableYield } = useClaimableYield();
   const { chain: activeChain } = useAccount();
   const [dsrAPY, setDsrAPY] = useState("");

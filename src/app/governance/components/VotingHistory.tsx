@@ -5,6 +5,8 @@ import { BreadIcon } from "@/app/core/components/Icons/TokenIcons";
 import { format } from "date-fns";
 import { useIsMobile } from "@/app/core/hooks/useIsMobile";
 import * as Accordion from "@radix-ui/react-accordion";
+import { useState } from "react";
+import { useDistributions } from "../useDistributions";
 
 interface CycleDistribution {
   cycleNumber: number;
@@ -43,11 +45,33 @@ function TopCard({
   );
 }
 
-export function VotingHistory({
-  cycleDistribution,
-}: {
-  cycleDistribution: CycleDistribution | null;
-}) {
+export function VotingHistory() {
+  const [cycleIndex, setCycleIndex] = useState(0); // 0 returns the latest cycle
+  const { cycleDistribution, totalDistributions } =
+    useDistributions(cycleIndex);
+  console.log({ cycleIndex, totalDistributions });
+
+  if (!cycleDistribution) {
+    return <p>Loading...</p>;
+  }
+
+  const updateCycleIdex = (_index: number) => {
+    setCycleIndex((prev) => {
+      // using banging sign cause totalDistributions is available at this point.
+      // The buttons are disabled if it's not available for whatever reason.
+      const maxCycle = totalDistributions!;
+      let newIndex = prev + _index;
+
+      if (newIndex < 0) {
+        newIndex = 0;
+      } else if (newIndex > maxCycle) {
+        newIndex = maxCycle;
+      }
+
+      return newIndex;
+    });
+  };
+
   if (!cycleDistribution) {
     return <p>Loading...</p>;
   }
@@ -77,7 +101,24 @@ export function VotingHistory({
             )}
           </TopCard>
           <TopCard title="Previous cycle">
+            <button
+              onClick={() => updateCycleIdex(1)}
+              disabled={
+                !totalDistributions ||
+                cycleIndex === totalDistributions - 1
+              }
+              className="disabled:opacity-50"
+            >
+              <LeftArrowIcon />
+            </button>
             Cycle #{cycleDistribution.cycleNumber}
+            <button
+              onClick={() => updateCycleIdex(-1)}
+              disabled={!totalDistributions || cycleIndex === 0}
+              className="disabled:opacity-50"
+            >
+              <RightArrowIcon />
+            </button>
           </TopCard>
         </div>
 
@@ -343,5 +384,43 @@ function VotingHistoryDetailDesktop({ sortedProjects }: Details) {
         </table>
       </div>
     </div>
+  );
+}
+
+function LeftArrowIcon() {
+  return (
+    <svg
+      width="33"
+      height="32"
+      viewBox="0 0 33 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M28.5 4L28.5 6.66667L28.5 25.3333L28.5 28L4.5 28L4.5 25.3333L4.5 6.66667L7.16667 6.66667L7.16667 25.3333L25.8333 25.3333L25.8333 6.66667L4.5 6.66667L4.5 4L28.5 4ZM23.1667 14.6667L23.1667 17.3333L15.1667 17.3333L15.1667 20L12.5 20L12.5 17.3333L9.83333 17.3333L9.83333 14.6667L12.5 14.6667L12.5 12L15.1667 12L15.1667 14.6667L23.1667 14.6667ZM15.1667 12L15.1667 9.33333L17.8333 9.33333L17.8333 12L15.1667 12ZM15.1667 20L17.8333 20L17.8333 22.6667L15.1667 22.6667L15.1667 20Z"
+        fill="#E873D3"
+      />
+    </svg>
+  );
+}
+
+function RightArrowIcon() {
+  return (
+    <svg
+      width="33"
+      height="32"
+      viewBox="0 0 33 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M4.5 28L4.5 25.3333L4.5 6.66667L4.5 4L28.5 4L28.5 6.66667L28.5 25.3333L28.5 28L4.5 28ZM25.8333 6.66667L7.16667 6.66667L7.16667 25.3333L25.8333 25.3333L25.8333 6.66667ZM9.83333 17.3333L9.83333 14.6667L17.8333 14.6667L17.8333 12L20.5 12L20.5 14.6667L23.1667 14.6667L23.1667 17.3333L20.5 17.3333L20.5 20L17.8333 20L17.8333 17.3333L9.83333 17.3333ZM15.1667 20L17.8333 20L17.8333 22.6667L15.1667 22.6667L15.1667 20ZM15.1667 9.33333L15.1667 12L17.8333 12L17.8333 9.33333L15.1667 9.33333Z"
+        fill="#E873D3"
+      />
+    </svg>
   );
 }
