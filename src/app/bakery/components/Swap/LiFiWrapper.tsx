@@ -19,7 +19,7 @@ export function useHydrated() {
   );
 }
 
-interface ClientOnlyProps extends PropsWithChildren {
+interface LiFiWrapperProps extends PropsWithChildren {
   fallback?: React.ReactNode;
 }
 
@@ -27,7 +27,7 @@ interface ClientOnlyProps extends PropsWithChildren {
  * Render the children only after the JS has loaded client-side. Use an optional
  * fallback component if the JS is not yet loaded.
  */
-export function ClientOnly({ children, fallback = null }: ClientOnlyProps) {
+export function LiFiWrapper({ children, fallback = null }: LiFiWrapperProps) {
   const hydrated = useHydrated();
   return hydrated ? children : fallback;
 }
