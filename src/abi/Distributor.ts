@@ -57,11 +57,29 @@ export const distributorAbi = [
   {
     type: "function",
     name: "allowlistedMultipliers",
-    inputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    inputs: [{ name: "index", type: "uint256", internalType: "uint256" }],
     outputs: [
-      { name: "", type: "address", internalType: "contract IMultiplier" },
+      {
+        name: "multiplier",
+        type: "address",
+        internalType: "contract IMultiplier",
+      },
     ],
     stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "calculateTotalMultipliers",
+    inputs: [
+      { name: "_user", type: "address", internalType: "address" },
+      {
+        name: "_multiplierIndexes",
+        type: "uint256[]",
+        internalType: "uint256[]",
+      },
+    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -138,20 +156,6 @@ export const distributorAbi = [
   },
   {
     type: "function",
-    name: "getTotalMultipliers",
-    inputs: [
-      { name: "_user", type: "address", internalType: "address" },
-      {
-        name: "_multiplierIndexes",
-        type: "uint256[]",
-        internalType: "uint256[]",
-      },
-    ],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
     name: "getValidMultiplierIndexes",
     inputs: [{ name: "_user", type: "address", internalType: "address" }],
     outputs: [{ name: "", type: "uint256[]", internalType: "uint256[]" }],
@@ -178,7 +182,11 @@ export const distributorAbi = [
     name: "initialize",
     inputs: [
       { name: "_bread", type: "address", internalType: "address" },
-      { name: "_butteredBread", type: "address", internalType: "address" },
+      {
+        name: "_butteredBread",
+        type: "address",
+        internalType: "address",
+      },
       { name: "_precision", type: "uint256", internalType: "uint256" },
       {
         name: "_minRequiredVotingPower",
@@ -186,7 +194,11 @@ export const distributorAbi = [
         internalType: "uint256",
       },
       { name: "_maxPoints", type: "uint256", internalType: "uint256" },
-      { name: "_cycleLength", type: "uint256", internalType: "uint256" },
+      {
+        name: "_cycleLength",
+        type: "uint256",
+        internalType: "uint256",
+      },
       {
         name: "_yieldFixedSplitDivisor",
         type: "uint256",
@@ -197,8 +209,19 @@ export const distributorAbi = [
         type: "uint256",
         internalType: "uint256",
       },
-      { name: "_projects", type: "address[]", internalType: "address[]" },
+      {
+        name: "_projects",
+        type: "address[]",
+        internalType: "address[]",
+      },
     ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "initialize",
+    inputs: [],
     outputs: [],
     stateMutability: "nonpayable",
   },
@@ -320,7 +343,11 @@ export const distributorAbi = [
     type: "function",
     name: "setButteredBread",
     inputs: [
-      { name: "_butteredBread", type: "address", internalType: "address" },
+      {
+        name: "_butteredBread",
+        type: "address",
+        internalType: "address",
+      },
     ],
     outputs: [],
     stateMutability: "nonpayable",
