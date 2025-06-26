@@ -16,12 +16,12 @@ import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBa
 import { useCycleLength } from "../../useCycleLength";
 import Tooltip from "@/app/core/components/Tooltip";
 import { useDistributions } from "../../useDistributions";
+import { useVotingPowerMultiplier } from "../../useVotingPowerMultiplier";
 
 export function VotingPowerPanel() {
   const { user } = useConnectedUser();
-
   const votingPower = useVotingPower();
-  const { data: distributions } = useDistributions();
+  const { totalDistributions } = useDistributions();
   const { BREAD } = useTokenBalances();
 
   const renderFormattedDecimalNumber = (
@@ -76,12 +76,22 @@ export function VotingPowerPanel() {
                   )}
                 </div>
               </div>
-
+              <div>
+                {user.status === "CONNECTED" ? (
+                  <>
+                    <span className="text-right w-27 font-bold text-breadgray-rye dark:text-breadgray-grey">
+                      <VotingMultiplierDisplay user={user} />
+                    </span>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </div>
               <div className="flex items-center gap-2 font-medium text-xs text-breadgray-rye dark:text-breadgray-grey">
                 <span className="pb-1">Accessible voting power</span>
                 <Tooltip>
                   Your total available voting power for the current voting cycle
-                  #{distributions ? distributions.length + 1 + "." : "-"}
+                  #{totalDistributions ? totalDistributions + 1 + "." : "-"}
                 </Tooltip>
               </div>
             </div>
@@ -182,6 +192,20 @@ export function VotingPowerPanel() {
         </CardBox>
       </div>
     </div>
+  );
+}
+
+function VotingMultiplierDisplay({ user }: { user: TUserConnected }) {
+  const {
+    status: votingPowerMultiplierStatus,
+    data: votingPowerMultiplierData,
+  } = useVotingPowerMultiplier(user);
+
+  return votingPowerMultiplierStatus === "success" &&
+    votingPowerMultiplierData ? (
+    formatBalance(Number(votingPowerMultiplierData) / 10 ** 18, 2)
+  ) : (
+    <Elipsis />
   );
 }
 
