@@ -6,7 +6,7 @@ export interface Boost {
   iconName: string;
   boosterName: string;
   verified: boolean;
-  boostAmmount: string;
+  boostAmount: string;
   descriptionShort: string;
   descriptionLong: string;
   expiration: Date;
@@ -18,6 +18,7 @@ export interface Boost {
 export interface BoostProgress {
   name: string;
   subtitle: string;
+  value: number;
   achieved: boolean;
 }
 
@@ -36,7 +37,7 @@ export function mapBoostToCardProps(boost: Boost) {
     iconName: boost.iconName,
     boosterName: boost.boosterName,
     verified: boost.verified,
-    boostAmmount: boost.boostAmmount,
+    boostAmount: boost.boostAmount,
     descriptionShort: boost.descriptionShort,
     descriptionLong: boost.descriptionLong,
     expiration: daysUntilExpiration,
@@ -49,7 +50,7 @@ export function mapBoostToDetailedCardProps(boost: Boost) {
   const progress = boost.progress.map((item) => ({
     title: item.name,
     subtitle: item.subtitle,
-    achieved: item.achieved,
+    value: item.value,
   }));
   const requirements = boost.requirements.map((item) => ({
     title: item.name,
@@ -69,7 +70,7 @@ const boostData: Boost[] = [
     iconName: "bullseye",
     boosterName: "Voting Streaks",
     verified: false, // TODO: should check if user has an active boost and if so, set to true
-    boostAmmount: "x1.10", // TODO: should fetch from smart contract
+    boostAmount: "1.02", // TODO: should fetch from smart contract
     descriptionShort: "Maintain a Breadchain voting cycle streak.",
     descriptionLong:
       "Maintain a Breadchain voting cycle streak. Break your streak and you will have to start over.",
@@ -79,26 +80,43 @@ const boostData: Boost[] = [
       {
         name: "Start (no booster)",
         subtitle: "",
+        value: 1.0,
         achieved: true,
       },
       {
-        name: "Lift Server",
-        subtitle: "Raise it up high",
+        name: "",
+        subtitle: "",
+        value: 1.01,
         achieved: true,
       },
       {
         name: "Streak of 2 voting cycles",
         subtitle: "",
+        value: 1.02,
+        achieved: true,
+      },
+      {
+        name: "",
+        subtitle: "",
+        value: 1.03,
         achieved: true,
       },
       {
         name: "Streak of 4 voting cycles",
         subtitle: "",
+        value: 1.04,
         achieved: false,
+      },
+      {
+        name: "",
+        subtitle: "",
+        value: 1.05,
+        achieved: true,
       },
       {
         name: "Streak of 6 voting cycles",
         subtitle: "",
+        value: 1.06,
         achieved: false,
       },
     ],

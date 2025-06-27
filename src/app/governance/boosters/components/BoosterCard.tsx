@@ -14,7 +14,7 @@ export function BoosterCard({
   iconName,
   boosterName,
   verified,
-  boostAmmount,
+  boostAmount,
   descriptionShort,
   descriptionLong,
   expiration,
@@ -24,7 +24,7 @@ export function BoosterCard({
   iconName: string;
   boosterName: string;
   verified: boolean;
-  boostAmmount: string;
+  boostAmount: string;
   descriptionShort: string;
   descriptionLong: string;
   expiration: number | undefined;
@@ -41,7 +41,7 @@ export function BoosterCard({
             "
     >
       {header(iconName, boosterName, verified)}
-      {boostPowerSection(boostAmmount)}
+      {boostPowerSection(boostAmount)}
       <p className="my-[24px]">{descriptionShort}</p>
       <ViewButton verified={verified} boost={boost} />
       {expiry(expiration, expirationUrgent, "Helpful information loading...")}
@@ -93,7 +93,7 @@ function verifiedBadge(verified: boolean): ReactElement {
   );
 }
 
-export function boostPowerSection(ammount: string): ReactElement {
+export function boostPowerSection(amount: string): ReactElement {
   return (
     <div
       className="
@@ -113,7 +113,7 @@ export function boostPowerSection(ammount: string): ReactElement {
         {/* This element simply adds the gradient. It has opacity and layers ontop of the solid background */}
       </div>
       <p className="font-bold text-[30px] bread-pink-text-gradient z-0">
-        {ammount}
+        x{amount}
       </p>
       <div className="flex items-center gap-2 z-30">
         <p className="block text-[16px] pb-[5px]">Voting power boost</p>

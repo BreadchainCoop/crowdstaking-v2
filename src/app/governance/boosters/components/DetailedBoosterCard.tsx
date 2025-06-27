@@ -10,6 +10,7 @@ import CheckDoubleIcon from "@/app/core/components/Icons/CheckDouble";
 
 export interface ProgressItem {
   title: string;
+  value: number;
   achieved: boolean;
 }
 
@@ -17,8 +18,7 @@ export function DetailedBoosterCard({
   iconName,
   boosterName,
   verified,
-  boostAmmount,
-  boostAmmountSubtitle,
+  boostAmount,
   descriptionShort,
   descriptionLong,
   expiration,
@@ -30,8 +30,7 @@ export function DetailedBoosterCard({
   iconName: string;
   boosterName: string;
   verified: boolean;
-  boostAmmount: string;
-  boostAmmountSubtitle: string;
+  boostAmount: string;
   descriptionShort: string;
   descriptionLong: string;
   expiration: number | undefined;
@@ -51,8 +50,8 @@ export function DetailedBoosterCard({
         "
     >
       {header(iconName, boosterName, verified, closeIcon(close))}
-      {boostPowerSection(boostAmmount)}
-      {detailsSection(descriptionLong, requirements, progress)}
+      {boostPowerSection(boostAmount)}
+      {detailsSection(descriptionLong, requirements, progress, boostAmount)}
       {buttons()}
       {expiry(expiration, expirationUrgent, "Helpful information loading...")}
     </div>
@@ -83,11 +82,12 @@ function buttons(): ReactElement {
 function detailsSection(
   description: String,
   requirements: ProgressItem[],
-  progress: ProgressItem[]
+  progress: ProgressItem[],
+  boostAmount: string
 ): ReactElement {
   return (
     <div className="px-[20px] flex flex-col gap-[24px] my-[24px]">
-      {progress.length > 0 && boostProgress(progress)}
+      {progress.length > 0 && boostProgress(progress, Number(boostAmount))}
       {requirements.length > 0 && requirementsList(requirements)}
       <p>{description}</p>
     </div>
@@ -96,9 +96,12 @@ function detailsSection(
 
 // Displays the horizontal progress bar with text beneath it
 // Note, this component expects Boost Progress to be ordered with completed items at the start.
-function boostProgress(progress: ProgressItem[]): ReactElement {
+function boostProgress(
+  progress: ProgressItem[],
+  boostAmount: number
+): ReactElement {
   let numberItems = progress.length;
-  let numberCompleted = progress.findIndex((item) => item.achieved === false);
+  let numberCompleted = progress.findIndex((item) => item.value > boostAmount);
   if (numberCompleted == -1) {
     numberCompleted = numberItems;
   }
@@ -111,7 +114,12 @@ function boostProgress(progress: ProgressItem[]): ReactElement {
       <div className="flex flex-row w-full justify-around">
         {progress.map((item, index) => (
           <React.Fragment key="index">
-            {progressText(item.title)}
+            {item.title != "" && (
+              <div className="max-w-[100px] flex flex-col items-center text-center text-gray-400">
+                {progressText(item.value.toString())}
+                <p className="text-[12px]">{item.title}</p>
+              </div>
+            )}
           </React.Fragment>
         ))}
       </div>
@@ -121,16 +129,8 @@ function boostProgress(progress: ProgressItem[]): ReactElement {
 
 function progressText(title: String | null): ReactElement {
   return (
-    <div
-      className="
-      max-w-[100px] 
-      flex flex-col items-center text-center 
-      text-gray-400
-    "
-    >
-      <div className="font-semibold text-[16px] mb-[4px] text-breadgray-pitchblack dark:text-breadgray-ultra-white">
-        {title}
-      </div>
+    <div className="font-semibold text-[16px] mb-[4px] text-breadgray-pitchblack dark:text-breadgray-ultra-white">
+      x{title}
     </div>
   );
 }
