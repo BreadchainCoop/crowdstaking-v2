@@ -9,6 +9,7 @@ import { VoteTransactionModal } from "./TransactionModal/VoteTransactionModal";
 import { BakeryTransactionModal } from "./TransactionModal/BakeryTransactionModal";
 import { LPVaultTransactionModal } from "./LPVaultTransactionModal/LPVaultTransactionModal";
 import { GenericModal } from "./GenericModal";
+import { LiFiBridgeModal } from "./Bridge/LiFiModal";
 
 export function ModalPresenter() {
   const { modalState, setModal } = useModal();
@@ -37,6 +38,8 @@ export function ModalPresenter() {
                       return (
                         <LPVaultTransactionModal modalState={modalState} />
                       );
+                    case "LIFI_BRIDGE":
+                      return <LiFiBridgeModal modalState={modalState} setModal={setModal} />
                     case "GENERIC_MODAL":
                       return (<GenericModal modalState={modalState}/>)
                     default:
