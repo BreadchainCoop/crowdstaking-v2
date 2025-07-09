@@ -1,4 +1,5 @@
 import { TransactionType } from "@/app/governance/lp-vaults/components/VaultPanel";
+import { Route } from "@lifi/widget";
 import { ReactElement, type ReactNode, createContext, useContext, useState } from "react";
 
 export type RecastModalState = {
@@ -29,6 +30,11 @@ export type LPVaultTransactionModalState = {
   parsedValue: bigint;
 };
 
+export type LiFiBridgeModalState = {
+  type: "LIFI_BRIDGE"
+  route: Route
+}
+
 export type GenericModalState = {
   type: "GENERIC_MODAL";
   showCloseButton: Boolean;
@@ -42,6 +48,7 @@ export type ModalState =
   | RecastModalState
   | ConfirmBurnModalState
   | LPVaultTransactionModalState
+  | LiFiBridgeModalState
   | GenericModalState
   | null;
 export type ModalContext = {
