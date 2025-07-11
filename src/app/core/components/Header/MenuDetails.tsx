@@ -87,7 +87,7 @@ export function MenuDetails({ address }: MenuDetailsProps) {
             <BreadIcon />
             {BREAD && BREAD.status === "SUCCESS" && BREAD.value && (
               <div className="bread-pink-text-gradient">
-                <span>
+                {/* <span>
                   {renderFormattedDecimalNumber(
                     formatBalance(
                       parseFloat(BREAD.value) *
@@ -95,7 +95,7 @@ export function MenuDetails({ address }: MenuDetailsProps) {
                       2
                     )
                   )}
-                </span>
+                </span> */}
               </div>
             )}
           </span>

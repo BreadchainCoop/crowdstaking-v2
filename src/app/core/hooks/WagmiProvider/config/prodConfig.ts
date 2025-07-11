@@ -43,6 +43,7 @@ const config = getDefaultConfig({
     [gnosis.id]: http(),
     [sepolia.id]: httpProvider,
   },
+  ssr: true,
 });
 
 export { config as prodConfig };
