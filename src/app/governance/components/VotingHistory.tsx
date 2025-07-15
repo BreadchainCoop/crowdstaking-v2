@@ -2,7 +2,7 @@ import { projectsMeta } from "@/app/projectsMeta";
 import { formatBalance, formatProjectPayment } from "@/app/core/util/formatter";
 import { formatUnits, Hex } from "viem";
 import { BreadIcon } from "@/app/core/components/Icons/TokenIcons";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { useIsMobile } from "@/app/core/hooks/useIsMobile";
 import * as Accordion from "@radix-ui/react-accordion";
 import { useState } from "react";
@@ -87,7 +87,10 @@ export function VotingHistory() {
         </p>
         <p className="pt-6 text-left text-breadgray-rye dark:text-breadgray-grey">
           Ended on{" "}
-          {format(new Date(cycleDistribution.distributionDate), "MMM d, yyyy")}
+          {format(
+            parse(cycleDistribution.distributionDate, 'MM/dd/yyyy', new Date()), 
+            "MMM d, yyyy"
+          )}
         </p>
       </header>
       <div>
