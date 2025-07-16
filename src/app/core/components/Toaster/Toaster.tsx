@@ -37,7 +37,7 @@ function Toast({
   toast: TToast;
   toastDispatch: TToastDispatch;
 }) {
-  const { id, toastType, txHash } = toast;
+  const { id, toastType } = toast;
 
   function handleOpenChange() {
     toastDispatch({ type: "CLEAR", payload: { id } });
@@ -46,7 +46,18 @@ function Toast({
   return (
     <ToastPrimitive.Provider>
       <ToastPrimitive.Root forceMount onOpenChange={handleOpenChange}>
-        <ToastUI toastType={toastType} txHash={txHash} />
+        <ToastUI
+          toastType={toastType}
+          txHash={
+            toast.toastType !== "CUSTOM" ? toast.txHash : undefined
+          }
+          message={
+            toast.toastType === "CUSTOM" ? toast.message : undefined
+          }
+          variant={
+            toast.toastType === "CUSTOM" ? toast.variant : undefined
+          }
+        />
       </ToastPrimitive.Root>
       <ToastPrimitive.Viewport />
     </ToastPrimitive.Provider>

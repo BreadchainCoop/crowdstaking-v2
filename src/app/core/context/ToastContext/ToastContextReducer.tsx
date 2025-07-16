@@ -2,7 +2,7 @@ import { WriteContractReturnType } from "viem";
 import { nanoid } from "nanoid";
 
 export type TTransactionHash = WriteContractReturnType;
-export type TToastType = "SUBMITTED" | "CONFIRMED" | "REVERTED";
+export type TToastType = "SUBMITTED" | "CONFIRMED" | "REVERTED" | "CUSTOM";
 
 export type TToastSubmitted = {
   id: string;
@@ -22,14 +22,35 @@ export type TToastReverted = {
   txHash: TTransactionHash;
 };
 
-export type TToast = TToastSubmitted | TToastConfirmed | TToastReverted;
+export type TToastCustom = {
+  id: string;
+  toastType: "CUSTOM";
+  message: string;
+  variant: "neutral" | "success" | "error";
+};
+
+export type TToast =
+  | TToastSubmitted
+  | TToastConfirmed
+  | TToastReverted
+  | TToastCustom;
 
 export type TToastState = TToast[];
 
 export type TToastAction =
   | {
       type: "NEW";
-      payload: { toastType: TToastType; txHash: TTransactionHash };
+      payload: {
+        toastType: Exclude<TToastType, "CUSTOM">;
+        txHash: TTransactionHash;
+      };
+    }
+  | {
+      type: "CUSTOM";
+      payload: {
+        message: string;
+        variant: "neutral" | "success" | "error";
+      };
     }
   | {
       type: "CLEAR";
@@ -62,10 +83,19 @@ export function ToastReducer(
         ...state,
       ];
     }
+    case "CUSTOM": {
+      return [
+        {
+          id: nanoid(),
+          toastType: "CUSTOM",
+          message: action.payload.message,
+          variant: action.payload.variant,
+        },
+        ...state,
+      ];
+    }
     case "CLEAR":
-      return state.filter(
-        (transaction) => transaction.id !== action.payload.id
-      );
+      return state.filter((toast) => toast.id !== action.payload.id);
     default:
       throw new Error(`ToastContext action not recognised`);
   }
@@ -73,10 +103,10 @@ export function ToastReducer(
 
 /*
     May want to use this function as CLEAR would fail silently if no
-    tx was found with provided id
+    toast was found with provided id
 */
 function getIndex(state: TToastState, id: string): number {
-  const txIndex = state.findIndex((tx) => tx.id === id);
-  if (txIndex < 0) throw new Error("no tx found with that id!");
-  return txIndex;
+  const toastIndex = state.findIndex((toast) => toast.id === id);
+  if (toastIndex < 0) throw new Error("no message found with that id!");
+  return toastIndex;
 }
