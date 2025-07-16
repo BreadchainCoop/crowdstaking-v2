@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { ModalAdviceText, ModalContainer, ModalContent, ModalHeading, transactionIcons, TransactionValue } from "../ModalUI";
 import { BreadIcon, XDAIIcon } from "../../Icons/TokenIcons";
 import {
@@ -10,6 +10,8 @@ import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import Bake from "@/app/bakery/components/Swap/Bake";
 import Button from "../../Button";
 import { formatUnits } from "viem";
+import { useAccount, useSwitchChain } from "wagmi";
+import { gnosis } from "viem/chains";
 
 export function LiFiBridgeModal({
   modalState,
@@ -18,7 +20,10 @@ export function LiFiBridgeModal({
   modalState: LiFiBridgeModalState;
   setModal: (modalState: ModalState) => void;
 }) {
+  const { chain } = useAccount();
+    const { switchChain } = useSwitchChain();
   const { user, isSafe } = useConnectedUser();
+  console.log("___ USER++IS_SAFE ____", user, isSafe);
   const xDaiAmount = modalState.route.toAmount;
   console.log({
     route: modalState.route,
@@ -28,6 +33,11 @@ export function LiFiBridgeModal({
   });
   const xDaiInEther = formatUnits(BigInt(xDaiAmount), 18);
   const formattedXdaiAmount = formatBalance(Number(xDaiInEther), 2);
+
+  useEffect(() => {
+    if (chain && chain.id !== gnosis.id) switchChain({chainId: gnosis.id});
+  }, [])
+  
 
   return (
     <ModalContainer>

@@ -1,9 +1,15 @@
-import type { ReactNode } from "react";
-import { WagmiProvider } from "wagmi";
+import { useRef, type ReactNode } from "react";
+import { createConfig, WagmiProvider } from "wagmi";
+import type { Config } from 'wagmi';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import { hashFn } from "@wagmi/core/query";
 import { getConfig } from "./config/getConfig";
+// import { injected } from '@wagmi/connectors'
+import { useAvailableChains } from "@lifi/widget";
+import { useSyncWagmiConfig } from '@lifi/wallet-management';
+import { gnosis, mainnet } from "viem/chains";
+// import { createClient, http } from "viem";
 
 const WALLET_CONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
@@ -37,16 +43,34 @@ const queryClient = new QueryClient({
   },
 });
 
-export function WagmiProviderWrapper({ children }: { children: ReactNode }) {
+// const connectors = [injected()];
+
+function WagmiConfigManager({ children }: { children: ReactNode }) {
   const { config } = getConfig();
+  const { chains } = useAvailableChains();
+  const wagmi = useRef<Config>();
+
+  if (!wagmi.current) {
+    wagmi.current = config as Config;
+  }
+
+  useSyncWagmiConfig(wagmi.current, [], chains);
 
   return (
-    <WagmiProvider reconnectOnMount={true} config={config}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider modalSize="compact" theme={theme}>
-          {children}
-        </RainbowKitProvider>
-      </QueryClientProvider>
+    <WagmiProvider reconnectOnMount config={wagmi.current}>
+      <RainbowKitProvider modalSize="compact" theme={theme} initialChain={gnosis}>
+        {children}
+      </RainbowKitProvider>
     </WagmiProvider>
+  );
+}
+
+export function WagmiProviderWrapper({ children }: { children: ReactNode }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <WagmiConfigManager>
+        {children}
+      </WagmiConfigManager>
+    </QueryClientProvider>
   );
 }

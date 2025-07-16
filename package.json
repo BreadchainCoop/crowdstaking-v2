@@ -14,6 +14,7 @@
     "find-deadcode": "ts-prune | grep -v '(used in module)'"
   },
   "dependencies": {
+    "@lifi/wallet-management": "^3.12.1",
     "@lifi/widget": "^3.21.3",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-dialog": "^1.1.14",
