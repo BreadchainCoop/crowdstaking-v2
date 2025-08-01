@@ -15,6 +15,7 @@ import { getChain } from "@/chainConfig";
 import { formatUnits } from "viem";
 import clsx from "clsx";
 import { useDistributions } from '../useDistributions';
+import { DistributionCountdown } from "./DistributionCountdown";
 
 export function DistributionOverview({
   cycleDates,
@@ -191,10 +192,7 @@ export function DistributionOverview({
                 <span>err </span>
               ) : (
                 <div className="pt-3 flex flex-col gap-3">
-                  <p className="font-bold dark:text-breadgray-ultra-white">
-                    Distributing in{" "}
-                    {differenceInDays(cycleDates.end, new Date())} days
-                  </p>
+                  <DistributionCountdown end={cycleDates.end} />
                   <div className="flex gap-0.5 bg-breadgray-white border-breadgray-white dark:bg-black border-2 dark:border-black rounded-full overflow-clip">
                     {completedDays &&
                       completedDays.map((isComplete, i) => {
