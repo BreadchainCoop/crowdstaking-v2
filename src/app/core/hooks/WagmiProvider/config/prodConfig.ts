@@ -24,6 +24,8 @@ const httpProvider = http(
     : NEXT_PUBLIC_QUIKNODE_URL
 );
 
+// testing netlify preview
+
 const sepoliaChain =
   process.env.NEXT_PUBLIC_TESTNET === "true" ? [sepolia] : [];
 
