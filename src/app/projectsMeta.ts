@@ -9,6 +9,7 @@ export type ProjectMeta = {
   links: {
     notion: string;
   };
+  karmaGAPId?: string; // Optional Karma GAP project identifier
 };
 
 export const projectsMeta: {
@@ -25,6 +26,7 @@ export const projectsMeta: {
       notion:
         "https://breadchain.notion.site/Labor-DAO-cbb5a4c374494cada57ad6b1aff21323",
     },
+    karmaGAPId: "sample-labor-dao-id", // Demo ID - replace with real Karma GAP project ID
   },
   "0x5405e2D4D12AAdB57579E780458c9a1151b560F1": {
     name: "Symbiota",
@@ -37,6 +39,7 @@ export const projectsMeta: {
       notion:
         "https://breadchain.notion.site/Symbiota-Coop-63a0ddf2702b4239b23d7eb0bf3141b7",
     },
+    karmaGAPId: "sample-symbiota-id", // Demo ID - replace with real Karma GAP project ID
   },
   "0x5c22B3F03b3d8FFf56C9B2e90151512Cb3F3dE0F": {
     name: "Crypto Commons Acc",
@@ -49,6 +52,7 @@ export const projectsMeta: {
       notion:
         "https://breadchain.notion.site/Crypto-Commons-Association-77818c4f425942479835e8bfec0b951b",
     },
+    karmaGAPId: "sample-cca-id", // Demo ID - replace with real Karma GAP project ID
   },
   "0xA232F16aB37C9a646f91Ba901E92Ed1Ba4B7b544": {
     name: "Citizen Wallet",
@@ -60,6 +64,7 @@ export const projectsMeta: {
       notion:
         "https://breadchain.notion.site/Citizen-Wallet-0139bb3030f7442a8804459d717adb52?pvs=74",
     },
+    karmaGAPId: "sample-citizen-wallet-id", // Demo ID - replace with real Karma GAP project ID
   },
   "0x918dEf5d593F46735f74F9E2B280Fe51AF3A99ad": {
     name: "Breadchain Core",
@@ -72,6 +77,7 @@ export const projectsMeta: {
       notion:
         "https://breadchain.notion.site/Breadchain-Core-208dcd81c6da49d1b1b00635f727d902",
     },
+    karmaGAPId: "sample-breadchain-core-id", // Demo ID - replace with real Karma GAP project ID
   },
   "0x6A148b997e6651237F2fCfc9E30330a6480519f0": {
     name: "Breadchain Treasury",
@@ -84,6 +90,7 @@ export const projectsMeta: {
       notion:
         "https://breadchain.notion.site/Breadchain-Core-208dcd81c6da49d1b1b00635f727d902",
     },
+    karmaGAPId: "sample-treasury-id", // Demo ID - replace with real Karma GAP project ID
   },
   "0x68060388C7D97B4bF779a2Ead46c86e5588F073f": {
     name: "ReFi DAO",
@@ -95,5 +102,6 @@ export const projectsMeta: {
       notion:
         "https://breadchain.notion.site/ReFi-DAO-1540ad9b1279805bb54de4ffd0d5d52d",
     },
+    karmaGAPId: "sample-refi-dao-id", // Demo ID - replace with real Karma GAP project ID
   },
 };

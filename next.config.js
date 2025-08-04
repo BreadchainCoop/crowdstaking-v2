@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Enable static export for mockup deployment
   output: "export",
   env: {
     SUBGRAPH_API_KEY: process.env.SUBGRAPH_API_KEY,

@@ -12,6 +12,8 @@ import clsx from "clsx";
 import { CardBox } from "@/app/core/components/CardBox";
 import { LinkIcon } from "@/app/core/components/Icons/LinkIcon";
 import { useProject } from "@/app/core/context/ProjectContext/ProjectContext";
+import { KarmaGAPInsights } from "./KarmaGAPInsights";
+import { useKarmaGAPData } from "../../../hooks/useKarmaGAPData";
 
 export function ProjectRow({
   address,
@@ -25,11 +27,16 @@ export function ProjectRow({
     logoSrc,
     description,
     links: { notion },
+    karmaGAPId,
   } = projectsMeta[address];
 
   const { project } = useProject();
   const projectBread = project.BREAD;
   const projectPower = project.POWER;
+  const { data: karmaGAPData, loading: karmaGAPLoading } = useKarmaGAPData(karmaGAPId);
+
+  // Debug logging
+  console.log(`ProjectRow: ${name}`, { karmaGAPId, hasData: !!karmaGAPData, loading: karmaGAPLoading });
 
   const renderBreadHolding = (value: string) => {
     return (
@@ -79,6 +86,12 @@ export function ProjectRow({
           <div className="text-breadgray-rye dark:text-breadgray-grey">
             {description}
           </div>
+          {/* Karma GAP Integration */}
+          {karmaGAPData && !karmaGAPLoading && (
+            <div className="mt-3">
+              <KarmaGAPInsights profile={karmaGAPData} compact />
+            </div>
+          )}
           {projectBread?.status === "SUCCESS" && (
             <div className="inline-block tracking-wide">
               <LinkBadge
@@ -147,6 +160,12 @@ export function ProjectRow({
           <div className="max-w-xs text-breadgray-rye dark:text-breadgray-grey">
             {description}
           </div>
+          {/* Karma GAP Integration */}
+          {karmaGAPData && !karmaGAPLoading && (
+            <div className="mt-3 max-w-md">
+              <KarmaGAPInsights profile={karmaGAPData} compact />
+            </div>
+          )}
         </div>
         <div className="flex flex-col gap-4 justify-center text-breadgray-rye dark:text-breadgray-grey">
           {children}
