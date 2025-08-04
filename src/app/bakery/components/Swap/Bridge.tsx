@@ -45,10 +45,7 @@ export function Bridge() {
       WidgetEvent.RouteExecutionCompleted,
       onRouteExecutionCompleted
     );
-    widgetEvents.on(
-      WidgetEvent.RouteExecutionFailed,
-      onRouteExecutionFailed
-    );
+    widgetEvents.on(WidgetEvent.RouteExecutionFailed, onRouteExecutionFailed);
 
     return () => widgetEvents.all.clear();
   }, [widgetEvents]);
@@ -59,6 +56,9 @@ export function Bridge() {
 function LiFiMainWrapper() {
   const config = {
     appearance: "system",
+    chains: {
+      allow: [1, 100],
+    },
     // initialize to xDai on Gnosis chain
     toToken: "0x0000000000000000000000000000000000000000",
     toChain: 100,
