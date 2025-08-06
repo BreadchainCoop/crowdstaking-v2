@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useBalance, useBlockNumber, useReadContract } from "wagmi";
 import { Hex } from "viem";
+import { getChain } from "@/chainConfig";
 
 export function useRefetchOnBlockChangeForUser(
   userAddress: Hex,
@@ -33,13 +34,14 @@ export function useRefetchOnBlockChange(
   args: any[],
   query?: { enabled: boolean }
 ) {
-  const { data: blockNumber } = useBlockNumber({ watch: true });
+  const { data: blockNumber } = useBlockNumber({ watch: true, chainId: getChain("DEFAULT").ID });
   const { status, data, error, refetch } = useReadContract({
     address: contractAddress,
     abi: abi,
     functionName: functionName,
     args: args,
     query: query,
+    chainId: getChain("DEFAULT").ID,
   });
 
   useEffect(() => {
