@@ -4,6 +4,7 @@ import { FistIcon } from "@/app/core/components/Icons/FistIcon";
 import { AccountMenu } from "@/app/core/components/Header/AccountMenu";
 import { LinkIcon } from "@/app/core/components/Icons/LinkIcon";
 import {
+  TUnsupportedChain,
   TUserConnected,
   useConnectedUser,
 } from "@/app/core/hooks/useConnectedUser";
@@ -17,9 +18,12 @@ import { useCycleLength } from "../../useCycleLength";
 import { useVaultTokenBalance } from "../context/VaultTokenBalanceContext";
 import Tooltip from "@/app/core/components/Tooltip";
 import { useDistributions } from "../../useDistributions";
+import { useChainModal } from "@rainbow-me/rainbowkit";
+import Button from "@/app/core/components/Button";
 
 export function VotingPowerPanel() {
   const { user } = useConnectedUser();
+  const { openChainModal } = useChainModal();
 
   const votingPower = useVotingPower();
   const vaultTokenBalance = useVaultTokenBalance();
@@ -129,7 +133,7 @@ export function VotingPowerPanel() {
                   : "-"}
               </span>
 
-              {user.status === "CONNECTED" && (
+              {user.status === "CONNECTED" || user.status === "UNSUPPORTED_CHAIN" && (
                 <>
                   <p className="text-breadgray-rye dark:text-breadgray-grey">
                     Total $BREAD baked
@@ -143,7 +147,7 @@ export function VotingPowerPanel() {
                 </>
               )}
 
-              {user.status === "CONNECTED" ? (
+              {user.status === "CONNECTED" || user.status === "UNSUPPORTED_CHAIN" ? (
                 <>
                   <DividerWithText text="Future voting power" />
 
@@ -167,6 +171,17 @@ export function VotingPowerPanel() {
 
               {user.status === "CONNECTED" ? (
                 <></>
+              ) : user.status === "UNSUPPORTED_CHAIN" ? (
+                <div className="col-span-2 pt-3">
+                  <Button
+                    fullWidth={true}
+                    size="large"
+                    variant="danger"
+                    onClick={() => openChainModal?.()}
+                  >
+                    Change network
+                  </Button>
+                </div>
               ) : (
                 <div className="col-span-2 pt-3">
                   <AccountMenu size="large" fullWidth>
@@ -211,7 +226,7 @@ function Divider() {
   );
 }
 
-function PendingVotingPowerDisplay({ user }: { user: TUserConnected }) {
+function PendingVotingPowerDisplay({ user }: { user: TUserConnected | TUnsupportedChain }) {
   const {
     status: currentAccumulatedVotingPowerStatus,
     data: currentAccumulatedVotingPowerData,
