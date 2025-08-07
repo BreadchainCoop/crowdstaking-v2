@@ -68,7 +68,6 @@ export function VotingPowerProvider({
               lastClaimedBlocknumber,
               account,
             ],
-
           },
           {
             address: chainConfig.DISBURSER.address,

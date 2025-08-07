@@ -9,11 +9,13 @@ import {
 import { useRefetchOnBlockChangeForUser } from "@/app/core/hooks/useRefetchOnBlockChange";
 
 import {
+  TUnsupportedChain,
   TUserConnected,
   useConnectedUser,
 } from "@/app/core/hooks/useConnectedUser";
 import { getChain } from "@/chainConfig";
 import { BUTTERED_BREAD_ABI } from "@/abi";
+import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 
 type VaultTokenBalanceLoading = {
   status: "loading";
@@ -40,7 +42,7 @@ const VaultTokenBalanceContext = createContext<VaultTokenBalanceState>(null);
 function VaultTokenBalanceProvider({ children }: { children: ReactNode }) {
   const { user } = useConnectedUser();
 
-  if (user.status === "CONNECTED") {
+  if (user.status === "CONNECTED" || user.status === "UNSUPPORTED_CHAIN") {
     return <ProviderWithUser user={user}>{children}</ProviderWithUser>;
   }
 
@@ -63,10 +65,9 @@ function useVaultTokenBalance() {
 
 function ProviderWithUser({
   user,
-
   children,
 }: {
-  user: TUserConnected;
+  user: TUserConnected | TUnsupportedChain;
   children: ReactNode;
 }) {
   const [votingPowerState, setVotingPowerState] =
@@ -74,7 +75,7 @@ function ProviderWithUser({
       butter: { status: "loading" },
     });
 
-  const chainConfig = getChain(user.chain.id);
+  const chainConfig = useActiveChain();
 
   const { data, status } = useRefetchOnBlockChangeForUser(
     user.address,
