@@ -3,6 +3,7 @@ import { useBlockNumber } from "wagmi";
 import { add, sub } from "date-fns";
 import { CycleLengthState } from "./useCycleLength";
 import { useLastClaimedBlockNumber } from "./useLastClaimedBlockNumber";
+import { useActiveChain } from "../core/hooks/useActiveChain";
 
 export type CycleDatesLoading = {
   status: "LOADING";
@@ -29,7 +30,7 @@ export function useCycleDates(cycleLength: CycleLengthState) {
   const { lastClaimedBlocknumber } = useLastClaimedBlockNumber();
 
   const { data: currentBlockNumberData, status: currentBlockNumberStatus } =
-    useBlockNumber();
+    useBlockNumber({ chainId: useActiveChain().ID });
 
   useEffect(() => {
     if (

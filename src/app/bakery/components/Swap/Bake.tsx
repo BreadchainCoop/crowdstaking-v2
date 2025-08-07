@@ -12,6 +12,7 @@ import { useTransactions } from "@/app/core/context/TransactionsContext/Transact
 import SafeAppsSDK from "@safe-global/safe-apps-sdk/dist/src/sdk";
 import { TransactionStatus } from "@safe-global/safe-apps-sdk/dist/src/types";
 import { useModal } from "@/app/core/context/ModalContext";
+import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 
 export default function Bake({
   user,
@@ -29,7 +30,7 @@ export default function Bake({
 
   const { setModal } = useModal();
 
-  const { BREAD } = getChain(user.chain.id);
+  const { BREAD, ID: chainId } = useActiveChain();
 
   const debouncedValue = useDebounce(inputValue, 500);
 
@@ -50,6 +51,7 @@ export default function Bake({
     query: {
       enabled: parseFloat(debouncedValue) > 0,
     },
+    chainId
   });
 
   useEffect(() => {
