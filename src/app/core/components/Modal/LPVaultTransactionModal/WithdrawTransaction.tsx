@@ -69,6 +69,7 @@ export function WithdrawTransaction({
         lockedBalanceStatus === "success" &&
         modalState.parsedValue <= (lockedBalance as bigint),
     },
+    chainId: chainConfig.ID
   });
 
   useEffect(() => {

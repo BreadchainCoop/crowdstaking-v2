@@ -107,6 +107,7 @@ export function CastVote({
     query: {
       enabled: writeIsEnabled && distributorAddress !== "0x",
     },
+    chainId: chainConfig.ID
   });
 
   const {

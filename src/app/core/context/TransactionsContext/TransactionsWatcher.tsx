@@ -6,6 +6,7 @@ import {
 import { useWaitForTransactionReceipt } from "wagmi";
 import { useToast } from "../ToastContext/ToastContext";
 import { useAudio } from "../../hooks/useAudio/useAudio";
+import { useActiveChain } from "../../hooks/useActiveChain";
 
 export function TransactionWatcher({
   transaction,
@@ -18,7 +19,7 @@ export function TransactionWatcher({
   const { toastDispatch } = useToast();
   const { playSound } = useAudio({ src: "/cookies.mp3" });
 
-  const { data: waitData } = useWaitForTransactionReceipt({ hash });
+  const { data: waitData } = useWaitForTransactionReceipt({ hash, chainId: useActiveChain().ID });
 
   useEffect(() => {
     toastDispatch({

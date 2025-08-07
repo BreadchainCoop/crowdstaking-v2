@@ -5,14 +5,13 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useAccount } from "wagmi";
 import { multicall } from "@wagmi/core";
 import { Hex } from "viem";
 import { useQuery } from "@tanstack/react-query";
 import { getConfig } from "@/app/core/hooks/WagmiProvider/config/getConfig";
 
-import { getChain } from "@/chainConfig";
 import { DISTRIBUTOR_ABI } from "@/abi";
+import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 
 export type VpTokenLoading = {
   status: "loading";
@@ -51,13 +50,13 @@ export function VotingPowerProvider({
     bread: { status: "loading" },
     butteredBread: { status: "loading" },
   });
-  const { chainId } = useAccount();
-  const chainConfig = getChain(chainId || "DEFAULT");
+  const chainConfig = useActiveChain();
 
   const { data, status, error } = useQuery({
-    queryKey: ["vpMulticall"],
+    queryKey: ["vpMulticall", chainConfig.ID, account],
     queryFn: async () => {
       return await multicall(getConfig().config, {
+        chainId: chainConfig.ID,
         contracts: [
           {
             address: chainConfig.DISBURSER.address,
@@ -69,6 +68,7 @@ export function VotingPowerProvider({
               lastClaimedBlocknumber,
               account,
             ],
+
           },
           {
             address: chainConfig.DISBURSER.address,

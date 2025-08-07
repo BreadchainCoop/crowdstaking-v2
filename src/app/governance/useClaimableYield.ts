@@ -1,17 +1,13 @@
 import { BREAD_ABI } from "@/abi";
-import { getChain } from "@/chainConfig";
 import { useEffect, useState } from "react";
 import { formatUnits } from "viem";
-import { useReadContract, useAccount } from "wagmi";
+import { useReadContract } from "wagmi";
+import { useActiveChain } from "../core/hooks/useActiveChain";
 
 export function useClaimableYield() {
   const [claimableYield, setClaimableYield] = useState<number | null>(null);
 
-  const { chain: activeChain } = useAccount();
-
-  const chainConfig = activeChain
-    ? getChain(activeChain.id)
-    : getChain("DEFAULT");
+  const chainConfig = useActiveChain();
   const breadAddress = chainConfig.BREAD.address;
 
   const { data, status, error } = useReadContract({
@@ -21,6 +17,7 @@ export function useClaimableYield() {
     query: {
       enabled: breadAddress !== "0x",
     },
+    chainId: chainConfig.ID
   });
 
   useEffect(() => {

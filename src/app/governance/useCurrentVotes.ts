@@ -24,6 +24,7 @@ export function useCurrentVotes(lastClaimedBlockNumber: bigint | null) {
     refetchInterval: 500,
     enabled: !!lastClaimedBlockNumber,
     queryFn: async () => {
+      // TODO: Look into this and see if and how chain Id can be passed explicitly
       const logs = await publicClient.getContractEvents({
         address: distributorAddress,
         abi: DISTRIBUTOR_ABI,

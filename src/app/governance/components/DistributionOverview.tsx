@@ -6,15 +6,15 @@ import { useRefetchOnBlockChange } from "@/app/core/hooks/useRefetchOnBlockChang
 import { LinkIcon } from "@/app/core/components/Icons/LinkIcon";
 import Tooltip from "@/app/core/components/Tooltip";
 import { CardBox } from "@/app/core/components/CardBox";
-import { useReadContract, useAccount } from "wagmi";
+import { useReadContract } from "wagmi";
 
 import { ERC20_ABI, SDAI_ADAPTOR_ABI } from "@/abi";
 import { useEffect, useMemo, useState } from "react";
 import { differenceInDays, differenceInHours, format } from "date-fns";
-import { getChain } from "@/chainConfig";
 import { formatUnits } from "viem";
 import clsx from "clsx";
-import { useDistributions } from '../useDistributions';
+import { useDistributions } from "../useDistributions";
+import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 
 export function DistributionOverview({
   cycleDates,
@@ -23,21 +23,15 @@ export function DistributionOverview({
 }) {
   const { totalDistributions: distributions } = useDistributions(0);
   const { claimableYield } = useClaimableYield();
-  const { chain: activeChain } = useAccount();
   const [dsrAPY, setDsrAPY] = useState("");
-  const chainConfig = activeChain
-    ? getChain(activeChain.id)
-    : getChain("DEFAULT");
+  const chainConfig = useActiveChain();
   const [yieldIncrement, setYieldIncrement] = useState(0);
 
-  const {
-    data: apyData,
-    error: apyError,
-    status: apyStatus,
-  } = useReadContract({
+  const { data: apyData, status: apyStatus } = useReadContract({
     address: chainConfig.SDAI_ADAPTOR.address,
     abi: SDAI_ADAPTOR_ABI,
     functionName: "vaultAPY",
+    chainId: chainConfig.ID,
   });
 
   const { data: totalSupplyData, status: totalSupplyStatus } =

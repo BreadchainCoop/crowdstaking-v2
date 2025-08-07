@@ -19,6 +19,7 @@ export function Diagnostics() {
     address: distributorAddress,
     abi: DISTRIBUTOR_ABI,
     functionName: "distributeYield",
+    chainId: chainConfig.ID
   });
 
   const {
@@ -57,13 +58,13 @@ function ProjectDisplay({ account }: { account: Hex }) {
   const chainConfig = useActiveChain();
   const breadAddress = chainConfig.BREAD.address;
 
-  const { data: breadBalanceData, status: breadBalanceStatus } =
-    useReadContract({
-      address: breadAddress,
-      abi: BREAD_ABI,
-      functionName: "balanceOf",
-      args: [account],
-    });
+  const { data: breadBalanceData } = useReadContract({
+    address: breadAddress,
+    abi: BREAD_ABI,
+    functionName: "balanceOf",
+    args: [account],
+    chainId: chainConfig.ID,
+  });
 
   return (
     <div>

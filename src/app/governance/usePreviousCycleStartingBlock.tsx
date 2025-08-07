@@ -12,5 +12,6 @@ export function usePreviousCycleStartingBlock() {
     query: {
       enabled: true,
     },
+    chainId: chainConfig.ID
   });
 }

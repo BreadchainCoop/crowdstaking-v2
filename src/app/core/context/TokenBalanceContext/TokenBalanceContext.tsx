@@ -6,17 +6,18 @@ import {
   useState,
   useMemo,
 } from "react";
-import { getChain } from "@/chainConfig";
 import {
   useRefetchOnBlockChangeForUser,
   useRefetchBalanceOnBlockChange,
 } from "@/app/core/hooks/useRefetchOnBlockChange";
 import {
+  TUnsupportedChain,
   TUserConnected,
   useConnectedUser,
 } from "@/app/core/hooks/useConnectedUser";
 import { ERC20_ABI } from "@/abi";
 import { formatUnits } from "viem";
+import { useActiveChain } from "../../hooks/useActiveChain";
 
 export type TSupportedTokenKeys = "xDAI" | "BREAD" | "BUTTER";
 
@@ -48,7 +49,7 @@ const TokenBalancesContext = createContext<TTokenBalancesState>(initialState);
 function TokenBalancesProvider({ children }: { children: ReactNode }) {
   const { user } = useConnectedUser();
 
-  if (user.status === "CONNECTED") {
+  if (user.status === "CONNECTED" || user.status === "UNSUPPORTED_CHAIN") {
     return <ProviderWithUser user={user}>{children}</ProviderWithUser>;
   }
 
@@ -63,7 +64,7 @@ function ProviderWithUser({
   user,
   children,
 }: {
-  user: TUserConnected;
+  user: TUserConnected | TUnsupportedChain;
   children: ReactNode;
 }) {
   const [breadBalanceState, setBreadBalanceState] =
@@ -78,7 +79,7 @@ function ProviderWithUser({
       status: "LOADING",
     });
 
-  const config = getChain(user.chain.id);
+  const config = useActiveChain();
   // BREAD balance
   const { data: breadBalanceData, status: breadBalanceStatus } =
     useRefetchOnBlockChangeForUser(

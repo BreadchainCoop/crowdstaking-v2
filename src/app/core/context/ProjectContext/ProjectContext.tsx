@@ -6,8 +6,7 @@ import React, {
   useMemo,
   ReactNode,
 } from "react";
-import { useAccount, useReadContract } from "wagmi";
-import { getChain } from "@/chainConfig";
+import { useReadContract } from "wagmi";
 import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 import { formatBalance } from "@/app/core/util/formatter";
 import { formatUnits } from "viem";
@@ -62,6 +61,7 @@ const ProjectsProvider = ({
       abi: ERC20_ABI,
       functionName: "balanceOf",
       args: [address],
+      chainId: chainConfig.ID
     });
 
   // Current voting power
@@ -74,6 +74,7 @@ const ProjectsProvider = ({
     abi: DISTRIBUTOR_ABI,
     functionName: "getCurrentVotingPower",
     args: [address],
+    chainId: chainConfig.ID
   });
 
   useEffect(() => {

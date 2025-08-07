@@ -3,8 +3,6 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import { AddTokenButton } from "@/app/core/components/Header/AddTokenButton";
 import Button from "../Button";
-import { useEnsName } from "@/app/core/hooks/useEnsName";
-import { useWatchAsset } from "../../hooks/useWatchAsset";
 import { MenuDetails } from "@/app/core/components/Header/MenuDetails";
 import { WalletDisconnectButton } from "@/app/core/components/Header/WalletMenu/WalletDisconnectButton";
 
@@ -14,7 +12,6 @@ function MobileWalletDisplay({
   handleNavToggle: () => void;
 }) {
   const { disconnectAsync } = useDisconnect();
-  const { watchAsset } = useWatchAsset();
 
   return (
     <ConnectButton.Custom>
@@ -78,7 +75,6 @@ function MobileWalletDisplay({
 }
 
 function AccountPanel({ accountAddress }: { accountAddress: string }) {
-  const ensNameState = useEnsName(accountAddress);
   return (
     <div className="flex flex-col gap-2">
       <div className="text-base dark:text-breadgray-grey font-semibold">

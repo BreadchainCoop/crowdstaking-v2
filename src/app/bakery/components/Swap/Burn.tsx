@@ -12,6 +12,7 @@ import { TransactionStatus } from "@safe-global/safe-apps-sdk";
 import { useModal } from "@/app/core/context/ModalContext";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
 import SwapBreadButton from "@/app/bakery/components/Swap/SwapBreadButton";
+import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 
 export default function Burn({
   user,
@@ -26,7 +27,7 @@ export default function Burn({
 }) {
   const { transactionsState, transactionsDispatch } = useTransactions();
   const [buttonIsEnabled, setButtonIsEnabled] = useState(false);
-  const { BREAD } = getChain(user.chain.id);
+  const { BREAD, ID: chainId } = useActiveChain()
   const { setModal } = useModal();
   const debouncedValue = useDebounce(inputValue, 500);
 
@@ -46,6 +47,7 @@ export default function Burn({
     query: {
       enabled: parseFloat(debouncedValue) > 0,
     },
+    chainId
   });
 
   useEffect(() => {

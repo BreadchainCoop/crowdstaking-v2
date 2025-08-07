@@ -28,6 +28,7 @@ import { useVaultAPY } from "@/app/core/hooks/useVaultAPY";
 import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
 import { renderFormattedDecimalNumber } from "@/app/core/util/formatter";
 import { LinkIcon } from "../../Icons/LinkIcon";
+import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 function makeHeaderText(
   modalType: "BAKE" | "BURN",
   status: TTransactionStatus
@@ -134,8 +135,8 @@ export function BakeryTransactionModal({
   );
 
   const { transactionsState } = useTransactions();
-  const { data: currentBlockNumberData } = useBlockNumber({ watch: true });
-  const { data: startingBlockNumber } = useBlockNumber();
+  const { data: currentBlockNumberData } = useBlockNumber({ watch: true, chainId: useActiveChain().ID });
+  const { data: startingBlockNumber } = useBlockNumber({chainId: useActiveChain().ID});
   const transaction = transactionsState.new
     ? {
         status: "PREPARED",

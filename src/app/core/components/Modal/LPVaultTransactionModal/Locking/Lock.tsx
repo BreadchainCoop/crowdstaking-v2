@@ -47,6 +47,7 @@ export function Lock({
     abi: BUTTERED_BREAD_ABI,
     functionName: "deposit",
     args: [chainConfig.BUTTER.address, lockingState.depositAmount],
+    chainId: chainConfig.ID
   });
 
   useEffect(() => {
