@@ -31,6 +31,7 @@ export type TUserConnected = {
 export type TUnsupportedChain = {
   status: "UNSUPPORTED_CHAIN";
   address: Hex;
+  config: ChainConfiguration;
   chain: Chain;
   features: Features;
 };
@@ -80,28 +81,17 @@ function ConnectedUserProvider({
   } = useAccount();
 
   useEffect(() => {
-    const config =
-      activeChain && isChainSupported(activeChain.id)
-        ? getChain(activeChain.id)
-        : false;
+    const defaultChain = getChain("DEFAULT");
+    const config = activeChain ? defaultChain : false;
 
-    if (activeConnector && activeChain && accountAddress && isConnected) {
-      setUser(
-        config
-          ? {
-              status: "CONNECTED",
-              address: accountAddress,
-              config,
-              chain: activeChain,
-              features,
-            }
-          : {
-              status: "UNSUPPORTED_CHAIN",
-              address: accountAddress,
-              chain: activeChain,
-              features,
-            }
-      );
+    if (activeConnector && activeChain && accountAddress && isConnected && config) {
+      setUser({
+        status: isChainSupported(activeChain.id) ? "CONNECTED" : "UNSUPPORTED_CHAIN",
+        address: accountAddress,
+        config,
+        chain: activeChain,
+        features
+      });
     } else if (status === "disconnected") {
       setUser({ status: "NOT_CONNECTED", features });
     }
