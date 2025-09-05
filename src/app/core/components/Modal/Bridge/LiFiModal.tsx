@@ -1,5 +1,12 @@
-import { ReactNode } from "react";
-import { ModalAdviceText, ModalContainer, ModalContent, ModalHeading, transactionIcons, TransactionValue } from "../ModalUI";
+import { ReactNode, useEffect } from "react";
+import {
+  ModalAdviceText,
+  ModalContainer,
+  ModalContent,
+  ModalHeading,
+  transactionIcons,
+  TransactionValue,
+} from "../ModalUI";
 import { BreadIcon, XDAIIcon } from "../../Icons/TokenIcons";
 import {
   LiFiBridgeModalState,
@@ -10,6 +17,8 @@ import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import Bake from "@/app/bakery/components/Swap/Bake";
 import Button from "../../Button";
 import { formatUnits } from "viem";
+import { useSwitchChain } from "wagmi";
+import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 
 export function LiFiBridgeModal({
   modalState,
@@ -18,6 +27,8 @@ export function LiFiBridgeModal({
   modalState: LiFiBridgeModalState;
   setModal: (modalState: ModalState) => void;
 }) {
+  const { switchChain } = useSwitchChain();
+  const defaultChain = useActiveChain();
   const { user, isSafe } = useConnectedUser();
   const xDaiAmount = modalState.route.toAmount;
   console.log({
@@ -28,6 +39,11 @@ export function LiFiBridgeModal({
   });
   const xDaiInEther = formatUnits(BigInt(xDaiAmount), 18);
   const formattedXdaiAmount = formatBalance(Number(xDaiInEther), 2);
+
+  useEffect(() => {
+    switchChain({ chainId: defaultChain.ID })
+  }, [])
+  
 
   return (
     <ModalContainer>
@@ -78,7 +94,7 @@ export function LiFiBridgeModal({
             <Bake
               user={user}
               clearInputValue={() => {}}
-              inputValue={xDaiAmount}
+              inputValue={formattedXdaiAmount}
               isSafe={isSafe}
             />
           </div>
