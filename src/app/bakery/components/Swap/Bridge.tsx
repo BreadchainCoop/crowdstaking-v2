@@ -57,7 +57,7 @@ function LiFiMainWrapper() {
   const config = {
     appearance: "system",
     chains: {
-      allow: [1, 100],
+      allow: [1, 100, 42161, 8453, 56],
     },
     // initialize to xDai on Gnosis chain
     toToken: "0x0000000000000000000000000000000000000000",
