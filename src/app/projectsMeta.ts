@@ -14,18 +14,6 @@ export type ProjectMeta = {
 export const projectsMeta: {
   [key: Hex]: ProjectMeta;
 } = {
-  "0x7E1367998e1fe8Fab8f0bbF41e97cD6E0C891B64": {
-    name: "Labour DAO",
-    order: 1,
-    ydIndex: 0,
-    description:
-      "A DAO supporting workers who want to organize in web3 and out.",
-    logoSrc: "project/labor_dao.png",
-    links: {
-      notion:
-        "https://breadchain.notion.site/Labor-DAO-cbb5a4c374494cada57ad6b1aff21323",
-    },
-  },
   "0x5405e2D4D12AAdB57579E780458c9a1151b560F1": {
     name: "Symbiota",
     order: 2,
