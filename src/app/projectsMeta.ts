@@ -6,6 +6,7 @@ export type ProjectMeta = {
   ydIndex: number; // the index of this project in the deployed YieldDistributor contract
   description: string;
   logoSrc: string;
+  active: boolean;
   links: {
     notion: string;
   };
@@ -21,6 +22,7 @@ export const projectsMeta: {
     description:
       "A DAO supporting workers who want to organize in web3 and out.",
     logoSrc: "project/labor_dao.png",
+    active: false,
     links: {
       notion:
         "https://breadchain.notion.site/Labor-DAO-cbb5a4c374494cada57ad6b1aff21323",
@@ -33,6 +35,7 @@ export const projectsMeta: {
     description:
       "Event-focused organisations devoted to new forms of culture and enquiry.",
     logoSrc: "project/symbiota.png",
+    active: true,
     links: {
       notion:
         "https://breadchain.notion.site/Symbiota-Coop-63a0ddf2702b4239b23d7eb0bf3141b7",
@@ -45,6 +48,7 @@ export const projectsMeta: {
     description:
       "Creating research and events on decentralized tech and the commons.",
     logoSrc: "project/cca.png",
+    active: true,
     links: {
       notion:
         "https://breadchain.notion.site/Crypto-Commons-Association-77818c4f425942479835e8bfec0b951b",
@@ -56,6 +60,7 @@ export const projectsMeta: {
     ydIndex: 6,
     description: "Open source tool stack to support Web3 community currencies.",
     logoSrc: "project/citizen_wallet.png",
+    active: true,
     links: {
       notion:
         "https://breadchain.notion.site/Citizen-Wallet-0139bb3030f7442a8804459d717adb52?pvs=74",
@@ -68,6 +73,7 @@ export const projectsMeta: {
     description:
       "The core team developing the tech and design used by Breadchain.",
     logoSrc: "project/core.png",
+    active: true,
     links: {
       notion:
         "https://breadchain.notion.site/Breadchain-Core-208dcd81c6da49d1b1b00635f727d902",
@@ -80,6 +86,7 @@ export const projectsMeta: {
     description:
       "A co-owned treasury in Breadchain used for grants and sponsorships.",
     logoSrc: "project/treasury.png",
+    active: true,
     links: {
       notion:
         "https://breadchain.notion.site/Breadchain-Core-208dcd81c6da49d1b1b00635f727d902",
@@ -91,6 +98,7 @@ export const projectsMeta: {
     ydIndex: 5,
     description: "Global network driving the Regenerative Finance movement.",
     logoSrc: "project/refi_dao.png",
+    active: true,
     links: {
       notion:
         "https://breadchain.notion.site/ReFi-DAO-1540ad9b1279805bb54de4ffd0d5d52d",
