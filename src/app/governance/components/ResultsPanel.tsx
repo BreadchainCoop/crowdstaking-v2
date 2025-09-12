@@ -19,6 +19,10 @@ export function ResultsPanel({
       .map((address, i) => {
         return { [address]: distribution.data[1][i] };
       })
+      .filter((item) => {
+        const address = Object.keys(item)[0] as Hex;
+        return projectsMeta[address]?.active; // Only include active projects
+      })
       .toSorted((a, b) => {
         return (
           projectsMeta[Object.keys(a)[0] as Hex].order -

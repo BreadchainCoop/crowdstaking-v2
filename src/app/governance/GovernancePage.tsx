@@ -78,11 +78,23 @@ export function GovernancePage() {
       castVote.status === "SUCCESS"
     ) {
       const projects = castVote.data
-        ? { ...castVote.data }
+        ? Object.keys(castVote.data).reduce<{ [key: Hex]: number }>(
+            (acc, cur) => {
+              // Only include active projects from cast vote data
+              if (projectsMeta[cur as Hex]?.active) {
+                acc[cur as Hex] = castVote.data![cur as Hex];
+              }
+              return acc;
+            },
+            {}
+          )
         : currentVotingDistribution.data[0].reduce<{
             [key: Hex]: number;
           }>((acc, cur, i) => {
-            acc[cur] = 0;
+            // Only include active projects in the vote form
+            if (projectsMeta[cur]?.active) {
+              acc[cur] = 0;
+            }
             return acc;
           }, {});
       setVoteFormState({
@@ -101,11 +113,23 @@ export function GovernancePage() {
 
     setVoteFormState({
       projects: castVote.data
-        ? { ...castVote.data }
+        ? Object.keys(castVote.data).reduce<{ [key: Hex]: number }>(
+            (acc, cur) => {
+              // Only include active projects from cast vote data
+              if (projectsMeta[cur as Hex]?.active) {
+                acc[cur as Hex] = castVote.data![cur as Hex];
+              }
+              return acc;
+            },
+            {}
+          )
         : currentVotingDistribution.data[0].reduce<{
             [key: Hex]: number;
           }>((acc, cur, i) => {
-            acc[cur] = 0;
+            // Only include active projects in the vote form
+            if (projectsMeta[cur]?.active) {
+              acc[cur] = 0;
+            }
             return acc;
           }, {}),
       totalPoints: 0,
