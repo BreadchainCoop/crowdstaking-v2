@@ -21,6 +21,7 @@ export function ProjectRow({
   children: ReactNode;
 }) {
   const projectMeta = projectsMeta[address];
+  const { project } = useProject();
 
   // If project metadata doesn't exist, don't render the component
   if (!projectMeta) {
@@ -33,8 +34,6 @@ export function ProjectRow({
     description,
     links: { notion },
   } = projectMeta;
-
-  const { project } = useProject();
   const projectBread = project.BREAD;
   const projectPower = project.POWER;
 
