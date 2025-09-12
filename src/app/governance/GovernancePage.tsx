@@ -242,6 +242,7 @@ export function GovernancePage() {
                 account,
                 castPoints: currentVotingDistribution.data[1][i],
               }))
+              .filter((project) => projectsMeta[project.account]) // Filter out projects not in projectsMeta
               .toSorted((a, b) => {
                 return (
                   projectsMeta[a.account].order - projectsMeta[b.account].order

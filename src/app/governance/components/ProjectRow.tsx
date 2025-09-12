@@ -20,12 +20,19 @@ export function ProjectRow({
   address: Hex;
   children: ReactNode;
 }) {
+  const projectMeta = projectsMeta[address];
+
+  // If project metadata doesn't exist, don't render the component
+  if (!projectMeta) {
+    return null;
+  }
+
   const {
     name,
     logoSrc,
     description,
     links: { notion },
-  } = projectsMeta[address];
+  } = projectMeta;
 
   const { project } = useProject();
   const projectBread = project.BREAD;

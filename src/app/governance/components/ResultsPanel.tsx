@@ -19,6 +19,7 @@ export function ResultsPanel({
       .map((address, i) => {
         return { [address]: distribution.data[1][i] };
       })
+      .filter((item) => projectsMeta[Object.keys(item)[0] as Hex]) // Filter out projects not in projectsMeta
       .toSorted((a, b) => {
         return (
           projectsMeta[Object.keys(a)[0] as Hex].order -
@@ -72,7 +73,7 @@ function ResultsProject({
     <div className="grid grid-cols-1 gap-2">
       <div className="flex gap-2">
         <h3 className="grow font-bold text-xl text-breadgray-grey100 dark:text-breadgray-ultra-white tracking-wide">
-          {projectsMeta[address].name}
+          {projectsMeta[address]?.name || "Unknown Project"}
         </h3>
         <span>{`${formatVotePercentage(percentage)}%`}</span>
       </div>
