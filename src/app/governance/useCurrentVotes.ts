@@ -21,7 +21,7 @@ export function useCurrentVotes(lastClaimedBlockNumber: bigint | null) {
 
   return useQuery({
     queryKey: ["getVotesForCurrentRound"],
-    refetchInterval: 500,
+    // refetchInterval: 500,
     enabled: !!lastClaimedBlockNumber,
     queryFn: async () => {
       const logs = await publicClient.getContractEvents({
