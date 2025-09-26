@@ -1,7 +1,6 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { GraphQLClient } from "graphql-request";
-import { formatUnits } from "viem";
-import { projectsMeta } from "@/app/projectsMeta";
+import { Address, formatUnits, getAddress } from "viem";
 import { Hex } from "viem";
 import { SUBGRAPH_QUERY_URL } from "@/constants";
 import { format } from "date-fns";
@@ -12,6 +11,7 @@ interface YieldDistribution {
   totalVotes: string;
   timestamp: string;
   projectDistributions: Array<string>;
+  projectAddresses: Array<Address>;
 }
 
 interface QueryResponse {
@@ -49,6 +49,7 @@ export function useDistributions(index: number = 0) {
             totalVotes
             timestamp
             projectDistributions
+            projectAddresses
           }
         }
       `);
@@ -65,17 +66,16 @@ export function useDistributions(index: number = 0) {
     const projectDistributions: CycleDistribution["projectDistributions"] = [];
 
     yieldDistribution.projectDistributions.forEach(
-      (projectDistribution, index) => {
-        const projectAddress = Object.entries(projectsMeta).find(
-          ([_, p]) => p.ydIndex === index
-        )?.[0];
+      (projectDistribution, pIndex) => {
+        let projectAddress = yieldDistribution.projectAddresses[pIndex];
+        if (!projectAddress) return;
 
         const percent =
           Number(formatUnits(BigInt(projectDistribution), 18)) /
           Number(totalVotes);
         const governancePayment = baseYield * percent;
         projectDistributions.push({
-          projectAddress: projectAddress as Hex,
+          projectAddress: getAddress(projectAddress),
           governancePayment: governancePayment,
           percentVotes: percent,
           flatPayment:
