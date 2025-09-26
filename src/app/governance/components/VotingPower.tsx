@@ -7,7 +7,7 @@ import { CycleDatesSuccess } from "../useCycleDates";
 import { CycleLengthSuccess } from "../useCycleLength";
 import { FistIcon } from "@/app/core/components/Icons/FistIcon";
 import { formatUnits } from "viem";
-import { differenceInDays } from "date-fns";
+import { DistributionCountdown } from "./DistributionCountdown";
 
 export function VotingPower({
   minRequiredVotingPower,
@@ -89,8 +89,6 @@ function NotEnoughPower() {
 }
 
 function UserHasVoted({ cycleDates }: { cycleDates: CycleDatesSuccess }) {
-  const days = differenceInDays(cycleDates.end, Date.now());
-
   return (
     <div className={clsx(widgetBaseClasses, "border-status-success")}>
       <div className="flex gap-4">
@@ -103,7 +101,9 @@ function UserHasVoted({ cycleDates }: { cycleDates: CycleDatesSuccess }) {
       </div>
       <div>
         <span className="dark:text-breadgray-grey">Next round: </span>
-        <span>In {days} {days === 1 ? "day" : "days"}</span>
+        <span>
+          <DistributionCountdown end={cycleDates.end} />
+        </span>
       </div>
     </div>
   );
