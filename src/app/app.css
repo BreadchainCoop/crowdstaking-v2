@@ -159,3 +159,15 @@
     #ffe70f 100%
   );
 }
+
+/* Hide all buttons to select a network */
+button[data-testid^="rk-chain-option-"] {
+  @apply !hidden;
+}
+
+/* Show Gnosis, Sepolia and Foundry since these are the only supported networks */
+button[data-testid="rk-chain-option-100"],
+button[data-testid="rk-chain-option-11155111"],
+button[data-testid="rk-chain-option-31337"] {
+  @apply !flex;
+}

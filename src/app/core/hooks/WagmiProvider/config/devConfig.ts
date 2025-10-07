@@ -1,6 +1,14 @@
 import { http } from "@wagmi/core";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
-import { sepolia, foundry, gnosis } from "wagmi/chains";
+import {
+  arbitrum,
+  base,
+  bsc,
+  mainnet,
+  sepolia,
+  foundry,
+  gnosis,
+} from "wagmi/chains";
 import { defineChain } from "viem";
 import { getWallets } from "./wallets";
 import { mockWallet } from "@/app/core/hooks/WagmiProvider/config/mockWallet";
@@ -32,7 +40,7 @@ const gnosisChain = defineChain({
 const config = getDefaultConfig({
   appName: "Breadchain Crowdstaking",
   projectId: WALLET_CONNECT_PROJECT_ID,
-  chains: [foundryChain, sepolia, gnosisChain],
+  chains: [foundryChain, sepolia, gnosisChain, mainnet, arbitrum, base, bsc],
   wallets: [
     {
       groupName: "Recommended",
@@ -47,6 +55,10 @@ const config = getDefaultConfig({
     [foundry.id]: http("http://localhost:8545"), //not sure if needing to add the address
     [gnosis.id]: http(),
     [sepolia.id]: http(),
+    [mainnet.id]: http(),
+    [arbitrum.id]: http(),
+    [base.id]: http(),
+    [bsc.id]: http(),
   },
 });
 

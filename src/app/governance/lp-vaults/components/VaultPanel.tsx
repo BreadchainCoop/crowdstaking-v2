@@ -26,10 +26,12 @@ import { useTransactions } from "@/app/core/context/TransactionsContext/Transact
 import { formatBalance } from "@/app/core/util/formatter";
 import { useVaultTokenBalance } from "../context/VaultTokenBalanceContext";
 import { AccountMenu } from "@/app/core/components/Header/AccountMenu";
+import { useChainModal } from "@rainbow-me/rainbowkit";
 
 export type TransactionType = "LOCK" | "UNLOCK";
 
 export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
+  const { openChainModal } = useChainModal();
   const [inputValue, setInputValue] = useState("");
   const [transactionType, setTransactionType] =
     useState<TransactionType>("LOCK");
@@ -119,7 +121,7 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                 <GradientBorder>
                   <div className="flex w-full md:w-auto justify-between rounded-full px-4 bg-breadpink-600 dark:bg-[#30252E] dark:bg-opacity-100 text-breadgray-rye dark:text-breadgray-grey items-center gap-2">
                     <div>Locked tokens:</div>
-                    {user.status === "CONNECTED" ? (
+                    {user.status === "CONNECTED" || user.status === "UNSUPPORTED_CHAIN" ? (
                       <span className="font-bold text-breadgray-grey100 dark:text-breadgray-ultra-white">
                         {vaultTokenBalance?.butter.status === "success"
                           ? formatBalance(
@@ -325,6 +327,15 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                   }
                 >
                   {transactionType === "UNLOCK" ? "Unlock" : "Lock"} LP Tokens
+                </Button>
+              ) : user.status === "UNSUPPORTED_CHAIN" ? (
+                <Button
+                  fullWidth={true}
+                  size="large"
+                  variant="danger"
+                  onClick={() => openChainModal?.()}
+                >
+                  Change network
                 </Button>
               ) : (
                 <AccountMenu fullWidth={true} size="large">
