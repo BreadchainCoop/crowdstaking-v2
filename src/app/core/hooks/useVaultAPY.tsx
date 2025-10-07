@@ -9,5 +9,6 @@ export function useVaultAPY() {
     address: chainConfig.SDAI_ADAPTOR.address,
     abi: SDAI_ADAPTOR_ABI,
     functionName: "vaultAPY",
+    chainId: chainConfig.ID
   });
 }

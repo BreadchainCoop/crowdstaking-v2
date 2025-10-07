@@ -8,12 +8,11 @@ import { getChain } from "@/chainConfig";
 import useLocalStorage from "@/app/core/hooks/useLocalStorage";
 import { PageGrid } from "@/app/governance/components/PageGrid";
 import { LiquidityBanner } from "@/app/bakery/components/Banners/LiquidityBanner";
+import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 
 export function LPVotingPowerPage() {
   const { user } = useConnectedUser();
-  const chainConfig = getChain(
-    user.status === "CONNECTED" ? user.chain.id : "DEFAULT"
-  );
+  const chainConfig = useActiveChain();
   const [setLocalStorage, getLocalStorage] = useLocalStorage();
 
   const [accordionState, setAccordionState] = useState(

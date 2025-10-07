@@ -44,6 +44,7 @@ export function IncreaseAllowance({
       chainConfig.BUTTERED_BREAD.address,
       lockingState.depositAmount - lockingState.allowance,
     ],
+    chainId: chainConfig.ID
   });
 
   useEffect(() => {

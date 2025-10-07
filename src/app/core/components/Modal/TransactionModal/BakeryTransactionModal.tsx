@@ -28,6 +28,7 @@ import { useVaultAPY } from "@/app/core/hooks/useVaultAPY";
 import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
 import { renderFormattedDecimalNumber } from "@/app/core/util/formatter";
 import { LinkIcon } from "../../Icons/LinkIcon";
+import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 function makeHeaderText(
   modalType: "BAKE" | "BURN",
   status: TTransactionStatus
@@ -134,8 +135,8 @@ export function BakeryTransactionModal({
   );
 
   const { transactionsState } = useTransactions();
-  const { data: currentBlockNumberData } = useBlockNumber({ watch: true });
-  const { data: startingBlockNumber } = useBlockNumber();
+  const { data: currentBlockNumberData } = useBlockNumber({ watch: true, chainId: useActiveChain().ID });
+  const { data: startingBlockNumber } = useBlockNumber({chainId: useActiveChain().ID});
   const transaction = transactionsState.new
     ? {
         status: "PREPARED",
@@ -390,8 +391,8 @@ const InfoBoxSvg = () => (
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      fill-rule="evenodd"
-      clip-rule="evenodd"
+      fillRule="evenodd"
+      clipRule="evenodd"
       d="M2.99951 3H4.99951V21H2.99951V3ZM18.9998 3.00003H5V5.00003H18.9998V19H5V21H19V21H20.9998V3H18.9998V3.00003ZM10.9998 9.00009H12.9998V7.00009H10.9998V9.00009ZM12.9998 17H10.9998V11H12.9998V17Z"
       fill="currentcolor"
     />
