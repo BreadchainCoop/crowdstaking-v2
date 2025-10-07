@@ -18,6 +18,7 @@ import { BridgeBanner } from "../Banners/BridgeBanner";
 import { TotalSupply } from "../TotalSupply";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
 import { Bridge } from "./Bridge";
+import { parseFeatureVar } from "@/app/core/util/parseFeatureVar";
 
 export type TSwapMode = "BAKE" | "BURN" | "BRIDGE";
 
@@ -25,6 +26,8 @@ export type TSwapState = {
   mode: TSwapMode;
   value: string;
 };
+
+const isBridgeEnabled = parseFeatureVar(process.env.NEXT_PUBLIC_FEATURE_BRIDGE);
 
 const initialSwapState: TSwapState = {
   mode: "BAKE",
@@ -110,20 +113,22 @@ export function Swap() {
                 >
                   Burn
                 </h3>
-                <h3
-                  onClick={() => setSwapState({ mode: "BRIDGE", value: "" })}
-                  className={
-                    swapState.mode === "BRIDGE"
-                      ? activeClasses
-                      : inactiveClasses
-                  }
-                >
-                  Bridge
-                </h3>
+                {isBridgeEnabled && (
+                  <h3
+                    onClick={() => setSwapState({ mode: "BRIDGE", value: "" })}
+                    className={
+                      swapState.mode === "BRIDGE"
+                        ? activeClasses
+                        : inactiveClasses
+                    }
+                  >
+                    Bridge
+                  </h3>
+                )}
               </span>
             </div>
             <div className="relative w-full my-2 flex flex-col gap-1">
-              {swapState.mode === "BRIDGE" && <Bridge />}
+              {isBridgeEnabled && swapState.mode === "BRIDGE" && <Bridge />}
               {(swapState.mode === "BAKE" || swapState.mode === "BURN") && (
                 <>
                   <FromPanel
