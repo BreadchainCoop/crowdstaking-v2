@@ -28,6 +28,9 @@ export function useCastVote(
 
   const { data: votesData } = useCurrentVotes(lastClaimedBlockNumber);
 
+  console.log("__ VOTES DATA __", votesData);
+  console.log("__ LAST TIME __", lastClaimedBlockNumber);
+
   useEffect(() => {
     if (votesData) {
       const mostRecentVote = votesData.reduce<null | ParsedVote>(
