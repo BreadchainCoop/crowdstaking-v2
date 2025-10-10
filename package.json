@@ -14,7 +14,9 @@
     "find-deadcode": "ts-prune | grep -v '(used in module)'"
   },
   "dependencies": {
+    "@breadcoop/ui": "^1.0.20",
     "@lifi/widget": "^3.30.0",
+    "@phosphor-icons/react": "github:phosphor-icons/react",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-navigation-menu": "^1.2.13",
@@ -44,7 +46,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.43.1",
-    "@tailwindcss/typography": "^0.5.10",
+    "@tailwindcss/postcss": "^4.1.14",
     "@types/node": "^20.11.25",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
@@ -53,10 +55,9 @@
     "env-cmd": "^10.1.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "13.5.4",
-    "postcss": "^8.4.35",
     "serve": "^14.2.1",
     "storybook": "^7.6.17",
-    "tailwindcss": "3.4.1",
+    "tailwindcss": "^4",
     "ts-prune": "^0.10.3",
     "tsx": "^4.19.1",
     "typescript": "^5.4.2"
