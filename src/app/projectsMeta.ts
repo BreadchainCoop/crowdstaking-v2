@@ -28,7 +28,7 @@ export const projectsMeta: {
   },
   "0x5405e2D4D12AAdB57579E780458c9a1151b560F1": {
     name: "Symbiota",
-    order: 2,
+    order: 1,
     description:
       "Event-focused organisations devoted to new forms of culture and enquiry.",
     logoSrc: "project/symbiota.png",
@@ -40,7 +40,7 @@ export const projectsMeta: {
   },
   "0x5c22B3F03b3d8FFf56C9B2e90151512Cb3F3dE0F": {
     name: "Crypto Commons Acc",
-    order: 3,
+    order: 2,
     description:
       "Creating research and events on decentralized tech and the commons.",
     logoSrc: "project/cca.png",
@@ -52,7 +52,7 @@ export const projectsMeta: {
   },
   "0xA232F16aB37C9a646f91Ba901E92Ed1Ba4B7b544": {
     name: "Citizen Wallet",
-    order: 4,
+    order: 3,
     description: "Open source tool stack to support Web3 community currencies.",
     logoSrc: "project/citizen_wallet.png",
     active: true,
@@ -90,10 +90,31 @@ export const projectsMeta: {
     order: 5,
     description: "Global network driving the Regenerative Finance movement.",
     logoSrc: "project/refi_dao.png",
+    active: false,
+    links: {
+      notion:
+        "https://breadchain.notion.site/ReFi-DAO-1540ad9b1279805bb54de4ffd0d5d52d",
+    },
+  },
+  "0xFCb81c1B0e0D4FEa01e5A0fbf0aebb91e78A67E1": {
+    name: "Regen Coordination",
+    order: 4,
+    description: "Global network driving the Regenerative Finance movement.",
+    logoSrc: "project/refi_dao.png",
     active: true,
     links: {
       notion:
         "https://breadchain.notion.site/ReFi-DAO-1540ad9b1279805bb54de4ffd0d5d52d",
+    },
+  },
+  "0x1bd2212c9aa332d22d61a0be6bcc55b2a1de6c63": {
+    name: "Gardens",
+    order: 5,
+    description: "",
+    logoSrc: "project/gardens.png",
+    active: true,
+    links: {
+      notion: "#",
     },
   },
 };
