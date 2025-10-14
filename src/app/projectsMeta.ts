@@ -100,7 +100,7 @@ export const projectsMeta: {
     name: "Regen Coordination",
     order: 4,
     description: "Global network driving the Regenerative Finance movement.",
-    logoSrc: "project/refi_dao.png",
+    logoSrc: "project/regen.png",
     active: true,
     links: {
       notion:
