@@ -107,7 +107,7 @@ export const projectsMeta: {
         "https://breadchain.notion.site/ReFi-DAO-1540ad9b1279805bb54de4ffd0d5d52d",
     },
   },
-  "0x1bd2212c9aa332d22d61a0be6bcc55b2a1de6c63": {
+  "0x1Bd2212C9aA332d22D61a0Be6bCc55b2A1de6C63": {
     name: "Gardens",
     order: 5,
     description: "",
