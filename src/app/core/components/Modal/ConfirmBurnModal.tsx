@@ -82,8 +82,8 @@ export function ConfirmBurnModal({
               Burning $BREAD will reduce crucial funding for our post-capitalist
               cooperatives.
               <b>
-                To continue supporting the Breadchain network, consider swapping
-                your $BREAD instead.
+                To continue supporting the Bread Coop projects, consider
+                swapping your $BREAD instead.
               </b>
             </p>
           </div>
