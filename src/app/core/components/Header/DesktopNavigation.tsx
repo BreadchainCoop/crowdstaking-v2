@@ -60,16 +60,15 @@ function DesktopNavigation({ currentPath }: { currentPath: string }) {
         </DesktopNavigationLink>
       )}
       <DesktopNavigationLink
-        href="https://dune.com/breadchain_cooperative/breadchain"
+        href="https://dune.com/bread_cooperative/solidarity"
         isExternal
       >
-        Analytics <span className="ml-2"></span><LinkIcon />
+        Analytics <span className="ml-2"></span>
+        <LinkIcon />
       </DesktopNavigationLink>
-      <DesktopNavigationLink
-        href="https://breadchain.notion.site/4d496b311b984bd9841ef9c192b9c1c7?v=2eb1762e6b83440f8b0556c9917f86ca"
-        isExternal
-      >
-        Docs <span className="ml-2"></span><LinkIcon />
+      <DesktopNavigationLink href="https://docs.bread.coop" isExternal>
+        Docs <span className="ml-2"></span>
+        <LinkIcon />
       </DesktopNavigationLink>
     </nav>
   );

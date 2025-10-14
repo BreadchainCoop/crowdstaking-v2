@@ -69,7 +69,7 @@ export function WithdrawTransaction({
         lockedBalanceStatus === "success" &&
         modalState.parsedValue <= (lockedBalance as bigint),
     },
-    chainId: chainConfig.ID
+    chainId: chainConfig.ID,
   });
 
   useEffect(() => {
@@ -129,8 +129,8 @@ export function WithdrawTransaction({
             <UnlockVPRate value={modalState.parsedValue} />
             <p className="p-4 rounded-xl border-2 border-status-warning text-center">
               By unlocking your LP tokens you will not be eligible to receive
-              voting power within the Breadchain cooperative network in future
-              voting cycles.
+              voting power within the Bread Coop network in future voting
+              cycles.
             </p>
           </>
         )}

@@ -62,7 +62,7 @@ function modalAdviceText(
 function ShareButtons({ newSupply }: { newSupply: number | null }) {
   function makeText(platform: "X" | "Warpcast") {
     return `I just baked some BREAD to help fund on-chain post-capitalism thanks to ${
-      platform === "X" ? "@breadchain_" : "breadchain.xyz"
+      platform === "X" ? "@breadcoop" : "bread.coop"
     }!
 
 I grew the bakery to ${
@@ -135,8 +135,13 @@ export function BakeryTransactionModal({
   );
 
   const { transactionsState } = useTransactions();
-  const { data: currentBlockNumberData } = useBlockNumber({ watch: true, chainId: useActiveChain().ID });
-  const { data: startingBlockNumber } = useBlockNumber({chainId: useActiveChain().ID});
+  const { data: currentBlockNumberData } = useBlockNumber({
+    watch: true,
+    chainId: useActiveChain().ID,
+  });
+  const { data: startingBlockNumber } = useBlockNumber({
+    chainId: useActiveChain().ID,
+  });
   const transaction = transactionsState.new
     ? {
         status: "PREPARED",

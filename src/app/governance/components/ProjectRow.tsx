@@ -28,12 +28,7 @@ export function ProjectRow({
     return null;
   }
 
-  const {
-    name,
-    logoSrc,
-    description,
-    links: { notion },
-  } = projectMeta;
+  const { name, logoSrc, description, link } = projectMeta;
   const projectBread = project.BREAD;
   const projectPower = project.POWER;
 
@@ -73,7 +68,7 @@ export function ProjectRow({
             <div className="font-bold col-start-2 col-span-11 row-start-1 row-span-1 flex items-center font-bold sm:text-xl sm:font-normal text-breadgray-grey100 dark:text-breadgray-light-grey">
               <a
                 className="flex gap-2 items-center font-bold sm:text-xl sm:font-normal dark:text-breadgray-ultra-white hover:text-breadpink-shaded transition-colors"
-                href={notion}
+                href={link}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -122,7 +117,7 @@ export function ProjectRow({
               <div className="flex items-center mb-2">
                 <a
                   className="flex gap-2 items-center font-bold sm:text-xl sm:font-normal dark:text-breadgray-ultra-white hover:text-breadpink-shaded transition-colors"
-                  href={notion}
+                  href={link}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
