@@ -110,7 +110,7 @@ export const projectsMeta: {
   "0x1Bd2212C9aA332d22D61a0Be6bCc55b2A1de6C63": {
     name: "Gardens",
     order: 5,
-    description: "",
+    description: "Next generation community governance.",
     logoSrc: "project/gardens.png",
     active: true,
     links: {
