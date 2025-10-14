@@ -36,7 +36,7 @@ export function Footer() {
             <span className="w-6 h-6">
               <LogoSVG />
             </span>
-            <span className="text-xl font-bold">Breadchain</span>
+            <span className="text-xl font-bold">Bread Coop</span>
           </div>
           <span className="text-breadgray-grey100 dark:text-breadgray-grey">
             Funding post-capitalism
@@ -47,7 +47,7 @@ export function Footer() {
           <nav className="flex flex-col gap-6 lg:flex-row items-center">
             <div className="flex items-center justify-center gap-6 lg:gap-4 w-full lg:w-auto">
               <FooterLink
-                href="https://twitter.com/breadchain_"
+                href="https://x.com/breadcoop"
                 className="text-breadgray-grey100 dark:text-breadgray-ultra-white"
               >
                 <svg
@@ -104,11 +104,11 @@ export function Footer() {
         <div className="flex flex-col items-center md:items-end gap-2">
           <div className="flex flex-row gap-4 md:justify-end">
             {renderLink(
-              "https://breadchain.mailchimpsites.com/",
+              "http://paragraph.com/@breadcoop",
               <span className="pr-2">Join our newsletter</span>
             )}
             {renderLink(
-              "https://dune.com/breadchain_cooperative/breadchain",
+              "https://dune.com/bread_cooperative/solidarity",
               <span className="pr-2">Analytics</span>
             )}
           </div>
@@ -118,7 +118,7 @@ export function Footer() {
               <span className="pr-2">Donate in crypto</span>
             )}
             {renderLink(
-              "https://opencollective.com/breadchain-cooperative",
+              "https://opencollective.com/bread-cooperative",
               <span className="pr-2">Donate in fiat</span>
             )}
           </div>

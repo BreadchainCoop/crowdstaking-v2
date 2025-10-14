@@ -80,17 +80,19 @@ export function MobileNavigation({ handleNavToggle }: IProps) {
       )}
       <MobileNavigationLink
         isExternal
-        href="https://dune.com/breadchain_cooperative/breadchain"
+        href="https://dune.com/bread_cooperative/solidarity"
         onClick={handleNavToggle}
       >
-        Analytics <span className="ml-2"></span><LinkIcon />
+        Analytics <span className="ml-2"></span>
+        <LinkIcon />
       </MobileNavigationLink>
       <MobileNavigationLink
         isExternal
-        href="https://breadchain.notion.site/4d496b311b984bd9841ef9c192b9c1c7?v=2eb1762e6b83440f8b0556c9917f86ca"
+        href="https://docs.bread.coop"
         onClick={handleNavToggle}
       >
-        Docs <span className="ml-2"></span><LinkIcon />
+        Docs <span className="ml-2"></span>
+        <LinkIcon />
       </MobileNavigationLink>
     </nav>
   );

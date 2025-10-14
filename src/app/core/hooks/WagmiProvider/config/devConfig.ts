@@ -38,7 +38,7 @@ const gnosisChain = defineChain({
 });
 
 const config = getDefaultConfig({
-  appName: "Breadchain Crowdstaking",
+  appName: "Bread Coop Solidarity Fund",
   projectId: WALLET_CONNECT_PROJECT_ID,
   chains: [foundryChain, sepolia, gnosisChain, mainnet, arbitrum, base, bsc],
   wallets: [

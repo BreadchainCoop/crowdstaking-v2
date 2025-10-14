@@ -38,7 +38,7 @@ const sepoliaChain =
 const projectId = NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
 
 const config = getDefaultConfig({
-  appName: "Breadchain Crowdstaking",
+  appName: "Bread Coop Solidarity Fund",
   projectId: projectId,
   chains: [gnosisChain, ...sepoliaChain, mainnet, arbitrum, base, bsc],
   wallets: [
