@@ -11,7 +11,9 @@ function Input({ name, value, handleInputChange }: TProps) {
   return (
     <input
       name={name}
-      className="min-w-0 px-3 leading-3 truncate text-ellipsis text-[2.3rem] sm:text-[2.5rem] text-breadgray-grey100 dark:text-neutral-200 bg-breadgray-ultra-white dark:bg-breadgray-grey300 placeholder-breadgray-grey100 dark:placeholder-neutral-200"
+      // className="min-w-0 px-3 leading-3 truncate text-ellipsis text-[2.3rem] sm:text-[2.5rem] text-breadgray-grey100 dark:text-neutral-200 bg-breadgray-ultra-white dark:bg-breadgray-grey300 placeholder-breadgray-grey100 dark:placeholder-neutral-200"
+      className="min-w-0 leading-3 truncate text-ellipsis text-[2.3rem] sm:text-[2.5rem] text-black"
+      // focus:outline-0 focus:outline-none
       placeholder="00.00"
       inputMode="decimal"
       autoComplete="off"
