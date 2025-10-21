@@ -90,7 +90,7 @@ function LpLabel() {
   );
 }
 
-function VpLabel({ status }: { status: string }) {
+function VpLabel({ status }: { status?: string }) {
   return (
     <div className="text-surface-grey col-span-1 row-span-1 col-start-3 row-start-1 justify-center flex">
       {status !== "success" && <TextLabel>Voting power</TextLabel>}
