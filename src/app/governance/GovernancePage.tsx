@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { Hex } from "viem";
+import { getAddress, Hex } from "viem";
 
 import { ProjectRow, VoteDisplay, VoteForm } from "./components/ProjectRow";
 import { CastVotePanel } from "./components/CastVote";
@@ -268,7 +268,7 @@ export function GovernancePage() {
               }))
               .toSorted((a, b) => {
                 return (
-                  projectsMeta[a.account].order - projectsMeta[b.account].order
+                  projectsMeta[getAddress(a.account)].order - projectsMeta[getAddress(b.account)].order
                 );
               })
               .map((project, i) => {
