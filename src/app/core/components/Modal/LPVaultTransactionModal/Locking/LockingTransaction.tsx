@@ -88,7 +88,7 @@ export function LockingTransaction({
                   Step 1. Confirm token allowance
                 </Body>
               </TransactionStage>
-              <Caption>
+              <Caption className="px-2">
                 {lockingState.status === "allowance_transaction_idle" &&
                   "Please confirm the transaction"}
                 {lockingState.status === "allowance_transaction_submitted" &&
@@ -107,7 +107,7 @@ export function LockingTransaction({
               >
                 2. Token locking
               </TransactionStage>
-              <Caption>
+              <Caption className="px-2">
                 {lockingState.status.includes("allowance") &&
                   "Waiting for next action..."}
                 {lockingState.status === "deposit_transaction_idle" &&

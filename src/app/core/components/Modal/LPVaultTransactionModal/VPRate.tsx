@@ -84,7 +84,7 @@ function TextLabel({ children }: { children: ReactNode }) {
 
 function LpLabel() {
   return (
-    <div className="text-surface-grey col-span-1 row-span-1 row-start-1 justify-center flex">
+    <div className="text-surface-grey col-span-1 row-span-1 justify-center flex">
       <TextLabel>Locked LP tokens</TextLabel>
     </div>
   );
@@ -92,7 +92,7 @@ function LpLabel() {
 
 function VpLabel({ status }: { status?: string }) {
   return (
-    <div className="text-surface-grey col-span-1 row-span-1 col-start-3 row-start-1 justify-center flex">
+    <div className="text-surface-grey col-span-1 row-span-1  justify-center flex">
       {status !== "success" && <TextLabel>Voting power</TextLabel>}
       {status === "success" && <TextLabel>Pending voting power</TextLabel>}
     </div>

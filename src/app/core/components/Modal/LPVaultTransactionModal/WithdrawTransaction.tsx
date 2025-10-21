@@ -129,9 +129,11 @@ export function WithdrawTransaction({
           <>
             <UnlockVPRate value={modalState.parsedValue} />
             <div className="border-l-4 border-system-warning shadow-md p-[20px] flex flex-col items-center gap-4">
-              By unlocking your LP tokens you will not be eligible to receive
-              voting power within the Bread Coop network in future voting
-              cycles.
+              <Body>
+                By unlocking your LP tokens you will not be eligible to receive
+                voting power within the Bread Coop network in future voting
+                cycles.
+              </Body>
             </div>
           </>
         )}
