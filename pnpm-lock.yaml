@@ -15,8 +15,8 @@ importers:
         specifier: ^3.30.0
         version: 3.30.0(aidsgnpo4g2cltghgficp5hkde)
       '@phosphor-icons/react':
-        specifier: github:phosphor-icons/react
-        version: https://codeload.github.com/phosphor-icons/react/tar.gz/57424d5f99b793b585f5c6f5cab76f79772510e5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^2.1.10
+        version: 2.1.10(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@radix-ui/react-accordion':
         specifier: ^1.2.11
         version: 1.2.11(@types/react-dom@18.2.21)(@types/react@18.2.64)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -2327,9 +2327,8 @@ packages:
     resolution: {integrity: sha512-IHnV6A+zxU7XwmKFinmYjUcwlyK9+xkG3/s9KcQhI9BjQKycrJ1JRO+FbNYPwZiPKW3je/DR0k7w8/gLa5eaxQ==}
     deprecated: 'The package is now available as "qr": npm install qr'
 
-  '@phosphor-icons/react@https://codeload.github.com/phosphor-icons/react/tar.gz/57424d5f99b793b585f5c6f5cab76f79772510e5':
-    resolution: {tarball: https://codeload.github.com/phosphor-icons/react/tar.gz/57424d5f99b793b585f5c6f5cab76f79772510e5}
-    version: 2.1.10
+  '@phosphor-icons/react@2.1.10':
+    resolution: {integrity: sha512-vt8Tvq8GLjheAZZYa+YG/pW7HDbov8El/MANW8pOAz4eGxrwhnbfrQZq0Cp4q8zBEu8NIhHdnr+r8thnfRSNYA==}
     engines: {node: '>=10'}
     peerDependencies:
       react: '>= 16.8'
@@ -11600,7 +11599,7 @@ snapshots:
 
   '@paulmillr/qr@0.2.1': {}
 
-  '@phosphor-icons/react@https://codeload.github.com/phosphor-icons/react/tar.gz/57424d5f99b793b585f5c6f5cab76f79772510e5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@phosphor-icons/react@2.1.10(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)

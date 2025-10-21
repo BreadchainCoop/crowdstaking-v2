@@ -9,10 +9,11 @@ import { BUTTERED_BREAD_ABI } from "@/abi";
 import { useModal } from "@/app/core/context/ModalContext";
 import { formatUnits } from "viem";
 import { useIsMobile } from "@/app/core/hooks/useIsMobile";
-
+import { Body, LiftedButton } from "@breadcoop/ui";
 import { LinkIcon } from "../../../Icons/LinkIcon";
 import { LockVPRate } from "../VPRate";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
+import { ArrowUpRightIcon } from "@phosphor-icons/react/ssr";
 
 export function Lock({
   user,
@@ -47,7 +48,7 @@ export function Lock({
     abi: BUTTERED_BREAD_ABI,
     functionName: "deposit",
     args: [chainConfig.BUTTER.address, lockingState.depositAmount],
-    chainId: chainConfig.ID
+    chainId: chainConfig.ID,
   });
 
   useEffect(() => {
@@ -104,17 +105,36 @@ export function Lock({
         <LockSuccess
           value={lockingState.depositAmount}
           status={contractWriteStatus}
-          explorerLink={`${chainConfig.EXPLORER}/tx/${lockingState.txHash}`}
         />
-        <Button
-          onClick={() => {
-            setModal(null);
-          }}
-          disabled={isWalletOpen}
-          fullWidth={isMobile}
+        <ExternalLink
+          href={`${chainConfig.EXPLORER}/tx/${lockingState.txHash}`}
         >
-          Return to vault page
-        </Button>
+          <LiftedButton
+            preset="stroke"
+            onClick={() => {
+              setModal(null);
+            }}
+            className="h-[32px]"
+            disabled={isWalletOpen}
+          >
+            <span className="flex items-center gap-2">
+              View receipt on Gnosisscan
+              <ArrowUpRightIcon size={24} className="text-primary-orange" />
+            </span>
+          </LiftedButton>
+        </ExternalLink>
+        <div className="w-full">
+          <LiftedButton
+            preset="secondary"
+            onClick={() => {
+              setModal(null);
+            }}
+            disabled={isWalletOpen}
+            width="full"
+          >
+            Return to vault page
+          </LiftedButton>
+        </div>
       </>
     );
   }
@@ -132,49 +152,41 @@ export function Lock({
   }
 
   return (
-    <Button
-      onClick={() => {
-        if (!contractWriteWrite) return;
-        setIsWalletOpen(true);
-        contractWriteWrite(prepareWriteConfig!.request);
-      }}
-      disabled={isWalletOpen}
-      fullWidth={isMobile}
-    >
-      Lock LP Tokens
-    </Button>
+    <div className="w-full">
+      <LiftedButton
+        onClick={() => {
+          if (!contractWriteWrite) return;
+          setIsWalletOpen(true);
+          contractWriteWrite(prepareWriteConfig!.request);
+        }}
+        disabled={isWalletOpen}
+        width="full"
+      >
+        Lock LP Tokens
+      </LiftedButton>
+    </div>
   );
 }
 
-function LockSuccess({
-  value,
-  status,
-  explorerLink,
-}: {
-  value: bigint;
-  status: string;
-  explorerLink: string;
-}) {
+function LockSuccess({ value, status }: { value: bigint; status: string }) {
   const tokenAmount = formatUnits(value, 18);
   const vpAmount = tokenAmount;
 
   return (
-    <div className="rounded-xl md:mx-20 border-2 border-status-success p-[20px] flex flex-col items-center gap-4">
-      <p className="text-center">
-        You successfully locked <strong>{tokenAmount} LP tokens</strong>. In the
-        next voting cycles you will have a{" "}
-        <strong>voting power of {vpAmount}</strong>.
-      </p>
-      <LockVPRate value={value} status={status} />
-      <p className="text-status-warning text-xs text-center">
-        You can unlock your LP tokens anytime.
-      </p>
-      <ExternalLink href={explorerLink}>
-        <div className="text-breadpink-shaded font-medium text-sm flex items-center gap-2">
-          View on Explorer
-          <LinkIcon />
-        </div>
-      </ExternalLink>
+    <div>
+      <div className="w-3/4 mx-auto">
+        <LockVPRate value={value} status={status} />
+      </div>
+      <div className=" border-l-4 border-system-green shadow-md p-[20px] flex flex-col items-center gap-4">
+        <Body>
+          You successfully locked <strong>{tokenAmount} LP tokens</strong>. In
+          the next voting cycles you will have a{" "}
+          <strong>voting power of {vpAmount}</strong>.{" "}
+          <span className="text-system-warning">
+            You can unlock your LP tokens anytime.
+          </span>
+        </Body>
+      </div>
     </div>
   );
 }

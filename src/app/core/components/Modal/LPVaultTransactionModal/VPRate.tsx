@@ -16,17 +16,16 @@ export function LockVPRate({
 
   return (
     <VPRateGrid>
-      {status !== "success" && (
-        <>
-          <LpLabel />
-          {/* empty div for column spacing */}
-          <div className="w-12"></div>
-          <VpLabel />
-        </>
-      )}
+      <>
+        <LpLabel />
+        {/* empty div for column spacing */}
+        <div className="w-12"></div>
+        <VpLabel status={status} />
+      </>
       <ValueDisplay>
         <PillContainer>
           <WXDaiBreadIcon />
+
           <ValueText>{tokenAmount}</ValueText>
         </PillContainer>
       </ValueDisplay>
@@ -85,16 +84,17 @@ function TextLabel({ children }: { children: ReactNode }) {
 
 function LpLabel() {
   return (
-    <div className="col-span-1 row-span-1 row-start-1 justify-center flex">
+    <div className="text-surface-grey col-span-1 row-span-1 row-start-1 justify-center flex">
       <TextLabel>Locked LP tokens</TextLabel>
     </div>
   );
 }
 
-function VpLabel() {
+function VpLabel({ status }: { status: string }) {
   return (
-    <div className="col-span-1 row-span-1 col-start-3 row-start-1 justify-center flex">
-      <TextLabel>Voting Power</TextLabel>
+    <div className="text-surface-grey col-span-1 row-span-1 col-start-3 row-start-1 justify-center flex">
+      {status !== "success" && <TextLabel>Voting power</TextLabel>}
+      {status === "success" && <TextLabel>Pending voting power</TextLabel>}
     </div>
   );
 }
@@ -102,7 +102,7 @@ function VpLabel() {
 function EqualityIcon() {
   return (
     <div className="m-auto">
-      <div className="mx-auto text-breadgray-grey text-3xl">=</div>
+      <div className="mx-auto text-primary-orange text-3xl">=</div>
     </div>
   );
 }
@@ -117,14 +117,9 @@ export function WXDaiBreadIcon() {
   return (
     <div>
       <img
-        src="/wxdai_bread_lp_icon.png"
-        alt="wxdai bread lp token icon"
-        className="block dark:hidden"
-      />
-      <img
-        src="/wxdai_bread_lp_icon_dark.png"
-        alt="wxdai bread lp token icon"
-        className="hidden dark:block"
+        src="/breadwxdaihalves.svg"
+        alt="bread and wxdai logos"
+        className="size-6"
       />
     </div>
   );
@@ -132,7 +127,7 @@ export function WXDaiBreadIcon() {
 
 export function PillContainer({ children }: { children: ReactNode }) {
   return (
-    <div className="dark:bg-breadgray-burnt rounded-full w-full flex gap-2 items-center px-2 py-1">
+    <div className="border border-surface-grey w-full flex gap-2 items-center px-2 py-1">
       {children}
     </div>
   );

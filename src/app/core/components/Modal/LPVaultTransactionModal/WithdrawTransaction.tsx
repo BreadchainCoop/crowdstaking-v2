@@ -1,6 +1,6 @@
 import { formatUnits } from "viem";
 import Button from "../../Button";
-import { ModalContent, ModalHeading, StatusMessage } from "../LPModalUI";
+import { ModalContent, ModalHeading } from "../LPModalUI";
 import { useEffect, useReducer, useState } from "react";
 import { useRefetchOnBlockChangeForUser } from "@/app/core/hooks/useRefetchOnBlockChange";
 import { useWriteContract, useSimulateContract } from "wagmi";
@@ -24,6 +24,7 @@ import {
 import { StatusBadge } from "./Locking/LockingTransaction";
 import { LinkIcon } from "../../Icons/LinkIcon";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
+import { Body } from "@breadcoop/ui";
 
 export function WithdrawTransaction({
   user,
@@ -135,12 +136,10 @@ export function WithdrawTransaction({
           </>
         )}
         {withdrawState.status === "idle" && (
-          <StatusMessage>
-            Press ‘Unlock LP tokens’ to execute the transaction
-          </StatusMessage>
+          <Body>Press ‘Unlock LP tokens’ to execute the transaction</Body>
         )}
         {withdrawState.status === "submitted" && (
-          <StatusMessage>Awaiting on-chain confirmation...</StatusMessage>
+          <Body>Awaiting on-chain confirmation...</Body>
         )}
         {(() => {
           if (withdrawState.status === "confirmed")
