@@ -13,7 +13,7 @@ function MobileNavigationToggle({
         handleClick();
       }}
       type="button"
-      className="z-30 h-8 w-8 text-neutral-600 md:hidden"
+      className="z-30 h-8 w-8 text-[#EA5817] md:hidden"
     >
       {isOpen ? (
         <></>

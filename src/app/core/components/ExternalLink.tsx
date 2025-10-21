@@ -11,7 +11,7 @@ export function ExternalLink({
     <a
       href={href}
       target="_blank"
-      className="hover:text-breadviolet-shaded hover:dark:text-breadpink-shaded"
+      className="text-primary-orange"
       rel="noopener noreferrer"
     >
       {children}
