@@ -27,7 +27,8 @@ export type WithdrawStateReverted = {
 export type WithdrawEvent =
   | WithdrawTransactionSubmitted
   | WithdrawTransactionConfirmed
-  | WithdrawTransactionReverted;
+  | WithdrawTransactionReverted
+  | WithdrawReset;
 
 export type WithdrawTransactionSubmitted = {
   type: "TRANSACTION_SUBMITTED";
@@ -40,6 +41,10 @@ export type WithdrawTransactionReverted = {
 
 export type WithdrawTransactionConfirmed = {
   type: "TRANSACTION_CONFIRMED";
+};
+
+export type WithdrawReset = {
+  type: "RESET";
 };
 
 export function withdrawReducer(
@@ -70,6 +75,17 @@ export function withdrawReducer(
           status: "reverted",
         };
       }
+      return state;
+
+    case "reverted":
+      if (event.type === "RESET") {
+        return {
+          status: "idle",
+        };
+      }
+      return state;
+
+    case "confirmed":
       return state;
 
     default:

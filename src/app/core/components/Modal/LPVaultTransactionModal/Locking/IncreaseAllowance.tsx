@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useWriteContract, useSimulateContract } from "wagmi";
-
-import Button from "@/app/core/components/Button";
+import { LiftedButton } from "@breadcoop/ui";
 import { useIsMobile } from "@/app/core/hooks/useIsMobile";
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
 import { LockingAllowance, LockingEvent } from "./lockingReducer";
@@ -44,7 +43,7 @@ export function IncreaseAllowance({
       chainConfig.BUTTERED_BREAD.address,
       lockingState.depositAmount - lockingState.allowance,
     ],
-    chainId: chainConfig.ID
+    chainId: chainConfig.ID,
   });
 
   useEffect(() => {
@@ -92,9 +91,9 @@ export function IncreaseAllowance({
 
   if (lockingState.status === "allowance_transaction_submitted") {
     return (
-      <Button onClick={() => {}} fullWidth={isMobile} disabled>
+      <LiftedButton onClick={() => {}} width="full" disabled>
         Confirming...
-      </Button>
+      </LiftedButton>
     );
   }
 
@@ -103,16 +102,16 @@ export function IncreaseAllowance({
   }
 
   return (
-    <Button
+    <LiftedButton
       onClick={() => {
         if (!contractWriteWrite) return;
         contractWriteWrite(prepareWriteConfig!.request);
         setIsWalletOpen(true);
       }}
       disabled={isWalletOpen}
-      fullWidth={isMobile}
+      width="full"
     >
       Confirm transaction
-    </Button>
+    </LiftedButton>
   );
 }
