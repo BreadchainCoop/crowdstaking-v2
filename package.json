@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@breadcoop/ui": "^1.0.20",
+    "@duneanalytics/client-sdk": "^0.2.5",
     "@lifi/widget": "^3.30.0",
     "@phosphor-icons/react": "^2.1.10",
     "@radix-ui/react-accordion": "^1.2.11",
