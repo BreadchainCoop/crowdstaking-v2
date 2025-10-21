@@ -5,19 +5,14 @@ import { ERC20_ABI } from "@/abi";
 import { useRefetchOnBlockChangeForUser } from "@/app/core/hooks/useRefetchOnBlockChange";
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
 import { LPVaultTransactionModalState } from "@/app/core/context/ModalContext";
-import {
-  ModalContent,
-  ModalHeading,
-  StatusMessage,
-  StatusMessageSmall,
-} from "../../LPModalUI";
+import { ModalContent, ModalHeading } from "../../LPModalUI";
 import { lockingReducer } from "./lockingReducer";
-import { CheckIcon } from "../../../Icons/CheckIcon";
 import { IncreaseAllowance } from "./IncreaseAllowance";
 import { Lock } from "./Lock";
-import { formatUnits } from "viem";
 import { LockVPRate } from "../VPRate";
 import { Spinner } from "../../../Icons/Spinner";
+import { Body, Caption } from "@breadcoop/ui";
+import { CheckCircleIcon, WarningCircleIcon } from "@phosphor-icons/react/ssr";
 
 export function LockingTransaction({
   user,
@@ -55,7 +50,8 @@ export function LockingTransaction({
       <ModalHeading>Locking LP Tokens</ModalHeading>
       <ModalContent>
         <StatusBadge
-          variant={
+          variant="lock"
+          status={
             lockingState.status !== "deposit_transaction_confirmed"
               ? "in-progress"
               : "complete"
@@ -63,56 +59,54 @@ export function LockingTransaction({
         />
 
         {lockingState.status === "allowance_transaction_idle" && (
-          <StatusMessage>
+          <Body className="text-surface-grey">
             Press ‘Confirm transaction’ to allow LP tokens to be locked.
-          </StatusMessage>
+          </Body>
         )}
-        <div className="flex flex-col md:flex-row gap-4 md:gap-20">
-          <div className="flex flex-col gap-2 flex-1">
-            <TransactionStage
-              status={
-                !lockingState.status.includes("allowance_transaction")
-                  ? "success"
-                  : "pending"
-              }
-            >
-              <span className="whitespace-nowrap">1. Token allowance</span>
-            </TransactionStage>
-            <StatusMessageSmall>
-              {lockingState.status === "allowance_transaction_idle" &&
-                "Please confirm the transaction"}
-              {lockingState.status === "allowance_transaction_submitted" &&
-                "Confirm the transaction..."}
-              {lockingState.status.includes("deposit") &&
-                "Token allowance granted!"}
-            </StatusMessageSmall>
+        {lockingState.status !== "deposit_transaction_confirmed" && (
+          <div className="flex flex-col md:flex-row gap-4 md:gap-20">
+            <div className="flex flex-col gap-2 flex-1">
+              <TransactionStage
+                status={
+                  !lockingState.status.includes("allowance_transaction")
+                    ? "success"
+                    : "pending"
+                }
+              >
+                <Body className="whitespace-nowrap">
+                  Step 1. Confirm token allowance
+                </Body>
+              </TransactionStage>
+              <Caption className="px-2">
+                {lockingState.status === "allowance_transaction_idle" &&
+                  "Please confirm the transaction"}
+                {lockingState.status === "allowance_transaction_submitted" &&
+                  "Confirm the transaction..."}
+                {lockingState.status.includes("deposit") &&
+                  "Token allowance granted!"}
+              </Caption>
+            </div>
+            <div className="flex flex-col gap-2 flex-1">
+              <TransactionStage
+                status={
+                  !lockingState.status.includes("deposit_transaction")
+                    ? "disabled"
+                    : "pending"
+                }
+              >
+                2. Token locking
+              </TransactionStage>
+              <Caption className="px-2">
+                {lockingState.status.includes("allowance") &&
+                  "Waiting for next action..."}
+                {lockingState.status === "deposit_transaction_idle" &&
+                  "Lock your LP tokens"}
+                {lockingState.status === "deposit_transaction_submitted" &&
+                  "Locking your LP tokens..."}
+              </Caption>
+            </div>
           </div>
-          <div className="flex flex-col gap-2 flex-1">
-            <TransactionStage
-              status={
-                !lockingState.status.includes("deposit_transaction")
-                  ? "disabled"
-                  : lockingState.status === "deposit_transaction_confirmed"
-                  ? "success"
-                  : "pending"
-              }
-            >
-              2. Token locking
-            </TransactionStage>
-            <StatusMessageSmall>
-              {lockingState.status.includes("allowance") &&
-                "Waiting for next action..."}
-              {lockingState.status === "deposit_transaction_idle" &&
-                "Lock your LP tokens"}
-              {lockingState.status === "deposit_transaction_submitted" &&
-                "Locking your LP tokens..."}
-              {lockingState.status === "deposit_transaction_confirmed" &&
-                formatUnits(lockingState.depositAmount, 18) +
-                  " LP tokens successfully locked!"}
-            </StatusMessageSmall>
-          </div>
-        </div>
-
+        )}
         {lockingState.status !== "deposit_transaction_confirmed" && (
           <LockVPRate
             value={lockingState.depositAmount}
@@ -129,11 +123,13 @@ export function LockingTransaction({
             lockingState.status === "allowance_transaction_reverted"
           ) {
             return (
-              <IncreaseAllowance
-                user={user}
-                lockingState={lockingState}
-                lockingDispatch={lockingDispatch}
-              />
+              <div className="w-full">
+                <IncreaseAllowance
+                  user={user}
+                  lockingState={lockingState}
+                  lockingDispatch={lockingDispatch}
+                />
+              </div>
             );
           }
           if (
@@ -158,19 +154,41 @@ export function LockingTransaction({
 
 export function StatusBadge({
   variant,
+  status,
 }: {
-  variant: "complete" | "in-progress";
+  variant: "lock" | "unlock";
+  status: "complete" | "in-progress" | "reverted";
 }) {
   return (
     <span
       className={clsx(
-        "rounded-full px-1 font-bold text-xs bg-opacity-10",
-        variant === "in-progress" && "bg-status-success text-status-success",
-        variant === "complete" && "bg-breadpink-shaded text-breadpink-shaded"
+        "px-1 text-system-green font-bold text-xs bg-opacity-10",
+        status === "in-progress" && "text-system-green",
+        status === "reverted" && "text-system-red"
       )}
     >
-      {variant === "in-progress" && "In progress"}
-      {variant === "complete" && "Complete"}
+      {status === "in-progress" && <Body>In progress...</Body>}
+      {status === "complete" && (
+        <div className="flex flex-col items-center gap-2">
+          <CheckCircleIcon size={42} />
+          <Body bold>Complete</Body>
+
+          <Body className="text-surface-grey">
+            {variant === "lock"
+              ? "Successfully locked!"
+              : "Successfully unlocked!"}
+          </Body>
+        </div>
+      )}
+      {status === "reverted" && (
+        <div className="flex flex-col items-center gap-2">
+          <WarningCircleIcon size={42} />
+          <Body bold>Transaction failed</Body>
+          <Body className="text-surface-grey">
+            Something went wrong. Please try again!
+          </Body>
+        </div>
+      )}
     </span>
   );
 }
@@ -195,35 +213,33 @@ function TransactionStage({
   return (
     <div
       className={clsx(
-        "px-1.5 py-1 flex gap-2 items-center dark:bg-breadgray-burnt rounded",
+        "px-1.5 py-1 flex gap-2 items-center",
         status === "disabled" && "opacity-50"
       )}
     >
       {stageIcons[status]}
-      <div className="dark:text-white font-bold">{children}</div>
+      <div className="">{children}</div>
     </div>
   );
 }
 
 function SuccessIcon() {
   return (
-    <span className="rounded-full p-[3.5px] border-[3px] transform size-6 flex items-center border-status-success">
-      <div className="size-full translate-y-0.5 text-status-success">
-        <CheckIcon />
-      </div>
-    </span>
+    <div className="text-system-green">
+      <CheckCircleIcon size={24} />
+    </div>
   );
 }
 
 function DisabledIcon() {
   return (
-    <span className="rounded-full p-[3.5px] border-[3px] transform size-6 flex items-center border-breadgray-toast" />
+    <span className="rounded-full p-[3.5px] border-[3px] transform size-6 flex items-center border-surface-grey" />
   );
 }
 
 function PendingIcon() {
   return (
-    <div className="size-6 text-breadpink-shaded">
+    <div className="size-6 text-primary-orange">
       <Spinner />
     </div>
   );

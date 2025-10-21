@@ -1,12 +1,11 @@
 import { forwardRef, Ref, type ReactNode } from "react";
 import { Close as DialogPrimitiveClose } from "@radix-ui/react-dialog";
-
-import CloseIcon from "../Icons/CloseIcon";
 import { formatBalance } from "../../util/formatter";
 import { motion } from "framer-motion";
 import { Spinner } from "../Icons/Spinner";
 import { TTransactionStatus } from "../../context/TransactionsContext/TransactionsReducer";
-
+import { Heading3 } from "@breadcoop/ui";
+import { X } from "@phosphor-icons/react/ssr";
 export const ModalContainer = forwardRef(
   (
     { children, ...props }: { children: ReactNode },
@@ -23,10 +22,10 @@ export const ModalContainer = forwardRef(
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 8, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="max-w-[28rem] md:max-w-[40rem] flex flex-col items-center rounded-2xl dark:bg-opacity-100 p-6 bg-breadgray-ultra-white dark:bg-breadgray-charcoal relative pointer-events-auto"
+          className="max-w-[28rem] md:max-w-[40rem] bg-bread-paper border border-paper-1 flex flex-col items-center p-6 relative pointer-events-auto"
         >
-          <DialogPrimitiveClose className="absolute top-0 right-0 size-16 p-4 pt-5">
-            <CloseIcon />
+          <DialogPrimitiveClose className="absolute top-2 right-0 size-16 p-4 pt-5">
+            <X size={24} className="hover:cursor-pointer text-primary-orange" />
           </DialogPrimitiveClose>
           {children}
         </motion.section>
@@ -39,10 +38,10 @@ ModalContainer.displayName = "LPModalContainer";
 
 export function ModalHeading({ children }: { children: ReactNode }) {
   return (
-    <div className="w-full md:w-auto flex items-center">
-      <h2 className="pr-2 pb-3 leading-normal text-breadgray-burnt dark:text-breadgray-light-grey font-bold text-left md:text-center">
+    <div className="w-full flex">
+      <Heading3 className="pr-2 pb-3 text-[24px] text-left">
         {children}
-      </h2>
+      </Heading3>
     </div>
   );
 }
@@ -57,7 +56,7 @@ export function ModalContent({ children }: { children: ReactNode }) {
 
 export function ModalAdviceText({ children }: { children: ReactNode }) {
   return (
-    <p className="max-w-xs text-lg leading-normal text-breadgray-burnt dark:text-breadgray-light-grey text-center pt-4 pb-2">
+    <p className="max-w-xs text-lg leading-normal text-center pt-4 pb-2">
       {children}
     </p>
   );
@@ -65,10 +64,7 @@ export function ModalAdviceText({ children }: { children: ReactNode }) {
 
 export function TransactionValue({ value }: { value: string }) {
   return (
-    <div
-      className="w-full text-center text-3xl font-medium text-breadgray-grey100 dark:text-breadgray-light-grey"
-      title={parseFloat(value).toString()}
-    >
+    <div className="w-full text-center" title={parseFloat(value).toString()}>
       {formatBalance(parseFloat(value), 2)}
     </div>
   );
@@ -157,13 +153,3 @@ export const transactionIcons: {
   SAFE_SUBMITTED: <TransactionStatusCheck />,
   REVERTED: <TransactionStatusCross />,
 };
-
-export function StatusMessage({ children }: { children: ReactNode }) {
-  return <p className="dark:text-breadgray-grey text-center">{children}</p>;
-}
-
-export function StatusMessageSmall({ children }: { children: ReactNode }) {
-  return (
-    <p className="dark:text-breadgray-grey text-center text-xs">{children}</p>
-  );
-}

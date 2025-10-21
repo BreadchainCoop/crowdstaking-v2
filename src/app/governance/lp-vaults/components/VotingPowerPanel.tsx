@@ -2,7 +2,6 @@ import { ReactElement } from "react";
 import { CardBox } from "@/app/core/components/CardBox";
 import { FistIcon } from "@/app/core/components/Icons/FistIcon";
 import { AccountMenu } from "@/app/core/components/Header/AccountMenu";
-import { LinkIcon } from "@/app/core/components/Icons/LinkIcon";
 import {
   TUnsupportedChain,
   TUserConnected,
@@ -13,13 +12,14 @@ import { formatBalance } from "@/app/core/util/formatter";
 import { useCurrentAccumulatedVotingPower } from "../../useCurrentAccumulatedVotingPower";
 import Elipsis from "@/app/core/components/Elipsis";
 import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
-
 import { useCycleLength } from "../../useCycleLength";
 import { useVaultTokenBalance } from "../context/VaultTokenBalanceContext";
 import Tooltip from "@/app/core/components/Tooltip";
 import { useDistributions } from "../../useDistributions";
 import { useChainModal } from "@rainbow-me/rainbowkit";
 import Button from "@/app/core/components/Button";
+import { Caption, Body, Heading2, Heading4 } from "@breadcoop/ui";
+import { ArrowUpRightIcon } from "@phosphor-icons/react/ssr";
 
 export function VotingPowerPanel() {
   const { user } = useConnectedUser();
@@ -38,28 +38,30 @@ export function VotingPowerPanel() {
     const part2 = number.split(".")[1];
 
     return (
-      <div className="w-full flex justify-center tracking-wider text-3xl font-bold text-breadgray-grey100 dark:text-breadgray-ultra-white leading-none">
-        <div className=" flex gap-2  justify-end">
+      <div className="w-full flex justify-center">
+        <div className=" flex gap-2 justify-end">
           {icon && <div className="mt-1">{icon}</div>}
-          <span>{part1}</span>
+          <Heading2 className="text-[48px]">{part1}</Heading2>
         </div>
         <div>.</div>
-        <div className="text-xl leading-[1.1] w-[56px] self-end">{part2}</div>
+        <Heading2 className="text-[24px] text-surface-grey-2 leading-[1.1] w-[56px] self-end">
+          {part2}
+        </Heading2>
       </div>
     );
   };
 
   return (
-    <div className="col-span-12 lg:col-span-4 row-start-2 lg:row-start-1 lg:row-span-2">
-      <div className="justify-center lg:block lg:w-full">
+    <div>
+      <div className="lg:ml-auto">
         <CardBox>
           <div className="p-4 flex flex-col items-center gap-4">
-            <h2 className="font-medium text-xl leading-none dark:text-breadgray-light-grey">
-              MY VOTING POWER
-            </h2>
+            <Heading4 className="text-surface-grey-2 text-[24px]">
+              My voting power
+            </Heading4>
             <div className="flex flex-col gap-2">
               <div className="flex gap-2 items-center">
-                <div className="font-bold text-3xl w-full leading-none text-breadgray-grey100 dark:text-breadgray-ultra-white">
+                <div className="w-full leading-none">
                   {votingPower &&
                   votingPower.bread.status === "success" &&
                   votingPower.butteredBread.status === "success" ? (
@@ -83,8 +85,10 @@ export function VotingPowerPanel() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 font-medium text-xs text-breadgray-rye dark:text-breadgray-grey">
-                <span className="pb-1">Accessible voting power</span>
+              <div className="flex items-center gap-2 font-medium text-xs">
+                <Caption className="pb-1 text-surface-grey">
+                  Accessible voting power
+                </Caption>
                 <Tooltip>
                   Your total available voting power for the current voting cycle
                   #{totalDistributions ? totalDistributions + 1 + "." : "-"}
@@ -96,11 +100,11 @@ export function VotingPowerPanel() {
             <div className="w-full grid grid-cols-[repeat(2, max-content)] gap-3">
               <DividerWithText text="Breakdown" />
 
-              <p className="text-breadgray-rye dark:text-breadgray-grey">
+              <Body className="text-surface-grey">
                 Voting power from locked LP
-              </p>
+              </Body>
 
-              <span className="font-bold text-breadgray-grey100 dark:text-breadgray-white text-right">
+              <span className="font-bold text-right">
                 {votingPower && votingPower.butteredBread.status === "success"
                   ? formatBalance(
                       Number(votingPower.butteredBread.value) / 10 ** 18,
@@ -109,21 +113,19 @@ export function VotingPowerPanel() {
                   : "-"}
               </span>
 
-              <p className="text-breadgray-rye dark:text-breadgray-grey">
+              <Body className="text-surface-grey">
                 Voting power from $BREAD
-              </p>
-              <span className="text-right font-bold text-breadgray-grey100 dark:text-breadgray-white">
+              </Body>
+              <Body bold className="text-right">
                 {votingPower && votingPower.bread.status === "success"
                   ? formatBalance(Number(votingPower.bread.value) / 10 ** 18, 1)
                   : "-"}
-              </span>
+              </Body>
               <DividerWithText text="Source(s)" />
 
-              <p className="text-breadgray-rye dark:text-breadgray-grey">
-                Total locked LP tokens
-              </p>
+              <Body className="text-surface-grey">Total locked LP tokens</Body>
 
-              <span className="text-right font-bold text-breadpink-100">
+              <Body bold className="text-right text-primary-orange">
                 {vaultTokenBalance &&
                 vaultTokenBalance.butter.status === "success"
                   ? formatBalance(
@@ -131,39 +133,41 @@ export function VotingPowerPanel() {
                       0
                     )
                   : "-"}
-              </span>
+              </Body>
 
-              {user.status === "CONNECTED" || user.status === "UNSUPPORTED_CHAIN" && (
-                <>
-                  <p className="text-breadgray-rye dark:text-breadgray-grey">
-                    Total $BREAD baked
-                  </p>
+              {user.status === "CONNECTED" ||
+                (user.status === "UNSUPPORTED_CHAIN" && (
+                  <>
+                    <Body className="text-surface-grey">
+                      Total $BREAD baked
+                    </Body>
 
-                  <span className="font-bold text-breadgray-grey100 dark:text-breadgray-white text-right">
-                    {BREAD && BREAD.status === "SUCCESS"
-                      ? formatBalance(parseFloat(BREAD.value), 2)
-                      : "-"}
-                  </span>
-                </>
-              )}
+                    <Body bold className="text-right">
+                      {BREAD && BREAD.status === "SUCCESS"
+                        ? formatBalance(parseFloat(BREAD.value), 2)
+                        : "-"}
+                    </Body>
+                  </>
+                ))}
 
-              {user.status === "CONNECTED" || user.status === "UNSUPPORTED_CHAIN" ? (
+              {user.status === "CONNECTED" ||
+              user.status === "UNSUPPORTED_CHAIN" ? (
                 <>
                   <DividerWithText text="Future voting power" />
 
-                  <p className="text-breadgray-rye dark:text-breadgray-grey">
-                    <div className="flex items-center gap-2">
-                      <span className="pb-1">Pending voting power</span>
-                      <Tooltip>
-                        The voting power you will receive in the next voting
-                        cycle.
-                      </Tooltip>
-                    </div>
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <Body className="pb-1 text-surface-grey">
+                      Pending voting power
+                    </Body>
+                    <Tooltip>
+                      The voting power you will receive in the next voting
+                      cycle.
+                    </Tooltip>
+                  </div>
 
-                  <span className="text-right w-27 font-bold text-breadgray-rye dark:text-breadgray-grey">
+                  <Body bold className="text-right w-27">
                     <PendingVotingPowerDisplay user={user} />
-                  </span>
+                  </Body>
                 </>
               ) : (
                 <></>
@@ -191,15 +195,18 @@ export function VotingPowerPanel() {
               )}
             </div>
             <a
-              className="flex items-center gap-2 text-sm font-medium pt-4 text-breadgray-grey100 hover:text-breadpink-shaded dark:text-breadgray-ultra-white"
+              className="flex items-center gap-2 bg-paper-main pt-1 px-4 border border-primary-orange "
               href="https://breadchain.notion.site/Voting-Power-LP-Vaults-15e0ad9b12798026a4e6cb917c3137a5?pvs=74"
               target="_blank"
               rel="noopener noreferrer"
             >
-              How does this work?
-              <div className="text-breadpink-shaded">
-                <LinkIcon />
-              </div>
+              <Body bold>
+                How does this work?{" "}
+                <ArrowUpRightIcon
+                  size={20}
+                  className="inline mb-1 text-primary-orange"
+                />
+              </Body>
             </a>
           </div>
         </CardBox>
@@ -211,22 +218,18 @@ export function VotingPowerPanel() {
 function DividerWithText({ text }: { text: string }) {
   return (
     <div className="flex col-span-2 py-2 h-[1px] items-center">
-      <div className="flex-1 border-t border-breadgray-light-grey dark:border-breadgray-rye"></div>
-      <span className="px-2 whitespace-nowrap font-medium text-xs text-breadgray-grey dark:text-breadgray-rye">
-        {text}
-      </span>
-      <div className="flex-1 border-t border-breadgray-light-grey dark:border-breadgray-rye"></div>
+      <div className="flex-1 border-t border-primary-orange"></div>
+      <Caption className="px-2 text-surface-grey">{text}</Caption>
+      <div className="flex-1 border-t border-primary-orange"></div>
     </div>
   );
 }
 
-function Divider() {
-  return (
-    <div className="col-span-2 h-[1px] bg-breadgray-light-grey dark:bg-breadgray-rye" />
-  );
-}
-
-function PendingVotingPowerDisplay({ user }: { user: TUserConnected | TUnsupportedChain }) {
+function PendingVotingPowerDisplay({
+  user,
+}: {
+  user: TUserConnected | TUnsupportedChain;
+}) {
   const {
     status: currentAccumulatedVotingPowerStatus,
     data: currentAccumulatedVotingPowerData,
