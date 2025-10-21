@@ -171,12 +171,11 @@ export function StatusBadge({
   return (
     <span
       className={clsx(
-        "rounded-full px-1 text-system-green font-bold text-xs bg-opacity-10",
-        variant === "in-progress" && "bg-status-success text-status-success",
-        variant === "complete" && "bg-breadpink-shaded text-breadpink-shaded"
+        "px-1 text-system-green font-bold text-xs bg-opacity-10",
+        variant === "in-progress" && "bg-status-success text-status-success"
       )}
     >
-      {variant === "in-progress" && "In progress..."}
+      {variant === "in-progress" && <Body>In progress...</Body>}
       {variant === "complete" && (
         <div className="flex flex-col items-center gap-2">
           <CheckCircleIcon size={42} />
@@ -221,11 +220,9 @@ function TransactionStage({
 
 function SuccessIcon() {
   return (
-    <span className="rounded-full p-[3.5px] border-[3px] transform size-6 flex items-center border-system-green">
-      <div className="size-full translate-y-0.5 text-system-green">
-        <CheckIcon />
-      </div>
-    </span>
+    <div className="text-system-green">
+      <CheckCircleIcon size={24} />
+    </div>
   );
 }
 

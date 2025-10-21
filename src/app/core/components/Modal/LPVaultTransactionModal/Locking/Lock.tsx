@@ -177,7 +177,7 @@ function LockSuccess({ value, status }: { value: bigint; status: string }) {
       <div className="w-3/4 mx-auto">
         <LockVPRate value={value} status={status} />
       </div>
-      <div className=" border-l-4 border-system-green shadow-md p-[20px] flex flex-col items-center gap-4">
+      <div className="border-l-4 border-system-green shadow-md p-[20px] flex flex-col items-center gap-4">
         <Body>
           You successfully locked <strong>{tokenAmount} LP tokens</strong>. In
           the next voting cycles you will have a{" "}
