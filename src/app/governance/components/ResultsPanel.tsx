@@ -1,4 +1,4 @@
-import { Hex } from "viem";
+import { getAddress, Hex } from "viem";
 
 import { projectsMeta } from "@/app/projectsMeta";
 import { formatVotePercentage } from "@/app/core/util/formatter";
@@ -25,8 +25,8 @@ export function ResultsPanel({
       })
       .toSorted((a, b) => {
         return (
-          projectsMeta[Object.keys(a)[0] as Hex].order -
-          projectsMeta[Object.keys(b)[0] as Hex].order
+          projectsMeta[getAddress(Object.keys(a)[0])].order -
+          projectsMeta[getAddress(Object.keys(b)[0])].order
         );
       });
     const totalPoints = distribution.data[1].reduce(
