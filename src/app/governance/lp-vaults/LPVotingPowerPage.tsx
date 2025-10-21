@@ -82,8 +82,8 @@ function TitleSection() {
         <ol className="list-disc px-5 pb-4">
           <li>
             <Body>
-              Provide Liquidity: Add liquidity for BREAD in the vault's listed
-              liquidity pool to get LP tokens.
+              Provide Liquidity: Add liquidity for BREAD in the vault&apos;s
+              listed liquidity pool to get LP tokens.
             </Body>
           </li>
           <li>
