@@ -54,7 +54,7 @@ export const projectsMeta: {
       "The core team developing the tech and design used by Bread Coop.",
     logoSrc: "project/core.png",
     active: true,
-    link: "https://docs.bread.coop/solidarity-primitives/crowdstaking/member-projects/bread-co-op",
+    link: "https://gap.karmahq.xyz/project/bread-cooperative",
   },
   "0x6A148b997e6651237F2fCfc9E30330a6480519f0": {
     name: "Bread Coop Treasury",
