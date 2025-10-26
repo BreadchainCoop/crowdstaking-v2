@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { TConnectedUserState } from "../core/hooks/useConnectedUser";
 import { ParsedVote, useCurrentVotes } from "./useCurrentVotes";
 import { Hex } from "viem";
+import { useTransactions } from "../core/context/TransactionsContext/TransactionsContext";
 
 export type CastVoteData = { [key: Hex]: number };
 export type CastVoteStatusLoading = { status: "LOADING" };
@@ -25,8 +26,14 @@ export function useCastVote(
   });
 
   const userAddress = user.status === "CONNECTED" ? user.address : "";
+  const { transactionsState } = useTransactions();
 
   const { data: votesData } = useCurrentVotes(lastClaimedBlockNumber);
+
+  const hasPendingVoteTransaction = transactionsState.submitted.some(
+    (tx) => tx.data.type === "VOTE" && 
+    (tx.status === "SUBMITTED" || tx.status === "SAFE_SUBMITTED")
+  );
 
   useEffect(() => {
     if (votesData) {
@@ -51,5 +58,5 @@ export function useCastVote(
     }
   }, [votesData, userAddress]);
 
-  return { castVote };
+  return { castVote, hasPendingVoteTransaction };
 }
