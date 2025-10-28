@@ -7,6 +7,16 @@ import { useIsMobile } from "@/app/core/hooks/useIsMobile";
 import * as Accordion from "@radix-ui/react-accordion";
 import { useState } from "react";
 import { useDistributions } from "../useDistributions";
+import {
+  Body,
+  Logo,
+  Heading3,
+  Caption,
+  LiftedButton,
+  Heading5,
+  Heading2,
+} from "@breadcoop/ui";
+import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react/ssr";
 
 interface CycleDistribution {
   cycleNumber: number;
@@ -30,15 +40,16 @@ function TopCard({
   title: string;
 }) {
   return (
-    <div className="py-3 border border-breadgray-light-grey dark:border-breadgray-rye rounded-[0.625rem] flex flex-col items-center justify-center mb-1 md:flex-1 md:mb-0">
-      <div className="flex items-center justify-center mb-1 text-breadgray-pitchblack dark:text-breadgray-ultra-white">
+    <div className="py-3 bg-paper-0 border border-paper-2 flex flex-col items-center justify-center mb-1 md:flex-1 md:mb-0">
+      <div className="flex items-center justify-center mb-1">
         <div className="flex flex-col gap-2 items-center">
-          <p className="text-breadgray-rye md:text-[20px] text-[16px] dark:text-breadgray-ultra-white text-[1rem] dark:md:text-breadgray-grey md:uppercase">
+          <Body
+            bold
+            className="text-surface-grey-2 md:text-[20px] text-[16px] text-[1rem]"
+          >
             {title}
-          </p>
-          <p className="gap-2 md:text-[30px] text-[24px] font-semibold inline-flex items-center">
-            {children}
-          </p>
+          </Body>
+          <div className="gap-2 inline-flex items-center">{children}</div>
         </div>
       </div>
     </div>
@@ -78,76 +89,83 @@ export function VotingHistory() {
   return (
     <>
       <header>
-        <h2 className="pb-2 text-breadgray-pitchblack dark:text-breadgray-ultra-white text-lg font-bold tracking-wider md:text-[2rem]">
-          Previous cycle
-        </h2>
-        <p className="text-breadgray-rye dark:text-breadgray-light-grey text-xl">
+        <Heading3 className="pb-2">Previous cycle</Heading3>
+        <Body className="">
           These are the results of the previous voting cycle #
           {cycleDistribution.cycleNumber}.
-        </p>
-        <p className="pt-6 text-left text-breadgray-rye dark:text-breadgray-grey">
+        </Body>
+        <Caption className="pt-6 text-left">
           Ended on{" "}
           {format(
-            parse(cycleDistribution.distributionDate, 'MM/dd/yyyy', new Date()), 
+            parse(cycleDistribution.distributionDate, "MM/dd/yyyy", new Date()),
             "MMM d, yyyy"
           )}
-        </p>
+        </Caption>
       </header>
       <div>
         <div className="my-3 md:flex md:flex-row-reverse md:gap-4">
           <TopCard title="Total yield distributed">
-            <BreadIcon />
-            {formatBalance(
-              Number(formatUnits(BigInt(cycleDistribution.totalYield), 18)),
-              2
-            )}
+            <Logo className="mb-2" />
+            <Heading3>
+              {formatBalance(
+                Number(formatUnits(BigInt(cycleDistribution.totalYield), 18)),
+                2
+              )}
+            </Heading3>
           </TopCard>
           <TopCard title="Previous cycle">
-            <button
+            <LiftedButton
+              preset="stroke"
               onClick={() => updateCycleIdex(1)}
               disabled={
                 !totalDistributions || cycleIndex === totalDistributions - 1
               }
-              className="disabled:opacity-50"
+              className="h-[32px] w-[32px] p-0"
             >
-              <LeftArrowIcon />
-            </button>
-            Cycle #{cycleDistribution.cycleNumber}
-            <button
+              <ArrowLeftIcon size={20} className="text-primary-orange" />
+            </LiftedButton>
+            <Body bold className="text-[24px]">
+              Cycle #{cycleDistribution.cycleNumber}
+            </Body>
+            <LiftedButton
+              preset="stroke"
               onClick={() => updateCycleIdex(-1)}
               disabled={!totalDistributions || cycleIndex === 0}
-              className="disabled:opacity-50"
+              className="h-[32px] w-[32px] p-0"
             >
-              <RightArrowIcon />
-            </button>
+              <ArrowRightIcon size={20} className="text-primary-orange" />
+            </LiftedButton>
           </TopCard>
         </div>
 
-        <div className="p-3 border border-breadgray-light-grey dark:border-breadgray-rye rounded-[0.625rem] mt-1 md:px-8 md:py-4">
-          <h3 className="pb-2 md:uppercase md:text-[20px] text-[16px] text-breadgray-pitchblack dark:text-breadgray-ultra-white md:text-breadgray-rye dark:md:text-breadgray-grey text-center md:font-medium md:text-left md:mb-2">
+        <div className="p-3 border border border-paper-2 mt-1 md:px-8 md:py-4">
+          <Body
+            bold
+            className="pb-2 md:text-[20px] text-[16px] text-surface-grey-2 text-center md:text-left md:mb-2"
+          >
             How yield is distributed
-          </h3>
+          </Body>
           <div className="md:flex md:items-center md:justify-center md:gap-4">
             <div className="mb-4 md:flex-1 md:flex md:items-center md:mb-0">
-              <div className="hidden md:inline-block md:rounded md:w-1 md:h-12 md:bg-breadpink-500 md:mr-2" />
+              <div className="hidden md:inline-block md:w-1 md:h-13 md:bg-primary-orange md:mr-4" />
               <div>
-                <p className="font-bold md:text-[20px] text-[16px] text-breadgray-pitchblack dark:text-breadgray-ultra-white">
+                <Body bold className="md:text-[20px] text-[16px] ">
                   Solidarity Amount
-                </p>
-                <p className="pt-1 md:text-[16px] text-[12px] text-breadgray-rye dark:text-breadgray-grey md:dark:text-breadgray-white text-sm font-medium">
+                </Body>
+                <Caption className="pt-1 md:text-[16px] text-[12px] ">
                   50% of the total yield is distributed equally.
-                </p>
+                </Caption>
               </div>
             </div>
             <div className="md:flex-1 md:flex md:items-center">
-              <div className="hidden md:inline-block md:rounded md:w-1 md:h-12 md:bg-breadpink-500 md:mr-2" />
+              <div className="hidden md:inline-block md:w-1 md:h-13 md:bg-orange-0 md:mr-4" />
               <div>
-                <p className="font-bold md:text-[20px] text-[16px] text-breadgray-pitchblack dark:text-breadgray-ultra-white">
+                <Body bold className="md:text-[20px] text-[16px]">
                   Democratic Amount
-                </p>
-                <p className="pt-1 md:text-[16px] text-[12px] text-breadgray-rye dark:text-breadgray-grey md:dark:text-breadgray-white text-sm font-medium">
+                </Body>
+                <Caption className="pt-1 md:text-[16px] text-[12px] ">
                   50% of the total yield is distributed by vote.
-                </p>
+                </Caption>
               </div>
             </div>
           </div>
@@ -191,7 +209,7 @@ interface Details {
 function VotingHistoryDetailMobile({ sortedProjects }: Details) {
   return (
     <div className="mt-4">
-      <div className="w-4/6 mx-auto h-[0.0625rem] my-6 bg-breadgray-grey dark:bg-breadgray-rye" />
+      <div className="w-4/6 mx-auto h-[0.0625rem] my-6 bg-paper-0 dark:bg-breadgray-rye" />
       <div className="flex items-center justify-between mb-3 text-breadgray-pitchblack dark:text-breadgray-ultra-white font-bold">
         <p>Project</p>
         <p>$BREAD Received</p>
@@ -304,7 +322,7 @@ function VotingHistoryDetailMobile({ sortedProjects }: Details) {
 
 function VotingHistoryDetailDesktop({ sortedProjects }: Details) {
   return (
-    <div className="mt-4 p-3 border border-breadgray-rye rounded-[0.625rem]">
+    <div className="mt-4 p-3 border border-paper-2 bg-paper-0">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
