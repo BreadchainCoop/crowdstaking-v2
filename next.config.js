@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
   env: {
     SUBGRAPH_API_KEY: process.env.SUBGRAPH_API_KEY,
   },

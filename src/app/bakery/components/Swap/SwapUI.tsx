@@ -1,3 +1,4 @@
+import { Body } from "@breadcoop/ui";
 import { ReactNode } from "react";
 
 export function PanelHeader({ children }: { children: ReactNode }) {
@@ -17,7 +18,8 @@ export function PanelTokenRow({ children }: { children: ReactNode }) {
 }
 
 export function PanelBalanceRow({ children }: { children: ReactNode }) {
-  return <div className="w-full flex justify-end">{children}</div>;
+  // return <div className="w-full flex justify-end">{children}</div>;
+  return <div className="w-full flex justify-between mt-1">{children}</div>;
 }
 
 type TBalanceProps = {
@@ -43,7 +45,8 @@ export function PanelBalance({ children }: { children: ReactNode }) {
 
 export function PanelContainer({ children }: { children: ReactNode }) {
   return (
-    <div className="w-full p-2 sm:px-8 sm:py-3 md:px-6 text-gray-300 bg-breadgray-ultra-white border border-1 border-breadgray-light-grey dark:border-none dark:bg-breadgray-grey300 rounded">
+    // <div className="w-full p-2 sm:px-8 sm:py-3 md:px-6 text-gray-300 bg-breadgray-ultra-white border border-1 border-breadgray-light-grey dark:border-none dark:bg-breadgray-grey300 rounded">
+    <div className="w-full bg-paper-1 p-5">
       {children}
     </div>
   );
@@ -59,7 +62,8 @@ export function PanelLabel({ children }: { children: ReactNode }) {
 
 export function TokenLabelContainer({ children }: { children: ReactNode }) {
   return (
-    <div className="rounded-full token-label-shadow dark:bg-[#343434] px-1.5 py-0.5 pr-3 flex items-center sm:text-xl w-auto">
+    // <div className="rounded-full token-label-shadow dark:bg-[#343434] px-1.5 py-0.5 pr-3 flex items-center sm:text-xl w-auto">
+    <div className="flex items-center w-auto border border-surface-grey p-1">
       {children}
     </div>
   );
@@ -67,7 +71,8 @@ export function TokenLabelContainer({ children }: { children: ReactNode }) {
 
 export function TokenLabelText({ children }: { children: ReactNode }) {
   return (
-    <span className="ml-2 font-medium text-xl text-breadgray-grey100 dark:text-gray-300">
+    // <span className="ml-2 font-medium text-xl text-breadgray-grey100 dark:text-gray-300">
+    <span className="ml-2 font-bold">
       {children}
     </span>
   );
@@ -83,4 +88,8 @@ export function TokenBalanceText({ children }: { children: ReactNode }) {
       {children}
     </div>
   );
+}
+
+export function TokenValueInDollars() {
+  return <Body className="text-surface-grey-2 text-xs">$00</Body>
 }
