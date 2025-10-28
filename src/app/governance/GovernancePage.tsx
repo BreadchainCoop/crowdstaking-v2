@@ -194,20 +194,33 @@ export function GovernancePage() {
     return { userCanVote, totalUserVotingPower };
   }, [minRequiredVotingPower, userVotingPower]);
 
-  if (
+  const hasError =
     castVote.status === "ERROR" ||
     currentVotingDistribution.status === "ERROR" ||
     cycleDates.status === "ERROR" ||
-    cycleLength.status === "ERROR"
-  )
+    cycleLength.status === "ERROR";
+
+  if (hasError) {
     return (
-      <div className="w-full flex flex-col items-center pt-32">
-        <h1>Please wait...</h1>
-        <div className="mt-6 size-10 text-breadgray-grey">
-          <Spinner />
+      <>
+        <div className="w-full flex flex-col items-center pt-32">
+          <h1>Please wait...</h1>
+          <div className="mt-6 size-10 text-breadgray-grey">
+            <Spinner />
+          </div>
         </div>
-      </div>
+        {user.features.votingHistory && (
+          <section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
+            <PageGrid>
+              <div className="col-span-12 row-start-1 row-span-1">
+                <VotingHistory />
+              </div>
+            </PageGrid>
+          </section>
+        )}
+      </>
     );
+  }
 
   if (
     !voteFormState ||
