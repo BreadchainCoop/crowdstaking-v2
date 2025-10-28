@@ -1,6 +1,5 @@
-import { formatUnits } from "viem";
-import Button from "../../Button";
-import { ModalContent, ModalHeading, StatusMessage } from "../LPModalUI";
+import { formatUnits, Hex } from "viem";
+import { ModalContent, ModalHeading } from "../LPModalUI";
 import { useEffect, useReducer, useState } from "react";
 import { useRefetchOnBlockChangeForUser } from "@/app/core/hooks/useRefetchOnBlockChange";
 import { useWriteContract, useSimulateContract } from "wagmi";
@@ -15,15 +14,14 @@ import { useIsMobile } from "@/app/core/hooks/useIsMobile";
 
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
 import { withdrawReducer } from "./withdrawReducer";
-import {
-  PillContainer,
-  UnlockVPRate,
-  ValueText,
-  WXDaiBreadIcon,
-} from "./VPRate";
+import { UnlockVPRate, ValueText, WXDaiBreadIcon } from "./VPRate";
 import { StatusBadge } from "./Locking/LockingTransaction";
-import { LinkIcon } from "../../Icons/LinkIcon";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
+import { Body, LiftedButton } from "@breadcoop/ui";
+import {
+  ArrowCounterClockwiseIcon,
+  ArrowUpRightIcon,
+} from "@phosphor-icons/react/ssr";
 
 export function WithdrawTransaction({
   user,
@@ -40,6 +38,13 @@ export function WithdrawTransaction({
   const [withdrawState, withdrawDispatch] = useReducer(withdrawReducer, {
     status: "idle",
   });
+
+  const handleRetry = () => {
+    // Reset to idle state to allow retry
+    withdrawDispatch({
+      type: "RESET",
+    });
+  };
 
   useEffect(() => {
     transactionsDispatch({
@@ -120,27 +125,39 @@ export function WithdrawTransaction({
       <ModalHeading>Unlocking LP Tokens</ModalHeading>
       <ModalContent>
         <StatusBadge
-          variant={
-            withdrawState.status === "confirmed" ? "complete" : "in-progress"
+          variant="unlock"
+          status={
+            withdrawState.status === "confirmed"
+              ? "complete"
+              : withdrawState.status === "reverted"
+              ? "reverted"
+              : "in-progress"
           }
         />
         {withdrawState.status !== "confirmed" && (
           <>
             <UnlockVPRate value={modalState.parsedValue} />
-            <p className="p-4 rounded-xl border-2 border-status-warning text-center">
-              By unlocking your LP tokens you will not be eligible to receive
-              voting power within the Bread Coop network in future voting
-              cycles.
-            </p>
+            <div className="border-l-4 border-system-warning shadow-md p-[20px] flex flex-col items-center gap-4">
+              <Body>
+                By unlocking your LP tokens you will not be eligible to receive
+                voting power within the Bread Coop network in future voting
+                cycles.
+              </Body>
+            </div>
           </>
         )}
         {withdrawState.status === "idle" && (
-          <StatusMessage>
+          <Body className="text-surface-grey">
             Press ‘Unlock LP tokens’ to execute the transaction
-          </StatusMessage>
+          </Body>
         )}
         {withdrawState.status === "submitted" && (
-          <StatusMessage>Awaiting on-chain confirmation...</StatusMessage>
+          <Body>Awaiting on-chain confirmation...</Body>
+        )}
+        {withdrawState.status === "reverted" && (
+          <Body className="text-status-error">
+            Transaction failed. Please try again.
+          </Body>
         )}
         {(() => {
           if (withdrawState.status === "confirmed")
@@ -150,34 +167,60 @@ export function WithdrawTransaction({
                   value={modalState.parsedValue}
                   explorerLink={`${chainConfig.EXPLORER}/tx/${withdrawState.txHash}`}
                 />
-                <Button
-                  onClick={() => {
-                    setModal(null);
-                  }}
-                  fullWidth={isMobile}
-                >
-                  Return to vault page
-                </Button>
+                <div className="w-full">
+                  <LiftedButton
+                    preset="secondary"
+                    onClick={() => {
+                      setModal(null);
+                    }}
+                    disabled={isWalletOpen}
+                    width="full"
+                  >
+                    Return to vault page
+                  </LiftedButton>
+                </div>
               </>
             );
           if (withdrawState.status === "submitted")
             return (
-              <Button onClick={() => {}} fullWidth={isMobile} disabled>
-                Unlocking...
-              </Button>
+              <div className="w-full">
+                <LiftedButton onClick={() => {}} disabled={true} width="full">
+                  Unlocking...
+                </LiftedButton>
+              </div>
+            );
+          if (withdrawState.status === "reverted")
+            return (
+              <div className="w-full">
+                <LiftedButton
+                  onClick={() => {
+                    if (!contractWriteWrite) return;
+                    handleRetry();
+                    setIsWalletOpen(true);
+                    contractWriteWrite(prepareWrite.data!.request);
+                  }}
+                  disabled={isWalletOpen}
+                  width="full"
+                  leftIcon={<ArrowCounterClockwiseIcon size={24} />}
+                >
+                  Try again
+                </LiftedButton>
+              </div>
             );
           return (
-            <Button
-              onClick={() => {
-                if (!contractWriteWrite) return;
-                setIsWalletOpen(true);
-                contractWriteWrite(prepareWrite.data!.request);
-              }}
-              disabled={isWalletOpen}
-              fullWidth={isMobile}
-            >
-              Unlock LP tokens
-            </Button>
+            <div className="w-full">
+              <LiftedButton
+                onClick={() => {
+                  if (!contractWriteWrite) return;
+                  setIsWalletOpen(true);
+                  contractWriteWrite(prepareWrite.data!.request);
+                }}
+                disabled={isWalletOpen}
+                width="full"
+              >
+                Unlock LP tokens
+              </LiftedButton>
+            </div>
           );
         })()}
       </ModalContent>
@@ -195,19 +238,18 @@ function UnlockingSuccess({
   const tokenAmount = formatUnits(value, 18);
 
   return (
-    <div className="w-full rounded-xl border-2 border-status-success md:mx-24 p-6 flex flex-col items-center gap-4">
-      <div className="w-auto">
-        <PillContainer>
-          <WXDaiBreadIcon />
-          <ValueText>{tokenAmount} LP TOKENS</ValueText>
-        </PillContainer>
+    <div className="w-full md:mx-24 p-6 flex flex-col items-center gap-4">
+      <div className="w-auto border border-surface-ink flex items-center gap-2 p-2 ml-auto">
+        <WXDaiBreadIcon />
+        <ValueText>{tokenAmount} LP TOKENS</ValueText>
       </div>
-      <p className="text-center">Successfully unlocked!</p>
       <ExternalLink href={explorerLink}>
-        <div className="text-breadpink-shaded font-medium text-sm flex items-center gap-2">
-          View on Explorer
-          <LinkIcon />
-        </div>
+        <LiftedButton preset="stroke" className="h-[32px]">
+          <span className="flex items-center gap-2">
+            View receipt on Gnosisscan
+            <ArrowUpRightIcon size={24} className="text-primary-orange" />
+          </span>
+        </LiftedButton>
       </ExternalLink>
     </div>
   );

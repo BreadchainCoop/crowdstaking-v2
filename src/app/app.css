@@ -7,6 +7,9 @@
 }
 
 /* Additional custom styles can go here */
+@theme {
+  --color-bread-paper: #fdfaf3;
+}
 
 /* Hide all buttons to select a network */
 button[data-testid^="rk-chain-option-"] {
