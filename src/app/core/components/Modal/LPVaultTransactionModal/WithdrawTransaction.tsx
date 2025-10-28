@@ -1,6 +1,6 @@
 import { formatUnits } from "viem";
 import Button from "../../Button";
-import { ModalContent, ModalHeading, StatusMessage } from "../LPModalUI";
+import { ModalContent, ModalHeading } from "../LPModalUI";
 import { useEffect, useReducer, useState } from "react";
 import { useRefetchOnBlockChangeForUser } from "@/app/core/hooks/useRefetchOnBlockChange";
 import { useWriteContract, useSimulateContract } from "wagmi";
@@ -24,6 +24,7 @@ import {
 import { StatusBadge } from "./Locking/LockingTransaction";
 import { LinkIcon } from "../../Icons/LinkIcon";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
+import { Body, LiftedButton } from "@breadcoop/ui";
 
 export function WithdrawTransaction({
   user,
@@ -127,20 +128,22 @@ export function WithdrawTransaction({
         {withdrawState.status !== "confirmed" && (
           <>
             <UnlockVPRate value={modalState.parsedValue} />
-            <p className="p-4 rounded-xl border-2 border-status-warning text-center">
-              By unlocking your LP tokens you will not be eligible to receive
-              voting power within the Bread Coop network in future voting
-              cycles.
-            </p>
+            <div className="border-l-4 border-system-warning shadow-md p-[20px] flex flex-col items-center gap-4">
+              <Body>
+                By unlocking your LP tokens you will not be eligible to receive
+                voting power within the Bread Coop network in future voting
+                cycles.
+              </Body>
+            </div>
           </>
         )}
         {withdrawState.status === "idle" && (
-          <StatusMessage>
+          <Body className="text-surface-grey">
             Press ‘Unlock LP tokens’ to execute the transaction
-          </StatusMessage>
+          </Body>
         )}
         {withdrawState.status === "submitted" && (
-          <StatusMessage>Awaiting on-chain confirmation...</StatusMessage>
+          <Body>Awaiting on-chain confirmation...</Body>
         )}
         {(() => {
           if (withdrawState.status === "confirmed")
@@ -150,34 +153,42 @@ export function WithdrawTransaction({
                   value={modalState.parsedValue}
                   explorerLink={`${chainConfig.EXPLORER}/tx/${withdrawState.txHash}`}
                 />
-                <Button
-                  onClick={() => {
-                    setModal(null);
-                  }}
-                  fullWidth={isMobile}
-                >
-                  Return to vault page
-                </Button>
+                <div className="w-full">
+                  <LiftedButton
+                    preset="secondary"
+                    onClick={() => {
+                      setModal(null);
+                    }}
+                    disabled={isWalletOpen}
+                    width="full"
+                  >
+                    Return to vault page
+                  </LiftedButton>
+                </div>
               </>
             );
           if (withdrawState.status === "submitted")
             return (
-              <Button onClick={() => {}} fullWidth={isMobile} disabled>
-                Unlocking...
-              </Button>
+              <div className="w-full">
+                <LiftedButton onClick={() => {}} disabled={true} width="full">
+                  Unlocking...
+                </LiftedButton>
+              </div>
             );
           return (
-            <Button
-              onClick={() => {
-                if (!contractWriteWrite) return;
-                setIsWalletOpen(true);
-                contractWriteWrite(prepareWrite.data!.request);
-              }}
-              disabled={isWalletOpen}
-              fullWidth={isMobile}
-            >
-              Unlock LP tokens
-            </Button>
+            <div className="w-full">
+              <LiftedButton
+                onClick={() => {
+                  if (!contractWriteWrite) return;
+                  setIsWalletOpen(true);
+                  contractWriteWrite(prepareWrite.data!.request);
+                }}
+                disabled={isWalletOpen}
+                width="full"
+              >
+                Unlock LP tokens
+              </LiftedButton>
+            </div>
           );
         })()}
       </ModalContent>

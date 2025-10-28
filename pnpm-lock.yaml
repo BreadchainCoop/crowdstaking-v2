@@ -13077,7 +13077,7 @@ snapshots:
       get-port: 5.1.1
       giget: 1.2.1
       globby: 11.1.0
-      jscodeshift: 0.15.2(@babel/preset-env@7.24.0(@babel/core@7.27.3))
+      jscodeshift: 0.15.2(@babel/preset-env@7.24.0(@babel/core@7.24.0))
       leven: 3.1.0
       ora: 5.4.1
       prettier: 2.8.8
@@ -13111,7 +13111,7 @@ snapshots:
       '@types/cross-spawn': 6.0.6
       cross-spawn: 7.0.3
       globby: 11.1.0
-      jscodeshift: 0.15.2(@babel/preset-env@7.24.0(@babel/core@7.27.3))
+      jscodeshift: 0.15.2(@babel/preset-env@7.24.0(@babel/core@7.24.0))
       lodash: 4.17.21
       prettier: 2.8.8
       recast: 0.23.6
@@ -17209,7 +17209,7 @@ snapshots:
 
   jsc-safe-url@0.2.4: {}
 
-  jscodeshift@0.15.2(@babel/preset-env@7.24.0(@babel/core@7.27.3)):
+  jscodeshift@0.15.2(@babel/preset-env@7.24.0(@babel/core@7.24.0)):
     dependencies:
       '@babel/core': 7.24.0
       '@babel/parser': 7.24.0

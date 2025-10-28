@@ -4,11 +4,23 @@ import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { VaultPanel } from "./components/VaultPanel";
 import { VotingPowerPanel } from "./components/VotingPowerPanel";
 import { Accordion } from "@radix-ui/react-accordion";
-import { getChain } from "@/chainConfig";
 import useLocalStorage from "@/app/core/hooks/useLocalStorage";
 import { PageGrid } from "@/app/governance/components/PageGrid";
 import { LiquidityBanner } from "@/app/bakery/components/Banners/LiquidityBanner";
 import { useActiveChain } from "@/app/core/hooks/useActiveChain";
+import {
+  Body,
+  Heading1,
+  Heading2,
+  Heading3,
+  Heading4,
+  Caption,
+  LiftedButton,
+  Logo,
+  Heading5,
+} from "@breadcoop/ui";
+import { WXDAIIcon } from "@/app/core/components/Icons/TokenIcons";
+import { ArrowUpRightIcon, ArrowRightIcon } from "@phosphor-icons/react/ssr";
 
 export function LPVotingPowerPage() {
   const { user } = useConnectedUser();
@@ -34,10 +46,11 @@ export function LPVotingPowerPage() {
         <VotingPowerPanel />
       </PageGrid>
       <div className="w-full pt-6">
-        <h2 className="font-bold text-xl">Manage your BREAD LP vaults</h2>
-        <p className="text-breadgray-rye dark:text-breadgray-grey mt-2 mb-4">
-          Lock LP tokens for voting power within the Bread Coop network
-        </p>
+        <Heading3 className="text-[24px]">Manage your BREAD LP vaults</Heading3>
+        <Body>
+          Lock LP tokens for voting power within the Bread Cooperative
+          solidarity fund.
+        </Body>
         <Accordion
           value={accordionState}
           onValueChange={setAccordionState}
@@ -54,35 +67,79 @@ export function LPVotingPowerPage() {
 function TitleSection() {
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="font-bold text-3xl text-breadgray-grey100 dark:text-breadgray-ultra-white">
-        Voting Power LP Vaults
-      </h1>
+      <Heading3 className="text-[40px]">
+        <span className="uppercase">Bread Solidarity Fund &mdash;</span> Voting
+        power vaults
+      </Heading3>
       <div className="text-lg text-breadgray-rye dark:text-breadgray-light-grey md:pe-6">
-        <p>
-          This page lets you provide liquidity for BREAD while maintaining your
-          voting power for governing the monthly BREAD crowdstaking yield
-          distribution. By staking your LP tokens into a vault, you still get
-          your voting power as if you are holding BREAD normally.
-        </p>
-        <h4 className="mt-5 mb-2 font-bold text-2xl leading-none text-breadgray-grey100 dark:text-breadgray-ultra-white">
-          Get Started:
-        </h4>
-        <ol className="list-decimal px-5">
+        <Body>
+          This page allows you to provide liquidity for BREAD while keeping your
+          voting rights for the monthly BREAD crowdstaking yield distribution.
+          By staking your LP tokens in a vault, you maintain your voting power
+          just like if you were holding BREAD directly.
+        </Body>
+        <Body>Get Started:</Body>
+        <ol className="list-disc px-5 pb-4">
           <li>
-            <b>Provide Liquidity:</b> Add liquidity by depositing BREAD on Curve
-            and receive LP tokens.
+            <Body>
+              Provide Liquidity: Add liquidity for BREAD in the vault&apos;s
+              listed liquidity pool to get LP tokens.
+            </Body>
           </li>
           <li>
-            <b>Stake Your LP Tokens:</b> Deposit your LP tokens into the vault
-            to retain your governance rights.
+            <Body>
+              Lock your LP Tokens: Deposit your LP tokens into the vault to keep
+              your governance rights.
+            </Body>
           </li>
           <li>
-            <b>Participate in Governance:</b> Share your preferences for the
-            monthly distribution on the vote page.
+            <Body>
+              Participate in Governance: Share your preferences for the monthly
+              distribution on the voting page.
+            </Body>
           </li>
         </ol>
+        <Caption>
+          * Distributions will be made at the end of the month based on all
+          votes received.
+        </Caption>
         <div className="pt-4">
-          <LiquidityBanner />
+          <LiftedButton
+            className="group relative py-10 px-10 bg-contain bg-right bg-no-repeat"
+            style={{ backgroundImage: "url(/bread-logo-line.png)" }}
+          >
+            <img
+              src="/breadwxdai.svg"
+              alt="Bread/WXDAI"
+              className="absolute mt-1 top-1/2 left-1 w-[88px] h-[64px] -translate-y-1/2"
+            />
+            <div className="flex items-center w-full pl-[42px]">
+              <div className="flex flex-col items-start flex-1">
+                <Heading3 className="m-0 p-0 text-[24px]">
+                  Provide liquidity to earn
+                </Heading3>
+                <Heading5 className="text-[16px] -mt-2 p-0 text-orange-0">
+                  Deposit BREAD/WXDAI on{" "}
+                  <img
+                    src="/curve-logo.png"
+                    alt="Curve"
+                    className="inline w-6 h-6"
+                  />
+                  <span className="text-white">Curve</span>
+                </Heading5>
+              </div>
+              <div className="pl-16 relative w-6 h-6">
+                <ArrowUpRightIcon
+                  size={24}
+                  className="text-white absolute top-0 right-0 group-hover:opacity-0 transition-opacity duration-200"
+                />
+                <ArrowRightIcon
+                  size={24}
+                  className="text-white absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                />
+              </div>
+            </div>
+          </LiftedButton>
         </div>
       </div>
     </div>
