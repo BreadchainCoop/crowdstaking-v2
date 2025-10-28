@@ -8,6 +8,7 @@
 
 body {
   @apply bg-paper-main;
+}
 /* Additional custom styles can go here */
 @theme {
   --color-bread-paper: #fdfaf3;
