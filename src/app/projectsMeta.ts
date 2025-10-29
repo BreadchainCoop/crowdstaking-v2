@@ -52,16 +52,16 @@ export const projectsMeta: {
     order: 6,
     description:
       "The core team developing the tech and design used by Bread Coop.",
-    logoSrc: "project/core.png",
+    logoSrc: "project/core.svg",
     active: true,
-    link: "https://gap.karmahq.xyz/project/bread-cooperative",
+    link: "https://docs.bread.coop/solidarity-primitives/crowdstaking/member-projects/bread-co-op",
   },
   "0x6A148b997e6651237F2fCfc9E30330a6480519f0": {
     name: "Bread Coop Treasury",
     order: 7,
     description:
       "A co-owned treasury in Bread Coop used for grants and sponsorships.",
-    logoSrc: "project/treasury.png",
+    logoSrc: "project/treasury.svg",
     active: true,
     link: "https://docs.bread.coop/solidarity-primitives/crowdstaking/member-projects/shared-treasury",
   },
@@ -87,6 +87,6 @@ export const projectsMeta: {
     description: "Next generation community governance.",
     logoSrc: "project/gardens.png",
     active: true,
-    link: "https://app.gardens.fund/gardens/100/0xa555d5344f6fb6c65da19e403cb4c1ec4a1a5ee3/0xe33e18b5887cf16ad4e351e98980eb5f50727c31/76",
+    link: "https://gap.karmahq.xyz/project/gardens-",
   },
 };

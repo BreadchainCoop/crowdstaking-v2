@@ -15,8 +15,13 @@ import {
   LiftedButton,
   Heading5,
   Heading2,
+  Heading4,
 } from "@breadcoop/ui";
-import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react/ssr";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  CaretDownIcon,
+} from "@phosphor-icons/react/ssr";
 
 interface CycleDistribution {
   cycleNumber: number;
@@ -145,9 +150,9 @@ export function VotingHistory() {
           >
             How yield is distributed
           </Body>
-          <div className="md:flex md:items-center md:justify-center md:gap-4">
-            <div className="mb-4 md:flex-1 md:flex md:items-center md:mb-0">
-              <div className="hidden md:inline-block md:w-1 md:h-13 md:bg-primary-orange md:mr-4" />
+          <div className="flex flex-col md:flex-row md:items-center justify-center gap-4">
+            <div className="mb-4 flex-1 flex items-center mb-0">
+              <div className="w-1 h-13 bg-primary-orange mr-4" />
               <div>
                 <Body bold className="md:text-[20px] text-[16px] ">
                   Solidarity Amount
@@ -157,8 +162,8 @@ export function VotingHistory() {
                 </Caption>
               </div>
             </div>
-            <div className="md:flex-1 md:flex md:items-center">
-              <div className="hidden md:inline-block md:w-1 md:h-13 md:bg-orange-0 md:mr-4" />
+            <div className="flex-1 flex items-center">
+              <div className="w-1 h-13 bg-orange-0 mr-4" />
               <div>
                 <Body bold className="md:text-[20px] text-[16px]">
                   Democratic Amount
@@ -209,10 +214,10 @@ interface Details {
 function VotingHistoryDetailMobile({ sortedProjects }: Details) {
   return (
     <div className="mt-4">
-      <div className="w-4/6 mx-auto h-[0.0625rem] my-6 bg-paper-0 dark:bg-breadgray-rye" />
-      <div className="flex items-center justify-between mb-3 text-breadgray-pitchblack dark:text-breadgray-ultra-white font-bold">
-        <p>Project</p>
-        <p>$BREAD Received</p>
+      <div className="w-4/6 mx-auto h-[0.0625rem] my-6" />
+      <div className="flex items-center justify-between mb-3">
+        <Body bold>Project</Body>
+        <Body bold>$BREAD Received</Body>
       </div>
       <div>
         <Accordion.Root
@@ -228,87 +233,84 @@ function VotingHistoryDetailMobile({ sortedProjects }: Details) {
               <Accordion.Item
                 key={project.projectAddress}
                 value={project.projectAddress}
-                className="border border-breadgray-grey rounded-[0.625rem] py-2 px-4 mb-4 last:mb-0"
+                className="border border-paper-2 bg-paper-0 py-2 px-4 mb-4 last:mb-0"
               >
-                <Accordion.Trigger className="flex items-center justify-between w-full text-breadgray-pitchblack dark:text-breadgray-ultra-white group">
+                <Accordion.Trigger className="flex items-center justify-between w-full group">
                   <span className="inline-flex items-center justify-start w-4/6">
                     <img
                       src={meta.logoSrc}
                       className="w-6 h-6 rounded-full mr-2"
                       alt={`${meta.name}'s logo`}
                     />
-                    <span className="">{meta.name}</span>
+                    <Body bold className="text-surface-grey mt-1">
+                      {meta.name}
+                    </Body>
                   </span>
                   <span className="inline-flex items-center justify-end w-1/6">
                     <span className="inline-flex justify-start items-center w-16">
                       <span className="mr-2">
-                        <BreadIcon />
+                        <Logo />
                       </span>
                       <span className="inline-flex w-20">
-                        <span className="font-bold">
+                        <Heading5 className="font-bold">
                           {formatted.totalPayment}
-                        </span>
+                        </Heading5>
                       </span>
                     </span>
                   </span>
                   <span className="inline-flex justify-end w-1/6">
                     <span>
-                      <div className="size-6 ms-2 text-breadgray-grey100 dark:text-breadgray-ultra-white">
-                        <svg
-                          className="w-full h-full fill-current group-data-[state=open]:rotate-180"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M7 8H5V10H7V12H9V14H11V16H13V14H15V12H17V10H19V8H17V10H15V12H13V14H11V12H9V10H7V8Z"
-                          />
-                        </svg>
+                      <div className="size-6 ms-2">
+                        <CaretDownIcon className="w-full text-primary-orange h-full fill-current group-data-[state=open]:rotate-180" />
                       </div>
                     </span>
                   </span>
                 </Accordion.Trigger>
-                <Accordion.Content className="text-breadgray-rye dark:text-breadgray-grey">
-                  <div className="border border-breadgray-light-grey p-2 rounded-[0.3125rem] mt-6 mb-3">
-                    <p className="mb-4 font-medium">Amount breakdown</p>
+                <Accordion.Content>
+                  <div className="border border-paper-1 p-2 mt-6 mb-3">
+                    <Caption className="mb-4">Amount breakdown</Caption>
                     <div className="flex items-center justify-between mb-3">
-                      <p>Democratic amount</p>
+                      <Body className="text-surface-grey">
+                        Democratic amount
+                      </Body>
                       <div className="inline-flex items-center justify-end">
                         <span className="mr-1">
-                          <BreadIcon />
+                          <Logo size={20} />
                         </span>
-                        <span className="text-breadgray-pitchblack dark:text-breadgray-ultra-white font-bold">
+                        <Heading5 className="font-bold">
                           {formatted.governancePayment}
-                        </span>
+                        </Heading5>
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
-                      <p>Solidarity amount</p>
+                      <Body className="text-surface-grey">
+                        Solidarity amount
+                      </Body>
                       <div className="inline-flex items-center justify-end">
                         <span className="mr-1">
-                          <BreadIcon />
+                          <Logo size={20} />
                         </span>
-                        <span className="text-breadgray-pitchblack dark:text-breadgray-ultra-white font-bold">
+                        <Heading5 className="font-bold">
                           {formatted.flatPayment}
-                        </span>
+                        </Heading5>
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center justify-between mb-2">
-                    <p>Share of total yield</p>
-                    <p className="text-breadgray-pitchblack dark:text-breadgray-ultra-white font-bold">
+                    <Body className="text-surface-grey">
+                      Share of total yield
+                    </Body>
+                    <Heading5 className="font-bold">
                       {formatted.percentOfYield}%
-                    </p>
+                    </Heading5>
                   </div>
                   <div className="flex items-center justify-between">
-                    <p>Total votes received</p>
-                    <p className="text-breadgray-pitchblack dark:text-breadgray-ultra-white font-bold">
+                    <Body className="text-surface-grey">
+                      Total votes received
+                    </Body>
+                    <Heading5 className="font-bold">
                       {formatted.percentVotes}%
-                    </p>
+                    </Heading5>
                   </div>
                 </Accordion.Content>
               </Accordion.Item>
@@ -327,17 +329,25 @@ function VotingHistoryDetailDesktop({ sortedProjects }: Details) {
         <table className="w-full">
           <thead>
             <tr>
-              <th className="text-left py-4 px-2 text-breadgray-rye dark:text-breadgray-light-grey font-bold text-lg">
-                Project
+              <th className="text-left py-4 px-2">
+                <Body bold className="text-surface-grey">
+                  Project
+                </Body>
               </th>
-              <th className="text-center py-4 px-2 text-breadgray-rye dark:text-breadgray-light-grey font-bold text-lg">
-                Total votes received
+              <th className="text-center py-4 px-2">
+                <Body bold className="text-surface-grey">
+                  Total votes received
+                </Body>
               </th>
-              <th className="text-center py-4 px-2 text-breadgray-rye dark:text-breadgray-light-grey font-bold text-lg">
-                Yield breakdown
+              <th className="text-center py-4 px-2">
+                <Body bold className="text-surface-grey">
+                  Yield breakdown
+                </Body>
               </th>
-              <th className="text-right py-4 px-2 text-breadgray-rye dark:text-breadgray-light-grey font-bold text-lg">
-                $BREAD Received
+              <th className="text-right py-4 px-2">
+                <Body bold className="text-surface-grey">
+                  $BREAD Received
+                </Body>
               </th>
             </tr>
           </thead>
@@ -360,40 +370,42 @@ function VotingHistoryDetailDesktop({ sortedProjects }: Details) {
                           alt={`${meta.name}'s logo`}
                         />
                       </span>
-                      <span className="font-normal text-lg">{meta.name}</span>
+                      <Body bold className="text-surface-grey">
+                        {meta.name}
+                      </Body>
                     </div>
                   </td>
                   <td className="py-4 px-2">
-                    <span className="block font-medium text-xl text-center">
+                    <Heading5 className="text-center font-bold">
                       {formatted.percentVotes}%
-                    </span>
+                    </Heading5>
                   </td>
                   <td className="py-4 px-2">
                     <div className="flex flex-col gap-1 w-9/12 mx-auto">
-                      <div className="h-4 p-1 bg-breadgray-charcoal rounded-full w-full relative flex items-center justify-start">
+                      <div className="h-4 p-1 bg-paper-2 w-full relative flex items-center justify-start">
                         <div
-                          className="h-2 rounded-full"
+                          className="h-2 "
                           style={{
                             width: `${50 + vote}%`,
-                            background: `linear-gradient(to right, #D04EC5 0% ${
+                            background: `linear-gradient(to right, #ea6023 0% ${
                               100 - vote
-                            }%, #FF99E2 ${100 - vote}%)`,
+                            }%, #ffc080 ${100 - vote}%)`,
                           }}
                         />
                       </div>
-                      <span className="text-sm font-medium">
+                      <Caption className="font-bold">
                         {formatted.percentOfYield}% of total yield
-                      </span>
+                      </Caption>
                     </div>
                   </td>
                   <td className="py-4 ps-12">
-                    <div className="flex items-center justify-start gap-2">
+                    <div className="flex items-center justify-end gap-2">
                       <span className="w-8 inline-block">
-                        <BreadIcon />
+                        <Logo />
                       </span>
-                      <span className="font-medium text-lg">
+                      <Heading5 className="font-bold">
                         {formatted.totalPayment}
-                      </span>
+                      </Heading5>
                     </div>
                   </td>
                 </tr>
