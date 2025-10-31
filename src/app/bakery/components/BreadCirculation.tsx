@@ -21,11 +21,9 @@ export const BreadCirculation = () => {
     },
   });
 
-  console.log("__ BREAD CIRCULATION DATA", data);
-
   return (
-    <Chip className="max-w-max mb-4">
-      <Logo />
+    <Chip className="max-w-max mb-4 md:mb-0">
+      <Logo className="md:size-6" />
       <Body bold className="flex items-center justify-center gap-1">
         {data ? formatSupply(data) : error ? "43,000+" : "..."} BREAD{" "}
         <span className="font-normal">in circulation</span>

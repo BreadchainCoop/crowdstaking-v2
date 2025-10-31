@@ -42,8 +42,6 @@ export const Interest = () => {
 			[]
 		);
 
-		console.log("__ TOTAL SUPPLY DATA", totalSupplyData);
-
 	const yieldPerHour = useMemo(() => {
 		if (
 			apyStatus === "success" &&
@@ -94,7 +92,7 @@ export const Interest = () => {
 	return (
 		<>
 			<div className="flex flex-col items-end mb-6">
-				<div className="flex items-center justify-start">
+				<div className="flex items-center justify-start md:mr-auto">
 					<Logo variant="line" className="mr-4" />
 					<p className="flex items-end justify-start flex-nowrap xl:block">
 						<span className="text-h1 md:text-[5rem]">{formattedValue[0]}</span>
@@ -103,7 +101,7 @@ export const Interest = () => {
 						</span>
 					</p>
 				</div>
-				<Body className="text-surface-grey">($ {displayValue?.toFixed(2) || "--"} USD)</Body>
+				<Body className="text-surface-grey md:mr-auto md:w-full md:max-w-[379.63px] md:text-right">($ {displayValue?.toFixed(2) || "--"} USD)</Body>
 			</div>
 			<Heading3 className="text-2xl">
 				Interest generated overtime
