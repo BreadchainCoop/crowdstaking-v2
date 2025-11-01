@@ -3,6 +3,7 @@
 import * as Accordion from "@radix-ui/react-accordion";
 import { ReactNode } from "react";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
+import { Body, Heading2 } from "@breadcoop/ui";
 
 function AccordionItem({
   children,
@@ -14,7 +15,8 @@ function AccordionItem({
   return (
     <Accordion.Item
       value={value}
-      className="flex flex-col gap-4 bg-breadgray-ultra-white dark:bg-breadgray-charcoal p-4 md:px-6 rounded"
+      // className="flex flex-col gap-4 bg-breadgray-ultra-white dark:bg-breadgray-charcoal p-4 md:px-6 rounded"
+      className="bg-paper-0 px-6 py-3 border border-surface-ink mb-4"
     >
       {children}
     </Accordion.Item>
@@ -23,7 +25,7 @@ function AccordionItem({
 
 function AccordionHeader({ children }: { children: ReactNode }) {
   return (
-    <Accordion.Header className="dark:text-breadgray-ultra-white text-xl font-semibold">
+    <Accordion.Header className="font-semibold">
       {children}
     </Accordion.Header>
   );
@@ -31,21 +33,23 @@ function AccordionHeader({ children }: { children: ReactNode }) {
 
 function AccordionTrigger({ children }: { children: ReactNode }) {
   return (
-    <Accordion.Trigger className="w-full text-left grid grid-cols-faq-trigger gap-4 justify-between group">
+    <Accordion.Trigger className="w-full flex items-center justify-between group">
       {children}
-      <div className="size-6 text-breadgray-grey100 dark:text-breadgray-ultra-white">
+      <div className="text-primary-orange">
         <svg
-          className="w-full h-full fill-current group-data-[state=open]:rotate-180"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
+          width="17"
+          height="9"
+          viewBox="0 0 17 9"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          className="group-data-[state=open]:rotate-180"
         >
           <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M7 8H5V10H7V12H9V14H11V16H13V14H15V12H17V10H19V8H17V10H15V12H13V14H11V12H9V10H7V8Z"
+            d="M15.75 0.75L8.25 8.25L0.75 0.75"
+            stroke="currentcolor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       </div>
@@ -56,8 +60,11 @@ function AccordionTrigger({ children }: { children: ReactNode }) {
 function AccordionContent({ children }: { children: ReactNode }) {
   return (
     <Accordion.Content>
-      <div className="border-t-[1px] border-breadviolet-shaded py-6">
+      {/* <div className="border-t-[1px] border-breadviolet-shaded py-6">
         <div className="prose prose-pink dark:prose-invert">{children}</div>
+      </div> */}
+      <div className="mt-2.5">
+        <div className="">{children}</div>
       </div>
     </Accordion.Content>
   );
@@ -65,170 +72,185 @@ function AccordionContent({ children }: { children: ReactNode }) {
 
 export default function FAQ() {
   return (
-    <section className="pb-16 sm:pb-28">
+    <section className="pb-16 mt-16 sm:pb-28">
+      <Heading2 className="text-center mb-6">FAQ</Heading2>
       <Accordion.Root
         type="single"
         className="flex flex-col gap-1 max-w-2xl m-auto px-2"
         collapsible
       >
-        <AccordionItem value="first">
+        <AccordionItem value="1">
           <AccordionHeader>
-            <AccordionTrigger>What is Breadchain and BREAD?</AccordionTrigger>
+            <AccordionTrigger>What is $BREAD?</AccordionTrigger>
           </AccordionHeader>
           <AccordionContent>
-            <p>
-              Breadchain is a collective federation of decentralized cooperative
-              projects looking to advance a post-capitalist vision for
-              blockchain and its effect on society. We aim to do this by
-              building what we call{" "}
-              <ExternalLink href="https://breadchain.mirror.xyz/nwQx4CqPAcwZ5zSNB2_K25N1quOF1NGcKaYcS3S33CA">
-                solidarity primitives
-              </ExternalLink>{" "}
-              like the Bread Crowdstaking Application. You can learn more about
-              us on our{" "}
-              <ExternalLink href="https://breadchain.xyz">
-                home page
-              </ExternalLink>{" "}
-              or{" "}
-              <ExternalLink href="https://breadchain.notion.site/4d496b311b984bd9841ef9c192b9c1c7?v=2eb1762e6b83440f8b0556c9917f86ca&pvs=74">
-                public Notion
-              </ExternalLink>
-              .
-            </p>
-            <p>
-              All you need is an Ethereum wallet with xDAI on{" "}
-              <ExternalLink href="https://chainlist.org/chain/100">
-                Gnosis Chain
-              </ExternalLink>{" "}
-              and through this application you can bake BREAD, our digital
-              community currency which helps fund the project to build
-              post-capitalist tools and organizations.
-            </p>
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="second">
-          <AccordionHeader>
-            <AccordionTrigger>
-              How does baking BREAD help build post-capitalism?
-            </AccordionTrigger>
-          </AccordionHeader>
-          <AccordionContent>
-            <p>
-              When baking BREAD, your xDAI gets automatically converted to sDAI
-              in order to generate yield from the{" "}
-              <ExternalLink href="https://docs.sparkprotocol.io/faq/dai-savings-rate-dsr">
-                DAI savings rate
-              </ExternalLink>
-              . 100% of the interest earned on this sDAI is used to help fund
-              the projects that exist within the{" "}
-              <ExternalLink href="https://breadchain.xyz/#projects">
-                Breadchain Network
-              </ExternalLink>
-              . As such, the Crowdstaking Application functions as an engine for
-              fundraising different from donations. We do not accept venture
-              capital investment.
-            </p>
-            <p>
-              To learn more about how we govern the disbursement of yield, check
-              out{" "}
-              <ExternalLink href="https://breadchain.notion.site/Yield-Governance-d3ac44ac679c4756a18e27e5ec0696d5?pvs=74">
-                this page
-              </ExternalLink>{" "}
-              in our public Notion.
-            </p>
+            <Body>
+              $BREAD is a digital currency designed for
+              solidarity. When you hold $BREAD, you&apos;re part
+              of a community that decides together how to use the
+              interest generated from our fund.
+            </Body>
+            <Body>
+              1 $BREAD = 1 xDAI = $1. BREAD is not about
+              speculation, but about supporting causes that matter
+              to working people.
+            </Body>
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="third">
-          <AccordionHeader>
-            <AccordionTrigger>What is the price of BREAD?</AccordionTrigger>
-          </AccordionHeader>
-          <AccordionContent>
-            <p>
-              1 xDAI (worth roughly $1 USD) is always equal to 1 BREAD and
-              vice-versa. The BREAD token is not speculative and is always worth
-              1 xDAI through this application. You can also get BREAD through
-              decentralized exchanges like Curve.
-            </p>
-            <p>
-              xDAI, which backs BREAD, is an over-collateralized stablecoin that
-              comes from MakerDAO and is the native cryptocurrency of Gnosis
-              Chain. Over-collateralized stablecoins offer a greater amount of
-              security and less risk compared to other stablecoins.
-            </p>
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="fourth">
-          <AccordionHeader>
-            <AccordionTrigger>What if I want my xDAI back?</AccordionTrigger>
-          </AccordionHeader>
-          <AccordionContent>
-            <p>
-              That’s totally fine! Any time you like, you can burn your BREAD
-              and, in doing so, receive the equivalent amount of xDAI back. To
-              do so simply click on the down arrow in the middle of the
-              application. All BREAD is backed 1:1 by xDAI meaning burning BREAD
-              is a risk free action - there will always be xDAI available for
-              you to reclaim.
-            </p>
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="fifth">
-          <AccordionHeader>
-            <AccordionTrigger>What can I do with BREAD?</AccordionTrigger>
-          </AccordionHeader>
-          <AccordionContent>
-            <p>
-              To find applications that are actively accepting BREAD, check out
-              this page in our{" "}
-              <ExternalLink href="https://breadchain.notion.site/Marketplace-ba2abef706464b8298401b1289d52662">
-                Notion
-              </ExternalLink>
-              . As the Breadchain Network grows, we plan on offering more
-              benefits to those who hold or transact with BREAD. To make sure
-              you get those benefits, be sure to get our{" "}
-              <ExternalLink href="https://app.questchains.xyz/gnosis/questing-with-breadchain">
-                Questchain NFT
-              </ExternalLink>
-              . If you’re interested in partnering up in order to explore how
-              you can use BREAD within your own project, please reach out to us
-              at contact@breadchain.xyz.
-            </p>
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="sixth">
+        <AccordionItem value="2">
           <AccordionHeader>
             <AccordionTrigger>
-              Why did you switch to Gnosis Chain?
+              Do I need xDAI to bake?
             </AccordionTrigger>
           </AccordionHeader>
           <AccordionContent>
-            <p>
-              We switched the crowdstaking application to Gnosis Chain for a few
-              reasons. You can find the full reasoning on our public Notion page{" "}
-              <ExternalLink href="https://breadchain.notion.site/Project-Pivot-Move-to-Gnosis-dc9397f6b25747d89770373e5e3d3ed7?pvs=25">
-                here
+            <Body>
+              Yes, but you don&apos;t need to have it already. Our
+              bridging feature converts whichever currency you
+              hold into xDAI, which you can then use to bake
+              BREAD.
+            </Body>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="3">
+          <AccordionHeader>
+            <AccordionTrigger>
+              How safe are my funds?
+            </AccordionTrigger>
+          </AccordionHeader>
+          <AccordionContent>
+            <Body>
+              When you bake $BREAD, your funds get deposited into
+              our smart contract. You receive $BREAD in return,
+              which you can exchange back for your deposit anytime
+              through the &quot;Burn&quot; tab.
+            </Body>
+            <Body>
+              <span className="font-bold">Risks:</span> Smart
+              contract risk (we use audited contracts, but no
+              system is risk-free) and fluctuating interest rates.
+            </Body>
+            <Body>
+              Check our code on GitHub. Don&lsquo;t trust, verify.
+            </Body>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="4">
+          <AccordionHeader>
+            <AccordionTrigger>
+              What happens when I bake?
+            </AccordionTrigger>
+          </AccordionHeader>
+          <AccordionContent>
+            <Body>Three things happen:</Body>
+            <Body>
+              <ol>
+                <li>
+                  <span className="font-bold">
+                    Your funds are deposited
+                  </span>{" "}
+                  and start earning interest
+                </li>
+                <li>
+                  <span className="font-bold">
+                    You receive $BREAD
+                  </span>{" "}
+                  as proof of your deposit
+                </li>
+                <li>
+                  <span className="font-bold">
+                    You gain voting power
+                  </span>{" "}
+                  to decide where the accumulated interest
+                  goes
+                </li>
+              </ol>
+            </Body>
+            <Body>
+              The interest goes into a collective pool. The
+              community votes on which nonprofits, mutual aid
+              organizations, and solidarity projects receive
+              funding.
+            </Body>
+            <Body>
+              Burn your $BREAD anytime to get your deposit back.
+            </Body>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="5">
+          <AccordionHeader>
+            <AccordionTrigger>
+              How does voting work?
+            </AccordionTrigger>
+          </AccordionHeader>
+          <AccordionContent>
+            <Body>
+              Every $BREAD holder has a say in where each
+              month&apos;s interest goes. More $BREAD = more
+              interest + more voting power. You can check your
+              voting power in the governance tab of the Bread
+              Solidarity Fund.
+            </Body>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="6">
+          <AccordionHeader>
+            <AccordionTrigger>
+              Where does the interest come from?
+            </AccordionTrigger>
+          </AccordionHeader>
+          <AccordionContent>
+            <Body>
+              The interest comes from DeFi across various chains.
+              For technical details, learn more about the{" "}
+              <ExternalLink href="https://claude.ai/chat/link-tbd">
+                DAI Savings Rate.
               </ExternalLink>
-              .
-            </p>
-            <p>In summary:</p>
-            <ol className="list-decimal px-6 py-2">
-              <li>
-                We changed the source of yield to sDAI which gives a more stable
-                yield in the long run.
-              </li>
-              <li>
-                No more need for contract approval to interact with the
-                application because we use xDAI, the native currency on Gnosis
-                Chain
-              </li>
-              <li>
-                We want to leverage Gnosis Pay to allow users to pay for real
-                goods in BREAD
-              </li>
-              <li>Very low transaction fees</li>
-            </ol>
+            </Body>
+            <Body>
+              We built our mechanism on Gnosis Chain, a network we
+              love because they&apos;re battle-tested,
+              transparent, and aligned with our values.
+            </Body>
+            <Body>
+              Current APY is shown on the main page and fluctuates
+              based on market conditions.
+            </Body>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="7">
+          <AccordionHeader>
+            <AccordionTrigger>
+              What&apos;s the catch?
+            </AccordionTrigger>
+          </AccordionHeader>
+          <AccordionContent>
+            <Body>
+              <span className="font-bold">
+                This isn&apos;t a profit-maximizing tool.
+              </span>{" "}
+              The interest goes to community-selected causes, not
+              back to you. You get your deposit back when you burn
+              $BREAD, but you don&apos;t get a share of the
+              interest.
+            </Body>
+            <Body>
+              <span className="font-bold">Why participate?</span>{" "}
+              Because you believe in collective action. Because
+              you want your funds to generate good while staying
+              liquid. Because you want a say in where resources
+              go.
+            </Body>
+            <Body>
+              If you&apos;re only looking to maximize personal
+              returns, traditional DeFi might suit you better.
+            </Body>
           </AccordionContent>
         </AccordionItem>
       </Accordion.Root>

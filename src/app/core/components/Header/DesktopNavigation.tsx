@@ -3,6 +3,8 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { useConnectedUser } from "../../hooks/useConnectedUser";
 import { LinkIcon } from "@/app/core/components/Icons/LinkIcon";
+import { LiftedButton } from "@breadcoop/ui";
+import { SignIn } from "@phosphor-icons/react";
 
 export function DesktopNavigationLink(props: {
   children: ReactNode;
@@ -13,9 +15,9 @@ export function DesktopNavigationLink(props: {
   const { children, href, isCurrentPage, isExternal } = props;
 
   const classList = clsx(
-    "font-redhat text-breadgray-grey100 hover:text-breadgray-grey100 dark:hover:text-breadgray-ultra-white active:text-breadgray-violet flex items-center px-3 py-2 text-xl font-bold leading-none tracking-wider",
+    "font-redhat text-text-standard hover:text-breadgray-grey100 dark:hover:text-breadgray-ultra-white active:text-breadgray-violet flex items-center px-3 py-2 text-xl font-normal leading-none tracking-wider",
     isCurrentPage
-      ? "text-breadgray-grey100 dark:text-breadgray-ultra-white"
+      ? "text-text-standard dark:text-breadgray-ultra-white"
       : "text-breadgray-rye"
   );
 
@@ -46,7 +48,8 @@ function DesktopNavigation({ currentPath }: { currentPath: string }) {
   return (
     <nav
       aria-label="site navigation"
-      className="hidden flex-grow items-center gap-2 pl-6 md:flex lg:gap-0 lg:pl-12"
+      // className="hidden flex-grow items-center gap-2 pl-6 md:ml-auto md:flex lg:gap-0 lg:pl-12"
+      className="hidden md:flex md:flex-grow md:items-center md:gap-2 md:ml-auto md:max-w-max"
     >
       <DesktopNavigationLink isCurrentPage={currentPath === "/"} href="/">
         Bake
@@ -59,7 +62,8 @@ function DesktopNavigation({ currentPath }: { currentPath: string }) {
           Governance
         </DesktopNavigationLink>
       )}
-      <DesktopNavigationLink
+      <LiftedButton className="h-14 mt-0.5" rightIcon={<SignIn />}>Sign in</LiftedButton>
+      {/* <DesktopNavigationLink
         href="https://dune.com/bread_cooperative/solidarity"
         isExternal
       >
@@ -67,9 +71,8 @@ function DesktopNavigation({ currentPath }: { currentPath: string }) {
         <LinkIcon />
       </DesktopNavigationLink>
       <DesktopNavigationLink href="https://docs.bread.coop" isExternal>
-        Docs <span className="ml-2"></span>
-        <LinkIcon />
-      </DesktopNavigationLink>
+        Docs <span className="ml-2"></span><LinkIcon />
+      </DesktopNavigationLink> */}
     </nav>
   );
 }

@@ -1,3 +1,4 @@
+import { Body } from "@breadcoop/ui";
 import { ReactNode } from "react";
 
 export function PanelHeader({ children }: { children: ReactNode }) {
@@ -6,18 +7,33 @@ export function PanelHeader({ children }: { children: ReactNode }) {
 
 export function PanelContent({ children }: { children: ReactNode }) {
   return (
-    <div className="flex flex-col items-start justify-between">{children}</div>
+    <div className="flex flex-col items-start justify-between">
+      {children}
+    </div>
   );
 }
 
 export function PanelTokenRow({ children }: { children: ReactNode }) {
   return (
-    <div className="flex w-full items-center gap-2 sm:gap-4">{children}</div>
+    <div className="flex w-full items-center gap-2 sm:gap-4">
+      {children}
+    </div>
   );
 }
 
-export function PanelBalanceRow({ children }: { children: ReactNode }) {
-  return <div className="w-full flex justify-end">{children}</div>;
+export function PanelBalanceRow({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  // return <div className="w-full flex justify-end">{children}</div>;
+  return (
+    <div className={`w-full flex justify-between mt-1 ${className}`}>
+      {children}
+    </div>
+  );
 }
 
 type TBalanceProps = {
@@ -43,9 +59,8 @@ export function PanelBalance({ children }: { children: ReactNode }) {
 
 export function PanelContainer({ children }: { children: ReactNode }) {
   return (
-    <div className="w-full p-2 sm:px-8 sm:py-3 md:px-6 text-gray-300 bg-breadgray-ultra-white border border-1 border-breadgray-light-grey dark:border-none dark:bg-breadgray-grey300 rounded">
-      {children}
-    </div>
+    // <div className="w-full p-2 sm:px-8 sm:py-3 md:px-6 text-gray-300 bg-breadgray-ultra-white border border-1 border-breadgray-light-grey dark:border-none dark:bg-breadgray-grey300 rounded">
+    <div className="w-full bg-paper-1 p-5">{children}</div>
   );
 }
 
@@ -59,18 +74,15 @@ export function PanelLabel({ children }: { children: ReactNode }) {
 
 export function TokenLabelContainer({ children }: { children: ReactNode }) {
   return (
-    <div className="rounded-full token-label-shadow dark:bg-[#343434] px-1.5 py-0.5 pr-3 flex items-center sm:text-xl w-auto">
+    // <div className="rounded-full token-label-shadow dark:bg-[#343434] px-1.5 py-0.5 pr-3 flex items-center sm:text-xl w-auto">
+    <div className="flex items-center w-auto border border-surface-grey p-1">
       {children}
     </div>
   );
 }
 
 export function TokenLabelText({ children }: { children: ReactNode }) {
-  return (
-    <span className="ml-2 font-medium text-xl text-breadgray-grey100 dark:text-gray-300">
-      {children}
-    </span>
-  );
+  return <span className="ml-2 font-bold">{children}</span>;
 }
 
 export function TokenBalanceContainer({ children }: { children: ReactNode }) {
@@ -79,8 +91,18 @@ export function TokenBalanceContainer({ children }: { children: ReactNode }) {
 
 export function TokenBalanceText({ children }: { children: ReactNode }) {
   return (
-    <div className="px-2 font-medium text-breadgray-rye dark:text-neutral-400 text-xs sm:text-[0.85rem] text-right">
+    <div className="text-xs text-right font-bold text-black">
       {children}
     </div>
+  );
+}
+
+export function TokenValueInDollars({ inputValue }: { inputValue: string }) {
+  // return <Body className="text-surface-grey-2 text-xs">$00</Body>
+  const value = Number(inputValue);
+  return (
+    <Body className="text-surface-grey-2 text-xs">
+      {(value === 0 || Number.isNaN(value)) ? "$00" : `~$${value}`}
+    </Body>
   );
 }
