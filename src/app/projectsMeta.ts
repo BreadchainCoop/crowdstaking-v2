@@ -52,7 +52,7 @@ export const projectsMeta: {
     order: 6,
     description:
       "The core team developing the tech and design used by Bread Coop.",
-    logoSrc: "project/core.png",
+    logoSrc: "project/core.svg",
     active: true,
     link: "https://gap.karmahq.xyz/project/bread-cooperative",
   },
@@ -61,7 +61,7 @@ export const projectsMeta: {
     order: 7,
     description:
       "A co-owned treasury in Bread Coop used for grants and sponsorships.",
-    logoSrc: "project/treasury.png",
+    logoSrc: "project/treasury.svg",
     active: true,
     link: "https://docs.bread.coop/solidarity-primitives/crowdstaking/member-projects/shared-treasury",
   },
