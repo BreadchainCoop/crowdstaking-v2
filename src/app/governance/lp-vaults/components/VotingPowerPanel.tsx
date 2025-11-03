@@ -19,7 +19,7 @@ import { useDistributions } from "../../useDistributions";
 import { useChainModal } from "@rainbow-me/rainbowkit";
 import Button from "@/app/core/components/Button";
 import { Caption, Body, Heading2, Heading4 } from "@breadcoop/ui";
-import { ArrowUpRightIcon } from "@phosphor-icons/react/ssr";
+import { HowDoesThisWorkButton } from "@/app/core/components/HowDoesThisWorkButton";
 
 export function VotingPowerPanel() {
   const { user } = useConnectedUser();
@@ -194,20 +194,7 @@ export function VotingPowerPanel() {
                 </div>
               )}
             </div>
-            <a
-              className="flex items-center gap-2 bg-paper-main pt-1 px-4 border border-primary-orange "
-              href="https://breadchain.notion.site/Voting-Power-LP-Vaults-15e0ad9b12798026a4e6cb917c3137a5?pvs=74"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Body bold>
-                How does this work?{" "}
-                <ArrowUpRightIcon
-                  size={20}
-                  className="inline mb-1 text-primary-orange"
-                />
-              </Body>
-            </a>
+            <HowDoesThisWorkButton href="https://breadchain.notion.site/Voting-Power-LP-Vaults-15e0ad9b12798026a4e6cb917c3137a5?pvs=74" />
           </div>
         </CardBox>
       </div>

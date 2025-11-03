@@ -7,7 +7,7 @@ import { LinkIcon } from "@/app/core/components/Icons/LinkIcon";
 import Tooltip from "@/app/core/components/Tooltip";
 import { CardBox } from "@/app/core/components/CardBox";
 import { useReadContract } from "wagmi";
-
+import { Heading2, Heading4, Body, Logo } from "@breadcoop/ui";
 import { ERC20_ABI, SDAI_ADAPTOR_ABI } from "@/abi";
 import { useEffect, useMemo, useState } from "react";
 import { differenceInDays, differenceInHours, format } from "date-fns";
@@ -15,6 +15,7 @@ import { formatUnits } from "viem";
 import clsx from "clsx";
 import { useDistributions } from "../useDistributions";
 import { useActiveChain } from "@/app/core/hooks/useActiveChain";
+import { HowDoesThisWorkButton } from "@/app/core/components/HowDoesThisWorkButton";
 
 export function DistributionOverview({
   cycleDates,
@@ -98,83 +99,83 @@ export function DistributionOverview({
       <div className="flex justify-center lg:block lg:w-full">
         <CardBox>
           <div className="max-w-96 m-auto lg:max-w-full flex flex-col items-center justify-center p-5 shadow-card">
-            <h4 className="text-xl font-medium text-breadgray-rye dark:text-breadgray-light-grey tracking-wide uppercase leading-none">
-              Amount to Distribute
-            </h4>
+            <Heading4 className="text-surface-grey-2 text-[24px] text-center">
+              Amount to distribute
+            </Heading4>
             <div className="pt-4 pb-6 w-full items-center">
               {claimableYield !== null ? (
-                <div className="w-full flex justify-center tracking-wider text-3xl font-bold text-breadgray-grey100 dark:text-breadgray-ultra-white leading-none">
-                  <div className=" flex gap-2  justify-end">
-                    <div className="mt-1">
-                      <BreadIcon />
-                    </div>
-                    <span>
+                <div className="w-full flex justify-center items-baseline">
+                  <div className="flex gap-2 justify-end items-baseline">
+                    <Logo size={32} />
+                    <Heading2 className="text-[48px]">
                       {
                         formatBalance(claimableYield + yieldIncrement, 4).split(
                           "."
                         )[0]
                       }
-                    </span>
+                    </Heading2>
                   </div>
-                  <div>.</div>
-                  <div className="text-xl leading-[1.1] w-[56px] self-end">
+                  <Body bold className="text-[48px] text-surface-grey-2">
+                    .
+                  </Body>
+                  <Heading2 className="text-[24px] w-[56px] text-surface-grey-2">
                     {
                       formatBalance(claimableYield + yieldIncrement, 4).split(
                         "."
                       )[1]
                     }
-                  </div>
+                  </Heading2>
                 </div>
               ) : (
                 <div className="text-3xl opacity-0">.</div>
               )}
 
-              <p className="flex justify-center pt-1 font-medium text-xs text-breadgray-rye dark:text-breadgray-grey">
-                <span className="me-1">Current accumulated yield</span>
+              <div className="flex justify-center pt-1">
+                <Body className="text-surface-grey me-2">
+                  Current accumulated interest
+                </Body>
                 <Tooltip>
                   Based on the current DAI savings rate of {dsrAPY + "% "}
                   applied on the total baked $BREAD on Gnosis chain.
                 </Tooltip>
-              </p>
+              </div>
             </div>
-            <div className="w-full flex flex-col gap-3 py-3 border-1 border-t border-b border-t-breadgray-light-grey border-b-breadgray-light-grey dark:border-t-breadgray-rye dark:border-b-breadgray-rye">
+            <div className="w-full flex flex-col gap-3 py-3 border-t border-t-primary-orange border-b border-b-primary-orange">
               <div className="flex w-full">
-                <p className="grow text-breadgray-rye dark:text-breadgray-grey">
-                  Estimated after 30 days
-                </p>
+                <Body className="grow text-surface-grey">
+                  Est. after 30 days
+                </Body>
                 <div className="flex gap-2 items-center md:justify-center">
-                  <BreadIcon size="small" />
-                  <span className="font-bold text-breadgray-grey100 dark:text-breadgray-white">
+                  <Logo size={16} />
+                  <Body bold>
                     {estimateTotal ? formatBalance(estimateTotal, 2) : "--.--"}
-                  </span>
+                  </Body>
                 </div>
               </div>
               <div className="flex w-full">
-                <p className="grow text-breadgray-rye dark:text-breadgray-grey">
-                  DAI savings rate (APY)
-                </p>
+                <Body className="grow text-surface-grey">
+                  Annual interest rate (APY)
+                </Body>
                 <div className="flex gap-2 items-center md:justify-center">
-                  <span className="font-bold text-breadgray-grey100 dark:text-breadgray-white">
-                    {dsrAPY + "%"}
-                  </span>
+                  <Body bold>{dsrAPY + "%"}</Body>
                 </div>
               </div>
               <div className="flex w-full gap-2">
-                <p className="grow text-breadgray-rye dark:text-breadgray-grey">
+                <Body className="grow text-surface-grey">
                   Voting cycle #
                   {distributions == undefined ? "--" : distributions + 1}
-                </p>
+                </Body>
                 {cycleDates.status === "LOADING" ? (
                   <span>--</span>
                 ) : cycleDates.status === "ERROR" ? (
                   <span>err</span>
                 ) : (
-                  <p className="font-bold text-breadgray-grey100 dark:text-breadgray-ultra-white">
+                  <Body bold>
                     {format(cycleDates.start, "MMM")}{" "}
                     {format(cycleDates.start, "do")} -{" "}
                     {format(cycleDates.end, "MMM")}{" "}
                     {format(cycleDates.end, "do")}
-                  </p>
+                  </Body>
                 )}
               </div>
             </div>
@@ -185,11 +186,11 @@ export function DistributionOverview({
                 <span>err </span>
               ) : (
                 <div className="pt-3 flex flex-col gap-3">
-                  <p className="font-bold dark:text-breadgray-ultra-white">
-                    Distributing in{" "}
+                  <Body bold>
+                    <span className="text-surface-grey">Distributing in </span>
                     {differenceInDays(cycleDates.end, new Date())} days
-                  </p>
-                  <div className="flex gap-0.5 bg-breadgray-white border-breadgray-white dark:bg-black border-2 dark:border-black rounded-full overflow-clip">
+                  </Body>
+                  <div className="flex gap-0.5 border border-black overflow-clip">
                     {completedDays &&
                       completedDays.map((isComplete, i) => {
                         return (
@@ -198,8 +199,8 @@ export function DistributionOverview({
                             className={clsx(
                               "grow",
                               isComplete
-                                ? "text-breadpink-500"
-                                : "text-breadgray-grey dark:text-breadgray-rye"
+                                ? "text-primary-orange"
+                                : "text-paper-main"
                             )}
                           >
                             <svg
@@ -221,18 +222,8 @@ export function DistributionOverview({
                 </div>
               )}
             </div>
-            <div>
-              <a
-                className="flex items-center gap-2 text-sm font-medium pt-4 text-breadgray-grey100 dark:text-breadgray-ultra-white"
-                href="https://breadchain.notion.site/BREAD-Voting-Power-UI-0f2d350320b94e4ba9aeec2ef6fdcb84"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                How does this work?
-                <div className="text-breadpink-shaded">
-                  <LinkIcon />
-                </div>
-              </a>
+            <div className="pt-4">
+              <HowDoesThisWorkButton href="https://breadchain.notion.site/BREAD-Voting-Power-UI-0f2d350320b94e4ba9aeec2ef6fdcb84" />
             </div>
           </div>
         </CardBox>

@@ -1,6 +1,7 @@
 import { forwardRef, Ref, useId, type ReactNode } from "react";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import TooltipIcon from "@/app/core/components/Icons/TooltipIcon";
+import { Body } from "@breadcoop/ui";
 
 interface IProps {
   children: ReactNode;
@@ -19,10 +20,10 @@ const Tooltip = forwardRef(
         </a>
         <ReactTooltip
           id={id}
-          className="!bg-breadgray-white/80 dark:!bg-breadgray-burnt/80 !rounded-[15px] !text-breadgray-grey100 dark:!text-breadgray-ultra-white !p-5 !backdrop-blur-sm"
+          className="!bg-paper-main !rounded-[15px] !text-surface-grey-2 !p-5 !backdrop-blur-sm"
           opacity={1}
         >
-          <div className="max-w-[210px] text-base font-normal">{children}</div>
+          <Body className="max-w-[210px]">{children}</Body>
         </ReactTooltip>
       </div>
     );

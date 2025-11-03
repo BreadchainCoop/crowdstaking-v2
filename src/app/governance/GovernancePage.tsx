@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { Hex } from "viem";
-
+import { Heading2, Body, Caption } from "@breadcoop/ui";
 import { ProjectRow, VoteDisplay, VoteForm } from "./components/ProjectRow";
 import { CastVotePanel } from "./components/CastVote";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
@@ -242,15 +242,19 @@ export function GovernancePage() {
       <section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
         <PageGrid>
           <div className="col-span-12 lg:col-span-8 row-start-1 row-span-1">
-            <h3 className="text-3xl font-bold text-breadgray-grey100 dark:text-breadgray-ultra-white">
-              Bread Governance
-            </h3>
-            <p className="pt-4 text-lg max-w-xl text-breadgray-rye dark:text-breadgray-light-grey">
+            <Heading2 className="text-[40px] leading-[30px]">
+              <span className="uppercase">Bread Solidarity Fund &mdash;</span>{" "}
+              Vote
+            </Heading2>
+            <Body className="py-4 max-w-xl">
               Distribute your voting power across the various projects in the
-              Breadchain Network to influence how much yield is given to each.
-              The actual distribution will be made at the end of the month based
-              on all votes received.
-            </p>
+              Bread Cooperative Network to influence how much yield is given to
+              each.
+            </Body>
+            <Caption>
+              * Distributions will be made at the end of the month based on all
+              votes received.
+            </Caption>
           </div>
 
           <DistributionOverview cycleDates={cycleDates} />
