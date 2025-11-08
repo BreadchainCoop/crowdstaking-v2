@@ -6,88 +6,127 @@ import { formatBalance } from "../../util/formatter";
 import { motion } from "framer-motion";
 import { Spinner } from "../Icons/Spinner";
 import { TTransactionStatus } from "../../context/TransactionsContext/TransactionsReducer";
+import { Body, Caption, Heading2, Heading3 } from "@breadcoop/ui";
+import clsx from "clsx";
 
 export const ModalContainer = forwardRef(
-  (
-    {
-      children,
-      showCloseButton = true,
-      includeContainerStyling = true,
-      ...props
-    }: {
-      children: ReactNode;
-      showCloseButton?: Boolean;
-      includeContainerStyling?: Boolean;
-    },
-    ref: Ref<HTMLDivElement>
-  ) => {
-    return (
-      <div
-        ref={ref}
-        className="h-screen max-h-[100vh] fixed w-screen top-0 p-2 grid place-items-center z-40 pointer-events-none"
-        {...props}
-      >
-        <motion.section
-          initial={{ y: 8, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 8, opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className={
-            "pointer-events-auto max-h-[calc(100vh-1rem)] overflow-y-auto mt-4" +
-            (includeContainerStyling
-              ? " w-[30rem] flex flex-col items-center p-4 bg-bread-paper border border-paper-1 relative"
-              : "")
-          }
-        >
-          {showCloseButton && (
-            <DialogPrimitiveClose className="absolute top-0 right-0 w-10 h-10 p-3">
-              <CloseIcon />
-            </DialogPrimitiveClose>
-          )}
-          {children}
-        </motion.section>
-      </div>
-    );
-  }
+	(
+		{
+			children,
+			showCloseButton = true,
+			includeContainerStyling = true,
+			className = "",
+			...props
+		}: {
+			children: ReactNode;
+			showCloseButton?: Boolean;
+			includeContainerStyling?: Boolean;
+			className?: string;
+		},
+		ref: Ref<HTMLDivElement>
+	) => {
+		return (
+			<div
+				ref={ref}
+				className="h-screen max-h-[100vh] fixed w-screen top-0 p-2 grid place-items-center z-40 pointer-events-none"
+				{...props}
+			>
+				<motion.section
+					initial={{ y: 8, opacity: 0 }}
+					animate={{ y: 0, opacity: 1 }}
+					exit={{ y: 8, opacity: 0 }}
+					transition={{ duration: 0.2 }}
+					className={clsx(
+						"pointer-events-auto max-h-[calc(100vh-1rem)] overflow-y-auto mt-4",
+						"shadow-[0_0.25rem_0.75rem_0_#1B201A26]",
+						includeContainerStyling
+							? "w-full max-w-[30rem] flex flex-col items-center bg-[#FDFAF3] relative p-5"
+							: "",
+						className
+					)}
+				>
+					{/* {showCloseButton && (
+						// TODO: Use color name from library
+						<DialogPrimitiveClose className="absolute top-0 right-0 w-10 h-10 p-3 text-[#EA5817]">
+							<CloseIcon />
+						</DialogPrimitiveClose>
+					)} */}
+					{children}
+				</motion.section>
+			</div>
+		);
+	}
 );
 
 ModalContainer.displayName = "ModalContainer";
 
-export function ModalHeading({ children }: { children: ReactNode }) {
-  return (
-    <div className="w-full flex flex-row items-center justify-center border-b-[0.075rem] border-b-breadviolet-shaded dark:border-b-breadpink-shaded">
-      <h2 className="text-2xl px-2 pb-3 leading-normal text-breadgray-burnt dark:text-breadgray-light-grey font-medium">
-        {children}
-      </h2>
-    </div>
-  );
+export function ModalHeading({
+	children,
+	showCloseButton = true,
+}: {
+	children: ReactNode;
+	showCloseButton?: Boolean;
+}) {
+	return (
+		<Heading2 className="text-2xl text-left w-full mr-auto flex items-center justify-between">
+			{children}
+			{showCloseButton && (
+				// TODO: Use color name from library
+				<DialogPrimitiveClose className="w-10 h-10 p-3 text-[#EA5817] relative right-[-1.1rem]">
+					<CloseIcon />
+				</DialogPrimitiveClose>
+			)}
+		</Heading2>
+	);
+	return (
+		<div className="w-full flex flex-row items-center justify-center border-b-[0.075rem] border-b-breadviolet-shaded dark:border-b-breadpink-shaded">
+			<h2 className="text-2xl px-2 pb-3 leading-normal text-breadgray-burnt dark:text-breadgray-light-grey font-medium">
+				{children}
+			</h2>
+		</div>
+	);
 }
 
 export function ModalContent({ children }: { children: ReactNode }) {
-  return (
-    <div className="px-2 pt-4 flex flex-col gap-4 items-center w-full">
-      {children}
-    </div>
-  );
+	return (
+		// <div className="px-2 pt-4 flex flex-col gap-4 items-center w-full">
+		<div className="px-2 pt-4 flex flex-col gap-2 items-center w-full">
+			{children}
+		</div>
+	);
 }
 
 export function ModalAdviceText({ children }: { children: ReactNode }) {
-  return (
-    <p className="max-w-xs text-lg leading-normal text-breadgray-burnt dark:text-breadgray-light-grey text-center pt-4 pb-2">
-      {children}
-    </p>
-  );
+	return (
+		// <p className="max-w-xs text-lg leading-normal text-breadgray-burnt dark:text-breadgray-light-grey text-center pt-4 pb-2">
+		<Caption className="text-surface-grey font-bold">{children}</Caption>
+	);
 }
 
-export function TransactionValue({ value }: { value: string }) {
-  return (
-    <div
-      className="w-full text-center text-3xl font-medium text-breadgray-grey100 dark:text-breadgray-light-grey"
-      title={parseFloat(value).toString()}
-    >
-      {formatBalance(parseFloat(value), 2)}
-    </div>
-  );
+export function TransactionValue({
+	value,
+	children,
+}: {
+	value: string;
+	children?: ReactNode;
+}) {
+	return (
+		<Heading3 className="leading-[1.5] pt-[0.2rem] md:text-2xl">
+			{/* <span title={parseFloat(value).toString()}>
+				{formatBalance(parseFloat(value), 2)}
+			</span> */}
+			{formatBalance(parseFloat(value), 2)}
+			{children}
+		</Heading3>
+	);
+	// return (
+	//   <div
+	//     className="w-full text-center text-3xl font-medium text-breadgray-grey100 dark:text-breadgray-light-grey"
+	//     title={parseFloat(value).toString()}
+	//   >
+	//     {formatBalance(parseFloat(value), 2)}
+	//   </div>
+	// );
 }
 
 export const ModalOverlay = forwardRef((props, ref: Ref<HTMLDivElement>) => {

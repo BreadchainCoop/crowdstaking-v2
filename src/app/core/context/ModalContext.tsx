@@ -8,10 +8,12 @@ export type RecastModalState = {
 };
 
 export type ConfirmBurnModalState = {
-  type: "CONFIRM_BURN";
-  breadValue: string;
-  xdaiValue: string;
-  write: Function | undefined;
+	type: "CONFIRM_BURN";
+	breadValue: string;
+	xdaiValue: string;
+	write: Function | undefined;
+	isSafe: boolean;
+	clearInputValue?: () => void;
 };
 
 export type VoteModalState = {

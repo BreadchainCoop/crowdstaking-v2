@@ -65,12 +65,7 @@ export const SwapPanel = ({
 					{breadIcon && (
 						<Logo text="BREAD" variant="square" size={24} />
 					)}
-					{xDaiIcon && (
-						<>
-							<XDAIIcon />
-							<span>xDAI</span>
-						</>
-					)}
+					{xDaiIcon && <XDAIIcon withLabel boldLabel />}
 				</div>
 			</div>
 			<div className={`w-full flex justify-between mt-1`}>
