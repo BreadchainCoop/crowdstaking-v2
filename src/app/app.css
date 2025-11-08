@@ -15,6 +15,16 @@ body {
   --color-bread-paper: #fdfaf3;
 }
 
+@layer components {
+  .lifted-button-container {
+    @apply [&>*]:w-full w-full;
+  }
+
+  .lifted-button-container button {
+    @apply w-full;
+  }
+}
+
 /* Hide all buttons to select a network */
 button[data-testid^="rk-chain-option-"] {
   @apply !hidden;

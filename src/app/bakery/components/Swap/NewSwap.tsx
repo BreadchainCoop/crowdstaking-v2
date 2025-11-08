@@ -1,5 +1,5 @@
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
-import React, { ChangeEvent, useCallback, useState } from "react";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { Address } from "viem";
 import { FromPanel } from "./FromPanel";
 import SwapReverse from "../SwapReverse";
@@ -10,6 +10,14 @@ import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
 import { Body, LiftedButton } from "@breadcoop/ui";
 import { ArrowsDownUpIcon, SignIn } from "@phosphor-icons/react";
 import { SwapPanel, TSwapState } from "./Panel";
+import { LoginButton } from "@/app/components/login-button";
+import { ButtonShell } from "./button-shell";
+import Bake from "./Bake";
+import Burn from "./Burn";
+import { InsufficentBalance } from "./InsufficentBalance";
+import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
+import { useModal } from "@/app/core/context/ModalContext";
+import { sleep } from "@/utils/sleep";
 
 // export type TSwapMode = "BAKE" | "BURN" | "BRIDGE";
 
@@ -18,8 +26,13 @@ import { SwapPanel, TSwapState } from "./Panel";
 // 	value: string;
 // };
 
+const notes: Record<Exclude<TSwapState["mode"], "BRIDGE">, string> = {
+	"BAKE": 'Baking adds new BREAD into circulation. You can redeem your BREAD through the "Burn" tab at any time',
+	"BURN": "When you Burn BREAD, you are no longer contributing to the Solidarity Fund, and all voting power will be removed.",
+};
+
 const initialSwapState: TSwapState = {
-	mode: "BAKE",
+	mode: "BURN",
 	value: "",
 };
 
@@ -75,6 +88,9 @@ const NewSwap = () => {
 					: value,
 		}));
 	};
+
+	const { transactionsState, transactionsDispatch } = useTransactions();
+	const { setModal } = useModal();
 
 	return (
 		<div className="bg-[#FDFAF3] shadow-[0px_4px_12px_0px_#1B201A26] p-8 mb-12">
@@ -149,16 +165,52 @@ const NewSwap = () => {
 					</>
 				)}
 			</div>
-			<div className="mt-6 [&>*]:w-full">
-				<LiftedButton rightIcon={<SignIn />} className="w-full">
-					Sign in
-				</LiftedButton>
+			{/* TODO: Remove some nested element here when the button is fixed */}
+			<div className="mt-6">
+				{user.status === "CONNECTED" && swapState.mode !== "BRIDGE" ? (
+					<div className="[&>*]:w-full">
+						{(() => {
+							const sourceToken =
+								swapState.mode === "BAKE" ? xDAI : BREAD;
+
+							if (!sourceToken) return <ButtonShell />;
+							if (sourceToken.status !== "SUCCESS")
+								return <ButtonShell />;
+
+							const balanceIsSufficent =
+								parseFloat(swapState.value || "0") <=
+								parseFloat(sourceToken.value);
+
+							if (balanceIsSufficent)
+								return swapState.mode === "BAKE" ? (
+									<Bake
+										user={user}
+										clearInputValue={clearInputValue}
+										inputValue={swapState.value}
+										isSafe={isSafe}
+									/>
+								) : (
+									<Burn
+										user={user}
+										clearInputValue={clearInputValue}
+										inputValue={swapState.value}
+										isSafe={isSafe}
+									/>
+								);
+
+							return <InsufficentBalance />;
+						})()}
+					</div>
+				) : (
+					<LoginButton user={user} />
+				)}
 			</div>
-			<Body className="text-surface-grey text-sm mt-1">
-				<span className="font-bold">Note</span>: Baking adds new BREAD
-				into circulation. You can redeem your BREAD through the
-				&quot;Burn&quot; tab at any time.
-			</Body>
+			{swapState.mode !== "BRIDGE" && (
+				<Body className="text-surface-grey text-sm mt-1">
+					<span className="font-bold">Note</span>:{" "}
+					{notes[swapState.mode]}
+				</Body>
+			)}
 		</div>
 	);
 };

@@ -50,14 +50,6 @@ export const Interest = () => {
 			[]
 		);
 
-	console.log(
-		"__ DATA __",
-		totalBreadDistributed,
-		totalBreadDistributedError,
-		apyData,
-		apyStatus
-	);
-
 	const yieldPerHour = useMemo(() => {
 		if (
 			apyStatus === "success" &&
