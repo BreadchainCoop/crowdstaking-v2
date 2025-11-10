@@ -32,7 +32,7 @@ const notes: Record<Exclude<TSwapState["mode"], "BRIDGE">, string> = {
 };
 
 const initialSwapState: TSwapState = {
-	mode: "BURN",
+	mode: "BAKE",
 	value: "",
 };
 

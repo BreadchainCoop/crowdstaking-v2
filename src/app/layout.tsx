@@ -11,7 +11,7 @@ import { ReactNode } from "react";
 import Header from "./core/components/Header/Header";
 import { ModalPresenter } from "./core/components/Modal/ModalPresenter";
 import { Toaster } from "./core/components/Toaster/Toaster";
-import { Footer } from "./core/components/Footer/Footer";
+import { Footer } from "./core/components/Footer";
 import { parseFeatureVar } from "./core/util/parseFeatureVar";
 
 const features = {
