@@ -80,14 +80,14 @@ export default function App({ children }: { children: React.ReactNode }) {
 
 function Layout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <main className="grow relative">
-        <ModalPresenter />
-        <Toaster />
-        {children}
-      </main>
-      <Footer />
-    </div>
+		<div className="flex min-h-screen flex-col">
+			<Header />
+			<main className="grow relative">
+				<ModalPresenter />
+				<Toaster />
+				{children}
+			</main>
+			<Footer />
+		</div>
   );
 }

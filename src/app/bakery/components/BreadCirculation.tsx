@@ -11,32 +11,36 @@ interface TotalBreadInCirculation {
 
 
 // Value as at when I ran the query
-const FALLBACK_CIRCULATION_VALUE = "43,000+";
+const FALLBACK_CIRCULATION_VALUE = 435464.49571094225;
 
 export const BreadCirculation = () => {
-  const { data, error } = useQuery({
-    queryKey: ["total-bread-in-circulation"],
-    refetchOnWindowFocus: false,
-    queryFn: async () => {
-      try {
-        const req = await fetch("/api/total-bread-in-circulation");
+	const { data, error } = useQuery({
+		queryKey: ["total-bread-in-circulation"],
+		refetchOnWindowFocus: false,
+		queryFn: async () => {
+			try {
+				const req = await fetch("/api/total-bread-in-circulation");
 
-        if (!req.ok) throw Error("Try again");
+				if (!req.ok) throw Error("Try again");
 
-        return (await req.json() as TotalBreadInCirculation).supply;
-      } catch (error) {
-        throw Error("Try again");
-      }
-    },
-  });
+				return ((await req.json()) as TotalBreadInCirculation).supply;
+			} catch (error) {
+				throw Error("Try again");
+			}
+		},
+	});
 
-  return (
-    <Chip className="max-w-max mb-4 md:mb-0">
-      <Logo className="md:size-6" />
-      <Body bold className="flex items-center justify-center gap-1">
-        {data ? formatSupply(data) : error ? FALLBACK_CIRCULATION_VALUE : "..."} BREAD{" "}
-        <span className="font-normal">in circulation</span>
-      </Body>
-    </Chip>
-  );
+	return (
+		<Chip className="max-w-max mb-4 md:mb-0">
+			<Logo className="md:size-6" />
+			<Body bold className="flex items-center justify-center gap-1">
+				{data
+					? formatSupply(data)
+					: error
+					? formatSupply(FALLBACK_CIRCULATION_VALUE)
+					: "..."}{" "}
+				BREAD <span className="font-normal">in circulation</span>
+			</Body>
+		</Chip>
+	);
 };
