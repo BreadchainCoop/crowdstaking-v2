@@ -36,15 +36,17 @@ export function Footer() {
 	return (
 		<footer className="bg-[#EA5817] py-[3.75rem]">
 			<div className={`${WRAPPER_CLASSES}`}>
-				<div className="lg:flex lg:items-start lg:justify-between">
-					<section className="mb-8 lg:mb-0">
-						<div className="mb-4 flex items-center justify-center">
-							<Logo text="BREAD COOPERATIVE" color="white" />
+				<div className="lg:flex lg:items-start lg:justify-between lg:gap-4">
+					<section className="mb-8 md:flex md:items-start md:justify-between lg:mb-0 lg:flex-col">
+						<div>
+							<div className="mb-4 flex items-center justify-center">
+								<Logo text="BREAD COOPERATIVE" color="white" />
+							</div>
+							<Body className="mb-4 text-center text-paper-main md:text-left">
+								Solidarity forever.
+							</Body>
 						</div>
-						<Body className="mb-4 text-center text-paper-main lg:text-left">
-							Solidarity forever.
-						</Body>
-						<ul className="flex items-center justify-between">
+						<ul className="flex items-center justify-between gap-5">
 							{[...socialLinks].map(([href, Icon]) => (
 								<li key={href}>
 									<a
@@ -58,63 +60,69 @@ export function Footer() {
 							))}
 						</ul>
 					</section>
-					<Section
-						title="Cooperative"
-						pages={[
-							{
-								href: "https://docs.bread.coop/",
-								label: "Documentation",
-							},
-							{
-								href: "https://breadchain.mirror.xyz/",
-								label: "Blog",
-							},
-							{
-								href: "https://github.com/BreadchainCoop",
-								label: "Contribute",
-							},
-						]}
-					/>
-					<Section
-						title="Solidarity tools"
-						pages={[
-							{ href: "", label: "Solidarity Funds" },
-							{ href: "", label: "Stacks", disabled: true },
-							{ href: "", label: "Safety Net", disabled: true },
-							{
-								href: "https://dune.com/bread_cooperative/solidarity",
-								label: "Analytics",
-								icon: "link",
-							},
-						]}
-					/>
-					<Section
-						title="Reach out"
-						pages={[
-							{
-								href: "mailto:contact@bread.coop",
-								label: "info@bread.coop",
-								icon: "email",
-							},
-						]}
-					/>
-					<Section
-						title="Support us"
-						pages={[
-							{
-								href: "https://giveth.io/project/breadchain-cooperative",
-								label: "Donate in crypto",
-								icon: "link",
-							},
-							{
-								href: "https://opencollective.com/bread-cooperative",
-								label: "Donate in fiat",
-								icon: "link",
-							},
-						]}
-					/>
+					<div className="sm:flex sm:items-start sm:justify-between sm:flex-wrap sm:gap-8 md:gap-2 lg:gap-3 xl:gap-8">
+						<Section
+							title="Cooperative"
+							pages={[
+								{
+									href: "https://docs.bread.coop/",
+									label: "Documentation",
+								},
+								{
+									href: "https://breadchain.mirror.xyz/",
+									label: "Blog",
+								},
+								{
+									href: "https://github.com/BreadchainCoop",
+									label: "Contribute",
+								},
+							]}
+						/>
+						<Section
+							title="Solidarity tools"
+							pages={[
+								{ href: "", label: "Solidarity Funds" },
+								{ href: "", label: "Stacks", disabled: true },
+								{
+									href: "",
+									label: "Safety Net",
+									disabled: true,
+								},
+								{
+									href: "https://dune.com/bread_cooperative/solidarity",
+									label: "Analytics",
+									icon: "link",
+								},
+							]}
+						/>
+						<Section
+							title="Reach out"
+							pages={[
+								{
+									href: "mailto:info@bread.coop",
+									label: "info@bread.coop",
+									icon: "email",
+								},
+							]}
+						/>
+						<Section
+							title="Support us"
+							pages={[
+								{
+									href: "https://giveth.io/project/breadchain-cooperative",
+									label: "Donate in crypto",
+									icon: "link",
+								},
+								{
+									href: "https://opencollective.com/bread-cooperative",
+									label: "Donate in fiat",
+									icon: "link",
+								},
+							]}
+						/>
+					</div>
 				</div>
-				<div className="border-t border-orange-0 mt-8 pt-8 text-center lg:flex lg:items-start lg:justify-between">
+				<div className="border-t border-orange-0 mt-8 pt-8 text-center text-paper-main lg:flex lg:items-start lg:justify-between">
 					<Body className="mb-6">
 						Creative Commons ©BREAD Cooperative
 					</Body>
