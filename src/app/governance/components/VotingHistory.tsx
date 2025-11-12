@@ -92,92 +92,116 @@ export function VotingHistory() {
   }
 
   return (
-    <>
-      <header>
-        <Heading3 className="pb-2">Previous cycle</Heading3>
-        <Body className="">
-          These are the results of the previous voting cycle #
-          {cycleDistribution.cycleNumber}.
-        </Body>
-        <Caption className="pt-6 text-left">
-          Ended on{" "}
-          {format(
-            parse(cycleDistribution.distributionDate, "MM/dd/yyyy", new Date()),
-            "MMM d, yyyy"
-          )}
-        </Caption>
-      </header>
-      <div>
-        <div className="my-3 md:flex md:flex-row-reverse md:gap-4">
-          <TopCard title="Total yield distributed">
-            <Logo className="mb-2" />
-            <Heading3>
-              {formatBalance(
-                Number(formatUnits(BigInt(cycleDistribution.totalYield), 18)),
-                2
-              )}
-            </Heading3>
-          </TopCard>
-          <TopCard title="Previous cycle">
-            <LiftedButton
-              preset="stroke"
-              onClick={() => updateCycleIdex(1)}
-              disabled={
-                !totalDistributions || cycleIndex === totalDistributions - 1
-              }
-              className="h-[32px] w-[32px] p-0"
-            >
-              <ArrowLeftIcon size={20} className="text-primary-orange" />
-            </LiftedButton>
-            <Body bold className="text-[24px]">
-              Cycle #{cycleDistribution.cycleNumber}
-            </Body>
-            <LiftedButton
-              preset="stroke"
-              onClick={() => updateCycleIdex(-1)}
-              disabled={!totalDistributions || cycleIndex === 0}
-              className="h-[32px] w-[32px] p-0"
-            >
-              <ArrowRightIcon size={20} className="text-primary-orange" />
-            </LiftedButton>
-          </TopCard>
-        </div>
+		<>
+			<header>
+				<Heading3 className="pb-2">Previous cycle</Heading3>
+				<Body className="">
+					These are the results of the previous voting cycle #
+					{cycleDistribution.cycleNumber}.
+				</Body>
+				<Caption className="pt-6 text-left">
+					Ended on{" "}
+					{format(
+						parse(
+							cycleDistribution.distributionDate,
+							"MM/dd/yyyy",
+							new Date()
+						),
+						"MMM d, yyyy"
+					)}
+				</Caption>
+			</header>
+			<div>
+				<div className="my-3 md:flex md:flex-row-reverse md:gap-4">
+					<TopCard title="Total yield distributed">
+						<Logo className="mb-2" />
+						<Heading3>
+							{formatBalance(
+								Number(
+									formatUnits(
+										BigInt(cycleDistribution.totalYield),
+										18
+									)
+								),
+								2
+							)}
+						</Heading3>
+					</TopCard>
+					<TopCard title="Previous cycle">
+						<LiftedButton
+							preset="stroke"
+							onClick={() => updateCycleIdex(1)}
+							disabled={
+								!totalDistributions ||
+								cycleIndex === totalDistributions - 1
+							}
+							className="h-[32px] w-[32px] p-0"
+						>
+							<ArrowLeftIcon
+								size={20}
+								className="text-primary-orange"
+							/>
+						</LiftedButton>
+						<Body bold className="text-[24px]">
+							Cycle #{cycleDistribution.cycleNumber}
+						</Body>
+						<LiftedButton
+							preset="stroke"
+							onClick={() => updateCycleIdex(-1)}
+							disabled={!totalDistributions || cycleIndex === 0}
+							className="h-[32px] w-[32px] p-0"
+						>
+							<ArrowRightIcon
+								size={20}
+								className="text-primary-orange"
+							/>
+						</LiftedButton>
+					</TopCard>
+				</div>
 
-        <div className="p-3 border border border-paper-2 mt-1 md:px-8 md:py-4">
-          <Body
-            bold
-            className="pb-2 md:text-[20px] text-[16px] text-surface-grey-2 text-center md:text-left md:mb-2"
-          >
-            How yield is distributed
-          </Body>
-          <div className="flex flex-col md:flex-row md:items-center justify-center gap-4">
-            <div className="mb-4 flex-1 flex items-center mb-0">
-              <div className="w-1 h-13 bg-primary-orange mr-4" />
-              <div>
-                <Body bold className="md:text-[20px] text-[16px] ">
-                  Solidarity Amount
-                </Body>
-                <Caption className="pt-1 md:text-[16px] text-[12px] ">
-                  50% of the total yield is distributed equally.
-                </Caption>
-              </div>
-            </div>
-            <div className="flex-1 flex items-center">
-              <div className="w-1 h-13 bg-orange-0 mr-4" />
-              <div>
-                <Body bold className="md:text-[20px] text-[16px]">
-                  Democratic Amount
-                </Body>
-                <Caption className="pt-1 md:text-[16px] text-[12px] ">
-                  50% of the total yield is distributed by vote.
-                </Caption>
-              </div>
-            </div>
-          </div>
-        </div>
-        <VotingHistoryDetail cycleDistribution={cycleDistribution} />
-      </div>
-    </>
+				<div className="p-3 border border-paper-2 mt-1 md:px-8 md:py-4">
+					<Body
+						bold
+						className="pb-2 md:text-[20px] text-[16px] text-surface-grey-2 text-center md:text-left md:mb-2"
+					>
+						How yield is distributed
+					</Body>
+					<div className="flex flex-col md:flex-row md:items-center justify-center gap-4">
+						<div className="mb-4 flex-1 flex items-center mb-0">
+							<div className="w-1 h-13 bg-primary-orange mr-4" />
+							<div>
+								<Body
+									bold
+									className="md:text-[20px] text-[16px] "
+								>
+									Solidarity Amount
+								</Body>
+								<Caption className="pt-1 md:text-[16px] text-[12px] ">
+									50% of the total yield is distributed
+									equally.
+								</Caption>
+							</div>
+						</div>
+						<div className="flex-1 flex items-center">
+							<div className="w-1 h-13 bg-orange-0 mr-4" />
+							<div>
+								<Body
+									bold
+									className="md:text-[20px] text-[16px]"
+								>
+									Democratic Amount
+								</Body>
+								<Caption className="pt-1 md:text-[16px] text-[12px] ">
+									50% of the total yield is distributed by
+									vote.
+								</Caption>
+							</div>
+						</div>
+					</div>
+				</div>
+				<VotingHistoryDetail cycleDistribution={cycleDistribution} />
+			</div>
+		</>
   );
 }
 
