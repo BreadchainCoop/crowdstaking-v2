@@ -241,15 +241,13 @@ export function CastVote({
 				</LiftedButton>
 			</div>
 			{isRecasting && (
-				<div className="w-full sm:w-auto">
-					<Button
+				<div className="lifted-button-container sm:w-auto">
+					<LiftedButton
+						preset="secondary"
 						onClick={() => {
 							setIsRecasting(false);
 							resetFormState();
 						}}
-						variant="cancel"
-						size="large"
-						fullWidth
 					>
 						<div className="flex items-center gap-3">
 							<svg
@@ -269,7 +267,7 @@ export function CastVote({
 
 							<span>Cancel recast</span>
 						</div>
-					</Button>
+					</LiftedButton>
 				</div>
 			)}
 		</div>
