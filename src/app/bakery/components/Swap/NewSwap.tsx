@@ -18,6 +18,7 @@ import { InsufficentBalance } from "./InsufficentBalance";
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
 import { useModal } from "@/app/core/context/ModalContext";
 import { sleep } from "@/utils/sleep";
+import { Bridge } from "./Bridge";
 
 // export type TSwapMode = "BAKE" | "BURN" | "BRIDGE";
 
@@ -26,9 +27,10 @@ import { sleep } from "@/utils/sleep";
 // 	value: string;
 // };
 
-const notes: Record<Exclude<TSwapState["mode"], "BRIDGE">, string> = {
+const notes: Record<TSwapState["mode"], string> = {
 	"BAKE": 'Baking adds new BREAD into circulation. You can redeem your BREAD through the "Burn" tab at any time',
 	"BURN": "When you Burn BREAD, you are no longer contributing to the Solidarity Fund, and all voting power will be removed.",
+	"BRIDGE": "This bridge is powered by LI.FI",
 };
 
 const initialSwapState: TSwapState = {
@@ -121,7 +123,7 @@ const NewSwap = () => {
 				{/* <button>filter icon</button> */}
 			</div>
 			<div className="mt-4">
-				{(swapState.mode === "BAKE" || swapState.mode === "BURN") && (
+				{swapState.mode === "BAKE" || swapState.mode === "BURN" ? (
 					<>
 						{/* <FromPanel
 							inputValue={swapState.value}
@@ -163,6 +165,8 @@ const NewSwap = () => {
 							}
 						/> */}
 					</>
+				) : (
+					<Bridge />
 				)}
 			</div>
 			{/* TODO: Remove some nested element here when the button is fixed */}
@@ -205,12 +209,9 @@ const NewSwap = () => {
 					<LoginButton user={user} />
 				)}
 			</div>
-			{swapState.mode !== "BRIDGE" && (
-				<Body className="text-surface-grey text-sm mt-1">
-					<span className="font-bold">Note</span>:{" "}
-					{notes[swapState.mode]}
-				</Body>
-			)}
+			<Body className="text-surface-grey text-sm mt-1">
+				<span className="font-bold">Note</span>: {notes[swapState.mode]}
+			</Body>
 		</div>
 	);
 };
