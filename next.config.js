@@ -1,12 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // output: "export",
-  env: {
-    SUBGRAPH_API_KEY: process.env.SUBGRAPH_API_KEY,
-  },
-  images: {
-    unoptimized: true,
-  },
+	// output: "export",
+	env: {
+		SUBGRAPH_API_KEY: process.env.SUBGRAPH_API_KEY,
+	},
+	images: {
+		unoptimized: true,
+	},
 };
 
 module.exports = nextConfig;
@@ -15,37 +15,82 @@ module.exports = nextConfig;
 
 const { withSentryConfig } = require("@sentry/nextjs");
 
+// Determine if we should upload source maps to Sentry
+// Only upload in production deployments or when explicitly enabled via env var
+// This prevents unnecessary uploads in preview/branch deployments and avoids
+// potential network issues that could fail the build
+const shouldUploadSourceMaps =
+	process.env.CONTEXT === "production" ||
+	process.env.ENABLE_SENTRY_UPLOAD === "true";
+
 module.exports = withSentryConfig(module.exports, {
-  // For all available options, see:
-  // https://github.com/getsentry/sentry-webpack-plugin#options
+	// For all available options, see:
+	// https://github.com/getsentry/sentry-webpack-plugin#options
 
-  org: "breadchain-cooperative",
-  project: "crowdstaking-app",
+	// Sentry organization slug - identifies your Sentry account
+	org: "breadchain-cooperative",
 
-  // Only print logs for uploading source maps in CI
-  silent: !process.env.CI,
+	// Sentry project slug - identifies which project to send errors to
+	project: "crowdstaking-app",
 
-  // For all available options, see:
-  // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+	// Controls console output during build
+	// Only show logs in CI environments (like Netlify) for debugging
+	// Keeps local builds cleaner by suppressing Sentry logs
+	silent: !process.env.CI,
 
-  // Upload a larger set of source maps for prettier stack traces (increases build time)
-  widenClientFileUpload: true,
+	// For all available options, see:
+	// https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
-  // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
-  // This can increase your server load as well as your hosting bill.
-  // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
-  // side errors will fail.
-  tunnelRoute: "/monitoring",
+	// Uploads a larger set of source maps for better stack traces
+	// Trade-off: increases build time but provides more detailed error context
+	// Helps debug minified production code by mapping back to original source
+	widenClientFileUpload: true,
 
-  // Hides source maps from generated client bundles
-  hideSourceMaps: true,
+	// Routes browser requests to Sentry through Next.js instead of directly
+	// Bypasses ad-blockers that might block sentry.io domain
+	// Uses /monitoring route as a proxy to Sentry's ingest endpoint
+	// Note: This increases server load and hosting costs as requests go through your server
+	tunnelRoute: "/monitoring",
 
-  // Automatically tree-shake Sentry logger statements to reduce bundle size
-  disableLogger: true,
+	// Removes source maps from the client bundle sent to users
+	// Prevents users from viewing your original source code in browser dev tools
+	// Source maps are only uploaded to Sentry for internal debugging
+	hideSourceMaps: true,
 
-  // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
-  // See the following for more information:
-  // https://docs.sentry.io/product/crons/
-  // https://vercel.com/docs/cron-jobs
-  automaticVercelMonitors: true,
+	// Removes Sentry's debug logging statements from production bundles
+	// Reduces bundle size by tree-shaking console.log statements
+	// Sentry will still capture errors, just won't log debug info to console
+	disableLogger: true,
+
+	// Automatically instruments Vercel Cron Monitors
+	// Tracks scheduled job execution and failures in Sentry
+	// Note: Currently only works with Pages Router, not App Router route handlers
+	automaticVercelMonitors: true,
+
+	// NEW: Skip source map upload in non-production environments
+	// When true, performs a "dry run" - validates config but doesn't upload
+	// Prevents build failures from Sentry network issues in preview deployments
+	// Only actually uploads when shouldUploadSourceMaps is true
+	dryRun: !shouldUploadSourceMaps,
+
+	// Custom error handler for Sentry CLI failures
+	// Logs warnings instead of failing the entire build
+	// Ensures deployment succeeds even if Sentry upload has network issues
+	// The build will continue and your app will deploy successfully
+	errorHandler: (err, invokeErr, compilation) => {
+		console.warn("Sentry CLI error (non-blocking):", err.message);
+	},
+
+	// Disables Sentry's anonymous usage telemetry
+	// Reduces network requests during build
+	// Slightly faster builds and one less potential point of failure
+	telemetry: false,
+
+	// Controls release finalization behavior
+	// finalize: false means don't mark the release as "complete" in Sentry
+	// Useful when you want to associate additional data with the release later
+	// Also makes the upload process more resilient to failures
+	release: {
+		finalize: false,
+	},
 });
