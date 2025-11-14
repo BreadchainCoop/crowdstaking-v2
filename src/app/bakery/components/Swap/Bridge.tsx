@@ -55,27 +55,29 @@ export function Bridge() {
 
 function LiFiMainWrapper() {
   const config = {
-    appearance: "system",
-    chains: {
-      allow: [1, 100, 42161, 8453, 56],
-    },
-    // initialize to xDai on Gnosis chain
-    toToken: "0x0000000000000000000000000000000000000000",
-    toChain: 100,
-    theme: {
-      container: {
-        boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.08)",
-        borderRadius: "16px",
-      },
-    },
-    disabledUI: ["toToken"],
+		appearance: "system",
+		chains: {
+			allow: [1, 100, 42161, 8453, 56],
+		},
+		// initialize to xDai on Gnosis chain
+		toToken: "0x0000000000000000000000000000000000000000",
+		toChain: 100,
+		theme: {
+			container: {
+				boxShadow: "0px 8px 32px rgba(0, 0, 0, 0.08)",
+				borderRadius: "0px",
+				width: "100%",
+				maxWidth: "none",
+			},
+		},
+		disabledUI: ["toToken"],
   } as Partial<WidgetConfig>;
 
   return (
-    <div>
-      <LiFiWrapper fallback={<WidgetSkeleton config={config} />}>
-        <LiFiWidget config={config} integrator="nextjs-example" />
-      </LiFiWrapper>
-    </div>
+		<div>
+			<LiFiWrapper fallback={<WidgetSkeleton config={config} />}>
+				<LiFiWidget config={config} integrator="nextjs-example" />
+			</LiFiWrapper>
+		</div>
   );
 }
