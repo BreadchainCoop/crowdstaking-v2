@@ -22,6 +22,10 @@ import { ProjectsProvider } from "@/app/core/context/ProjectContext/ProjectConte
 import { useVotingPower } from "./context/VotingPowerContext";
 import { VotingHistory } from "./components/VotingHistory";
 import { useTransactions } from "../core/context/TransactionsContext/TransactionsContext";
+import { useModal } from "../core/context/ModalContext";
+import { sleep } from "@/utils/sleep";
+import SafeAppsSDK from "@safe-global/safe-apps-sdk/dist/src/sdk";
+import { TransactionStatus } from "@safe-global/safe-apps-sdk";
 
 export function GovernancePage() {
 	const { transactionsState, transactionsDispatch } = useTransactions();
@@ -41,6 +45,15 @@ export function GovernancePage() {
 		totalPoints: number;
 	}>(null);
 	const [isRecasting, setIsRecasting] = useState<boolean>(false);
+
+	const { modalState, setModal } = useModal();
+
+	useEffect(() => {
+		if (modalState?.type === "CONFIRM_RECAST" && modalState.isConfirmed) {
+			setModal(null);
+			setIsRecasting(true);
+		}
+	}, [modalState, setModal]);
 
 	useEffect(() => {
 		if (

@@ -41,7 +41,7 @@ export const ModalContainer = forwardRef(
 						"pointer-events-auto max-h-[calc(100vh-1rem)] overflow-y-auto mt-4",
 						"shadow-[0_0.25rem_0.75rem_0_#1B201A26]",
 						includeContainerStyling
-							? "w-full maxW-[30rem] flex flex-col items-center bg-[#FDFAF3] relative p-5"
+							? "w-full max-w-[30rem] flex flex-col items-center bg-[#FDFAF3] relative p-5"
 							: "",
 						className
 					)}
