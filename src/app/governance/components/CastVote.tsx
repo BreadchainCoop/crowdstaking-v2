@@ -294,25 +294,28 @@ function RecastVote({}: {}) {
   const { setModal } = useModal();
 
   return (
-    <button
-      className="bg-[#FFCCF1] dark:bg-[#402639] px-6 py-2 flex items-center justify-center gap-2.5 rounded-lg font-bold text-breadpink-400 dark:text-breadpink-shaded text-lg border-2 border-[#FFCCF1] dark:border-[#402639] hover:border-breadpink-400 dark:hover:border-breadpink-shaded hover:transition-[border]"
-      onClick={() => setModal({ type: "CONFIRM_RECAST", isConfirmed: false })}
-    >
-      <div className="w-4 h-4">
-        <svg
-          className="w-full h-full fill-current"
-          viewBox="0 0 16 16"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M12 0H10V2H12V4H2V6H0V14H2V16H8V14H2V6H12V8H10V10H12V8H14V6H16V4H14V2H12V0Z"
-          />
-        </svg>
-      </div>
-
-      <span>Recast Vote</span>
-    </button>
+		<LiftedButton
+			preset="secondary"
+			leftIcon={
+				<div className="w-4 h-4">
+					<svg
+						className="w-full h-full fill-current"
+						viewBox="0 0 16 16"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							fillRule="evenodd"
+							clipRule="evenodd"
+							d="M12 0H10V2H12V4H2V6H0V14H2V16H8V14H2V6H12V8H10V10H12V8H14V6H16V4H14V2H12V0Z"
+						/>
+					</svg>
+				</div>
+			}
+			onClick={() =>
+				setModal({ type: "CONFIRM_RECAST", isConfirmed: false })
+			}
+		>
+			Recast Vote
+		</LiftedButton>
   );
 }

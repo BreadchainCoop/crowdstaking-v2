@@ -39,10 +39,10 @@ export function ResultsPanel({
 
 	return (
 		<section className="grid grid-cols-1 gap-4">
-			<CardBox>
+			<CardBox className="lg:border-transparent">
 				<div className="grid grid-cols-1 gap-8 p-4">
 					<div className="grid grid-cols-1 gap-4">
-						<Heading3 className="text-center text-surface-grey-2 pb-2 border-b border-orange-0">
+						<Heading3 className="text-center text-2xl text-surface-grey-2 pb-1 border-b border-orange-0">
 							RESULTS
 						</Heading3>
 						<div className="grid grid-cols-1 gap-4">

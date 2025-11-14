@@ -9,7 +9,7 @@ import { FistIcon } from "@/app/core/components/Icons/FistIcon";
 import { formatUnits } from "viem";
 import { differenceInDays } from "date-fns";
 import { Body, Heading2, Heading3, LiftedButton } from "@breadcoop/ui";
-import { HeartIcon } from "@phosphor-icons/react";
+import { ArrowUpRightIcon, HeartIcon } from "@phosphor-icons/react";
 
 export function VotingPower({
 	minRequiredVotingPower,
@@ -45,7 +45,43 @@ export function VotingPower({
 					voting opened.
 				</Body>
 			</div>
-			<div>
+			{userHasVoted && !isRecasting ? (
+				<UserHasVoted cycleDates={cycleDates} />
+			) : !userCanVote &&
+			  minRequiredVotingPower !== null &&
+			  userVotingPower !== null &&
+			  userVotingPower < minRequiredVotingPower ? (
+				<NotEnoughPower />
+			) : (
+				<div>
+					<div className="bg-paper-0 border border-[#EA5817] text-center py-2.5 px-6">
+						<Heading3 className="text-surface-grey-2 mb-2.5 text-2xl">
+							Your voting power:
+						</Heading3>
+						<div className="flex items-center justify-center gap-2">
+							<span className="mb-[0.2rem]">
+								<FistIcon />
+							</span>
+							<Body className="text-2xl font-bold">
+								{userVotingPower
+									? formatBalance(
+											Number(
+												formatUnits(userVotingPower, 18)
+											),
+											2
+									  )
+									: "-"}
+							</Body>
+						</div>
+					</div>
+					{user.status === "CONNECTED" && (
+						<DistributeEqually
+							distributeEqually={distributeEqually}
+						/>
+					)}
+				</div>
+			)}
+			{/* <div>
 				<div className="bg-paper-0 border border-[#EA5817] text-center py-2.5 px-6">
 					<Heading3 className="text-surface-grey-2 mb-2.5 text-2xl">
 						Your voting power:
@@ -55,12 +91,6 @@ export function VotingPower({
 							<FistIcon />
 						</span>
 						<Heading2 className="text-2xl">
-							{/* 230.68 */}
-							{/* {userVotingPower !== null &&
-								formatBalance(
-									Number(formatUnits(userVotingPower, 18)),
-									2
-								)} */}
 							{userVotingPower
 								? formatBalance(
 										Number(
@@ -86,7 +116,7 @@ export function VotingPower({
 						/>
 					) : null}
 				</div>
-			</div>
+			</div> */}
 		</section>
 	);
 
@@ -130,21 +160,22 @@ export function VotingPower({
 	// );
 }
 const widgetBaseClasses =
-	"py-3 sm:py-2 px-4 sm:w-[215px] flex flex-col items-center justify-center rounded-xl border-2";
+	"py-3 px-4 flex flex-col items-center justify-center border mx-auto gap-2.5 sm:py-2 sm:w-[22.125rem] lg:mr-0 lg:mt-4";
 
 function NotEnoughPower() {
 	return (
-		<div className={clsx(widgetBaseClasses, "border-status-danger")}>
-			<span className="dark:text-breadgray-ultra-white font-bold text-xl">
-				No Power
-			</span>
+		<div className={clsx(widgetBaseClasses, "border-system-red")}>
+			<Heading3 className="text-2xl text-surface-grey-2">
+				No voter power
+			</Heading3>
 			<a
-				className="font-bold text-breadpink-shaded"
+				className="font-bold text-[#EA5817] flex items-center justify-center gap-2"
 				href="https://breadchain.notion.site/BREAD-Voting-Power-UI-0f2d350320b94e4ba9aeec2ef6fdcb84"
 				target="_blank"
 				rel="noopener noreferrer"
 			>
 				Learn why
+				<ArrowUpRightIcon />
 			</a>
 		</div>
 	);
@@ -154,21 +185,40 @@ function UserHasVoted({ cycleDates }: { cycleDates: CycleDatesSuccess }) {
 	const days = differenceInDays(cycleDates.end, Date.now());
 
 	return (
-		<div className={clsx(widgetBaseClasses, "border-status-success")}>
+		<div className={clsx(widgetBaseClasses, "border-system-green")}>
 			<div className="flex gap-4">
-				<div className="w-7 h-7 flex items-center text-status-success">
-					<CheckIcon />
+				<div className="flex items-center text-system-green">
+					<svg
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							d="M8.25 12.75L10.5 15L15.75 9.75"
+							stroke="#32A800"
+							strokeWidth="1.5"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						/>
+						<path
+							d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
+							stroke="#32A800"
+							strokeWidth="1.5"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						/>
+					</svg>
 				</div>
-				<span className="dark:text-breadgray-ultra-white font-bold text-xl">
-					Voted
-				</span>
+				<Heading3 className="text-2xl">Voted Casted</Heading3>
 			</div>
-			<div>
-				<span className="dark:text-breadgray-grey">Next round: </span>
+			<Body>
+				<span className="font-bold">Next round: </span>
 				<span>
 					In {days} {days === 1 ? "day" : "days"}
 				</span>
-			</div>
+			</Body>
 		</div>
 	);
 }

@@ -169,7 +169,7 @@ export function ProjectRow({
 									<LinkIcon />
 								</a>
 							</div>
-							<div className="flex items-stretch justify-center gap-2">
+							<div className="flex items-stretch justify-start gap-2">
 								{projectBread?.status === "SUCCESS" && (
 									<div className="tracking-wide">
 										<LinkBadge
