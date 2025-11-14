@@ -7,7 +7,13 @@ import Image from "next/image";
 import { SignIn } from "@phosphor-icons/react";
 import { ButtonShell } from "../bakery/components/Swap/button-shell";
 
-export const LoginButton = ({ user }: { user: TConnectedUserState }) => {
+export const LoginButton = ({
+	user,
+	label,
+}: {
+	user: TConnectedUserState;
+	label?: string;
+}) => {
 	const { openChainModal } = useChainModal();
 
 	if (user.status === "CONNECTED") return null;
@@ -29,10 +35,10 @@ export const LoginButton = ({ user }: { user: TConnectedUserState }) => {
 		);
 	}
 
-	return <CustomLoginButton />;
+	return <CustomLoginButton label={label} />;
 };
 
-function CustomLoginButton() {
+function CustomLoginButton({ label = "Sign In" }: { label?: string }) {
 	return (
 		<ConnectButton.Custom>
 			{({
@@ -73,7 +79,7 @@ function CustomLoginButton() {
 							rightIcon={<SignIn />}
 							className="w-full"
 						>
-							Sign in
+							{label}
 						</LiftedButton>
 					</div>
 				);

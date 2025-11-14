@@ -1,55 +1,73 @@
 import { ModalContainer, ModalContent, ModalHeading } from "./ModalUI";
 import { ModalState } from "../../context/ModalContext";
 import Button from "../Button";
+import { Body, LiftedButton } from "@breadcoop/ui";
 
 export function ConfirmRecastModal({
-  setModal,
+	setModal,
 }: {
-  setModal: (modalState: ModalState) => void;
+	setModal: (modalState: ModalState) => void;
 }) {
-  return (
-    <ModalContainer>
-      <ModalHeading>Re-cast your vote?</ModalHeading>
-      <ModalContent>
-        <div className="size-12 text-status-warning">
-          <svg
-            className="fill-current w-full h-full"
-            viewBox="0 0 65 64"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M8.5 8H13.8333H51.1667H56.5V56L51.1667 56L13.8333 56H8.5V8ZM51.1667 50.6667V13.3333H13.8333V50.6667H51.1667ZM29.8333 40H35.1667V45.3333H29.8333V40ZM35.1667 18.6667H29.8333V34.6667H35.1667V18.6667Z"
-            />
-          </svg>
-        </div>
-        <p className="text-center text-breadgray-rye dark:text-breadgray-light-grey">
-          You are about to Re-cast your vote. Your previous votes of this cycle
-          will be removed.
-        </p>
-        <Button
-          variant="primary"
-          size="large"
-          fullWidth
-          onClick={() =>
-            setModal({ type: "CONFIRM_RECAST", isConfirmed: true })
-          }
-        >
-          Yes, proceed
-        </Button>
-        <Button
-          variant="secondary"
-          size="large"
-          fullWidth
-          onClick={() => {
-            setModal(null);
-          }}
-        >
-          Cancel
-        </Button>
-      </ModalContent>
-    </ModalContainer>
-  );
+	return (
+		<ModalContainer>
+			<ModalHeading>Re-cast your vote?</ModalHeading>
+			<ModalContent>
+				<div className="">
+					<svg
+						width="64"
+						height="64"
+						viewBox="0 0 64 64"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							d="M32 34V20"
+							stroke="#CE7F00"
+							strokeWidth="4"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						/>
+						<path
+							d="M32 40.125C33.5878 40.125 34.875 41.4122 34.875 43C34.875 44.5878 33.5878 45.875 32 45.875C30.4122 45.875 29.125 44.5878 29.125 43C29.125 41.4122 30.4122 40.125 32 40.125Z"
+							fill="#CE7F00"
+							stroke="#CE7F00"
+							strokeWidth="0.25"
+						/>
+						<path
+							d="M30.5927 6.58305L6.58116 30.5946C5.80499 31.3708 5.80499 32.6292 6.58116 33.4054L30.5927 57.417C31.3689 58.1931 32.6273 58.1931 33.4035 57.417L57.4151 33.4054C58.1912 32.6292 58.1912 31.3708 57.4151 30.5946L33.4035 6.58305C32.6273 5.80688 31.3689 5.80688 30.5927 6.58305Z"
+							stroke="#CE7F00"
+							stroke-Width="4"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						/>
+					</svg>
+				</div>
+				<Body className="mb-6 text-surface-grey">
+					You are about to Re-cast your vote.
+				</Body>
+				<div className="lifted-button-container">
+					<LiftedButton
+						onClick={() =>
+							setModal({
+								type: "CONFIRM_RECAST",
+								isConfirmed: true,
+							})
+						}
+					>
+						Yes, proceed
+					</LiftedButton>
+				</div>
+				<div className="lifted-button-container -mt-1">
+					<LiftedButton
+						preset="secondary"
+						onClick={() => {
+							setModal(null);
+						}}
+					>
+						Cancel
+					</LiftedButton>
+				</div>
+			</ModalContent>
+		</ModalContainer>
+	);
 }
