@@ -15,6 +15,7 @@ import {
 } from "@/app/core/hooks/useConnectedUser";
 import { DISTRIBUTOR_ABI } from "@/abi";
 import { LiftedButton } from "@breadcoop/ui";
+import { LoginButton } from "@/app/components/login-button";
 
 export function CastVotePanel({
 	user,
@@ -37,41 +38,72 @@ export function CastVotePanel({
 }) {
 	const { openChainModal } = useChainModal();
 
+	if (user.status !== "CONNECTED")
+		return (
+			<div className="mt-3">
+				<LoginButton user={user} label="Sign in to vote" />
+			</div>
+		);
+
+	if (isRecasting || !userHasVoted)
+		return (
+			<div className="mt-3">
+				<CastVote
+					vote={userVote}
+					isSafe={isSafe}
+					userCanVote={userCanVote}
+					userHasVoted={userHasVoted}
+					isRecasting={isRecasting}
+					setIsRecasting={setIsRecasting}
+					user={user}
+					resetFormState={resetFormState}
+				/>
+			</div>
+		);
+
 	return (
-		<div className="pt-3">
-			{user.status === "NOT_CONNECTED" ? (
-				<AccountMenu size="large" fullWidth>
-					<div className="tracking-wider">Connect to vote</div>
-				</AccountMenu>
-			) : user.status === "UNSUPPORTED_CHAIN" ? (
-				<Button
-					fullWidth={true}
-					size="large"
-					variant="danger"
-					onClick={() => openChainModal?.()}
-				>
-					Change network
-				</Button>
-			) : user.status === "CONNECTED" ? (
-				isRecasting || !userHasVoted ? (
-					<CastVote
-						vote={userVote}
-						isSafe={isSafe}
-						userCanVote={userCanVote}
-						userHasVoted={userHasVoted}
-						isRecasting={isRecasting}
-						setIsRecasting={setIsRecasting}
-						user={user}
-						resetFormState={resetFormState}
-					/>
-				) : (
-					<VoteIsCast>
-						{user.features.recastVote && <RecastVote />}
-					</VoteIsCast>
-				)
-			) : null}
+		<div className="mt-3">
+			<VoteIsCast>
+				{user.features.recastVote && <RecastVote />}
+			</VoteIsCast>
 		</div>
 	);
+
+	// return (
+	// 	<div className="pt-3">
+	// 		{user.status === "NOT_CONNECTED" ? (
+	// 			<AccountMenu size="large" fullWidth>
+	// 				<div className="tracking-wider">Connect to vote</div>
+	// 			</AccountMenu>
+	// 		) : user.status === "UNSUPPORTED_CHAIN" ? (
+	// 			<Button
+	// 				fullWidth={true}
+	// 				size="large"
+	// 				variant="danger"
+	// 				onClick={() => openChainModal?.()}
+	// 			>
+	// 				Change network
+	// 			</Button>
+	// 		) : user.status === "CONNECTED" ? (
+	// 			isRecasting || !userHasVoted ? (
+	// 				<CastVote
+	// 					vote={userVote}
+	// 					isSafe={isSafe}
+	// 					userCanVote={userCanVote}
+	// 					userHasVoted={userHasVoted}
+	// 					isRecasting={isRecasting}
+	// 					setIsRecasting={setIsRecasting}
+	// 					user={user}
+	// 					resetFormState={resetFormState}
+	// 				/>
+	// 			) : (
+	// 				<VoteIsCast>
+	// 					{user.features.recastVote && <RecastVote />}
+	// 				</VoteIsCast>
+	// 			)
+	// 		) : null}
+	// 	</div>
+	// );
 }
 
 export function CastVote({

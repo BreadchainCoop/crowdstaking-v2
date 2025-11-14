@@ -56,11 +56,19 @@ export function VotingPower({
 						</span>
 						<Heading2 className="text-2xl">
 							{/* 230.68 */}
-							{userVotingPower !== null &&
+							{/* {userVotingPower !== null &&
 								formatBalance(
 									Number(formatUnits(userVotingPower, 18)),
 									2
-								)}
+								)} */}
+							{userVotingPower
+								? formatBalance(
+										Number(
+											formatUnits(userVotingPower, 18)
+										),
+										2
+								  )
+								: "-"}
 						</Heading2>
 					</div>
 				</div>

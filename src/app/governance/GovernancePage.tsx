@@ -15,229 +15,222 @@ import { useCycleLength } from "./useCycleLength";
 import { Spinner } from "../core/components/Icons/Spinner";
 import { useCycleDates } from "./useCycleDates";
 import { useMinRequiredVotingPower } from "./useMinRequiredVotingPower";
-import { InfoCallout } from "./components/InfoCallout";
-import { useModal } from "../core/context/ModalContext";
+// import { InfoCallout } from "./components/InfoCallout";
 import { projectsMeta } from "../projectsMeta";
 import { PageGrid } from "./components/PageGrid";
 import { ProjectsProvider } from "@/app/core/context/ProjectContext/ProjectContext";
 import { useVotingPower } from "./context/VotingPowerContext";
 import { VotingHistory } from "./components/VotingHistory";
+import { useTransactions } from "../core/context/TransactionsContext/TransactionsContext";
 
 export function GovernancePage() {
-  const { user, isSafe } = useConnectedUser();
-  const { currentVotingDistribution } = useCurrentVotingDistribution();
-  const { lastClaimedBlocknumber } = useLastClaimedBlockNumber();
-  const { cycleLength } = useCycleLength();
-  const { castVote } = useCastVote(user, lastClaimedBlocknumber);
-  const { minRequiredVotingPower } = useMinRequiredVotingPower();
+	const { transactionsState, transactionsDispatch } = useTransactions();
+	const { user, isSafe } = useConnectedUser();
+	const { currentVotingDistribution } = useCurrentVotingDistribution();
+	const { lastClaimedBlocknumber } = useLastClaimedBlockNumber();
+	const { cycleLength } = useCycleLength();
+	const { castVote } = useCastVote(user, lastClaimedBlocknumber);
+	const { minRequiredVotingPower } = useMinRequiredVotingPower();
 
-  const userVotingPower = useVotingPower();
+	const userVotingPower = useVotingPower();
 
-  const { cycleDates } = useCycleDates(cycleLength);
+	const { cycleDates } = useCycleDates(cycleLength);
 
-  const [voteFormState, setVoteFormState] = useState<null | {
-    projects: { [key: Hex]: number };
-    totalPoints: number;
-  }>(null);
-  const [isRecasting, setIsRecasting] = useState<boolean>(false);
+	const [voteFormState, setVoteFormState] = useState<null | {
+		projects: { [key: Hex]: number };
+		totalPoints: number;
+	}>(null);
+	const [isRecasting, setIsRecasting] = useState<boolean>(false);
 
-  const { modalState, setModal } = useModal();
+	useEffect(() => {
+		if (
+			castVote.status === "ERROR" ||
+			currentVotingDistribution.status === "ERROR" ||
+			cycleDates.status === "ERROR" ||
+			cycleLength.status === "ERROR"
+		) {
+			const errorVars = [];
 
-  useEffect(() => {
-    if (modalState?.type === "CONFIRM_RECAST" && modalState.isConfirmed) {
-      setModal(null);
-      setIsRecasting(true);
-    }
-  }, [modalState, setModal]);
+			if (castVote.status === "ERROR") errorVars.push("castVote");
+			if (currentVotingDistribution.status === "ERROR")
+				errorVars.push("currentVotingDistribution");
+			if (cycleDates.status === "ERROR") errorVars.push("cycleDates");
+			if (cycleLength.status === "ERROR") errorVars.push("cycleLength");
 
-  useEffect(() => {
-    if (
-      castVote.status === "ERROR" ||
-      currentVotingDistribution.status === "ERROR" ||
-      cycleDates.status === "ERROR" ||
-      cycleLength.status === "ERROR"
-    ) {
-      const errorVars = [];
+			if (errorVars.length > 0) {
+				console.log("Error status in: ", errorVars.join(", "));
+			}
+		}
+	}, [castVote, currentVotingDistribution, cycleDates, cycleLength]);
 
-      if (castVote.status === "ERROR") errorVars.push("castVote");
-      if (currentVotingDistribution.status === "ERROR")
-        errorVars.push("currentVotingDistribution");
-      if (cycleDates.status === "ERROR") errorVars.push("cycleDates");
-      if (cycleLength.status === "ERROR") errorVars.push("cycleLength");
+	useEffect(() => {
+		if (voteFormState?.projects) return;
+		if (
+			currentVotingDistribution.status === "SUCCESS" &&
+			castVote.status === "SUCCESS"
+		) {
+			const projects = castVote.data
+				? Object.keys(castVote.data).reduce<{ [key: Hex]: number }>(
+						(acc, cur) => {
+							// Only include active projects from cast vote data
+							if (projectsMeta[cur as Hex]?.active) {
+								acc[cur as Hex] = castVote.data![cur as Hex];
+							}
+							return acc;
+						},
+						{}
+				  )
+				: currentVotingDistribution.data[0].reduce<{
+						[key: Hex]: number;
+				  }>((acc, cur, i) => {
+						// Only include active projects in the vote form
+						if (projectsMeta[cur]?.active) {
+							acc[cur] = 0;
+						}
+						return acc;
+				  }, {});
+			setVoteFormState({
+				projects,
+				totalPoints: 0,
+			});
+		}
+	}, [currentVotingDistribution, voteFormState, castVote]);
 
-      if (errorVars.length > 0) {
-        console.log("Error status in: ", errorVars.join(", "));
-      }
-    }
-  }, [castVote, currentVotingDistribution, cycleDates, cycleLength]);
+	function resetFormState() {
+		if (
+			castVote.status !== "SUCCESS" ||
+			currentVotingDistribution.status !== "SUCCESS"
+		)
+			return;
 
-  useEffect(() => {
-    if (voteFormState?.projects) return;
-    if (
-      currentVotingDistribution.status === "SUCCESS" &&
-      castVote.status === "SUCCESS"
-    ) {
-      const projects = castVote.data
-        ? Object.keys(castVote.data).reduce<{ [key: Hex]: number }>(
-            (acc, cur) => {
-              // Only include active projects from cast vote data
-              if (projectsMeta[cur as Hex]?.active) {
-                acc[cur as Hex] = castVote.data![cur as Hex];
-              }
-              return acc;
-            },
-            {}
-          )
-        : currentVotingDistribution.data[0].reduce<{
-            [key: Hex]: number;
-          }>((acc, cur, i) => {
-            // Only include active projects in the vote form
-            if (projectsMeta[cur]?.active) {
-              acc[cur] = 0;
-            }
-            return acc;
-          }, {});
-      setVoteFormState({
-        projects,
-        totalPoints: 0,
-      });
-    }
-  }, [currentVotingDistribution, voteFormState, castVote]);
+		setVoteFormState({
+			projects: castVote.data
+				? Object.keys(castVote.data).reduce<{ [key: Hex]: number }>(
+						(acc, cur) => {
+							// Only include active projects from cast vote data
+							if (projectsMeta[cur as Hex]?.active) {
+								acc[cur as Hex] = castVote.data![cur as Hex];
+							}
+							return acc;
+						},
+						{}
+				  )
+				: currentVotingDistribution.data[0].reduce<{
+						[key: Hex]: number;
+				  }>((acc, cur, i) => {
+						// Only include active projects in the vote form
+						if (projectsMeta[cur]?.active) {
+							acc[cur] = 0;
+						}
+						return acc;
+				  }, {}),
+			totalPoints: 0,
+		});
+	}
 
-  function resetFormState() {
-    if (
-      castVote.status !== "SUCCESS" ||
-      currentVotingDistribution.status !== "SUCCESS"
-    )
-      return;
+	function updateValue(value: number, account: Hex) {
+		setVoteFormState((state) => {
+			if (!state) return state;
+			const newState = { ...state };
+			newState.projects[account] = value;
+			newState.totalPoints = Object.keys(newState.projects).reduce(
+				(acc, cur) => acc + newState.projects[cur as Hex],
+				0
+			);
+			return newState;
+		});
+	}
 
-    setVoteFormState({
-      projects: castVote.data
-        ? Object.keys(castVote.data).reduce<{ [key: Hex]: number }>(
-            (acc, cur) => {
-              // Only include active projects from cast vote data
-              if (projectsMeta[cur as Hex]?.active) {
-                acc[cur as Hex] = castVote.data![cur as Hex];
-              }
-              return acc;
-            },
-            {}
-          )
-        : currentVotingDistribution.data[0].reduce<{
-            [key: Hex]: number;
-          }>((acc, cur, i) => {
-            // Only include active projects in the vote form
-            if (projectsMeta[cur]?.active) {
-              acc[cur] = 0;
-            }
-            return acc;
-          }, {}),
-      totalPoints: 0,
-    });
-  }
+	function distributeEqually() {
+		setVoteFormState((state) => {
+			console.log({ state });
+			if (!state) return state;
+			const newState = { ...state };
+			newState.projects = Object.keys(newState.projects).reduce<{
+				[key: Hex]: number;
+			}>((acc, cur) => {
+				acc[cur as Hex] = 1;
+				return acc;
+			}, {});
+			newState.totalPoints = Object.keys(newState.projects).length;
+			return newState;
+		});
+	}
 
-  function updateValue(value: number, account: Hex) {
-    setVoteFormState((state) => {
-      if (!state) return state;
-      const newState = { ...state };
-      newState.projects[account] = value;
-      newState.totalPoints = Object.keys(newState.projects).reduce(
-        (acc, cur) => acc + newState.projects[cur as Hex],
-        0
-      );
-      return newState;
-    });
-  }
+	const castTotalPoints =
+		castVote.status === "SUCCESS" && castVote.data
+			? Object.keys(castVote.data).reduce(
+					(acc, cur) => acc + castVote.data![cur as Hex],
+					0
+			  )
+			: 0;
 
-  function distributeEqually() {
-    setVoteFormState((state) => {
-      console.log({ state });
-      if (!state) return state;
-      const newState = { ...state };
-      newState.projects = Object.keys(newState.projects).reduce<{
-        [key: Hex]: number;
-      }>((acc, cur) => {
-        acc[cur as Hex] = 1;
-        return acc;
-      }, {});
-      newState.totalPoints = Object.keys(newState.projects).length;
-      return newState;
-    });
-  }
+	const userHasVoted = useMemo(() => {
+		return castVote.status === "SUCCESS" && castVote.data ? true : false;
+	}, [castVote]);
 
-  const castTotalPoints =
-    castVote.status === "SUCCESS" && castVote.data
-      ? Object.keys(castVote.data).reduce(
-          (acc, cur) => acc + castVote.data![cur as Hex],
-          0
-        )
-      : 0;
+	const { userCanVote, totalUserVotingPower } = useMemo(() => {
+		const totalUserVotingPower =
+			userVotingPower &&
+			userVotingPower.bread.status === "success" &&
+			userVotingPower.butteredBread.status === "success"
+				? userVotingPower.bread.value +
+				  userVotingPower.butteredBread.value
+				: null;
 
-  const userHasVoted = useMemo(() => {
-    return castVote.status === "SUCCESS" && castVote.data ? true : false;
-  }, [castVote]);
+		const userCanVote =
+			totalUserVotingPower &&
+			totalUserVotingPower > Number(minRequiredVotingPower || 0)
+				? true
+				: false;
 
-  const { userCanVote, totalUserVotingPower } = useMemo(() => {
-    const totalUserVotingPower =
-      userVotingPower &&
-      userVotingPower.bread.status === "success" &&
-      userVotingPower.butteredBread.status === "success"
-        ? userVotingPower.bread.value + userVotingPower.butteredBread.value
-        : null;
+		return { userCanVote, totalUserVotingPower };
+	}, [minRequiredVotingPower, userVotingPower]);
 
-    const userCanVote =
-      totalUserVotingPower &&
-      totalUserVotingPower > Number(minRequiredVotingPower || 0)
-        ? true
-        : false;
+	const hasError =
+		castVote.status === "ERROR" ||
+		currentVotingDistribution.status === "ERROR" ||
+		cycleDates.status === "ERROR" ||
+		cycleLength.status === "ERROR";
 
-    return { userCanVote, totalUserVotingPower };
-  }, [minRequiredVotingPower, userVotingPower]);
+	if (hasError) {
+		return (
+			<>
+				<div className="w-full flex flex-col items-center pt-32">
+					<h1>Please wait...</h1>
+					<div className="mt-6 size-10 text-breadgray-grey">
+						<Spinner />
+					</div>
+				</div>
+				{user.features.votingHistory && (
+					<section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
+						<PageGrid>
+							<div className="col-span-12 row-start-1 row-span-1">
+								<VotingHistory />
+							</div>
+						</PageGrid>
+					</section>
+				)}
+			</>
+		);
+	}
 
-  const hasError =
-    castVote.status === "ERROR" ||
-    currentVotingDistribution.status === "ERROR" ||
-    cycleDates.status === "ERROR" ||
-    cycleLength.status === "ERROR";
+	if (
+		!voteFormState ||
+		castVote.status === "LOADING" ||
+		currentVotingDistribution.status === "LOADING" ||
+		cycleDates.status === "LOADING" ||
+		cycleLength.status === "LOADING"
+	)
+		return (
+			<div className="w-full flex justify-center pt-32">
+				<div className="size-10 text-breadgray-grey">
+					<Spinner />
+				</div>
+			</div>
+		);
 
-  if (hasError) {
-    return (
-      <>
-        <div className="w-full flex flex-col items-center pt-32">
-          <h1>Please wait...</h1>
-          <div className="mt-6 size-10 text-breadgray-grey">
-            <Spinner />
-          </div>
-        </div>
-        {user.features.votingHistory && (
-          <section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
-            <PageGrid>
-              <div className="col-span-12 row-start-1 row-span-1">
-                <VotingHistory />
-              </div>
-            </PageGrid>
-          </section>
-        )}
-      </>
-    );
-  }
-
-  if (
-    !voteFormState ||
-    castVote.status === "LOADING" ||
-    currentVotingDistribution.status === "LOADING" ||
-    cycleDates.status === "LOADING" ||
-    cycleLength.status === "LOADING"
-  )
-    return (
-      <div className="w-full flex justify-center pt-32">
-        <div className="size-10 text-breadgray-grey">
-          <Spinner />
-        </div>
-      </div>
-    );
-
-  return (
+	return (
 		<>
 			<section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
 				<PageGrid>
@@ -375,5 +368,5 @@ export function GovernancePage() {
 				</section>
 			)}
 		</>
-  );
+	);
 }
