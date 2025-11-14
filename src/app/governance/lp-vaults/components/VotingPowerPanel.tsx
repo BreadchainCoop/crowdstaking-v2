@@ -31,32 +31,45 @@ export function VotingPowerPanel() {
   const { BREAD } = useTokenBalances();
 
   const renderFormattedDecimalNumber = (
-    number: string,
-    icon?: ReactElement
+		number: string,
+		icon?: ReactElement
   ) => {
-    const part1 = number.split(".")[0];
-    const part2 = number.split(".")[1];
+		const part1 = number.split(".")[0];
+		const part2 = number.split(".")[1];
 
-    return (
-      <div className="w-full flex justify-center">
-        <div className=" flex gap-2 justify-end">
-          {icon && <div className="mt-1">{icon}</div>}
-          <Heading2 className="text-[48px]">{part1}</Heading2>
-        </div>
-        <div>.</div>
-        <Heading2 className="text-[24px] text-surface-grey-2 leading-[1.1] w-[56px] self-end">
-          {part2}
-        </Heading2>
-      </div>
-    );
+		return (
+			<div className="w-full flex items-center justify-center">
+				{icon && <div className="mt-1 mr-2">{icon}</div>}
+				<Heading2 className="relative">
+					<span className="text-5xl">{part1}</span>
+					<span className="text-2xl text-surface-grey-2 relative left-[0.2rem] inline-flex items-center justify-start leading-[1.1]">
+						<span className="mr-[0.2rem]">.</span>
+						<span>{part2}</span>
+					</span>
+				</Heading2>
+			</div>
+		);
+
+		// return (
+		// 	<div className="w-full flex justify-center bg-yellow-800">
+		// 		<div className="flex gap-2 justify-end">
+		// 			{icon && <div className="mt-1">{icon}</div>}
+		// 			<Heading2 className="text-[48px]">{part1}</Heading2>
+		// 		</div>
+		// 		<div>.</div>
+		// 		<Heading2 className="text-[24px] text-surface-grey-2 leading-[1.1] w-[56px] self-end">
+		// 			{part2}
+		// 		</Heading2>
+		// 	</div>
+		// );
   };
 
   return (
 		<div>
 			<div className="lg:ml-auto">
-				<CardBox>
+				<CardBox className="lg:border-transparent">
 					<div className="p-4 flex flex-col items-center gap-4">
-						<Heading4 className="text-surface-grey-2 text-[24px]">
+						<Heading4 className="text-surface-grey-2 text-2xl">
 							My voting power
 						</Heading4>
 						<div className="flex flex-col gap-2">
@@ -76,12 +89,10 @@ export function VotingPowerPanel() {
 													10 ** 18,
 												1
 											),
-											// <FistIcon bg="burnt" />
 											<FistIcon />
 										)
 									) : (
 										<div className="flex justify-center items-center">
-											{/* <FistIcon bg="burnt" /> */}
 											<FistIcon />
 											<span className="ms-2">-</span>
 										</div>
