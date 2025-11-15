@@ -26,6 +26,7 @@ import { useVaultTokenBalance } from "../context/VaultTokenBalanceContext";
 import { AccountMenu } from "@/app/core/components/Header/AccountMenu";
 import { useChainModal } from "@rainbow-me/rainbowkit";
 import { ArrowUpRightIcon, CaretDownIcon } from "@phosphor-icons/react/ssr";
+import { LoginButton } from "@/app/components/login-button";
 
 export type TransactionType = "LOCK" | "UNLOCK";
 
@@ -312,20 +313,11 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                 >
                   {transactionType === "UNLOCK" ? "Unlock" : "Lock"} LP Tokens
                 </LiftedButton>
-              ) : user.status === "UNSUPPORTED_CHAIN" ? (
-                <Button
-                  fullWidth={true}
-                  size="large"
-                  variant="danger"
-                  onClick={() => openChainModal?.()}
-                >
-                  Change network
-                </Button>
               ) : (
-                <AccountMenu fullWidth={true} size="large">
-                  Connect
-                </AccountMenu>
-              )}
+								<div className="lifted-button-container">
+                  <LoginButton user={user} />
+                </div>
+							)}
             </form>
           </div>
         </div>
