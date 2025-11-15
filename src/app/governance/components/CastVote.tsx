@@ -1,6 +1,4 @@
-import { ReactNode, useEffect } from "react";
-import Button from "@/app/core/components/Button";
-import { AccountMenu } from "@/app/core/components/Header/AccountMenu";
+import { ReactNode } from "react";
 import { CheckIcon } from "@/app/core/components/Icons/CheckIcon";
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
 import { useModal } from "@/app/core/context/ModalContext";
@@ -145,92 +143,50 @@ export function CastVote({
 		chainId: chainConfig.ID,
 	});
 
-	const {
-		writeContract,
-		data: writeData,
-		isError: writeIsError,
-		error: writeError,
-	} = useWriteContract();
+	const { writeContractAsync, isPending: isCasting } = useWriteContract();
 
-	useEffect(() => {
-		(async () => {
-			if (!writeData) return;
-			if (
-				transactionsState.submitted.find((tx) => tx.hash === writeData)
-			) {
-				return;
-			}
-			if (isSafe) {
-				const safeSdk = new SafeAppsSDK();
-				const tx = await safeSdk.txs.getBySafeTxHash(writeData);
-				if (tx.txStatus === TransactionStatus.AWAITING_CONFIRMATIONS) {
-					transactionsDispatch({
-						type: "SET_SAFE_SUBMITTED",
-						payload: { hash: writeData },
-					});
-					setModal({ type: "VOTE_TRANSACTION", hash: writeData });
-					setIsRecasting(false);
-					return;
-				}
-				if (tx.txStatus === TransactionStatus.SUCCESS) {
-					transactionsDispatch({
-						type: "SET_SUBMITTED",
-						payload: { hash: writeData },
-					});
-					setIsRecasting(false);
-					return;
-				}
-			}
-			// not safe
-			transactionsDispatch({
-				type: "SET_SUBMITTED",
-				payload: { hash: writeData },
-			});
-			setModal({ type: "VOTE_TRANSACTION", hash: writeData });
-			setIsRecasting(false);
-		})();
-	}, [
-		writeData,
-		transactionsState,
-		transactionsDispatch,
-		isSafe,
-		setModal,
-		setIsRecasting,
-	]);
+  const castVote = async () => {
+    if (!writeContractAsync || !prepareConfig || isCasting) return;
 
-	useEffect(() => {
-		if (!writeIsError && !writeError) return;
-		// clear transaction closing modal on error including if user rejects the request
-		setModal(null);
-	}, [writeIsError, writeError, transactionsDispatch, setModal]);
+    try {
+      transactionsDispatch({
+        type: "NEW",
+        payload: { data: { type: "VOTE" } },
+      });
+
+      setModal({ type: "VOTE_TRANSACTION", hash: null });
+
+      const hash = await writeContractAsync(prepareConfig.request);
+
+      if (transactionsState.submitted.find((tx) => tx.hash === hash)) return;
+
+      if (isSafe) {
+        const safeSdk = new SafeAppsSDK();
+        const tx = await safeSdk.txs.getBySafeTxHash(hash);
+        if (tx.txStatus === TransactionStatus.AWAITING_CONFIRMATIONS) {
+          transactionsDispatch({ type: "SET_SAFE_SUBMITTED", payload: { hash } });
+        }
+
+        setModal({ type: "VOTE_TRANSACTION", hash });
+        setIsRecasting(false);
+        return;
+      }
+
+      transactionsDispatch({ type: "SET_SUBMITTED", payload: { hash } });
+      setModal({ type: "VOTE_TRANSACTION", hash });
+      setIsRecasting(false);
+
+    } catch (error) {
+			// clear transaction closing modal on error including if user rejects the request
+      setModal(null);
+    }
+  }
 
 	return (
 		<div className="flex flex-col gap-2 sm:flex-row">
 			<div className="grow lifted-button-container">
 				<LiftedButton
-					onClick={() => {
-						if (!writeContract) return;
-						if (prepareConfigStatus !== "success") {
-							console.log(
-								"castVote tx prepare failed: ",
-								prepareConfigError
-							);
-							return;
-						}
-						transactionsDispatch({
-							type: "NEW",
-							payload: {
-								data: {
-									type: "VOTE",
-								},
-							},
-						});
-						setModal({
-							type: "VOTE_TRANSACTION",
-							hash: "",
-						});
-						writeContract(prepareConfig!.request);
-					}}
+					onClick={castVote}
 					disabled={
 						!userCanVote ||
 						!writeIsEnabled ||

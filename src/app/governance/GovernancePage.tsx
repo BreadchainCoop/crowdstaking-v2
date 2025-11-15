@@ -33,7 +33,7 @@ export function GovernancePage() {
 	const { currentVotingDistribution } = useCurrentVotingDistribution();
 	const { lastClaimedBlocknumber } = useLastClaimedBlockNumber();
 	const { cycleLength } = useCycleLength();
-	const { castVote } = useCastVote(user, lastClaimedBlocknumber);
+	const { castVote, hasPendingVoteTransaction } = useCastVote(user, lastClaimedBlocknumber);
 	const { minRequiredVotingPower } = useMinRequiredVotingPower();
 
 	const userVotingPower = useVotingPower();
@@ -179,8 +179,8 @@ export function GovernancePage() {
 			: 0;
 
 	const userHasVoted = useMemo(() => {
-		return castVote.status === "SUCCESS" && castVote.data ? true : false;
-	}, [castVote]);
+    return castVote.status === "SUCCESS" && castVote.data && !hasPendingVoteTransaction ? true : false;
+  }, [castVote, hasPendingVoteTransaction]);
 
 	const { userCanVote, totalUserVotingPower } = useMemo(() => {
 		const totalUserVotingPower =
