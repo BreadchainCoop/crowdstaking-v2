@@ -1,9 +1,13 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import NewSwap from "../bakery/components/Swap/NewSwap";
+// import NewSwap from "../bakery/components/Swap/NewSwap";
 
-const Swap = dynamic(() => import("../bakery/components/Swap/Swap"), {
+// const Swap = dynamic(() => import("../bakery/components/Swap/Swap"), {
+// 	ssr: false,
+// });
+
+const NewSwap = dynamic(() => import("../bakery/components/Swap/NewSwap"), {
 	ssr: false,
 });
 
