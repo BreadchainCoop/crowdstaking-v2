@@ -12,7 +12,7 @@ import { TTransactionStatus } from "../../../context/TransactionsContext/Transac
 
 import { ExplorerLink } from "../../ExplorerLink";
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
-import { VoteModalState } from "@/app/core/context/ModalContext";
+import { useModal, VoteModalState } from "@/app/core/context/ModalContext";
 import { LiftedButton } from "@breadcoop/ui";
 
 const modalHeaderText: {
@@ -40,6 +40,7 @@ export function VoteTransactionModal({
 }: {
 	modalState: VoteModalState;
 }) {
+	const { setModal } = useModal();
 	const { transactionsState } = useTransactions();
 
 	const transaction = transactionsState.new
@@ -55,6 +56,8 @@ export function VoteTransactionModal({
 		throw new Error("Transaction modal requires a transaction!");
 
 	const txStatus = transaction.status as TTransactionStatus;
+
+	const closeModal = () => setModal(null);
 
 	return (
 		<ModalContainer>
@@ -78,7 +81,7 @@ export function VoteTransactionModal({
 						<div className="mt-6 w-full">
 							{txStatus === "CONFIRMED" ? (
 								<div className="lifted-button-container">
-									<LiftedButton preset="secondary">
+									<LiftedButton preset="secondary" onClick={closeModal}>
 										Close
 									</LiftedButton>
 								</div>
