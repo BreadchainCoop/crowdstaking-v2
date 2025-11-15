@@ -213,7 +213,7 @@ export function VotingPowerPanel() {
 								<></>
 							)}
 
-							{user.status === "CONNECTED" ? (
+							{/* {user.status === "CONNECTED" ? (
 								<></>
 							) : user.status === "UNSUPPORTED_CHAIN" ? (
 								<div className="col-span-2 pt-3">
@@ -232,7 +232,7 @@ export function VotingPowerPanel() {
 										Connect
 									</AccountMenu>
 								</div>
-							)}
+							)} */}
 						</div>
 						<HowDoesThisWorkButton href="https://breadchain.notion.site/Voting-Power-LP-Vaults-15e0ad9b12798026a4e6cb917c3137a5?pvs=74" />
 					</div>
