@@ -202,10 +202,7 @@ export function DistributionOverview({
 										<span className="text-surface-grey">
 											Distributing in{" "}
 										</span>
-										{differenceInDays(
-											cycleDates.end,
-											new Date()
-										)}{" "}
+										{Math.max(0, differenceInDays( cycleDates.end, new Date()))}{" "}
 										days
 									</Body>
 									<div className="flex gap-0.5 border border-black overflow-clip">
