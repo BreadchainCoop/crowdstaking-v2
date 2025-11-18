@@ -22,6 +22,7 @@ import {
   ArrowRightIcon,
   CaretDownIcon,
 } from "@phosphor-icons/react/ssr";
+import { Spinner } from "@/app/core/components/Icons/Spinner";
 
 interface CycleDistribution {
   cycleNumber: number;
@@ -66,10 +67,6 @@ export function VotingHistory() {
   const { cycleDistribution, totalDistributions } =
     useDistributions(cycleIndex);
 
-  if (!cycleDistribution) {
-    return <p>Loading...</p>;
-  }
-
   const updateCycleIdex = (_index: number) => {
     setCycleIndex((prev) => {
       // Using non-null assertion (!) because totalDistributions is guaranteed to be available at this point.
@@ -87,9 +84,16 @@ export function VotingHistory() {
     });
   };
 
+  console.log({cycleIndex})
+
   if (!cycleDistribution) {
-    return <p>Loading...</p>;
-  }
+		return (
+			<div className="flex items-center justify-center flex-col">
+				<Body>Loading...</Body>
+        <Spinner />
+			</div>
+		);
+	}
 
   return (
 		<>
@@ -130,7 +134,12 @@ export function VotingHistory() {
 					<TopCard title="Previous cycle">
 						<LiftedButton
 							preset="stroke"
-							onClick={() => updateCycleIdex(1)}
+							onClick={() => {
+                // TODO: Remove when disabled prop works in the library
+                if (!totalDistributions || cycleIndex === totalDistributions - 1) return;
+
+                updateCycleIdex(1)
+              }}
 							disabled={
 								!totalDistributions ||
 								cycleIndex === totalDistributions - 1
@@ -147,7 +156,12 @@ export function VotingHistory() {
 						</Body>
 						<LiftedButton
 							preset="stroke"
-							onClick={() => updateCycleIdex(-1)}
+							onClick={() => {
+                // TODO: Remove when disabled prop works in the library
+                if (!totalDistributions || cycleIndex === 0) return;
+
+                updateCycleIdex(-1)
+              }}
 							disabled={!totalDistributions || cycleIndex === 0}
 							className="h-[32px] w-[32px] p-0"
 						>
