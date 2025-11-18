@@ -370,7 +370,7 @@ const BakedBreadCoopInfoItem = ({
 }) => {
 	return (
 		<div className="flex items-center justify-between mb-2">
-			<Body className="w-full max-w-[11.5rem] text-surface-grey text-sm mr-auto">
+			<Body className="w-full max-w-72 shrink text-surface-grey text-sm mr-auto">
 				{label}
 			</Body>
 			<div className="flex items-center justify-start flex-1 gap-2">
