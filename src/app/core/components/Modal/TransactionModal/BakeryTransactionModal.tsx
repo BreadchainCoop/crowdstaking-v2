@@ -239,7 +239,7 @@ export function BakeryTransactionModal({
 			</ModalHeading>
 
 			<ModalContent>
-				{/* {transactionIcons[txStatus]} */}
+				{transactionIcons[txStatus]}
 				{transaction.status === "CONFIRMED" && (
 					<ModalAdviceText>
 						{modalAdviceText(transaction.data.type, txStatus)}

@@ -69,11 +69,11 @@ export function ModalHeading({
 	showCloseButton?: Boolean;
 }) {
 	return (
-		<Heading2 className="text-2xl text-left w-full mr-auto flex items-center justify-between">
+		<Heading2 className="text-2xl text-left w-full mr-auto flex items-center justify-between pl-2">
 			{children}
 			{showCloseButton && (
 				// TODO: Use color name from library
-				<DialogPrimitiveClose className="w-10 h-10 p-3 text-[#EA5817] relative right-[-1.1rem]">
+				<DialogPrimitiveClose className="w-10 h-10 pr-3 pl-2 text-[#EA5817]">
 					<CloseIcon />
 				</DialogPrimitiveClose>
 			)}

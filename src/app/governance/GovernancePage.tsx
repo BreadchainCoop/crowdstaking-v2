@@ -245,8 +245,8 @@ export function GovernancePage() {
 
 	return (
 		<section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
-			<div className="mb-4">
-				<Heading2 className="text-2xl">
+			<div className="mb-4 max-w-xl">
+				<Heading2 className="text-2xl lg:text-[2.5rem]">
 					<span className="uppercase">
 						Bread Solidarity Fund &mdash;
 					</span>{" "}

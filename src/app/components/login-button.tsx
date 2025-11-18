@@ -23,14 +23,12 @@ export const LoginButton = ({
 	if (user.status === "UNSUPPORTED_CHAIN") {
 		return (
 			<div className="[&>*]:w-full">
-				return (
 				<LiftedButton
 					onClick={() => openChainModal?.()}
 					className="w-full"
 				>
 					Change network
 				</LiftedButton>
-				);
 			</div>
 		);
 	}
