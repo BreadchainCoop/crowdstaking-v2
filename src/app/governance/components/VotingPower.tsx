@@ -182,7 +182,7 @@ function NotEnoughPower() {
 }
 
 function UserHasVoted({ cycleDates }: { cycleDates: CycleDatesSuccess }) {
-	const days = differenceInDays(cycleDates.end, Date.now());
+	const days = Math.max(0, differenceInDays(cycleDates.end, Date.now()));
 
 	return (
 		<div className={clsx(widgetBaseClasses, "border-system-green")}>
