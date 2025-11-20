@@ -1,10 +1,10 @@
 import {
-  ModalAdviceText,
-  ModalContainer,
-  ModalContent,
-  ModalHeading,
-  transactionIcons,
-  TransactionValue,
+	ModalAdviceText,
+	ModalContainer,
+	ModalContent,
+	ModalHeading,
+	transactionIcons,
+	TransactionValue,
 } from "../ModalUI";
 import {
 	TSafeTransactionSubmitted,
@@ -26,7 +26,7 @@ import { useTransactions } from "@/app/core/context/TransactionsContext/Transact
 import { BakeryTransactionModalState } from "@/app/core/context/ModalContext";
 import { BREAD_ADDRESS } from "@/constants";
 import { ERC20_ABI } from "@/abi";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import { formatBalance, formatSupply } from "@/app/core/util/formatter";
 import { formatUnits } from "viem";
 import { useRefetchOnBlockChange } from "@/app/core/hooks/useRefetchOnBlockChange";
@@ -42,6 +42,7 @@ import clsx from "clsx";
 import { ArrowUpRightIcon } from "@phosphor-icons/react";
 import Image from "next/image";
 import { Close as DialogPrimitiveClose } from "@radix-ui/react-dialog";
+import { sleep } from "@/utils/sleep";
 
 function makeHeaderText(
 	modalType: "BAKE" | "BURN",
@@ -144,6 +145,7 @@ export function BakeryTransactionModal({
 }: {
 	modalState: BakeryTransactionModalState;
 }) {
+	const handImgRef = useRef<HTMLImageElement>(null);
 	const { data: APY } = useVaultAPY();
 	const { BREAD } = useTokenBalances();
 	const { data: supply } = useRefetchOnBlockChange(
@@ -232,6 +234,17 @@ export function BakeryTransactionModal({
 		);
 	}
 
+	useEffect(() => {
+		const animateHandImg = async () => {
+			if (txStatus !== "CONFIRMED") return;
+
+			handImgRef.current?.classList.add("h-10");
+			handImgRef.current?.classList.remove("h-0");
+		};
+
+		animateHandImg();
+	}, [txStatus]);
+
 	return (
 		<ModalContainer>
 			<ModalHeading>
@@ -239,7 +252,19 @@ export function BakeryTransactionModal({
 			</ModalHeading>
 
 			<ModalContent>
-				{transactionIcons[txStatus]}
+				{txStatus === "CONFIRMED" &&
+				transaction.data.type === "BAKE" ? (
+					<div className="overflow-hidden max-w-max">
+						<img
+							ref={handImgRef}
+							src="/bake-hand.png"
+							alt=""
+							className="opacity-[0.4] transition-all duration-700 h-0"
+						/>
+					</div>
+				) : (
+					<>{transactionIcons[txStatus]}</>
+				)}
 				{transaction.status === "CONFIRMED" && (
 					<ModalAdviceText>
 						{modalAdviceText(transaction.data.type, txStatus)}
