@@ -110,6 +110,8 @@ export default function Bake({
 	// simulate bake flow
 	// useEffect(() => {
 	// 	const fill = async () => {
+	// 		const hash = "0xe298b92e1b3b3fa3f03e1bdf9d6973d4ed6047512ed3c8384b7a6e52243d7fed";
+
 	// 		transactionsDispatch({
 	// 			type: "NEW",
 	// 			payload: {
@@ -117,25 +119,14 @@ export default function Bake({
 	// 			},
 	// 		});
 
-	// 		setModal({
-	// 			type: "BAKERY_TRANSACTION",
-	// 			hash: null,
-	// 		});
+	// 		setModal({ type: "BAKERY_TRANSACTION", hash: null });
 
 	// 		await sleep(1000);
 
 	// 		console.log("Submitted");
 
-	// 		transactionsDispatch({
-	// 			type: "SET_SUBMITTED",
-	// 			payload: {
-	// 				"hash": "0x431cec99f7987f59b177e725fcc000ace4797c7a80b78e67d86d64c7f0c1e8f4",
-	// 			},
-	// 		});
-	// 		setModal({
-	// 			type: "BAKERY_TRANSACTION",
-	// 			hash: "0x431cec99f7987f59b177e725fcc000ace4797c7a80b78e67d86d64c7f0c1e8f4",
-	// 		});
+	// 		transactionsDispatch({ type: "SET_SUBMITTED", payload: { hash } });
+	// 		setModal({ type: "BAKERY_TRANSACTION", hash });
 	// 	};
 
 	// 	fill();
