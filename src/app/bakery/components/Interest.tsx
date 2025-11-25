@@ -104,7 +104,7 @@ export const Interest = () => {
 
 	return (
 		<>
-			<div className="flex items-start justify-end">
+			<div className="flex items-start justify-end md:justify-start">
 				<Logo
 					variant="line"
 					className="mr-2 shrink-0 w-[clamp(2rem,calc(1.1rem+4.5vw),4.0625rem)] md:mr-1 md:self-center md:mb-8 lg:w-[4.0625rem] lg:h-[4.0625rem] lg:mr-3"

@@ -4,22 +4,30 @@ import { Body } from "@breadcoop/ui";
 import { Chip } from "./Chip";
 import { FALLBACK_APY_VALUE, useVaultAPY } from "@/app/core/hooks/useVaultAPY";
 import { formatUnits } from "viem";
+import { ExternalLink } from "@/app/core/components/ExternalLink";
 
 export const Apy = () => {
 	const { data, error } = useVaultAPY();
 
 	return (
-		<Chip className="max-w-max">
-			<ChartLine />
-			<Body bold>
-				{data
-					? (Number(formatUnits(data as bigint, 18)) * 100).toFixed(1)
-					: error
-					? FALLBACK_APY_VALUE
-					: ".."}
-				% APY
-			</Body>
-		</Chip>
+		<ExternalLink
+			href="https://app.spark.fi/savings/gnosis/sdai"
+			className="!text-current shrink-0"
+		>
+			<Chip className="max-w-max gap-x-2.5 bg-paper-main hover:bg-[#EA581733] transition-colors">
+				<ChartLine />
+				<Body bold>
+					{data
+						? (
+								Number(formatUnits(data as bigint, 18)) * 100
+						  ).toFixed(1)
+						: error
+						? FALLBACK_APY_VALUE
+						: ".."}
+					% APY
+				</Body>
+			</Chip>
+		</ExternalLink>
 	);
 };
 
