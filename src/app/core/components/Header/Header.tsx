@@ -83,7 +83,7 @@ function Header() {
 					{/* Invisible hover bridge (eliminates gap) */}
 					<div className="h-4 -mt-4" aria-hidden="true" />
 
-					<div className="bg-paper-main overflow-hidden">
+					<div className="bg-paper-main border border-paper-2 overflow-hidden">
 						{/* Focusable container so focus-within works */}
 						<div tabIndex={-1}>
 							<NavSolidarityApps
