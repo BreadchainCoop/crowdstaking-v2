@@ -24,6 +24,7 @@ export function Bridge() {
 
   useEffect(() => {
     const onRouteExecutionCompleted = (route: Route) => {
+      console.log("__ BRIDGE COMPLETED __", route);
       setModal({ type: "LIFI_BRIDGE", route });
     };
     const onRouteExecutionFailed = (update: RouteExecutionUpdate) => {
