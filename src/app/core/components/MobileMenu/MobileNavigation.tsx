@@ -5,9 +5,10 @@ import type { ReactNode } from "react";
 import { LinkIcon } from "@/app/core/components/Icons/LinkIcon";
 
 import { useConnectedUser } from "../../hooks/useConnectedUser";
+import PageMenuLink from "../Header/page-menu-link";
 
 interface IProps {
-  handleNavToggle: () => void;
+	handleNavToggle: () => void;
 }
 
 export function MobileNavigation({ handleNavToggle }: IProps) {
@@ -15,20 +16,20 @@ export function MobileNavigation({ handleNavToggle }: IProps) {
 	const user = useConnectedUser();
 	return (
 		<nav className="flex flex-col gap-2">
-			<MobileNavigationLink
+			<PageMenuLink
 				isCurrentPage={pathname === "/"}
 				href="/"
 				onClick={() => handleNavToggle()}
 			>
 				Bake
-			</MobileNavigationLink>
-			<MobileNavigationLink
+			</PageMenuLink>
+			<PageMenuLink
 				isCurrentPage={false}
 				href="/governance"
 				onClick={() => handleNavToggle()}
 			>
 				Governance
-			</MobileNavigationLink>
+			</PageMenuLink>
 			{user.user.features.lpVaults && (
 				<>
 					<Link
@@ -58,37 +59,37 @@ export function MobileNavigation({ handleNavToggle }: IProps) {
 		</nav>
 	);
 }
-export function MobileNavigationLink(props: {
-	children: ReactNode;
-	href: string;
-	onClick: () => void;
-	isCurrentPage?: boolean;
-	isExternal?: boolean;
-}) {
-	const { href, children, isCurrentPage, isExternal, onClick } = props;
+// export function MobileNavigationLink(props: {
+// 	children: ReactNode;
+// 	href: string;
+// 	onClick: () => void;
+// 	isCurrentPage?: boolean;
+// 	isExternal?: boolean;
+// }) {
+// 	const { href, children, isCurrentPage, isExternal, onClick } = props;
 
-	const classList = clsx(
-		"text-base font-normal",
-		isCurrentPage ? "text-[#EA5817]" : "text-text-standard"
-	);
+// 	const classList = clsx(
+// 		"text-base font-normal",
+// 		isCurrentPage ? "text-[#EA5817]" : "text-text-standard"
+// 	);
 
-	if (isExternal) {
-		return (
-			<a
-				href={href}
-				className={classList}
-				target="_blank"
-				rel="noopener noreferrer"
-				onClick={onClick}
-			>
-				{children}
-			</a>
-		);
-	}
+// 	if (isExternal) {
+// 		return (
+// 			<a
+// 				href={href}
+// 				className={classList}
+// 				target="_blank"
+// 				rel="noopener noreferrer"
+// 				onClick={onClick}
+// 			>
+// 				{children}
+// 			</a>
+// 		);
+// 	}
 
-	return (
-		<Link href={href} onClick={onClick} className={classList}>
-			{children}
-		</Link>
-	);
-}
+// 	return (
+// 		<Link href={href} onClick={onClick} className={classList}>
+// 			{children}
+// 		</Link>
+// 	);
+// }
