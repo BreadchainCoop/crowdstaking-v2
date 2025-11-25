@@ -42,7 +42,7 @@ export function MobileMenu({ isOpen, handleNavToggle }: IProps) {
 					</button>
 				</div>
 				<MobileNavigation handleNavToggle={handleNavToggle} />
-				<NavSolidarityApps current="fund" className="mt-6" />
+				<NavSolidarityApps showTitle showSelected rearranged current="fund" className="mt-6" />
 				{user.status === "CONNECTED" ? (
 					<NavMobileAccountMenu />
 				) : (
