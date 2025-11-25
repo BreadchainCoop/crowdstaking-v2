@@ -1,4 +1,4 @@
-import { ExternalLink } from "./Icons/ExternalLink";
+import { ArrowUpRightIcon } from "@phosphor-icons/react";
 
 export function ExplorerLink({ to }: { to: string }) {
   return (
@@ -9,9 +9,7 @@ export function ExplorerLink({ to }: { to: string }) {
       className="flex items-center justify-center gap-1 text-breadpink-shaded"
     >
       <span className="font-medium">View on Explorer</span>
-      <span className="w-5 h-5">
-        <ExternalLink />
-      </span>
+      <ArrowUpRightIcon color="var(--color-primary-orange)" />
     </a>
   );
 }

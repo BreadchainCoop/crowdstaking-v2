@@ -228,7 +228,7 @@ function ModeBtn({
 	return (
 		<button
 			// TODO: BOrder color here -> library color is different from figma
-			className={`py-1 px-2 font-bold border ${
+			className={`py-1 px-2 font-bold border hover:text-surface-ink transition-colors ${
 				selected
 					? "text-surface-ink border-[#EA5817]"
 					: "text-surface-grey border-transparent"

@@ -238,7 +238,7 @@ export function BakeryTransactionModal({
 		const animateHandImg = async () => {
 			if (txStatus !== "CONFIRMED") return;
 
-			handImgRef.current?.classList.add("h-10");
+			handImgRef.current?.classList.add("h-[5.5rem]");
 			handImgRef.current?.classList.remove("h-0");
 		};
 
@@ -282,12 +282,11 @@ export function BakeryTransactionModal({
 						transaction.data.type === "BURN" ? "mt-2" : ""
 					)}
 				>
-					{transaction.status === "CONFIRMED" &&
-						transaction.data.type === "BAKE" && (
-							<span>
-								<Logo variant="square" size={24} />
-							</span>
-						)}
+					{transaction.data.type === "BAKE" && (
+						<span>
+							<Logo variant="square" size={24} />
+						</span>
+					)}
 					{transaction.data.type === "BURN" && <XDAIIcon />}
 					<TransactionValue
 						value={

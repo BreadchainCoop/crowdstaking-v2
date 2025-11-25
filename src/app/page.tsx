@@ -28,7 +28,7 @@ export default function Home() {
         <Heading1 className="text-[2.5rem] text-primary-orange mb-4 md:max-w-[32rem] md:flex md:flex-col md:leading-[0.9] md:text-[3.5rem] lg:text-[4rem]">
           <span>THE</span> <span>SOLIDARITY</span> <span>FUND</span>
         </Heading1>
-        <div className="row-span-2">
+        <div className="row-span-2 md:w-full md:max-w-[451px]">
           <Suspense>
             <SwapWrapper />
           </Suspense>
