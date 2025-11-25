@@ -3,6 +3,9 @@ import { Body, Caption } from "@breadcoop/ui";
 interface NavSolidarityAppsProps {
 	current?: "fund" | "stacks" | "net";
 	className?: string;
+	showTitle?: boolean;
+	showSelected?: boolean;
+	rearranged?: boolean;
 }
 
 const _apps = [
@@ -32,21 +35,32 @@ const _apps = [
 const NavSolidarityApps = ({
 	current,
 	className = "",
+	showTitle,
+	showSelected,
+	rearranged,
 }: NavSolidarityAppsProps) => {
-	const apps = [..._apps].sort((a, b) => {
-		if (a.id === current) return -1;
-		if (b.id === current) return 1;
-		return 0;
-	});
+	const apps = rearranged
+		? [..._apps].sort((a, b) => {
+				if (a.id === current) return -1;
+				if (b.id === current) return 1;
+				return 0;
+		  })
+		: [..._apps];
 
 	return (
 		<section className={className}>
-			<Body className="text-surface-grey mb-4">Solidarity apps</Body>
+			{showTitle && (
+				<Body className="text-surface-grey mb-4">Solidarity apps</Body>
+			)}
 			<ul className="flex flex-col gap-2">
 				{[...apps].map((app) => (
 					<li
 						key={app.id}
-						className="flex items-center justify-start"
+						className={`flex items-center justify-start p-2.5 border ${
+							current === app.id
+								? "border-[#EA5817]"
+								: "border-transparent"
+						}`}
 					>
 						<span className={`mr-2 ${app.color}`}>
 							<AppSvg />
@@ -55,7 +69,7 @@ const NavSolidarityApps = ({
 							<div className="flex items-center justify-start font-bold">
 								<Body>{app.label}</Body>
 								{app.comingSoon && (
-									<Caption className="text-sm ml-2 text-[#EA5817]">
+									<Caption className="text-xs ml-2 text-[#EA5817]">
 										Coming soon
 									</Caption>
 								)}
@@ -64,7 +78,7 @@ const NavSolidarityApps = ({
 								{app.desc}
 							</Body>
 						</div>
-						{current === app.id && (
+						{showSelected && current === app.id && (
 							<Caption className="font-bold text-system-green">
 								Selected
 							</Caption>
