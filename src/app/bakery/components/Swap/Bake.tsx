@@ -2,7 +2,6 @@ import { useWriteContract, useSimulateContract } from "wagmi";
 import { parseEther } from "viem";
 
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
-import Button from "@/app/core/components/Button";
 import { BREAD_ABI } from "@/abi";
 import useDebounce from "@/app/bakery/hooks/useDebounce";
 
