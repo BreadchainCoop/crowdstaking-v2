@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className={clsx(WRAPPER_CLASSES, "")}>
-      <div className="md:grid md:grid-cols-2 md:gap-x-6">
+      <div className="md:grid md:grid-cols-2 md:gap-x-6 lg:gap-x-[9.5rem]">
         <Heading1 className="text-[2.5rem] text-primary-orange mb-4 md:max-w-[32rem] md:flex md:flex-col md:leading-[0.9] md:text-[3.5rem] lg:text-[4rem]">
           <span>THE</span> <span>SOLIDARITY</span> <span>FUND</span>
         </Heading1>
@@ -35,7 +35,7 @@ export default function Home() {
         </div>
         <div className="md:max-w-[32rem]">
           <Interest />
-          <div className="md:flex md:items-center md:justify-start md:gap-4">
+          <div className="md:flex md:items-center md:justify-start md:gap-4 md:flex-wrap lg:flex-nowrap">
             <BreadCirculation />
             <Apy />
           </div>
