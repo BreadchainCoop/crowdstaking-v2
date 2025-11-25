@@ -30,10 +30,12 @@ const Item = ({
 	children: ReactNode;
 }) => {
 	return (
-		<li className="flex items-center justify-start">
+		<li className={clsx("flex items-center justify-start gap-2")}>
 			<Icon />
 			<Body className="mr-auto ml-2">{label}</Body>
-			<div className="flex items-center justify-center">{children}</div>
+			<div className="flex items-center justify-center gap-2">
+				{children}
+			</div>
 		</li>
 	);
 };
@@ -74,17 +76,17 @@ const NavAccountDetails = ({
 						)
 					}
 				>
-					<CopyIcon />
+					<CopyIcon size={24} />
 				</button>
 				<Link
 					href={GNOSIS_LINK + (account.address || "")}
 					className="text-surface-grey"
 				>
-					<ArrowUpRightIcon />
+					<ArrowUpRightIcon size={24} />
 				</Link>
 			</Item>
 			<Item Icon={WalletSvg} label="Bread Balance">
-				<div className="flex items-center justify-center gap-2">
+				<>
 					<Logo size={24} />
 					<Body>
 						{BREAD &&
@@ -94,10 +96,10 @@ const NavAccountDetails = ({
 								formatBalance(parseFloat(BREAD.value), 2)
 							)}
 					</Body>
-				</div>
+				</>
 			</Item>
 			<Item Icon={HandHeartSvg} label="Donation">
-				<div className="flex items-center justify-center gap-2">
+				<>
 					<Logo size={24} />
 					{BREAD && BREAD.status === "SUCCESS" && BREAD.value && (
 						<>
@@ -120,7 +122,7 @@ const NavAccountDetails = ({
 							</Caption>
 						</>
 					)}
-				</div>
+				</>
 			</Item>
 			<Item Icon={GraphSvg} label="Network">
 				<div className="flex items-center justify-center">
