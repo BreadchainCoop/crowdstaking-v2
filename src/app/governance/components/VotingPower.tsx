@@ -186,8 +186,8 @@ function UserHasVoted({ cycleDates }: { cycleDates: CycleDatesSuccess }) {
 
 	return (
 		<div className={clsx(widgetBaseClasses, "border-system-green")}>
-			<div className="flex gap-4">
-				<div className="flex items-center text-system-green">
+			<div className="flex gap-2">
+				<div className="flex items-center text-system-green -mt-1">
 					<svg
 						width="24"
 						height="24"
