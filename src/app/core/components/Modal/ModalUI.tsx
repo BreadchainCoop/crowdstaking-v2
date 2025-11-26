@@ -107,12 +107,16 @@ export function ModalAdviceText({ children }: { children: ReactNode }) {
 export function TransactionValue({
 	value,
 	children,
+	className,
 }: {
 	value: string;
 	children?: ReactNode;
+	className?: string;
 }) {
 	return (
-		<Heading3 className="leading-[1.5] pt-[0.2rem] md:text-2xl">
+		<Heading3
+			className={clsx("leading-[1.5] pt-[0.2rem] md:text-2xl", className)}
+		>
 			{/* <span title={parseFloat(value).toString()}>
 				{formatBalance(parseFloat(value), 2)}
 			</span> */}
