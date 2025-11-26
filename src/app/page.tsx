@@ -62,18 +62,19 @@ export default function Home() {
         </figure>
         <div className="md:max-w-[32rem]">
           <div className="max-w-[42.375rem] md:max-w-[30rem]">
-            <Heading2>In this fund, we decide together.</Heading2>
-            <Body className="mt-4">
+            <Heading2>We decide, together.</Heading2>
+            <Body className="mt-3 mb-5 text-surface-grey-2">
               We are unique because we allow anyone that bakes and
               holds $BREAD to decide over where the interest
               should go.
             </Body>
           </div>
           <div>
-            <div className="flex items-center justify-start flex-wrap gap-4 mb-2 mt-4">
+            <div className="flex items-center justify-start flex-wrap gap-4">
               <ProjectBackers />
-              <MonthlyVoters />
+              {/* <MonthlyVoters /> */}
             </div>
+            <Body className="my-5 text-surface-grey-2 text-xs">This is the total people that can decide where funding goes.*</Body>
             <ViewAnalytics />
           </div>
           <Actions />

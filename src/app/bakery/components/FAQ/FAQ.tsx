@@ -15,7 +15,7 @@ function AccordionItem({
 	return (
 		<Accordion.Item
 			value={value}
-			className="bg-paper-0 px-6 py-3 border border-surface-ink mb-4"
+			className="bg-paper-0 px-6 py-3 border border-surface-ink hover:border-[#EA5817] transition-colors"
 		>
 			{children}
 		</Accordion.Item>
@@ -59,7 +59,7 @@ function AccordionTrigger({ children }: { children: ReactNode }) {
 function AccordionContent({ children }: { children: ReactNode }) {
 	return (
 		<Accordion.Content>
-			<div className="mt-2.5 flex flex-col gap-2.5">{children}</div>
+			<div className="mt-2.5 flex flex-col gap-2.5 text-surface-grey-2">{children}</div>
 		</Accordion.Content>
 	);
 }
@@ -70,7 +70,7 @@ export default function FAQ() {
 			<Heading2 className="text-center mb-6">FAQ</Heading2>
 			<Accordion.Root
 				type="single"
-				className="flex flex-col gap-1 max-w-2xl m-auto px-2"
+				className="flex flex-col gap-2 max-w-2xl m-auto px-2"
 				collapsible
 			>
 				<AccordionItem value="1">
