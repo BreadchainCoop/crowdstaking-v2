@@ -23,6 +23,10 @@ body {
   .lifted-button-container button {
     @apply w-full;
   }
+
+  .chip-transition {
+    @apply bg-paper-main hover:bg-[#EA581733] transition-colors;
+  }
 }
 
 /* Hide all buttons to select a network */

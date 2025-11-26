@@ -3,6 +3,7 @@
 import { Body } from "@breadcoop/ui";
 import { Chip } from "./Chip";
 import { useQuery } from "@tanstack/react-query";
+import { ExternalLink } from "@/app/core/components/ExternalLink";
 
 // Value as at when I ran the query
 const FALLBACK_BREAD_BACKERS = 209;
@@ -20,12 +21,18 @@ export const ProjectBackers = () => {
 	});
 
 	return (
-		<Chip>
-			<UsersThreeicon />
-			<Body bold>
-				{data || (isLoading ? "--" : FALLBACK_BREAD_BACKERS)} Backers
-			</Body>
-		</Chip>
+		<ExternalLink
+			href="https://dune.com/bread_cooperative/solidarity"
+			className="!text-current shrink-0 w-full"
+		>
+			<Chip className="chip-transition w-full">
+				<UsersThreeicon />
+				<Body bold>
+					{data || (isLoading ? "--" : FALLBACK_BREAD_BACKERS)}{" "}
+					Backers
+				</Body>
+			</Chip>
+		</ExternalLink>
 	);
 };
 
