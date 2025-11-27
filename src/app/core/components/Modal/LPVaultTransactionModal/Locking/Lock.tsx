@@ -143,9 +143,11 @@ export function Lock({
 
   if (lockingState.status === "deposit_transaction_submitted") {
     return (
-      <LiftedButton onClick={() => {}} disabled width="full">
-        Locking...
-      </LiftedButton>
+      <div className="lifted-button-container">
+        <LiftedButton onClick={() => {}} disabled width="full">
+          Locking...
+        </LiftedButton>
+      </div>
     );
   }
 
