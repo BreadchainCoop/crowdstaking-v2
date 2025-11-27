@@ -78,16 +78,21 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
   return (
     <AccordionItem
       value="first"
-      className="grid w-full flex-col border-2 border-paper-0 rounded-sm bg-bread-paper"
+      // className="grid w-full flex-col border-2 border-paper-1 bg-bread-paper shadow-[0_4px_8px_0_#1B201A0F]"
+      className="w-full border border-paper-1 bg-bread-paper shadow-[0_0.25rem_0.5rem_0_#1B201A0F] hover:border-[#EA5817] p-5 transition-colors data-[state=open]:border-paper-1"
     >
       <AccordionHeader className="flex flex-col gap-6 md:gap-2">
-        <AccordionTrigger className="flex flex-col py-8 px-4 gap-6 group">
+        {/* <AccordionTrigger className="flex flex-col py-8 px-4 gap-6 group"> */}
+        <AccordionTrigger className="flex flex-col gap-6 group">
           <div className="flex w-full flex-wrap">
-            <div className="flex pr-4">
-              <Logo size={24} color="orange" variant="square" />
-              <div className="transform -translate-x-1">
-                <WXDAIIcon />
-              </div>
+            <div className="mr-2">
+              <img
+                src="/bread-wxdai-third-quarter.svg"
+                alt="Bread/WXDAI"
+                height={24}
+                width={42}
+                className="h-6 w-[2.625rem]"
+              />
             </div>
             <Body bold className="grow text-[20px] text-left">
               {lpTokenMeta[tokenAddress].poolName}
@@ -136,7 +141,9 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
           </div>
         </AccordionTrigger>
       </AccordionHeader>
-      <AccordionContent className="pt-2 pb-4 md:px-20">
+      {/* <AccordionContent className="pt-2 pb-4 md:px-20"> */}
+      {/* <AccordionContent className="pt-2 md:px-20"> */}
+      <AccordionContent className="mt-8 md:px-[4.40625rem]">
         <div className="grid grid-cols-2 gap-5 px-5">
           <section className="col-span-2 lg:col-span-1 flex flex-col gap-4">
             {transactionType === "LOCK" && (
@@ -206,13 +213,13 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
             )}
           </section>
           <div className="col-span-2 lg:col-span-1">
-            <div className="py-4">
+            <div className="mb-6">
               <SelectTransaction
                 transactionType={transactionType}
                 setTransactionType={setTransactionType}
               />
             </div>
-            <Caption className="pb-2">
+            <Caption className="mb-2">
               {transactionType === "LOCK" ? "You deposit" : "You withdraw"}
             </Caption>
             <form
@@ -222,7 +229,7 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                 submitTransaction();
               }}
             >
-              <div className="flex flex-col gap-3 bg-paper-1 border border-paper-2 px-[10px] py-4">
+              <div className="flex flex-col gap-4 bg-paper-1 border border-paper-2 px-[10px] py-4">
                 <div className="flex gap-4 items-center">
                   {transactionType === "LOCK" ? (
                     <input
@@ -255,18 +262,19 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                       </div>
                     </div>
                   )}
-                  <div className="rounded-full flex gap-2 items-center px-1.5 py-[0.15625rem] shadow-[0_4px_10px_0px_#0000001A]">
+                  {/* <div className="rounded-full flex gap-2 items-center px-1.5 py-[0.15625rem] shadow-[0_4px_10px_0px_#0000001A]"> */}
+                  <div className="flex items-center justify-center gap-2.5 border border-surface-grey bg-paper-main p-1">
                     <img
                       src="/WXDAIBread.svg"
                       alt="WXDAI Bread"
                       className="w-6 h-6"
                     />
-                    <Body bold>{lpTokenMeta[tokenAddress].tokenName}</Body>
+                    <Body bold className="pt-0.5">{lpTokenMeta[tokenAddress].tokenName}</Body>
                   </div>
                 </div>
                 <div className="flex items-center justify-end gap-2.5 text-xs">
                   {transactionType === "LOCK" ? (
-                    <>
+                    <Body bold className="text-xs">
                       <span>Unlocked LP tokens: </span>
                       {lpTokenBalance?.status === "SUCCESS"
                         ? lpTokenBalance.value
@@ -277,12 +285,12 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                           setInputValue(lpTokenBalance.value);
                         }}
                       >
-                        <Body>Max.</Body>
+                        Max
                       </MaxButton>
-                    </>
+                    </Body>
                   ) : (
-                    <>
-                      <Body>Locked LP tokens: </Body>
+                    <Body bold className="text-xs">
+                      <span>Locked LP tokens: </span>
                       {vaultTokenBalance?.butter.status === "success"
                         ? formatBalance(
                             Number(
@@ -291,7 +299,7 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                             3
                           )
                         : "-"}
-                    </>
+                    </Body>
                   )}
                 </div>
               </div>

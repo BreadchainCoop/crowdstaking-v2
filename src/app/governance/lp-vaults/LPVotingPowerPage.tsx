@@ -35,9 +35,9 @@ export function LPVotingPowerPage() {
           <VotingPowerPanel />
         </div>
       </PageGrid>
-      <div className="w-full pt-6">
-        <Heading3 className="text-[24px]">Manage your BREAD LP vaults</Heading3>
-        <Body>
+      <div className="w-full mt-20">
+        <Heading3 className="text-2xl mb-[1.375rem]">Manage your BREAD LP vaults</Heading3>
+        <Body className="mb-8">
           Lock LP tokens for voting power within the Bread Cooperative
           solidarity fund.
         </Body>
