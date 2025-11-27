@@ -1,7 +1,7 @@
 import CircularProgress from "@/app/components/circular-progress";
 
-export function Spinner() {
-  return <CircularProgress />
+export function Spinner({ className }: { className?: string }) {
+  return <CircularProgress className={className} />
   // return (
   //   <svg
   //     className="stroke-current fill-current"

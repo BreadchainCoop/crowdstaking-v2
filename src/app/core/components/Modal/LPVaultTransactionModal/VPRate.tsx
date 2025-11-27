@@ -2,6 +2,7 @@ import { formatUnits } from "viem";
 import { FistIcon } from "../../Icons/FistIcon";
 import { ReactNode } from "react";
 import { formatBalance } from "@/app/core/util/formatter";
+import { Chip } from "@/app/bakery/components/Chip";
 
 export function LockVPRate({
   value,
@@ -84,7 +85,8 @@ function TextLabel({ children }: { children: ReactNode }) {
 function LpLabel() {
   return (
     <div className="text-surface-grey col-span-1 row-span-1 justify-center flex">
-      <TextLabel>Locked LP tokens</TextLabel>
+      {/* <TextLabel>Locked LP tokens</TextLabel> */}
+      <TextLabel>LP tokens</TextLabel>
     </div>
   );
 }
@@ -126,10 +128,15 @@ export function WXDaiBreadIcon() {
 
 export function PillContainer({ children }: { children: ReactNode }) {
   return (
-    <div className="border border-surface-grey w-full flex gap-2 items-center px-2 py-1">
+    <Chip className="border-surface-ink py-1! px-4! bg-paper-main">
       {children}
-    </div>
+    </Chip>
   );
+  // return (
+  //   <div className="border border-surface-grey w-full flex gap-2 items-center px-2 py-1">
+  //     {children}
+  //   </div>
+  // );
 }
 
 export function ValueText({ children }: { children: ReactNode }) {
