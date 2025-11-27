@@ -1,19 +1,21 @@
 import { ReactNode } from "react";
 import { Hex } from "viem";
 import Image from "next/image";
-import { Badge, LinkBadge } from "@/app/core/components/Badge/Badge";
-import { BreadIcon } from "@/app/core/components/Icons/TokenIcons";
+// import { Badge, LinkBadge } from "@/app/core/components/Badge/Badge";
+// import { BreadIcon } from "@/app/core/components/Icons/TokenIcons";
 import { FistIcon } from "@/app/core/components/Icons/FistIcon";
 import { formatVotePercentage } from "@/app/core/util/formatter";
 import { projectsMeta } from "@/app/projectsMeta";
 import type { TConnectedUserState } from "@/app/core/hooks/useConnectedUser";
 import { DecrementIcon, IncrementIcon } from "./Icons";
 import clsx from "clsx";
-import { CardBox } from "@/app/core/components/CardBox";
-import { LinkIcon } from "@/app/core/components/Icons/LinkIcon";
+// import { CardBox } from "@/app/core/components/CardBox";
+// import { LinkIcon } from "@/app/core/components/Icons/LinkIcon";
 import { useProject } from "@/app/core/context/ProjectContext/ProjectContext";
 import { Body, LiftedButton, Logo } from "@breadcoop/ui";
 import { ArrowUpRightIcon } from "@phosphor-icons/react";
+import { ExternalLink } from "@/app/core/components/ExternalLink";
+import { Chip } from "@/app/bakery/components/Chip";
 
 export function ProjectRow({
 	address,
@@ -62,134 +64,103 @@ export function ProjectRow({
 		<div className="shadow-[0px_4px_8px_0px_#1B201A0F]">
 			{/* small */}
 			<div className="sm:hidden py-3 px-5 flex flex-col justify-start gap-4">
-				<div className="flex flex-col gap-3">
+				<div className="flex flex-col gap-2">
 					<div className="flex gap-2">
-						<Image
-							className="w-8 h-8"
-							src={logoSrc}
-							alt={`${name} logo`}
-							width="56"
-							height="56"
-						/>
-						<div className="flex items-center justify-start gap-1">
-							<Body bold>{name}</Body>
-							<ArrowUpRightIcon color="#EA5817" />
+						<div className="flex items-center justify-center h-8 w-8 bg-white p-1">
+							<Image
+								className="w-6 h-6"
+								src={logoSrc}
+								alt={`${name} logo`}
+								width="24"
+								height="24"
+							/>
 						</div>
+						<ExternalLink
+							href={link}
+							className="flex items-center justify-start gap-1 text-[#EA5817]"
+						>
+							<Body bold className="text-black">
+								{name}
+							</Body>
+							<ArrowUpRightIcon size={24} />
+						</ExternalLink>
 					</div>
-					<Body className="text-xs mb-3">{description}</Body>
+					<Body className="text-xs mb-4">{description}</Body>
 					{projectBread?.status === "SUCCESS" && (
-						<div className="inline-block tracking-wide">
-							<LinkBadge
-								icon={<Logo size={20} />}
-								href={explorerLink()}
-							>
-								{renderBreadHolding(projectBread.value)}
-							</LinkBadge>
-						</div>
+						<ExternalLink
+							href={explorerLink()}
+							className="!text-[#EA5817] flex items-center justify-start w-full"
+						>
+							<Chip className="px-4! py-1! border-surface-ink! bg-paper-main flex items-center justify-center w-full">
+								<Logo size={20} />
+								<Body bold className="mt-1 mr-auto text-surface-ink">
+									{renderBreadHolding(projectBread.value)}
+								</Body>
+								<ArrowUpRightIcon size={20} />
+							</Chip>
+						</ExternalLink>
 					)}
 					{projectPower?.status === "SUCCESS" && (
-						<div className="inline-block tracking-wide">
-							<Badge icon={<FistIcon />}>
+						<Chip className="px-4! py-1! border-surface-ink! bg-paper-main flex items-center justify-start">
+							<FistIcon />
+							<Body bold className="mt-1">
 								{projectPower.value}
-							</Badge>
-						</div>
+							</Body>
+						</Chip>
 					)}
 				</div>
 				<div className="flex items-center justify-center">
 					{children}
 				</div>
-				{/* <div className=" flex flex-col gap-3">
-					<div className="flex gap-2">
-						<Image
-							className="w-8 h-8"
-							src={logoSrc}
-							alt={`${name} logo`}
-							width="56"
-							height="56"
-						/>
-						<div className="font-bold col-start-2 col-span-11 row-start-1 row-span-1 flex items-center font-bold sm:text-xl sm:font-normal text-breadgray-grey100 dark:text-breadgray-light-grey">
-							<a
-								className="flex gap-2 items-center font-bold sm:text-xl sm:font-normal dark:text-breadgray-ultra-white hover:text-breadpink-shaded transition-colors"
-								href={link}
-								target="_blank"
-								rel="noopener noreferrer"
-							>
-								<span className="font-bold">{name}</span>
-								<LinkIcon />
-							</a>
-						</div>
-					</div>
-					<div className="text-breadgray-rye dark:text-breadgray-grey">
-						{description}
-					</div>
-					{projectBread?.status === "SUCCESS" && (
-						<div className="inline-block tracking-wide">
-							<LinkBadge
-								icon={<BreadIcon size="small" />}
-								href={explorerLink()}
-							>
-								{renderBreadHolding(projectBread.value)}
-							</LinkBadge>
-						</div>
-					)}
-					{projectPower?.status === "SUCCESS" && (
-						<div className="inline-block tracking-wide">
-							<Badge icon={<FistIcon size="small" bg="burnt" />}>
-								{projectPower.value}
-							</Badge>
-						</div>
-					)}
-				</div>
-				<div className="flex items-center justify-center">
-					{children}
-				</div> */}
 			</div>
 			{/* large */}
 			<div className="hidden sm:flex flex-col sm:flex-row rounded-lg px-5 py-4 gap-4 lg:bg-[#FDFAF3]">
 				<div className="flex flex-col gap-4 grow">
-					<div className="flex gap-4 items-center">
-						<div className="flex items-center">
+					<div className="flex gap-2 items-end">
+						<div className="flex items-center justify-center h-16 w-16 bg-white p-1">
 							<Image
-								className="min-w-14 h-14 rounded-full"
+								className="w-12 h-12"
 								src={logoSrc}
 								alt={`${name} logo`}
-								width="56"
-								height="56"
+								width="48"
+								height="48"
 							/>
 						</div>
 						<div>
 							<div className="flex items-center mb-2">
-								<a
-									className="flex gap-2 items-center font-bold sm:text-xl sm:font-normal dark:text-breadgray-ultra-white hover:text-breadpink-shaded transition-colors"
+								<ExternalLink
 									href={link}
-									target="_blank"
-									rel="noopener noreferrer"
+									className="flex items-center justify-start gap-1"
 								>
-									<span className="font-bold">{name}</span>
-									<LinkIcon />
-								</a>
+									<Body bold className="text-black">
+										{name}
+									</Body>
+									<ArrowUpRightIcon size={24} />
+								</ExternalLink>
 							</div>
 							<div className="flex items-stretch justify-start gap-2">
 								{projectBread?.status === "SUCCESS" && (
-									<div className="tracking-wide">
-										<LinkBadge
-											className="h-full"
-											icon={<Logo size={20} />}
-											href={explorerLink()}
-										>
-											{renderBreadHolding(
-												projectBread.value
-											)}
-										</LinkBadge>
-									</div>
+									<ExternalLink
+										href={explorerLink()}
+										className="!text-current flex items-center justify-center"
+									>
+										<Chip className="px-4! py-1! border-surface-ink! bg-paper-main flex items-center justify-center">
+											<Logo size={20} />
+											<Body bold className="mt-1">
+												{renderBreadHolding(
+													projectBread.value
+												)}
+											</Body>
+										</Chip>
+									</ExternalLink>
 								)}
 								{projectPower?.status === "SUCCESS" && (
-									<div className="tracking-wide">
-										<Badge icon={<FistIcon />}>
+									<Chip className="px-4! py-1! border-surface-ink! bg-paper-main flex items-center justify-center">
+										<FistIcon />
+										<Body bold className="mt-1">
 											{projectPower.value}
-											{/* TODO #134 <span className="ms-3">Not voted</span> */}
-										</Badge>
-									</div>
+										</Body>
+									</Chip>
 								)}
 							</div>
 						</div>
@@ -309,20 +280,20 @@ function InputButton({
 }
 
 export function VoteDisplay({
-  points,
-  percentage,
+	points,
+	percentage,
 }: {
-  points: number;
-  percentage: number;
+	points: number;
+	percentage: number;
 }) {
-  return (
-    <div className="flex items-center gap-4 px-4 border-2 border-breadgray-light-grey dark:border-breadgray-rye rounded-lg dark:bg-breadgray-burnt">
-      <div className="text-2xl font-medium min-w-[3rem] text-center">
-        {points}
-      </div>
-      <div className="font-medium min-w-[4rem] text-right border-l-2 border-breadgray-light-grey dark:border-l-breadgray-rye">
-        {formatVotePercentage(percentage)}%
-      </div>
-    </div>
-  );
+	return (
+		<div className="flex items-center gap-4 px-4 border-2 border-breadgray-light-grey dark:border-breadgray-rye rounded-lg dark:bg-breadgray-burnt">
+			<div className="text-2xl font-medium min-w-[3rem] text-center">
+				{points}
+			</div>
+			<div className="font-medium min-w-[4rem] text-right border-l-2 border-breadgray-light-grey dark:border-l-breadgray-rye">
+				{formatVotePercentage(percentage)}%
+			</div>
+		</div>
+	);
 }

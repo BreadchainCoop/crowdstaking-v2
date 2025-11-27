@@ -84,8 +84,6 @@ export function VotingHistory() {
     });
   };
 
-  console.log({cycleIndex})
-
   if (!cycleDistribution) {
 		return (
 			<div className="flex items-center justify-center flex-col">
@@ -181,7 +179,7 @@ export function VotingHistory() {
 						How yield is distributed
 					</Body>
 					<div className="flex flex-col md:flex-row md:items-center justify-center gap-4">
-						<div className="mb-4 flex-1 flex items-center mb-0">
+						<div className="mb-4 flex-1 flex items-center">
 							<div className="w-1 h-13 bg-primary-orange mr-4" />
 							<div>
 								<Body
@@ -274,16 +272,20 @@ function VotingHistoryDetailMobile({ sortedProjects }: Details) {
                 className="border border-paper-2 bg-paper-0 py-2 px-4 mb-4 last:mb-0"
               >
                 <Accordion.Trigger className="flex items-center justify-between w-full group">
-                  <span className="inline-flex items-center justify-start w-4/6">
-                    <img
-                      src={meta.logoSrc}
-                      className="w-6 h-6 rounded-full mr-2"
-                      alt={`${meta.name}'s logo`}
-                    />
+                  <div className="inline-flex items-center justify-start w-4/6">
+                    <div className="w-6 h-6 flex items-center justify-center bg-paper-0 border-[0.015rem] border-paper-2 mr-2">
+											<img
+												src={meta.logoSrc}
+												className="w-[1.2rem] h-[1.2rem]"
+												alt={`${meta.name}'s logo`}
+                        width={19.2}
+                        height={19.2}
+											/>
+										</div>
                     <Body bold className="text-surface-grey mt-1">
                       {meta.name}
                     </Body>
-                  </span>
+                  </div>
                   <span className="inline-flex items-center justify-end w-1/6">
                     <span className="inline-flex justify-start items-center w-16">
                       <span className="mr-2">
@@ -400,14 +402,16 @@ function VotingHistoryDetailDesktop({ sortedProjects }: Details) {
                   className="text-breadgray-pitchblack dark:text-breadgray-ultra-white"
                 >
                   <td className="py-4 px-2">
-                    <div className="flex items-center gap-3">
-                      <span>
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 bg-paper-0 border-[0.015rem] border-paper-2 flex items-center justify-center">
                         <img
                           src={meta.logoSrc}
-                          className="w-6 h-6 rounded-full"
+                          className="w-[1.1625rem] h-[1.1625rem]"
                           alt={`${meta.name}'s logo`}
+                          width={18.6}
+                          height={18.6}
                         />
-                      </span>
+                      </div>
                       <Body bold className="text-surface-grey">
                         {meta.name}
                       </Body>
