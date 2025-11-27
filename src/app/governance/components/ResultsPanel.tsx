@@ -89,7 +89,7 @@ function ResultsProject({
 	return (
 		<div className="grid grid-cols-1 gap-2">
 			<Body className="flex gap-2">
-				<span className="grow">{projectsMeta[address].name}</span>
+				<span className="grow font-bold">{projectsMeta[address].name}</span>
 				<span className="text-surface-ink">{`${formatVotePercentage(
 					percentage
 				)}%`}</span>

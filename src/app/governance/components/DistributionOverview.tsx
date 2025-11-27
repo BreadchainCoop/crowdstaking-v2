@@ -10,7 +10,8 @@ import { useReadContract } from "wagmi";
 import { Heading2, Heading4, Body, Logo } from "@breadcoop/ui";
 import { ERC20_ABI, SDAI_ADAPTOR_ABI } from "@/abi";
 import { useEffect, useMemo, useState } from "react";
-import { differenceInDays, differenceInHours, format } from "date-fns";
+import { differenceInDays, differenceInHours, format, isAfter, isBefore } from "date-fns";
+
 import { formatUnits } from "viem";
 import clsx from "clsx";
 import { useDistributions } from "../useDistributions";
@@ -83,16 +84,16 @@ export function DistributionOverview({
     return () => clearInterval(intervalId);
   }, [claimableYield, yieldPerHour]);
 
-  const completedDays = useMemo(() => {
-    if (cycleDates.status !== "SUCCESS") return null;
-    const daysRemaining = differenceInDays(cycleDates.end, new Date());
-    const totalDaysCount = differenceInDays(cycleDates.end, cycleDates.start);
-    const days: boolean[] = [];
-    for (let i = 0; i < totalDaysCount; i++) {
-      days.unshift(i >= daysRemaining);
-    }
-    return days;
-  }, [cycleDates]);
+  // const completedDays = useMemo(() => {
+  //   if (cycleDates.status !== "SUCCESS") return null;
+  //   const daysRemaining = differenceInDays(cycleDates.end, new Date());
+  //   const totalDaysCount = differenceInDays(cycleDates.end, cycleDates.start);
+  //   const days: boolean[] = [];
+  //   for (let i = 0; i < totalDaysCount; i++) {
+  //     days.unshift(i >= daysRemaining);
+  //   }
+  //   return days;
+  // }, [cycleDates]);
 
   return (
 		<div className="col-span-12 lg:col-span-4 row-start-2 lg:row-start-1 lg:row-span-2">
@@ -197,7 +198,7 @@ export function DistributionOverview({
 							) : cycleDates.status === "ERROR" ? (
 								<span>err </span>
 							) : (
-								<div className="pt-3 flex flex-col gap-3">
+								<div className="pt-3 flex flex-col gap-2">
 									<Body bold>
 										<span className="text-surface-grey">
 											Distributing in{" "}
@@ -205,7 +206,8 @@ export function DistributionOverview({
 										{Math.max(0, differenceInDays( cycleDates.end, new Date()))}{" "}
 										days
 									</Body>
-									<div className="flex gap-0.5 border border-black overflow-clip">
+									<CycleProgressBar start={cycleDates.start} end={cycleDates.end} />
+									{/* <div className="flex gap-0.5 border border-black overflow-clip p-1">
 										{completedDays &&
 											completedDays.map(
 												(isComplete, i) => {
@@ -235,16 +237,41 @@ export function DistributionOverview({
 													);
 												}
 											)}
-									</div>
+									</div> */}
 								</div>
 							)}
 						</div>
-						<div className="pt-4">
+						<div className="mt-6">
 							<HowDoesThisWorkButton href="https://breadchain.notion.site/BREAD-Voting-Power-UI-0f2d350320b94e4ba9aeec2ef6fdcb84" />
 						</div>
 					</div>
 				</CardBox>
 			</div>
 		</div>
+  );
+}
+
+interface CycleProgressBarProps {
+  start: Date;
+  end: Date;
+}
+
+export default function CycleProgressBar({ start, end }: CycleProgressBarProps) {
+  const today = new Date();
+  
+  const effectiveToday = isBefore(today, start) 
+    ? start 
+    : isAfter(today, end) 
+      ? end 
+      : today;
+
+  const totalDays = differenceInDays(end, start);
+  const daysPassed = differenceInDays(effectiveToday, start);
+  const percentage = Math.round((daysPassed / totalDays) * 100);
+
+  return (
+    <div className="p-1 border border-black h-[1.0625rem]">
+      <div className="bg-[#EA5817]" style={{ width: `${percentage}%` }} />
+    </div>
   );
 }

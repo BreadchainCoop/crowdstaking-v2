@@ -39,7 +39,7 @@ export function VotingPower({
 				<Heading3 className="hidden lg:block lg:text-2xl">
 					Voting Power
 				</Heading3>
-				<Body className="mb-6">
+				<Body className="mb-6 lg:mb-0">
 					Your Voting Power is equal to the average amount of BREAD
 					you held during the 30 days up until the current round of
 					voting opened.

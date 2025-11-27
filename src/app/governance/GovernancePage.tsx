@@ -33,7 +33,10 @@ export function GovernancePage() {
 	const { currentVotingDistribution } = useCurrentVotingDistribution();
 	const { lastClaimedBlocknumber } = useLastClaimedBlockNumber();
 	const { cycleLength } = useCycleLength();
-	const { castVote, hasPendingVoteTransaction } = useCastVote(user, lastClaimedBlocknumber);
+	const { castVote, hasPendingVoteTransaction } = useCastVote(
+		user,
+		lastClaimedBlocknumber
+	);
 	const { minRequiredVotingPower } = useMinRequiredVotingPower();
 
 	const userVotingPower = useVotingPower();
@@ -179,8 +182,12 @@ export function GovernancePage() {
 			: 0;
 
 	const userHasVoted = useMemo(() => {
-    return castVote.status === "SUCCESS" && castVote.data && !hasPendingVoteTransaction ? true : false;
-  }, [castVote, hasPendingVoteTransaction]);
+		return castVote.status === "SUCCESS" &&
+			castVote.data &&
+			!hasPendingVoteTransaction
+			? true
+			: false;
+	}, [castVote, hasPendingVoteTransaction]);
 
 	const { userCanVote, totalUserVotingPower } = useMemo(() => {
 		const totalUserVotingPower =
@@ -245,31 +252,31 @@ export function GovernancePage() {
 
 	return (
 		<section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
-			<div className="mb-4 max-w-xl">
-				<Heading2 className="text-2xl lg:text-[2.5rem]">
-					<span className="uppercase">
-						Bread Solidarity Fund &mdash;
-					</span>{" "}
-					Vote
-				</Heading2>
-				<Body className="py-4 max-w-xl">
-					Distribute your voting power across the various projects in
-					the Bread Cooperative Network to influence how much yield is
-					given to each.
-				</Body>
-				<Caption>
-					* Distributions will be made at the end of the month based
-					on all votes received.
-				</Caption>
-			</div>
+			<div className="lg:grid lg:grid-cols-[2fr_1fr] lg:min-h-0 lg:gap-x-[1.0625rem] lg:gap-y-4 lg:content-between lg:mb-[1.625rem]">
+				<div className="mb-8 lg:mb-0 lg:col-start-1 lg:row-start-1 lg:flex lg:flex-col lg:h-full">
+					<Heading2 className="text-2xl lg:text-[2.5rem]">
+						<span className="uppercase">
+							Bread Solidarity Fund &mdash;
+						</span>{" "}
+						Vote
+					</Heading2>
+					<Body className="py-4 max-w-xl">
+						Distribute your voting power across the various projects
+						in the Bread Cooperative Network to influence how much
+						yield is given to each.
+					</Body>
+					<Caption>
+						* Distributions will be made at the end of the month
+						based on all votes received.
+					</Caption>
+				</div>
 
-			<div className="mb-14 lg:flex lg:gap-4">
-				<div className=" flex flex-col gap-6 mb-8 lg:order-2 lg:w-full lg:max-w-[22.0625rem]">
+				<div className="flex flex-col gap-6 mb-8 lg:mb-0 lg:max-w-[22.0625rem] lg:col-start-2 lg:row-start-1 lg:row-end-3 lg:ml-auto">
 					<DistributionOverview cycleDates={cycleDates} />
 					<ResultsPanel distribution={currentVotingDistribution} />
 				</div>
 
-				<div>
+				<div className="lg:col-start-1 lg:row-start-2 lg:flex lg:flex-col lg:h-full lg:gap-y-6">
 					<VotingPower
 						minRequiredVotingPower={minRequiredVotingPower}
 						userVotingPower={totalUserVotingPower}
@@ -368,6 +375,132 @@ export function GovernancePage() {
 			<VotingHistory />
 		</section>
 	);
+
+	// return (
+	// 	<section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
+	// 		<div className="mb-4 max-w-xl">
+	// 			<Heading2 className="text-2xl lg:text-[2.5rem]">
+	// 				<span className="uppercase">
+	// 					Bread Solidarity Fund &mdash;
+	// 				</span>{" "}
+	// 				Vote
+	// 			</Heading2>
+	// 			<Body className="py-4 max-w-xl">
+	// 				Distribute your voting power across the various projects in
+	// 				the Bread Cooperative Network to influence how much yield is
+	// 				given to each.
+	// 			</Body>
+	// 			<Caption>
+	// 				* Distributions will be made at the end of the month based
+	// 				on all votes received.
+	// 			</Caption>
+	// 		</div>
+
+	// 		<div className="mb-14 lg:flex lg:gap-4">
+	// 			<div className="flex flex-col gap-6 mb-8 lg:order-2 lg:w-full lg:max-w-[22.0625rem] lg:-mt-48">
+	// 				<DistributionOverview cycleDates={cycleDates} />
+	// 				<ResultsPanel distribution={currentVotingDistribution} />
+	// 			</div>
+
+	// 			<div>
+	// 				<VotingPower
+	// 					minRequiredVotingPower={minRequiredVotingPower}
+	// 					userVotingPower={totalUserVotingPower}
+	// 					userHasVoted={userHasVoted}
+	// 					cycleDates={cycleDates}
+	// 					cycleLength={cycleLength}
+	// 					userCanVote={userCanVote}
+	// 					user={user}
+	// 					distributeEqually={distributeEqually}
+	// 					isRecasting={isRecasting}
+	// 				/>
+	// 				<div className="col-span-12 row-start-5 lg:col-start-1 lg:col-span-8 lg:row-start-3 grid grid-cols-1 gap-3">
+	// 					{currentVotingDistribution.data[0]
+	// 						.map((account, i) => ({
+	// 							account,
+	// 							castPoints:
+	// 								currentVotingDistribution.data[1][i],
+	// 						}))
+	// 						.toSorted((a, b) => {
+	// 							return (
+	// 								projectsMeta[a.account].order -
+	// 								projectsMeta[b.account].order
+	// 							);
+	// 						})
+	// 						.map((project, i) => {
+	// 							return (
+	// 								<div key={`project_row_${project.account}`}>
+	// 									<ProjectsProvider
+	// 										cycleLength={cycleLength.data}
+	// 										address={project.account}
+	// 									>
+	// 										<ProjectRow
+	// 											address={project.account}
+	// 										>
+	// 											{!isRecasting &&
+	// 											castVote.data ? (
+	// 												<VoteDisplay
+	// 													points={
+	// 														castVote.data[
+	// 															project.account
+	// 														]
+	// 													}
+	// 													percentage={
+	// 														(castVote.data[
+	// 															project.account
+	// 														] /
+	// 															castTotalPoints) *
+	// 															100 || 0
+	// 													}
+	// 												/>
+	// 											) : (
+	// 												<VoteForm
+	// 													value={
+	// 														voteFormState
+	// 															.projects[
+	// 															project.account
+	// 														]
+	// 													}
+	// 													updateValue={
+	// 														updateValue
+	// 													}
+	// 													address={
+	// 														project.account
+	// 													}
+	// 													totalPoints={
+	// 														voteFormState.totalPoints
+	// 													}
+	// 													user={user}
+	// 													userCanVote={
+	// 														userCanVote
+	// 													}
+	// 												/>
+	// 											)}
+	// 										</ProjectRow>
+	// 									</ProjectsProvider>
+	// 								</div>
+	// 							);
+	// 						})}
+	// 					<CastVotePanel
+	// 						user={user}
+	// 						userVote={Object.keys(voteFormState.projects).map(
+	// 							(account) =>
+	// 								voteFormState.projects[account as Hex]
+	// 						)}
+	// 						userHasVoted={userHasVoted}
+	// 						userCanVote={userCanVote}
+	// 						isSafe={isSafe}
+	// 						isRecasting={isRecasting}
+	// 						setIsRecasting={setIsRecasting}
+	// 						resetFormState={resetFormState}
+	// 					/>
+	// 				</div>
+	// 			</div>
+	// 		</div>
+
+	// 		<VotingHistory />
+	// 	</section>
+	// );
 
 	// return (
 	// 	<>
