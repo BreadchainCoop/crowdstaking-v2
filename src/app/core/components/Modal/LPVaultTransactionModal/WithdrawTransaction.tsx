@@ -134,7 +134,7 @@ export function WithdrawTransaction({
   return (
     <>
       <ModalHeading>Unlocking LP Tokens</ModalHeading>
-      <ModalContent>
+      <ModalContent className="!gap-2">
         <StatusBadge
           variant="unlock"
           status={
@@ -249,19 +249,30 @@ function UnlockingSuccess({
   const tokenAmount = formatUnits(value, 18);
 
   return (
-    <div className="w-full md:mx-24 p-6 flex flex-col items-center gap-4">
-      <div className="w-auto border border-surface-ink flex items-center gap-2 p-2 ml-auto">
-        <WXDaiBreadIcon />
-        <ValueText>{tokenAmount} LP TOKENS</ValueText>
-      </div>
-      <ExternalLink href={explorerLink}>
-        <LiftedButton preset="stroke" className="h-[32px]">
-          <span className="flex items-center gap-2">
-            View receipt on Gnosisscan
-            <ArrowUpRightIcon size={24} className="text-primary-orange" />
-          </span>
-        </LiftedButton>
-      </ExternalLink>
-    </div>
-  );
+		<div className="w-full p-6 pb-0 flex flex-col items-center gap-4">
+			<div className="w-auto border border-surface-ink flex items-center gap-2 px-2 mx-auto bg-paper-main">
+				<WXDaiBreadIcon />
+				<ValueText className="flex items-center justify-center pt-1">
+					<span
+						className="w-full max-w-[7.2rem] truncate mr-1.5"
+						title={tokenAmount}
+					>
+						{tokenAmount}
+					</span>{" "}
+					<span className="shrink-0">LP TOKENS</span>
+				</ValueText>
+			</div>
+			<ExternalLink href={explorerLink}>
+				<LiftedButton preset="stroke" className="h-8">
+					<span className="flex items-center gap-2">
+						View receipt on Gnosisscan
+						<ArrowUpRightIcon
+							size={24}
+							className="text-primary-orange"
+						/>
+					</span>
+				</LiftedButton>
+			</ExternalLink>
+		</div>
+	);
 }
