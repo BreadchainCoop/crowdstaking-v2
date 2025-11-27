@@ -3,6 +3,7 @@ import { FistIcon } from "../../Icons/FistIcon";
 import { ReactNode } from "react";
 import { formatBalance } from "@/app/core/util/formatter";
 import { Chip } from "@/app/bakery/components/Chip";
+import { Body } from "@breadcoop/ui";
 
 export function LockVPRate({
   value,
@@ -139,10 +140,10 @@ export function PillContainer({ children }: { children: ReactNode }) {
   // );
 }
 
-export function ValueText({ children }: { children: ReactNode }) {
+export function ValueText({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div className="text-xl m-auto font-semibold dark:text-breadgray-ultra-white">
+    <Body className={`text-xl m-auto font-semibold ${className}`}>
       {children}
-    </div>
+    </Body>
   );
 }
