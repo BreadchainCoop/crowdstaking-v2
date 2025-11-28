@@ -271,7 +271,7 @@ export default function CycleProgressBar({ start, end }: CycleProgressBarProps) 
 
   return (
     <div className="p-1 border border-black h-[1.0625rem]">
-      <div className="bg-[#EA5817]" style={{ width: `${percentage}%` }} />
+      <div className="bg-[#EA5817] h-full" style={{ width: `${percentage}%` }} />
     </div>
   );
 }
