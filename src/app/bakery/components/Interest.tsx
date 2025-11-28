@@ -1,15 +1,19 @@
 "use client";
 
-import { useClaimableYield } from "@/app/governance/useClaimableYield";
+import {
+	FALLBACK_CLAIMABLE_YIELD,
+	useClaimableYield,
+} from "@/app/governance/useClaimableYield";
 import { Body, Heading3, Logo } from "@breadcoop/ui";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useState, useEffect, useMemo } from "react";
 import { formatBalance } from "@/app/core/util/formatter";
 import { useRefetchOnBlockChange } from "@/app/core/hooks/useRefetchOnBlockChange";
 import { ERC20_ABI, SDAI_ADAPTOR_ABI } from "@/abi";
 import { formatUnits } from "viem";
 import { useActiveChain } from "@/app/core/hooks/useActiveChain";
-import { useVaultAPY } from "@/app/core/hooks/useVaultAPY";
+import { FALLBACK_APY_VALUE, useVaultAPY } from "@/app/core/hooks/useVaultAPY";
+import AnimatedNumber from "@/app/components/animated-number";
 
 interface Response {
 	_col0: number;
@@ -18,29 +22,35 @@ interface Response {
 // Value as at when I ran the query
 const FALLBACK_TOTAL_BREAD_DISTRIBUTED = 46548.833508149735;
 
+const formatWholeNumber = (val: number) => formatBalance(val, 4).split(".")[0];
+
 export const Interest = () => {
 	const { claimableYield } = useClaimableYield();
 	const chainConfig = useActiveChain();
 	const [yieldIncrement, setYieldIncrement] = useState(0);
 
-	const { data: totalBreadDistributed, error: totalBreadDistributedError } =
-		useQuery({
-			queryKey: ["total-bread-distributed"],
-			refetchOnWindowFocus: false,
-			queryFn: async () => {
-				try {
-					const req = await fetch("/api/total-bread-distributed");
+	const {
+		data: totalBreadDistributed = FALLBACK_TOTAL_BREAD_DISTRIBUTED,
+		error: totalBreadDistributedError,
+	} = useQuery({
+		queryKey: ["total-bread-distributed"],
+		refetchOnWindowFocus: false,
+		placeholderData: keepPreviousData,
+		queryFn: async () => {
+			try {
+				const req = await fetch("/api/total-bread-distributed");
 
-					if (req.ok) throw Error("Try again");
+				if (!req.ok) throw Error("Try again");
 
-					return ((await req.json()) as Response)._col0;
-				} catch (error) {
-					throw Error("Try again");
-				}
-			},
-		});
+				return ((await req.json()) as Response)._col0;
+			} catch (error) {
+				throw Error("Try again");
+			}
+		},
+	});
 
-	const { data: apyData, status: apyStatus } = useVaultAPY();
+	const { data: apyData = FALLBACK_APY_VALUE, status: apyStatus } =
+		useVaultAPY();
 
 	const { data: totalSupplyData, status: totalSupplyStatus } =
 		useRefetchOnBlockChange(
@@ -69,17 +79,22 @@ export const Interest = () => {
 		return null;
 	}, [apyStatus, apyData, totalSupplyStatus, totalSupplyData]);
 
+	// const totalInterest = useMemo(() => {
+	// 	if (claimableYield === null) return null;
+
+	// 	if (totalBreadDistributed) return totalBreadDistributed + claimableYield;
+
+	// 	if (Boolean(totalBreadDistributedError))
+	// 		return FALLBACK_TOTAL_BREAD_DISTRIBUTED + claimableYield;
+
+	// 	return null;
+	// }, [totalBreadDistributed, totalBreadDistributedError, claimableYield]);
+
 	const totalInterest = useMemo(() => {
-		if (claimableYield === null) return null;
+		const _claim = claimableYield || FALLBACK_CLAIMABLE_YIELD;
 
-		if (totalBreadDistributed)
-			return totalBreadDistributed + claimableYield;
-
-		if (Boolean(totalBreadDistributedError))
-			return FALLBACK_TOTAL_BREAD_DISTRIBUTED + claimableYield;
-
-		return null;
-	}, [totalBreadDistributed, totalBreadDistributedError, claimableYield]);
+		return totalBreadDistributed + _claim;
+	}, [totalBreadDistributed, claimableYield]);
 
 	useEffect(() => {
 		let intervalId: NodeJS.Timeout;
@@ -93,14 +108,19 @@ export const Interest = () => {
 		return () => clearInterval(intervalId);
 	}, [claimableYield, yieldPerHour]);
 
-	const displayValue = useMemo(() => {
-		if (totalInterest !== null) {
-			return totalInterest + yieldIncrement;
-		}
-		return null;
-	}, [totalInterest, yieldIncrement]);
+	// const displayValue = useMemo(() => {
+	// 	if (totalInterest !== null) {
+	// 		return totalInterest + yieldIncrement;
+	// 	}
+	// 	return null;
+	// }, [totalInterest, yieldIncrement]);
 
-	const formattedValue = formatBalance(displayValue || 0, 4).split(".");
+	const displayValue = useMemo(
+		() => totalInterest + yieldIncrement,
+		[totalInterest, yieldIncrement]
+	);
+
+	// const formattedValue = formatBalance(displayValue || 0, 4).split(".");
 
 	return (
 		<>
@@ -112,10 +132,14 @@ export const Interest = () => {
 				<div>
 					<p className="flex items-end justify-start flex-nowrap xl:block">
 						<span className="text-h1 md:text-[4rem] lg:text-[5rem]">
-							{formattedValue[0]}
+							{/* {formattedValue[0]} */}
+							<AnimatedNumber
+								value={displayValue}
+								formatter={formatWholeNumber}
+							/>
 						</span>
 						<span className="text-h2 !text-2xl text-surface-grey-2 relative top-1.5 left-[-0.1rem] md:top-[-0.6rem] lg:top[0rem] xl:top-[-0.1rem]">
-							.{formattedValue[1]}
+							.{formatBalance(displayValue || 0, 4).split(".")[1]}
 						</span>
 					</p>
 					<Body className="text-surface-grey ml-auto max-w-max md:mt-[-0.6rem] lg:mt-[-0.8rem]">
