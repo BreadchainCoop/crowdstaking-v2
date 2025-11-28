@@ -4,12 +4,15 @@ import { Body } from "@breadcoop/ui";
 import { Chip } from "./Chip";
 import { useQuery } from "@tanstack/react-query";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
+import AnimatedNumber from "@/app/components/animated-number";
 
 // Value as at when I ran the query
 const FALLBACK_BREAD_BACKERS = 209;
 
+const formatter = (val: number) => val.toFixed(0);
+
 export const ProjectBackers = () => {
-	const { data, isLoading } = useQuery({
+	const { data = FALLBACK_BREAD_BACKERS, isLoading } = useQuery({
 		queryKey: ["bread-backers"],
 		queryFn: async () => {
 			const res = (await (await fetch("/api/bread-backers")).json()) as {
@@ -28,7 +31,7 @@ export const ProjectBackers = () => {
 			<Chip className="chip-transition w-full">
 				<UsersThreeicon />
 				<Body bold>
-					{data || (isLoading ? "--" : FALLBACK_BREAD_BACKERS)}{" "}
+					<AnimatedNumber value={data} formatter={formatter} />{" "}
 					Backers
 				</Body>
 			</Chip>
