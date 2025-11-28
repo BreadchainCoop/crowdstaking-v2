@@ -113,21 +113,21 @@ export function LockingTransaction({
 								Step 1: Confirm token allowance
 							</Caption>
 							<TransactionStage
-								// status={
-								//   !lockingState.status.includes("allowance_transaction")
-								//     ? "success"
-								//     : "pending"
-								// }
 								status={
-									lockingState.status ===
-									"allowance_transaction_idle"
-										? "disabled"
-										: !lockingState.status.includes(
-												"allowance_transaction"
-										  )
-										? "success"
-										: "pending"
+								  !lockingState.status.includes("allowance_transaction")
+								    ? "success"
+								    : "pending"
 								}
+								// status={
+								// 	lockingState.status ===
+								// 	"allowance_transaction_idle"
+								// 		? "disabled"
+								// 		: !lockingState.status.includes(
+								// 				"allowance_transaction"
+								// 		  )
+								// 		? "success"
+								// 		: "pending"
+								// }
 							>
 								<Body className="whitespace-nowrap">
 									Token allowance
