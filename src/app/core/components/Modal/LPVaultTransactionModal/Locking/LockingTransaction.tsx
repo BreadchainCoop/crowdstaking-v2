@@ -387,8 +387,8 @@ function TransactionStage({
 	return (
 		<Chip
 			className={clsx(
-				"flex items-center justify-center gap-2.5! py-1! px-4! font-bold",
-				status === "disabled" && "opacity-50 border-surface-ink!"
+				"flex items-center justify-center gap-2.5! py-1! px-4! font-bold border-surface-ink!",
+				status === "disabled" && "opacity-50"
 			)}
 		>
 			{stageIcons[status]}
