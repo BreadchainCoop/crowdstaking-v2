@@ -103,7 +103,7 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
               <div className="flex w-full md:w-auto justify-between gap-2 items-center px-4 md:px-2 mb-2 md:mb-0">
                 <Body>Unlocked LP tokens:</Body>
                 {lpTokenBalance?.status === "SUCCESS" ? (
-                  <Body bold>{lpTokenBalance.value}</Body>
+                  <Body bold>{formatBalance(+lpTokenBalance.value, 2)}</Body>
                 ) : (
                   <span className="ml-auto">-</span>
                 )}
@@ -120,7 +120,7 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                             Number(
                               formatUnits(vaultTokenBalance.butter.value, 18)
                             ),
-                            0
+                            2
                           )
                         : "-"}
                     </Body>
@@ -256,7 +256,7 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                               Number(
                                 formatUnits(vaultTokenBalance.butter.value, 18)
                               ),
-                              0
+                              2
                             )
                           : "-"}
                       </div>
@@ -277,7 +277,7 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                     <Body bold className="text-xs">
                       <span>Unlocked LP tokens: </span>
                       {lpTokenBalance?.status === "SUCCESS"
-                        ? lpTokenBalance.value
+                        ? formatBalance(+lpTokenBalance.value, 2)
                         : "-"}
                       <MaxButton
                         onClick={() => {
@@ -296,7 +296,7 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                             Number(
                               formatUnits(vaultTokenBalance.butter.value, 18)
                             ),
-                            3
+                            2
                           )
                         : "-"}
                     </Body>
