@@ -5,9 +5,16 @@ import { Chip } from "./Chip";
 import { FALLBACK_APY_VALUE, useVaultAPY } from "@/app/core/hooks/useVaultAPY";
 import { formatUnits } from "viem";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
+import AnimatedNumber from "@/app/components/animated-number";
+
+const formatter = (val: number) => val.toFixed(1);
 
 export const Apy = () => {
-	const { data, error } = useVaultAPY();
+	const { data } = useVaultAPY();
+
+	const apy = data
+		? Number(formatUnits(data as bigint, 18)) * 100
+		: FALLBACK_APY_VALUE;
 
 	return (
 		<ExternalLink
@@ -17,14 +24,7 @@ export const Apy = () => {
 			<Chip className="max-w-max gap-x-2.5 bg-paper-main hover:bg-[#EA581733] transition-colors">
 				<ChartLine />
 				<Body bold>
-					{data
-						? (
-								Number(formatUnits(data as bigint, 18)) * 100
-						  ).toFixed(1)
-						: error
-						? FALLBACK_APY_VALUE
-						: ".."}
-					% APY
+					<AnimatedNumber value={apy} formatter={formatter} />% APY
 				</Body>
 			</Chip>
 		</ExternalLink>

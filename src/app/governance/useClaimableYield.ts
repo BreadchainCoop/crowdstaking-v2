@@ -4,6 +4,9 @@ import { formatUnits } from "viem";
 import { useReadContract } from "wagmi";
 import { useActiveChain } from "../core/hooks/useActiveChain";
 
+// Value as at when I ran the query
+export const FALLBACK_CLAIMABLE_YIELD = 113.35748823553301;
+
 export function useClaimableYield() {
   const [claimableYield, setClaimableYield] = useState<number | null>(null);
 
