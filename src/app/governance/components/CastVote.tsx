@@ -36,16 +36,11 @@ export function CastVotePanel({
 }) {
 	const { openChainModal } = useChainModal();
 
-	if (user.status !== "CONNECTED")
-		return (
-			<div className="mt-3">
+	return (
+		<div className="mt-3 mb-6 lg:mb-0">
+			{user.status !== "CONNECTED" ? (
 				<LoginButton user={user} label="Sign in to vote" />
-			</div>
-		);
-
-	if (isRecasting || !userHasVoted)
-		return (
-			<div className="mt-3">
+			) : isRecasting || !userHasVoted ? (
 				<CastVote
 					vote={userVote}
 					isSafe={isSafe}
@@ -56,14 +51,11 @@ export function CastVotePanel({
 					user={user}
 					resetFormState={resetFormState}
 				/>
-			</div>
-		);
-
-	return (
-		<div className="mt-3 mb-6 lg:mb-0">
-			<VoteIsCast>
-				{user.features.recastVote && <RecastVote />}
-			</VoteIsCast>
+			) : (
+				<VoteIsCast>
+					{user.features.recastVote && <RecastVote />}
+				</VoteIsCast>
+			)}
 		</div>
 	);
 
