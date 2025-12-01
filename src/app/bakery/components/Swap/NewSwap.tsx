@@ -170,45 +170,47 @@ const NewSwap = () => {
 				)}
 			</div>
 			{/* TODO: Remove some nested element here when the button is fixed */}
-			<div className="mt-6">
-				{user.status === "CONNECTED" && swapState.mode !== "BRIDGE" ? (
-					<div className="[&>*]:w-full">
-						{(() => {
-							const sourceToken =
-								swapState.mode === "BAKE" ? xDAI : BREAD;
+			{swapState.mode !== "BRIDGE" && (
+				<div className="mt-6">
+					{user.status === "CONNECTED" ? (
+						<div className="[&>*]:w-full">
+							{(() => {
+								const sourceToken =
+									swapState.mode === "BAKE" ? xDAI : BREAD;
 
-							if (!sourceToken) return <ButtonShell />;
-							if (sourceToken.status !== "SUCCESS")
-								return <ButtonShell />;
+								if (!sourceToken) return <ButtonShell />;
+								if (sourceToken.status !== "SUCCESS")
+									return <ButtonShell />;
 
-							const balanceIsSufficent =
-								parseFloat(swapState.value || "0") <=
-								parseFloat(sourceToken.value);
+								const balanceIsSufficent =
+									parseFloat(swapState.value || "0") <=
+									parseFloat(sourceToken.value);
 
-							if (balanceIsSufficent)
-								return swapState.mode === "BAKE" ? (
-									<Bake
-										user={user}
-										clearInputValue={clearInputValue}
-										inputValue={swapState.value}
-										isSafe={isSafe}
-									/>
-								) : (
-									<Burn
-										user={user}
-										clearInputValue={clearInputValue}
-										inputValue={swapState.value}
-										isSafe={isSafe}
-									/>
-								);
+								if (balanceIsSufficent)
+									return swapState.mode === "BAKE" ? (
+										<Bake
+											user={user}
+											clearInputValue={clearInputValue}
+											inputValue={swapState.value}
+											isSafe={isSafe}
+										/>
+									) : (
+										<Burn
+											user={user}
+											clearInputValue={clearInputValue}
+											inputValue={swapState.value}
+											isSafe={isSafe}
+										/>
+									);
 
-							return <InsufficentBalance />;
-						})()}
-					</div>
-				) : (
-					<LoginButton user={user} />
-				)}
-			</div>
+								return <InsufficentBalance />;
+							})()}
+						</div>
+					) : (
+						<LoginButton user={user} />
+					)}
+				</div>
+			)}
 			<Body className="text-surface-grey text-sm mt-1">
 				<span className="font-bold">Note</span>: {notes[swapState.mode]}
 			</Body>
