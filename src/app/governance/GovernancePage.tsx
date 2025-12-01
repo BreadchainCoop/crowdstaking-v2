@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Hex } from "viem";
 import { Heading2, Body, Caption } from "@breadcoop/ui";
 import { ProjectRow, VoteDisplay, VoteForm } from "./components/ProjectRow";
@@ -105,44 +105,61 @@ export function GovernancePage() {
 						}
 						return acc;
 				  }, {});
+			const totalPoints = Object.keys(projects).reduce(
+				(acc, cur) => acc + projects[cur as Hex],
+				0
+			);
 			setVoteFormState({
 				projects,
-				totalPoints: 0,
+				totalPoints,
 			});
 		}
 	}, [currentVotingDistribution, voteFormState, castVote]);
 
-	function resetFormState() {
+	const resetFormState = useCallback(() => {
 		if (
 			castVote.status !== "SUCCESS" ||
 			currentVotingDistribution.status !== "SUCCESS"
 		)
 			return;
 
-		setVoteFormState({
-			projects: castVote.data
-				? Object.keys(castVote.data).reduce<{ [key: Hex]: number }>(
-						(acc, cur) => {
-							// Only include active projects from cast vote data
-							if (projectsMeta[cur as Hex]?.active) {
-								acc[cur as Hex] = castVote.data![cur as Hex];
-							}
-							return acc;
-						},
-						{}
-				  )
-				: currentVotingDistribution.data[0].reduce<{
-						[key: Hex]: number;
-				  }>((acc, cur, i) => {
-						// Only include active projects in the vote form
-						if (projectsMeta[cur]?.active) {
-							acc[cur] = 0;
+		const projects = castVote.data
+			? Object.keys(castVote.data).reduce<{ [key: Hex]: number }>(
+					(acc, cur) => {
+						// Only include active projects from cast vote data
+						if (projectsMeta[cur as Hex]?.active) {
+							acc[cur as Hex] = castVote.data![cur as Hex];
 						}
 						return acc;
-				  }, {}),
-			totalPoints: 0,
+					},
+					{}
+			  )
+			: currentVotingDistribution.data[0].reduce<{
+					[key: Hex]: number;
+			  }>((acc, cur, i) => {
+					// Only include active projects in the vote form
+					if (projectsMeta[cur]?.active) {
+						acc[cur] = 0;
+					}
+					return acc;
+			  }, {});
+
+		const totalPoints = Object.keys(projects).reduce(
+			(acc, cur) => acc + projects[cur as Hex],
+			0
+		);
+
+		setVoteFormState({
+			projects,
+			totalPoints,
 		});
-	}
+	}, [castVote, currentVotingDistribution]);
+
+	useEffect(() => {
+		if (isRecasting) {
+			resetFormState();
+		}
+	}, [isRecasting, resetFormState]);
 
 	function updateValue(value: number, account: Hex) {
 		setVoteFormState((state) => {
