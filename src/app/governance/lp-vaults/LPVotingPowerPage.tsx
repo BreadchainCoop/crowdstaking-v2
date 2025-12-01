@@ -39,7 +39,7 @@ export function LPVotingPowerPage() {
         <Heading3 className="text-2xl mb-[1.375rem]">Manage your BREAD LP vaults</Heading3>
         <Body className="mb-8">
           Lock LP tokens for voting power within the Bread Cooperative
-          solidarity fund.
+          solidarity Fund.
         </Body>
         <Accordion
           value={accordionState}

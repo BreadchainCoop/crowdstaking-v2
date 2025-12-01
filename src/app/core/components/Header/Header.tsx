@@ -74,7 +74,7 @@ function Header() {
 					Open BREAD menu
 				</button>
 				<Body className="md:text-surface-grey-2 md:inline-flex md:items-center md:justify-center md:gap-2 lg:text-2xl lg:mt-1">
-					<span>Solidarity fund</span>
+					<span>Solidarity Fund</span>
 					<span className="text-[#EA5817] transition-transform duration-300 group-hover:rotate-180 group-focus-within:rotate-180 md:mt-[-0.0625rem] lg:-mt-1">
 						<Caret />
 					</span>
