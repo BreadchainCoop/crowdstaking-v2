@@ -40,3 +40,23 @@ button[data-testid="rk-chain-option-11155111"],
 button[data-testid="rk-chain-option-31337"] {
   @apply !flex;
 }
+
+
+/* TODO:  ===== Remove footer styles when library tailwind issue is fixed  ====== */
+footer > div:first-child > div:first-child {
+  @apply xl:mb-0;
+}
+
+footer > div:nth-child(2) {
+  /* @apply border-t border-orange-0 pt-6 flex flex-col justify-between items-center gap-4 md:flex-row md:mx-auto md:max-w-7xl; */
+  @apply md:mx-auto md:max-w-7xl;
+}
+
+footer > div:first-child > div:first-child > div:nth-child(2) {
+  @apply xl:mb-0;
+}
+
+footer > div:first-child > div:first-child > div:first-child {
+  @apply xl:mb-6;
+}
+/* ======== END OF TODO ======== */

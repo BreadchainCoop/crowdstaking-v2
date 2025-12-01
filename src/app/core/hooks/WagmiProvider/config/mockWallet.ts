@@ -4,6 +4,8 @@ import { type Chain, createWalletClient, Hex } from "viem";
 import { http } from "@wagmi/core";
 
 export const mockWallet = (chain: Chain, devAccount: Hex, name: string) => {
+  // TODO: Find a solution
+  // @ts-expect-error Ignore for now
   const customConnector: CreateConnectorFn = () => {
     return {
       id: name.replace(/\s+/g, "-").toLowerCase(),

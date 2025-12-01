@@ -14,7 +14,7 @@
     "find-deadcode": "ts-prune | grep -v '(used in module)'"
   },
   "dependencies": {
-    "@breadcoop/ui": "^1.0.20",
+    "@breadcoop/ui": "^1.0.23",
     "@duneanalytics/client-sdk": "^0.2.5",
     "@lifi/widget": "^3.30.0",
     "@phosphor-icons/react": "^2.1.10",
