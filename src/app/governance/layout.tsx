@@ -65,21 +65,21 @@ const pages = [
 				<path
 					d="M1.875 8.75H8.75"
 					stroke="currentcolor"
-					stroke-width="0.625"
+					strokeWidth="0.625"
 					strokeLinecap="round"
 					strokeLinejoin="round"
 				/>
 				<path
 					d="M11.25 8.75H18.125"
 					stroke="currentcolor"
-					stroke-width="0.625"
+					strokeWidth="0.625"
 					strokeLinecap="round"
 					strokeLinejoin="round"
 				/>
 				<path
 					d="M11.25 7.5H8.75V11.25H11.25V7.5Z"
 					stroke="currentcolor"
-					stroke-width="0.625"
+					strokeWidth="0.625"
 					strokeLinecap="round"
 					strokeLinejoin="round"
 				/>
