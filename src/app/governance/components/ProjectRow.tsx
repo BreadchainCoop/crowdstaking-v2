@@ -250,7 +250,10 @@ export function VoteForm({
 				</InputButton>
 			</div>
 			<Body bold className="text-orange-2 text-center">
-				{formatVotePercentage(value ? (value / totalPoints) * 100 : 0)}%
+				{formatVotePercentage(
+					value && totalPoints > 0 ? (value / totalPoints) * 100 : 0
+				)}
+				%
 			</Body>
 		</div>
 	);
