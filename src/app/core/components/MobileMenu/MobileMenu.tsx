@@ -32,7 +32,7 @@ export function MobileMenu({ isOpen, handleNavToggle }: IProps) {
 			>
 				<div className="flex items-center justify-between mb-6">
 					<Link href="/">
-						<Logo text="Solidarity fund" />
+						<Logo text="Solidarity Fund" />
 					</Link>
 					<button
 						onClick={() => handleNavToggle()}

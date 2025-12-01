@@ -11,7 +11,7 @@ interface NavSolidarityAppsProps {
 const _apps = [
 	{
 		id: "fund",
-		label: "Solidarity fund",
+		label: "Solidarity Fund",
 		desc: "Fund post-capitalism",
 		color: "text-[#EA5817]",
 		comingSoon: false,
