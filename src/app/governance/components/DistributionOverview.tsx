@@ -242,7 +242,7 @@ export function DistributionOverview({
 							)}
 						</div>
 						<div className="mt-6">
-							<HowDoesThisWorkButton href="https://breadchain.notion.site/BREAD-Voting-Power-UI-0f2d350320b94e4ba9aeec2ef6fdcb84" />
+							<HowDoesThisWorkButton href="https://docs.bread.coop/solidarity-primitives/crowdstaking/yield-governance/voting-power" />
 						</div>
 					</div>
 				</CardBox>

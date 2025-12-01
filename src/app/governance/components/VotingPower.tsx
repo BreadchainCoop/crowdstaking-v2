@@ -170,7 +170,7 @@ function NotEnoughPower() {
 			</Heading3>
 			<a
 				className="font-bold text-[#EA5817] flex items-center justify-center gap-2"
-				href="https://breadchain.notion.site/BREAD-Voting-Power-UI-0f2d350320b94e4ba9aeec2ef6fdcb84"
+				href="https://docs.bread.coop/solidarity-primitives/crowdstaking/yield-governance/voting-power"
 				target="_blank"
 				rel="noopener noreferrer"
 			>
@@ -211,7 +211,7 @@ function UserHasVoted({ cycleDates }: { cycleDates: CycleDatesSuccess }) {
 						/>
 					</svg>
 				</div>
-				<Heading3 className="text-2xl">Voted Casted</Heading3>
+				<Heading3 className="text-2xl">Vote Casted</Heading3>
 			</div>
 			<Body>
 				<span className="font-bold">Next round: </span>
