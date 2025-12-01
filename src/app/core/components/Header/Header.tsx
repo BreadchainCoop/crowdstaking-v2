@@ -41,9 +41,9 @@ const Caret = () => (
 		<path
 			d="M19.5 9L12 16.5L4.5 9"
 			stroke="#EA5817"
-			stroke-width="1.5"
-			stroke-linecap="round"
-			stroke-linejoin="round"
+			strokeWidth="1.5"
+			strokeLinecap="round"
+			strokeLinejoin="round"
 		/>
 	</svg>
 );
