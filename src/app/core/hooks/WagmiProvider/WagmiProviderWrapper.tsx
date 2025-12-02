@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
+import { RainbowKitProvider, Theme, darkTheme } from "@rainbow-me/rainbowkit";
 import { hashFn } from "@wagmi/core/query";
 import { getConfig } from "./config/getConfig";
 
@@ -11,22 +11,33 @@ if (!WALLET_CONNECT_PROJECT_ID)
   throw new Error("WALLET_CONNECT_PROJECT_ID not set!");
 
 const baseTheme = darkTheme({
-  accentColor: "#E873D3",
-  accentColorForeground: "#2E2E2E",
-  borderRadius: "small",
+  accentColor: "#EA5817",
+  accentColorForeground: "yellow",
+  borderRadius: "none",
   fontStack: "system",
   overlayBlur: "small",
 });
 
-const theme = {
-  ...baseTheme,
+const customTheme: Theme = {
+  // @ts-expect-error Correct
   colors: {
-    ...baseTheme.colors,
-    modalBackground: "#242424",
+    closeButton: "#EA5817",
+    accentColor: "#EA5817",
+    connectButtonText: "#EA5817",
+    modalTextSecondary: "#EA5817",
+    modalBackground: "#FDFAF3",
+    modalBorder: "#eae2d6",
+    modalText: "#171717",
+    accentColorForeground: "#0f0",
   },
   fonts: {
-    body: "var(--font-redhat)",
+    body: "var(--font-breadBody)",
   },
+}
+
+const theme: Theme = {
+  ...baseTheme,
+  ...customTheme,
 };
 
 const queryClient = new QueryClient({
@@ -44,6 +55,7 @@ export function WagmiProviderWrapper({ children }: { children: ReactNode }) {
     <WagmiProvider reconnectOnMount={true} config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider modalSize="compact" theme={theme}>
+        {/* <RainbowKitProvider modalSize="compact" theme={customTheme}> */}
           {children}
         </RainbowKitProvider>
       </QueryClientProvider>
