@@ -28,7 +28,8 @@ export type Features = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://app.breadchain.xyz/"),
+  // metadataBase: new URL("https://app.breadchain.xyz/"),
+  metadataBase: new URL("https://fund.bread.coop/"),
 };
 
 export default function App({ children }: { children: React.ReactNode }) {
@@ -53,7 +54,7 @@ export default function App({ children }: { children: React.ReactNode }) {
         href="/favicon-16x16.png"
       />
       <link rel="manifest" href="/manifest.json" />
-      <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+      <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#da532c" />
       <meta name="msapplication-TileColor" content="#da532c" />
       <meta name="theme-color" content="#ffffff" />
 
