@@ -89,7 +89,7 @@ I grew the bakery to ${
 			newSupply ? formatSupply(newSupply) : ""
 		} BREAD! \u{1F35E} \u{1F35E} \u{1F35E}
 
-https://app.breadchain.xyz`;
+https://fund.bread.coop`;
 	}
 
 	const xText = encodeURIComponent(makeText("X"));
