@@ -180,6 +180,7 @@ export function VoteForm({
 	totalPoints,
 	user,
 	userCanVote,
+	disabled,
 }: {
 	address: Hex;
 	value: number;
@@ -187,6 +188,7 @@ export function VoteForm({
 	totalPoints: number;
 	user: TConnectedUserState;
 	userCanVote: boolean;
+	disabled?: boolean;
 }) {
 	function increment() {
 		updateValue(value + 1 <= 99 ? (value || 0) + 1 : value, address);
@@ -196,10 +198,17 @@ export function VoteForm({
 		updateValue(value - 1 >= 0 ? (value || 0) - 1 : value, address);
 	}
 
-	const isDisabled = user.status !== "CONNECTED" || !userCanVote;
+	const isDisabled =
+		user.status !== "CONNECTED" || !userCanVote || (disabled ?? false);
 
 	return (
-		<div className="border border-surface-brown flex flex-col gap-2.5 py-[2.1875rem] px-[1.5625rem] w-full sm:max-w-[10.00875rem] sm:ml-auto md:max-w-48">
+		<fieldset
+			className={clsx(
+				"border border-surface-brown flex flex-col gap-2.5 py-[2.1875rem] px-[1.5625rem] w-full sm:max-w-[10.00875rem] sm:ml-auto md:max-w-48",
+				isDisabled && "opacity-50"
+			)}
+			disabled={isDisabled}
+		>
 			<div className="flex items-center justify-between w-full sm:w-auto">
 				<InputButton onClick={decrement} isDisabled={isDisabled}>
 					<span
@@ -228,6 +237,8 @@ export function VoteForm({
 					maxLength={2}
 					spellCheck="false"
 					onChange={(event) => {
+						if (isDisabled) return;
+
 						updateValue(
 							event.target.value
 								? parseInt(event.target.value)
@@ -255,7 +266,7 @@ export function VoteForm({
 				)}
 				%
 			</Body>
-		</div>
+		</fieldset>
 	);
 }
 
@@ -268,35 +279,21 @@ function InputButton({
 	children: ReactNode;
 	isDisabled: boolean;
 }) {
+	const handleClick = () => {
+		if (isDisabled) return;
+		onClick();
+	};
+
 	return (
 		<div className="lifted-button-container max-w-7">
 			<LiftedButton
 				preset="stroke"
 				className="p-2 border-2 border-surface-ink h-7"
-				onClick={onClick}
+				onClick={handleClick}
 				// disabled={isDisabled}
 			>
 				{children}
 			</LiftedButton>
-		</div>
-	);
-}
-
-export function VoteDisplay({
-	points,
-	percentage,
-}: {
-	points: number;
-	percentage: number;
-}) {
-	return (
-		<div className="flex items-center gap-4 px-4 border-2 border-breadgray-light-grey dark:border-breadgray-rye rounded-lg dark:bg-breadgray-burnt">
-			<div className="text-2xl font-medium min-w-[3rem] text-center">
-				{points}
-			</div>
-			<div className="font-medium min-w-[4rem] text-right border-l-2 border-breadgray-light-grey dark:border-l-breadgray-rye">
-				{formatVotePercentage(percentage)}%
-			</div>
 		</div>
 	);
 }
