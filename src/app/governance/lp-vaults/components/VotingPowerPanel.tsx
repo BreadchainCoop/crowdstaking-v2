@@ -82,8 +82,8 @@ export function VotingPowerPanel() {
 										formatBalance(
 											Number(
 												votingPower.bread.value +
-													votingPower
-														.butteredBread.value
+													votingPower.butteredBread
+														.value
 											) /
 												10 ** 18,
 											1
@@ -130,7 +130,7 @@ export function VotingPowerPanel() {
 										) /
 											10 ** 18,
 										1
-									)
+								  )
 								: "-"}
 						</span>
 
@@ -144,7 +144,7 @@ export function VotingPowerPanel() {
 										Number(votingPower.bread.value) /
 											10 ** 18,
 										1
-									)
+								  )
 								: "-"}
 						</Body>
 						<DividerWithText text="Source(s)" />
@@ -153,19 +153,14 @@ export function VotingPowerPanel() {
 							Total locked LP tokens
 						</Body>
 
-						<Body
-							bold
-							className="text-right text-primary-orange"
-						>
+						<Body bold className="text-right text-primary-orange">
 							{vaultTokenBalance &&
 							vaultTokenBalance.butter.status === "success"
 								? formatBalance(
-										Number(
-											vaultTokenBalance.butter.value
-										) /
+										Number(vaultTokenBalance.butter.value) /
 											10 ** 18,
 										0
-									)
+								  )
 								: "-"}
 						</Body>
 
@@ -181,7 +176,7 @@ export function VotingPowerPanel() {
 											? formatBalance(
 													parseFloat(BREAD.value),
 													2
-												)
+											  )
 											: "-"}
 									</Body>
 								</>
@@ -197,15 +192,13 @@ export function VotingPowerPanel() {
 										Pending voting power
 									</Body>
 									<Tooltip>
-										The voting power you will receive in
-										the next voting cycle.
+										The voting power you will receive in the
+										next voting cycle.
 									</Tooltip>
 								</div>
 
 								<Body bold className="text-right w-27">
-									<PendingVotingPowerDisplay
-										user={user}
-									/>
+									<PendingVotingPowerDisplay user={user} />
 								</Body>
 							</>
 						) : (
@@ -233,8 +226,7 @@ export function VotingPowerPanel() {
 							</div>
 						)} */}
 					</div>
-					<HowDoesThisWorkButton href="https://breadchain.notion.site/Voting-Power-LP-Vaults-15e0ad9b12798026a4e6cb917c3137a5?pvs=74" />
-					{/* <HowDoesThisWorkButton href="https://docs.bread.coop/" /> */}
+					<HowDoesThisWorkButton href="https://docs.bread.coop/solidarity-primitives/crowdstaking/yield-governance/lp-vaults" />
 				</div>
 			</CardBox>
 		</div>
