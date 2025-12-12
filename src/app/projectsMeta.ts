@@ -71,7 +71,7 @@ export const projectsMeta: {
     description: "Global network driving the Regenerative Finance movement.",
     logoSrc: "project/refi_dao.png",
     active: false,
-    link: "https://breadchain.notion.site/ReFi-DAO-1540ad9b1279805bb54de4ffd0d5d52d",
+    link: "https://docs.bread.coop/solidarity-primitives/crowdstaking/member-projects/refi-dao",
   },
   "0xFCb81c1B0e0D4FEa01e5A0fbf0aebb91e78A67E1": {
     name: "Regen Coordination",

@@ -16,7 +16,7 @@ const BakingBreadImportance = ({ className }: { className?: string }) => {
 				Baking $BREAD increases crucial funding for our post-capitalist
 				cooperatives.{" "}
 				<a
-					href="https://breadchain.notion.site/4d496b311b984bd9841ef9c192b9c1c7?v=2eb1762e6b83440f8b0556c9917f86ca"
+					href="https://docs.bread.coop/"
 					target="_blank"
 					rel="noopener noreferrer"
 					className="text-[#EA5817] font-bold"

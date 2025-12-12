@@ -206,8 +206,8 @@ export default function FAQ() {
 						<Body>
 							The interest comes from DeFi across various chains.
 							For technical details, learn more about the{" "}
-							<ExternalLink href="https://docs.bread.coop/">
-								DAI Savings Rate.
+							<ExternalLink href="https://docs.spark.fi/user-guides/earning-savings/susdc">
+								Sky Savings Rate
 							</ExternalLink>
 						</Body>
 						<Body>
