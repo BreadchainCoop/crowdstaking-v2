@@ -1,23 +1,23 @@
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
-import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
+import React, { ChangeEvent, useCallback, useState } from "react";
 import { Address } from "viem";
-import { FromPanel } from "./FromPanel";
+// import { FromPanel } from "./FromPanel";
 import SwapReverse from "../SwapReverse";
-import ToPanel from "./ToPanel";
-import { useChainModal } from "@rainbow-me/rainbowkit";
+// import ToPanel from "./ToPanel";
+// import { useChainModal } from "@rainbow-me/rainbowkit";
 import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
-import { Body, LiftedButton } from "@breadcoop/ui";
-import { ArrowsDownUpIcon, SignIn } from "@phosphor-icons/react";
+import { Body } from "@breadcoop/ui";
+// import { ArrowsDownUpIcon, SignIn } from "@phosphor-icons/react";
 import { SwapPanel, TSwapState } from "./Panel";
 import { LoginButton } from "@/app/components/login-button";
 import { ButtonShell } from "./button-shell";
 import Bake from "./Bake";
 import Burn from "./Burn";
 import { InsufficentBalance } from "./InsufficentBalance";
-import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
-import { useModal } from "@/app/core/context/ModalContext";
-import { sleep } from "@/utils/sleep";
+// import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
+// import { useModal } from "@/app/core/context/ModalContext";
+// import { sleep } from "@/utils/sleep";
 import { Bridge } from "./Bridge";
 
 // export type TSwapMode = "BAKE" | "BURN" | "BRIDGE";
@@ -56,7 +56,7 @@ const NewSwap = () => {
 		setSwapState((state) => ({ ...state, value: "" }));
 	}, [setSwapState]);
 
-	const { openChainModal } = useChainModal();
+	// const { openChainModal } = useChainModal();
 
 	const { xDAI, BREAD } = useTokenBalances();
 
@@ -91,8 +91,8 @@ const NewSwap = () => {
 		}));
 	};
 
-	const { transactionsState, transactionsDispatch } = useTransactions();
-	const { setModal } = useModal();
+	// const { transactionsState, transactionsDispatch } = useTransactions();
+	// const { setModal } = useModal();
 
 	return (
 		<div className="bg-[#FDFAF3] shadow-[0px_4px_12px_0px_#1B201A26] p-8 mb-12">

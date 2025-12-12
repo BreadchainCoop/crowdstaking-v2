@@ -80,7 +80,7 @@ export default function App({ children }: { children: React.ReactNode }) {
 }
 
 function Layout({ children }: { children: ReactNode }) {
-  return (
+	return (
 		<div className="flex min-h-screen flex-col overflow-x-hidden md:overflow-x-visible">
 			<Header />
 			<main className="grow relative">
@@ -90,5 +90,5 @@ function Layout({ children }: { children: ReactNode }) {
 			</main>
 			<Footer />
 		</div>
-  );
+	);
 }
