@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "./../../node_modules/@breadcoop";
 @import "@breadcoop/ui/theme";
 
 :root {
