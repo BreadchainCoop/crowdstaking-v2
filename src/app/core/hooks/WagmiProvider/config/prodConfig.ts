@@ -55,6 +55,7 @@ const config = getDefaultConfig({
     [base.id]: http(),
     [bsc.id]: http(),
   },
+  // ssr: true,
 });
 
 export { config as prodConfig };
