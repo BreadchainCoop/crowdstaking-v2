@@ -7,6 +7,18 @@ const nextConfig = {
 	images: {
 		unoptimized: true,
 	},
+	webpack: (config) => {
+		// Polyfills for Node.js core modules needed by WalletConnect v2
+		config.resolve.fallback = {
+			...config.resolve.fallback,
+			buffer: require.resolve("buffer/"),
+			events: require.resolve("events/"),
+			stream: require.resolve("stream-browserify"),
+			process: require.resolve("process/browser"),
+		};
+
+		return config;
+	},
 };
 
 module.exports = nextConfig;

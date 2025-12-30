@@ -62,12 +62,18 @@ importers:
       blo:
         specifier: ^1.1.1
         version: 1.2.0
+      buffer:
+        specifier: ^6.0.3
+        version: 6.0.3
       clsx:
         specifier: ^2.1.0
         version: 2.1.1
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
+      events:
+        specifier: ^3.3.0
+        version: 3.3.0
       framer-motion:
         specifier: ^10.18.0
         version: 10.18.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -83,6 +89,9 @@ importers:
       pino-pretty:
         specifier: ^11.2.2
         version: 11.3.0
+      process:
+        specifier: ^0.11.10
+        version: 0.11.10
       react:
         specifier: ^19.1.0
         version: 19.2.0
@@ -92,6 +101,9 @@ importers:
       react-tooltip:
         specifier: ^5.28.0
         version: 5.30.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      stream-browserify:
+        specifier: ^3.0.0
+        version: 3.0.0
       viem:
         specifier: ^2.30.1
         version: 2.40.3(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
@@ -7611,6 +7623,9 @@ packages:
   storybook@7.6.20:
     resolution: {integrity: sha512-Wt04pPTO71pwmRmsgkyZhNo4Bvdb/1pBAMsIFb9nQLykEdzzpXjvingxFFvdOG4nIowzwgxD+CLlyRqVJqnATw==}
     hasBin: true
+
+  stream-browserify@3.0.0:
+    resolution: {integrity: sha512-H73RAHsVBapbim0tU2JwwOiXUj+fikfiaoYAKHF3VJfA0pe2BCzkhAHBlLG6REzE+2WNZcxOXjK7lkso+9euLA==}
 
   stream-chain@2.2.5:
     resolution: {integrity: sha512-1TJmBx6aSWqZ4tx7aTpBDXK0/e2hhcNSTV8+CbFJtDjbb+I1mZ8lHit0Grw9GRT+6JbIrrDd8esncgBi8aBXGA==}
@@ -15738,7 +15753,7 @@ snapshots:
 
   extension-port-stream@3.0.0:
     dependencies:
-      readable-stream: 3.6.2
+      readable-stream: 4.7.0
       webextension-polyfill: 0.10.0
 
   extract-zip@1.7.0:
@@ -18506,6 +18521,11 @@ snapshots:
       - encoding
       - supports-color
       - utf-8-validate
+
+  stream-browserify@3.0.0:
+    dependencies:
+      inherits: 2.0.4
+      readable-stream: 3.6.2
 
   stream-chain@2.2.5: {}
 
