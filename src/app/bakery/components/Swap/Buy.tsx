@@ -56,21 +56,23 @@ export function Buy() {
           </div>
         )}
 
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-black">
-            Amount (USD) - Optional
-          </label>
-          <input
-            type="text"
-            value={amount}
-            onChange={handleInputChange}
-            placeholder="Enter amount or leave blank"
-            className="w-full p-3 border border-surface-grey bg-white text-black placeholder:text-surface-grey-2 focus:outline-none focus:border-[#EA5817]"
-          />
-        </div>
+        {!isMobile && (
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-black">
+              Amount (USD) - Optional
+            </label>
+            <input
+              type="text"
+              value={amount}
+              onChange={handleInputChange}
+              placeholder="Enter amount or leave blank"
+              className="w-full p-3 border border-surface-grey bg-white text-black placeholder:text-surface-grey-2 focus:outline-none focus:border-[#EA5817]"
+            />
+          </div>
+        )}
       </div>
 
-      <div className={`relative lifted-button-container ${isMobile ? "opacity-50 cursor-not-allowed" : ""}`}>
+      <div className={`relative lifted-button-container ${isMobile ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}`}>
         <LiftedButton
           onClick={handleBuy}
           disabled={isMobile}
