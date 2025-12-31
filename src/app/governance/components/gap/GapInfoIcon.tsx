@@ -35,7 +35,7 @@ export function GapInfoIcon({ address }: GapInfoIconProps) {
         place="top"
         clickable
       >
-        <GapTooltipContent data={data} isLoading={isLoading} error={error} />
+        <GapTooltipContent data={data ?? null} isLoading={isLoading} error={error} />
       </ReactTooltip>
     </>
   );
