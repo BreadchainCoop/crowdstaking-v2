@@ -70,11 +70,11 @@ export function Buy() {
         </div>
       </div>
 
-      <div className="relative lifted-button-container">
+      <div className={`relative lifted-button-container ${isMobile ? "opacity-50 cursor-not-allowed" : ""}`}>
         <LiftedButton
           onClick={handleBuy}
           disabled={isMobile}
-          className={isMobile ? "opacity-50 cursor-not-allowed" : ""}
+          className=""
         >
           Buy with ZKP2P
         </LiftedButton>
