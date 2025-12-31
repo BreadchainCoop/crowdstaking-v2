@@ -5,6 +5,8 @@ import PageMenuLink from "./page-menu-link";
 
 function DesktopNavigation({ currentPath }: { currentPath: string }) {
 	const { user } = useConnectedUser();
+	console.log("__ Connected User __", user);
+
 	return (
 		<div className="hidden md:flex md:flex-grow md:items-center md:gap-8 md:ml-auto md:max-w-max">
 			<nav

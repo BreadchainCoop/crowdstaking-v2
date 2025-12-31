@@ -81,6 +81,14 @@ function ConnectedUserProvider({
     chain: activeChain,
   } = useAccount();
 
+  console.log("__ Connected_User_Provider __", {
+		isConnected,
+		activeConnector,
+		accountAddress,
+		status,
+		activeChain,
+  });
+
   useEffect(() => {
     const defaultChain = getChain("DEFAULT");
     const config = activeChain ? defaultChain : false;
