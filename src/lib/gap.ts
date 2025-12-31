@@ -77,6 +77,7 @@ export interface GapApiResponse {
       links?: Array<{ type: string; url: string }>;
     };
   };
+  milestones?: GapMilestone[];
   project_milestones?: GapMilestone[];
   updates?: GapUpdate[];
   impacts?: GapImpact[];
@@ -147,7 +148,7 @@ function transformApiResponse(raw: GapApiResponse): GapProject {
     solution: raw.details?.data?.solution,
     missionSummary: raw.details?.data?.missionSummary,
     imageURL: raw.details?.data?.imageURL,
-    milestones: raw.project_milestones || [],
+    milestones: raw.milestones || raw.project_milestones || [],
     updates: raw.updates || [],
     impacts: raw.impacts || [],
     endorsements: raw.endorsements || [],
