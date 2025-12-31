@@ -16,6 +16,7 @@ import { Body, LiftedButton, Logo } from "@breadcoop/ui";
 import { ArrowUpRightIcon } from "@phosphor-icons/react";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
 import { Chip } from "@/app/bakery/components/Chip";
+import { GapInfoIcon } from "./gap/GapInfoIcon";
 
 export function ProjectRow({
 	address,
@@ -82,6 +83,7 @@ export function ProjectRow({
 							<Body bold className="text-black">
 								{name}
 							</Body>
+							{link.includes('gap.karmahq.xyz') && <GapInfoIcon address={address} />}
 							<ArrowUpRightIcon size={24} />
 						</ExternalLink>
 					</div>
@@ -135,7 +137,8 @@ export function ProjectRow({
 									<Body bold className="text-black">
 										{name}
 									</Body>
-									<ArrowUpRightIcon size={24} />
+									{link.includes('gap.karmahq.xyz') && <GapInfoIcon address={address} />}
+								<ArrowUpRightIcon size={24} />
 								</ExternalLink>
 							</div>
 							<div className="flex items-stretch justify-start gap-2">
