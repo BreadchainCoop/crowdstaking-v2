@@ -76,16 +76,18 @@ export function ProjectRow({
 								height="24"
 							/>
 						</div>
-						<ExternalLink
-							href={link}
-							className="flex items-center justify-start gap-1 text-[#EA5817]"
-						>
-							<Body bold className="text-black">
-								{name}
-							</Body>
+						<div className="flex items-center gap-2">
+							<ExternalLink
+								href={link}
+								className="flex items-center justify-start gap-1 text-[#EA5817]"
+							>
+								<Body bold className="text-black">
+									{name}
+								</Body>
+								<ArrowUpRightIcon size={24} />
+							</ExternalLink>
 							{link.includes('gap.karmahq.xyz') && <GapInfoIcon address={address} />}
-							<ArrowUpRightIcon size={24} />
-						</ExternalLink>
+						</div>
 					</div>
 					<Body className="text-xs mb-4">{description}</Body>
 					{projectBread?.status === "SUCCESS" && (
@@ -129,7 +131,7 @@ export function ProjectRow({
 							/>
 						</div>
 						<div>
-							<div className="flex items-center mb-2">
+							<div className="flex items-center mb-2 gap-2">
 								<ExternalLink
 									href={link}
 									className="flex items-center justify-start gap-1"
@@ -137,9 +139,9 @@ export function ProjectRow({
 									<Body bold className="text-black">
 										{name}
 									</Body>
-									{link.includes('gap.karmahq.xyz') && <GapInfoIcon address={address} />}
-								<ArrowUpRightIcon size={24} />
+									<ArrowUpRightIcon size={24} />
 								</ExternalLink>
+								{link.includes('gap.karmahq.xyz') && <GapInfoIcon address={address} />}
 							</div>
 							<div className="flex items-stretch justify-start gap-2">
 								{projectBread?.status === "SUCCESS" && (
