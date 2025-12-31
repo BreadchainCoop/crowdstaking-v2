@@ -6,34 +6,33 @@ import { useGapProjectData } from "../../useGapProjectData";
 import { Hex } from "viem";
 import { projectsMeta } from "@/app/projectsMeta";
 import { ArrowUpRightIcon } from "@phosphor-icons/react";
+import ReactMarkdown from "react-markdown";
 
 interface GapModalContentProps {
   address: Hex;
 }
 
 /**
- * Helper function to convert text with URLs into clickable links
+ * Markdown renderer component with consistent styling
  */
-function linkifyText(text: string) {
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-  const parts = text.split(urlRegex);
-
-  return parts.map((part, index) => {
-    if (part.match(urlRegex)) {
-      return (
-        <a
-          key={index}
-          href={part}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-500 hover:underline"
-        >
-          {part}
-        </a>
-      );
-    }
-    return part;
-  });
+function MarkdownContent({ content }: { content: string }) {
+  return (
+    <ReactMarkdown
+      components={{
+        a: ({ node, ...props }) => (
+          <a
+            {...props}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline"
+          />
+        ),
+        p: ({ node, ...props }) => <span {...props} />,
+      }}
+    >
+      {content}
+    </ReactMarkdown>
+  );
 }
 
 /**
@@ -77,6 +76,11 @@ export function GapModalContent({ address }: GapModalContentProps) {
   const impacts = data.impacts || [];
   const endorsements = data.endorsements || [];
 
+  // Find project homepage from links (look for website type)
+  const projectHomepage = data.links?.find(
+    (link) => link.type?.toLowerCase() === "website" || link.type?.toLowerCase() === "homepage"
+  )?.url;
+
   return (
     <>
       <ModalHeading>{data.title || "Project Details"}</ModalHeading>
@@ -86,22 +90,22 @@ export function GapModalContent({ address }: GapModalContentProps) {
           <div className="mb-6">
             {data.description && (
               <Body className="text-sm text-surface-grey-2 mb-3">
-                {linkifyText(data.description)}
+                <MarkdownContent content={data.description} />
               </Body>
             )}
             {!data.description && data.missionSummary && (
               <Body className="text-sm text-surface-grey-2 mb-3">
-                <strong>Mission:</strong> {linkifyText(data.missionSummary)}
+                <strong>Mission:</strong> <MarkdownContent content={data.missionSummary} />
               </Body>
             )}
             {data.problem && (
               <Body className="text-sm text-surface-grey-2 mb-2">
-                <strong>Problem:</strong> {linkifyText(data.problem)}
+                <strong>Problem:</strong> <MarkdownContent content={data.problem} />
               </Body>
             )}
             {data.solution && (
               <Body className="text-sm text-surface-grey-2">
-                <strong>Solution:</strong> {linkifyText(data.solution)}
+                <strong>Solution:</strong> <MarkdownContent content={data.solution} />
               </Body>
             )}
           </div>
@@ -126,16 +130,16 @@ export function GapModalContent({ address }: GapModalContentProps) {
               {impacts.map((impact) => (
                 <div key={impact.uid} className="border-l-2 border-green-500 pl-4 py-1">
                   <Body className="text-sm font-bold text-surface-grey-2 mb-1">
-                    {linkifyText(impact.data.title)}
+                    <MarkdownContent content={impact.data.title} />
                   </Body>
                   {impact.data.description && (
                     <Body className="text-xs text-surface-grey-2 mb-2">
-                      {linkifyText(impact.data.description)}
+                      <MarkdownContent content={impact.data.description} />
                     </Body>
                   )}
                   {impact.data.proof && (
                     <Body className="text-xs text-surface-grey-2 mb-2 italic">
-                      Proof: {linkifyText(impact.data.proof)}
+                      Proof: <MarkdownContent content={impact.data.proof} />
                     </Body>
                   )}
                   {impact.createdAt && (
@@ -167,11 +171,11 @@ export function GapModalContent({ address }: GapModalContentProps) {
                     </span>
                     <div className="flex-1">
                       <Body className="text-sm font-bold text-surface-grey-2">
-                        {linkifyText(milestone.data.title)}
+                        <MarkdownContent content={milestone.data.title} />
                       </Body>
                       {milestone.data.description && (
                         <Body className="text-xs text-surface-grey-2 mt-1">
-                          {linkifyText(milestone.data.description)}
+                          <MarkdownContent content={milestone.data.description} />
                         </Body>
                       )}
                       <div className="flex gap-3 mt-2 text-xs text-surface-grey-2 opacity-70">
@@ -205,11 +209,11 @@ export function GapModalContent({ address }: GapModalContentProps) {
               {updates.map((update) => (
                 <div key={update.uid} className="border-l-2 border-blue-500 pl-4 py-1">
                   <Body className="text-sm font-bold text-surface-grey-2 mb-1">
-                    {linkifyText(update.data.title)}
+                    <MarkdownContent content={update.data.title} />
                   </Body>
                   {update.data.text && (
                     <Body className="text-xs text-surface-grey-2 mb-2">
-                      {linkifyText(update.data.text)}
+                      <MarkdownContent content={update.data.text} />
                     </Body>
                   )}
                   {update.createdAt && (
@@ -223,15 +227,25 @@ export function GapModalContent({ address }: GapModalContentProps) {
           </div>
         )}
 
-        {/* View Full Profile Button */}
-        {gapUrl && (
-          <div className="mt-6 flex justify-center">
-            <a href={gapUrl} target="_blank" rel="noopener noreferrer">
-              <LiftedButton className="flex items-center gap-2">
-                View Full Karma GAP Profile
-                <ArrowUpRightIcon size={20} />
-              </LiftedButton>
-            </a>
+        {/* Action Buttons */}
+        {(gapUrl || projectHomepage) && (
+          <div className="mt-6 flex justify-center gap-3 flex-wrap">
+            {gapUrl && (
+              <a href={gapUrl} target="_blank" rel="noopener noreferrer">
+                <LiftedButton className="flex items-center gap-2">
+                  Learn More
+                  <ArrowUpRightIcon size={20} />
+                </LiftedButton>
+              </a>
+            )}
+            {projectHomepage && (
+              <a href={projectHomepage} target="_blank" rel="noopener noreferrer">
+                <LiftedButton className="flex items-center gap-2">
+                  Project Homepage
+                  <ArrowUpRightIcon size={20} />
+                </LiftedButton>
+              </a>
+            )}
           </div>
         )}
       </ModalContent>
