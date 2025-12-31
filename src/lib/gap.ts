@@ -15,8 +15,9 @@ export interface GapMilestone {
     description?: string;
     endsAt?: number;
   };
-  completed?: boolean;
-  completedAt?: string;
+  completed?: {
+    createdAt: string;
+  } | null;
 }
 
 export interface GapUpdate {

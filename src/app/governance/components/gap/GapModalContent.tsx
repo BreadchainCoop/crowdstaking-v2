@@ -212,15 +212,15 @@ export function GapModalContent({ address }: GapModalContentProps) {
                         </Body>
                       )}
                       <div className="flex gap-3 mt-2 text-xs text-surface-grey-2 opacity-70">
-                        {milestone.completedAt && (
+                        {milestone.completed?.createdAt && (
                           <span>
                             Completed:{" "}
-                            {format(new Date(milestone.completedAt), "MMM d, yyyy")}
+                            {format(new Date(milestone.completed.createdAt), "MMM d, yyyy")}
                           </span>
                         )}
                         {milestone.data.endsAt && !milestone.completed && (
                           <span>
-                            Due: {format(new Date(milestone.data.endsAt), "MMM d, yyyy")}
+                            Due: {format(new Date(milestone.data.endsAt * 1000), "MMM d, yyyy")}
                           </span>
                         )}
                       </div>
