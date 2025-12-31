@@ -62,6 +62,8 @@ export interface GapGrant {
     amount?: string;
     details?: string;
   };
+  milestones?: GapMilestone[];
+  updates?: GapUpdate[];
 }
 
 // Raw API response structure
@@ -141,6 +143,16 @@ export function getGapType(url: string): "project" | "community" | null {
  * Transform raw API response to normalized GapProject
  */
 function transformApiResponse(raw: GapApiResponse): GapProject {
+  // Collect milestones from both root and grants
+  const rootMilestones = raw.milestones || raw.project_milestones || [];
+  const grantMilestones = raw.grants?.flatMap(grant => grant.milestones || []) || [];
+  const allMilestones = [...rootMilestones, ...grantMilestones];
+
+  // Collect updates from both root and grants
+  const rootUpdates = raw.updates || [];
+  const grantUpdates = raw.grants?.flatMap(grant => grant.updates || []) || [];
+  const allUpdates = [...rootUpdates, ...grantUpdates];
+
   return {
     uid: raw.uid,
     title: raw.details?.data?.title || "Untitled Project",
@@ -149,8 +161,8 @@ function transformApiResponse(raw: GapApiResponse): GapProject {
     solution: raw.details?.data?.solution,
     missionSummary: raw.details?.data?.missionSummary,
     imageURL: raw.details?.data?.imageURL,
-    milestones: raw.milestones || raw.project_milestones || [],
-    updates: raw.updates || [],
+    milestones: allMilestones,
+    updates: allUpdates,
     impacts: raw.impacts || [],
     endorsements: raw.endorsements || [],
     members: raw.members || [],
