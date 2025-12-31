@@ -1,21 +1,50 @@
-import { Body, Heading4 } from "@breadcoop/ui";
+import { Body, Heading4, LiftedButton } from "@breadcoop/ui";
 import { GapProject } from "@/lib/gap";
 import { format } from "date-fns";
 import { ModalHeading, ModalContent } from "@/app/core/components/Modal/ModalUI";
 import { useGapProjectData } from "../../useGapProjectData";
 import { Hex } from "viem";
+import { projectsMeta } from "@/app/projectsMeta";
+import { ArrowUpRightIcon } from "@phosphor-icons/react";
 
 interface GapModalContentProps {
   address: Hex;
 }
 
 /**
+ * Helper function to convert text with URLs into clickable links
+ */
+function linkifyText(text: string) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const parts = text.split(urlRegex);
+
+  return parts.map((part, index) => {
+    if (part.match(urlRegex)) {
+      return (
+        <a
+          key={index}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:underline"
+        >
+          {part}
+        </a>
+      );
+    }
+    return part;
+  });
+}
+
+/**
  * Modal content component displaying comprehensive Karma GAP project information
  *
- * Shows all milestones, all updates, team info, and full descriptions in a standardized format
+ * Shows all milestones, all updates, impacts, and full descriptions in a standardized format
  */
 export function GapModalContent({ address }: GapModalContentProps) {
   const { data, isLoading, error } = useGapProjectData(address);
+  const projectMeta = projectsMeta[address];
+  const gapUrl = projectMeta?.link || "";
 
   // Loading state
   if (isLoading) {
@@ -47,7 +76,6 @@ export function GapModalContent({ address }: GapModalContentProps) {
   const updates = data.updates || [];
   const impacts = data.impacts || [];
   const endorsements = data.endorsements || [];
-  const teamMembers = data.members || [];
 
   return (
     <>
@@ -58,22 +86,22 @@ export function GapModalContent({ address }: GapModalContentProps) {
           <div className="mb-6">
             {data.description && (
               <Body className="text-sm text-surface-grey-2 mb-3">
-                {data.description}
+                {linkifyText(data.description)}
               </Body>
             )}
             {!data.description && data.missionSummary && (
               <Body className="text-sm text-surface-grey-2 mb-3">
-                <strong>Mission:</strong> {data.missionSummary}
+                <strong>Mission:</strong> {linkifyText(data.missionSummary)}
               </Body>
             )}
             {data.problem && (
               <Body className="text-sm text-surface-grey-2 mb-2">
-                <strong>Problem:</strong> {data.problem}
+                <strong>Problem:</strong> {linkifyText(data.problem)}
               </Body>
             )}
             {data.solution && (
               <Body className="text-sm text-surface-grey-2">
-                <strong>Solution:</strong> {data.solution}
+                <strong>Solution:</strong> {linkifyText(data.solution)}
               </Body>
             )}
           </div>
@@ -98,16 +126,16 @@ export function GapModalContent({ address }: GapModalContentProps) {
               {impacts.map((impact) => (
                 <div key={impact.uid} className="border-l-2 border-green-500 pl-4 py-1">
                   <Body className="text-sm font-bold text-surface-grey-2 mb-1">
-                    {impact.data.title}
+                    {linkifyText(impact.data.title)}
                   </Body>
                   {impact.data.description && (
                     <Body className="text-xs text-surface-grey-2 mb-2">
-                      {impact.data.description}
+                      {linkifyText(impact.data.description)}
                     </Body>
                   )}
                   {impact.data.proof && (
                     <Body className="text-xs text-surface-grey-2 mb-2 italic">
-                      Proof: {impact.data.proof}
+                      Proof: {linkifyText(impact.data.proof)}
                     </Body>
                   )}
                   {impact.createdAt && (
@@ -139,11 +167,11 @@ export function GapModalContent({ address }: GapModalContentProps) {
                     </span>
                     <div className="flex-1">
                       <Body className="text-sm font-bold text-surface-grey-2">
-                        {milestone.data.title}
+                        {linkifyText(milestone.data.title)}
                       </Body>
                       {milestone.data.description && (
                         <Body className="text-xs text-surface-grey-2 mt-1">
-                          {milestone.data.description}
+                          {linkifyText(milestone.data.description)}
                         </Body>
                       )}
                       <div className="flex gap-3 mt-2 text-xs text-surface-grey-2 opacity-70">
@@ -177,11 +205,11 @@ export function GapModalContent({ address }: GapModalContentProps) {
               {updates.map((update) => (
                 <div key={update.uid} className="border-l-2 border-blue-500 pl-4 py-1">
                   <Body className="text-sm font-bold text-surface-grey-2 mb-1">
-                    {update.data.title}
+                    {linkifyText(update.data.title)}
                   </Body>
                   {update.data.text && (
                     <Body className="text-xs text-surface-grey-2 mb-2">
-                      {update.data.text}
+                      {linkifyText(update.data.text)}
                     </Body>
                   )}
                   {update.createdAt && (
@@ -195,30 +223,16 @@ export function GapModalContent({ address }: GapModalContentProps) {
           </div>
         )}
 
-        {/* Team Section - Show team member details */}
-        {teamMembers.length > 0 && (
-          <div className="mb-4">
-            <Heading4 className="text-lg mb-3">
-              Team ({teamMembers.length} member{teamMembers.length !== 1 ? "s" : ""})
-            </Heading4>
-            <div className="space-y-2">
-              {teamMembers.map((member, index) => (
-                <div key={member.recipient + index} className="flex items-start gap-2">
-                  <Body className="text-xs text-surface-grey-2">
-                    {member.data.name || `${member.recipient.slice(0, 6)}...${member.recipient.slice(-4)}`}
-                    {member.data.role && <span className="opacity-70"> - {member.data.role}</span>}
-                  </Body>
-                </div>
-              ))}
-            </div>
+        {/* View Full Profile Button */}
+        {gapUrl && (
+          <div className="mt-6 flex justify-center">
+            <a href={gapUrl} target="_blank" rel="noopener noreferrer">
+              <LiftedButton className="flex items-center gap-2">
+                View Full Karma GAP Profile
+                <ArrowUpRightIcon size={20} />
+              </LiftedButton>
+            </a>
           </div>
-        )}
-
-        {/* Empty state */}
-        {milestones.length === 0 && updates.length === 0 && impacts.length === 0 && teamMembers.length === 0 && endorsements.length === 0 && (
-          <Body className="text-sm text-surface-grey-2">
-            No additional project details available from Karma GAP
-          </Body>
         )}
       </ModalContent>
     </>
