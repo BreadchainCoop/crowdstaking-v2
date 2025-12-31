@@ -45,18 +45,79 @@ export function GapModalContent({ address }: GapModalContentProps) {
 
   const milestones = data.milestones || [];
   const updates = data.updates || [];
+  const impacts = data.impacts || [];
+  const endorsements = data.endorsements || [];
   const teamMembers = data.members || [];
 
   return (
     <>
       <ModalHeading>{data.title || "Project Details"}</ModalHeading>
       <ModalContent>
-        {/* Project Description */}
-        {data.description && (
+        {/* Project Description - Use missionSummary if description is not available */}
+        {(data.description || data.missionSummary || data.problem || data.solution) && (
           <div className="mb-6">
-            <Body className="text-sm text-surface-grey-2">
-              {data.description}
+            {data.description && (
+              <Body className="text-sm text-surface-grey-2 mb-3">
+                {data.description}
+              </Body>
+            )}
+            {!data.description && data.missionSummary && (
+              <Body className="text-sm text-surface-grey-2 mb-3">
+                <strong>Mission:</strong> {data.missionSummary}
+              </Body>
+            )}
+            {data.problem && (
+              <Body className="text-sm text-surface-grey-2 mb-2">
+                <strong>Problem:</strong> {data.problem}
+              </Body>
+            )}
+            {data.solution && (
+              <Body className="text-sm text-surface-grey-2">
+                <strong>Solution:</strong> {data.solution}
+              </Body>
+            )}
+          </div>
+        )}
+
+        {/* Endorsements Count */}
+        {endorsements.length > 0 && (
+          <div className="mb-4 p-3 bg-surface-grey-4 rounded-lg">
+            <Body className="text-sm font-bold text-surface-grey-2">
+              {endorsements.length} Endorsement{endorsements.length !== 1 ? "s" : ""}
             </Body>
+          </div>
+        )}
+
+        {/* Impacts Section */}
+        {impacts.length > 0 && (
+          <div className="mb-6">
+            <Heading4 className="text-lg mb-3">
+              Impact ({impacts.length})
+            </Heading4>
+            <div className="space-y-4">
+              {impacts.map((impact) => (
+                <div key={impact.uid} className="border-l-2 border-green-500 pl-4 py-1">
+                  <Body className="text-sm font-bold text-surface-grey-2 mb-1">
+                    {impact.data.title}
+                  </Body>
+                  {impact.data.description && (
+                    <Body className="text-xs text-surface-grey-2 mb-2">
+                      {impact.data.description}
+                    </Body>
+                  )}
+                  {impact.data.proof && (
+                    <Body className="text-xs text-surface-grey-2 mb-2 italic">
+                      Proof: {impact.data.proof}
+                    </Body>
+                  )}
+                  {impact.createdAt && (
+                    <Body className="text-xs text-surface-grey-2 opacity-70">
+                      {format(new Date(impact.createdAt), "MMM d, yyyy")}
+                    </Body>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
@@ -78,11 +139,11 @@ export function GapModalContent({ address }: GapModalContentProps) {
                     </span>
                     <div className="flex-1">
                       <Body className="text-sm font-bold text-surface-grey-2">
-                        {milestone.title}
+                        {milestone.data.title}
                       </Body>
-                      {milestone.description && (
+                      {milestone.data.description && (
                         <Body className="text-xs text-surface-grey-2 mt-1">
-                          {milestone.description}
+                          {milestone.data.description}
                         </Body>
                       )}
                       <div className="flex gap-3 mt-2 text-xs text-surface-grey-2 opacity-70">
@@ -92,9 +153,9 @@ export function GapModalContent({ address }: GapModalContentProps) {
                             {format(new Date(milestone.completedAt), "MMM d, yyyy")}
                           </span>
                         )}
-                        {milestone.dueDate && !milestone.completed && (
+                        {milestone.data.endsAt && !milestone.completed && (
                           <span>
-                            Due: {format(new Date(milestone.dueDate), "MMM d, yyyy")}
+                            Due: {format(new Date(milestone.data.endsAt), "MMM d, yyyy")}
                           </span>
                         )}
                       </div>
@@ -114,13 +175,13 @@ export function GapModalContent({ address }: GapModalContentProps) {
             </Heading4>
             <div className="space-y-4">
               {updates.map((update) => (
-                <div key={update.uid} className="border-l-2 border-surface-grey-3 pl-4 py-1">
+                <div key={update.uid} className="border-l-2 border-blue-500 pl-4 py-1">
                   <Body className="text-sm font-bold text-surface-grey-2 mb-1">
-                    {update.title}
+                    {update.data.title}
                   </Body>
-                  {update.text && (
+                  {update.data.text && (
                     <Body className="text-xs text-surface-grey-2 mb-2">
-                      {update.text}
+                      {update.data.text}
                     </Body>
                   )}
                   {update.createdAt && (
@@ -141,11 +202,11 @@ export function GapModalContent({ address }: GapModalContentProps) {
               Team ({teamMembers.length} member{teamMembers.length !== 1 ? "s" : ""})
             </Heading4>
             <div className="space-y-2">
-              {teamMembers.map((member) => (
-                <div key={member.address} className="flex items-start gap-2">
+              {teamMembers.map((member, index) => (
+                <div key={member.recipient + index} className="flex items-start gap-2">
                   <Body className="text-xs text-surface-grey-2">
-                    {member.name || `${member.address.slice(0, 6)}...${member.address.slice(-4)}`}
-                    {member.role && <span className="opacity-70"> - {member.role}</span>}
+                    {member.data.name || `${member.recipient.slice(0, 6)}...${member.recipient.slice(-4)}`}
+                    {member.data.role && <span className="opacity-70"> - {member.data.role}</span>}
                   </Body>
                 </div>
               ))}
@@ -154,7 +215,7 @@ export function GapModalContent({ address }: GapModalContentProps) {
         )}
 
         {/* Empty state */}
-        {milestones.length === 0 && updates.length === 0 && teamMembers.length === 0 && (
+        {milestones.length === 0 && updates.length === 0 && impacts.length === 0 && teamMembers.length === 0 && endorsements.length === 0 && (
           <Body className="text-sm text-surface-grey-2">
             No additional project details available from Karma GAP
           </Body>

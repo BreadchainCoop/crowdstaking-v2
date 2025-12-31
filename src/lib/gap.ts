@@ -10,50 +10,101 @@ const GAP_API_BASE = "https://gapapi.karmahq.xyz";
 // TypeScript interfaces for GAP data structures
 export interface GapMilestone {
   uid: string;
-  title: string;
-  description: string;
-  completed: boolean;
+  data: {
+    title: string;
+    description?: string;
+    endsAt?: number;
+  };
+  completed?: boolean;
   completedAt?: string;
-  dueDate?: string;
 }
 
 export interface GapUpdate {
   uid: string;
-  title: string;
-  text: string;
+  data: {
+    title: string;
+    text: string;
+  };
+  createdAt: string;
+}
+
+export interface GapImpact {
+  uid: string;
+  data: {
+    title: string;
+    description?: string;
+    proof?: string;
+  };
+  createdAt: string;
+}
+
+export interface GapEndorsement {
+  uid: string;
+  data: {
+    comment?: string;
+  };
+  attester: string;
   createdAt: string;
 }
 
 export interface GapTeamMember {
-  address: string;
-  name?: string;
-  role?: string;
+  data: {
+    name?: string;
+    role?: string;
+  };
+  recipient: string;
 }
 
-export interface GapCommunity {
-  name: string;
+export interface GapGrant {
+  status?: string;
+  data: {
+    amount?: string;
+    details?: string;
+  };
+}
+
+// Raw API response structure
+export interface GapApiResponse {
   uid: string;
+  details: {
+    data: {
+      title: string;
+      description?: string;
+      problem?: string;
+      solution?: string;
+      missionSummary?: string;
+      imageURL?: string;
+      links?: Array<{ type: string; url: string }>;
+    };
+  };
+  project_milestones?: GapMilestone[];
+  updates?: GapUpdate[];
+  impacts?: GapImpact[];
+  endorsements?: GapEndorsement[];
+  members?: GapTeamMember[];
+  grants?: GapGrant[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
+// Normalized interface for use in components
 export interface GapProject {
   uid: string;
   title: string;
-  description: string;
-  problemStatement?: string;
+  description?: string;
+  problem?: string;
   solution?: string;
   missionSummary?: string;
-  logoUrl?: string;
+  imageURL?: string;
   milestones?: GapMilestone[];
   updates?: GapUpdate[];
+  impacts?: GapImpact[];
+  endorsements?: GapEndorsement[];
   members?: GapTeamMember[];
-  communities?: GapCommunity[];
-  grantsReceived?: number;
-  endorsementCount?: number;
+  grants?: GapGrant[];
   createdAt?: string;
   updatedAt?: string;
-  github?: string;
-  website?: string;
-  twitter?: string;
+  links?: Array<{ type: string; url: string }>;
 }
 
 /**
@@ -85,6 +136,30 @@ export function getGapType(url: string): "project" | "community" | null {
 }
 
 /**
+ * Transform raw API response to normalized GapProject
+ */
+function transformApiResponse(raw: GapApiResponse): GapProject {
+  return {
+    uid: raw.uid,
+    title: raw.details?.data?.title || "Untitled Project",
+    description: raw.details?.data?.description,
+    problem: raw.details?.data?.problem,
+    solution: raw.details?.data?.solution,
+    missionSummary: raw.details?.data?.missionSummary,
+    imageURL: raw.details?.data?.imageURL,
+    milestones: raw.project_milestones || [],
+    updates: raw.updates || [],
+    impacts: raw.impacts || [],
+    endorsements: raw.endorsements || [],
+    members: raw.members || [],
+    grants: raw.grants || [],
+    createdAt: raw.createdAt,
+    updatedAt: raw.updatedAt,
+    links: raw.details?.data?.links || [],
+  };
+}
+
+/**
  * Fetch project data by slug
  */
 export async function getProjectBySlug(slug: string): Promise<GapProject | null> {
@@ -96,8 +171,8 @@ export async function getProjectBySlug(slug: string): Promise<GapProject | null>
       return null;
     }
 
-    const data = await response.json();
-    return data as GapProject;
+    const raw = await response.json() as GapApiResponse;
+    return transformApiResponse(raw);
   } catch (error) {
     console.error(`Failed to fetch GAP project ${slug}:`, error);
     return null;
@@ -116,8 +191,8 @@ export async function getCommunityBySlug(slug: string): Promise<GapProject | nul
       return null;
     }
 
-    const data = await response.json();
-    return data as GapProject;
+    const raw = await response.json() as GapApiResponse;
+    return transformApiResponse(raw);
   } catch (error) {
     console.error(`Failed to fetch GAP community ${slug}:`, error);
     return null;
