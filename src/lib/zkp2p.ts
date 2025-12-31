@@ -6,7 +6,7 @@ export const zkp2pConfig = {
   toToken: "100:0x0000000000000000000000000000000000000000",
 };
 
-export function buildZkp2pUrl(options?: { inputAmount?: string }): string {
+export function buildZkp2pUrl(options?: { inputAmount?: string; recipientAddress?: string }): string {
   const params = new URLSearchParams({
     referrer: zkp2pConfig.referrer,
     referrerLogo: zkp2pConfig.referrerLogo,
@@ -16,6 +16,10 @@ export function buildZkp2pUrl(options?: { inputAmount?: string }): string {
 
   if (options?.inputAmount) {
     params.set("inputAmount", options.inputAmount);
+  }
+
+  if (options?.recipientAddress) {
+    params.set("recipientAddress", options.recipientAddress);
   }
 
   return `${zkp2pConfig.baseUrl}?${params.toString()}`;
