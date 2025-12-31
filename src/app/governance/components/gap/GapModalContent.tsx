@@ -1,12 +1,12 @@
-import { Body, Heading2, Heading4 } from "@breadcoop/ui";
+import { Body, Heading4 } from "@breadcoop/ui";
 import { GapProject } from "@/lib/gap";
 import { format } from "date-fns";
 import { ModalHeading, ModalContent } from "@/app/core/components/Modal/ModalUI";
+import { useGapProjectData } from "../../useGapProjectData";
+import { Hex } from "viem";
 
 interface GapModalContentProps {
-  data: GapProject | null;
-  isLoading: boolean;
-  error: Error | null;
+  address: Hex;
 }
 
 /**
@@ -14,11 +14,9 @@ interface GapModalContentProps {
  *
  * Shows all milestones, all updates, team info, and full descriptions in a standardized format
  */
-export function GapModalContent({
-  data,
-  isLoading,
-  error,
-}: GapModalContentProps) {
+export function GapModalContent({ address }: GapModalContentProps) {
+  const { data, isLoading, error } = useGapProjectData(address);
+
   // Loading state
   if (isLoading) {
     return (
