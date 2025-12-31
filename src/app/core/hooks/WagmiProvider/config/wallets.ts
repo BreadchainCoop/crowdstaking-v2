@@ -20,10 +20,17 @@ export function getWallets() {
 		safeWallet,
 	];
 
-	if (typeof indexedDB !== "undefined") {
-		// @ts-expect-error Correct
-		wallets.unshift(metaMaskWallet, walletConnectWallet);
-	}
+  if (typeof indexedDB !== "undefined") {
+		wallets.unshift(
+			// @ts-expect-error Correct
+			metaMaskWallet,
+			() =>
+				walletConnectWallet({
+					projectId:
+						process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID!,
+				})
+		);
+  }
 
-	return wallets;
+  return wallets;
 }
