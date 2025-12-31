@@ -4,10 +4,12 @@ import { useState, ChangeEvent } from "react";
 import { Body, LiftedButton } from "@breadcoop/ui";
 import { buildZkp2pUrl } from "@/lib/zkp2p";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
-import { Desktop, DeviceMobile } from "@phosphor-icons/react";
+import { Desktop } from "@phosphor-icons/react";
+import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 
 export function Buy() {
   const [amount, setAmount] = useState("");
+  const { user } = useConnectedUser();
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const sanitizedValue = sanitizeInputValue(event.target.value);
@@ -15,7 +17,11 @@ export function Buy() {
   };
 
   const handleBuy = () => {
-    const url = buildZkp2pUrl(amount ? { inputAmount: amount } : undefined);
+    const recipientAddress = user.status === "CONNECTED" ? user.address : undefined;
+    const url = buildZkp2pUrl({
+      ...(amount && { inputAmount: amount }),
+      ...(recipientAddress && { recipientAddress }),
+    });
     window.open(url, "_blank");
   };
 
