@@ -6,6 +6,7 @@ import { buildZkp2pUrl } from "@/lib/zkp2p";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
 import { Desktop } from "@phosphor-icons/react";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
+import { isAddress } from "viem";
 
 export function Buy() {
   const [amount, setAmount] = useState("");
@@ -29,7 +30,13 @@ export function Buy() {
   };
 
   const handleBuy = () => {
-    const recipientAddress = user.status === "CONNECTED" ? user.address : undefined;
+    let recipientAddress: string | undefined = undefined;
+
+    // Validate and use recipient address only if user is connected and address is valid
+    if (user.status === "CONNECTED" && isAddress(user.address)) {
+      recipientAddress = user.address;
+    }
+
     const url = buildZkp2pUrl({
       ...(amount && { inputAmount: amount }),
       ...(recipientAddress && { recipientAddress }),
@@ -40,7 +47,7 @@ export function Buy() {
   return (
     <div className="space-y-4">
       <div className="bg-paper-1 p-5">
-        <Body className="text-surface-grey-2 text-sm mb-4">
+        <Body className="text-surface-grey-2 text-sm mb-4" id="zkp2p-description">
           {isMobile
             ? "This feature is only available on desktop devices."
             : "Buy xDAI with Venmo, Revolut, Wise, or Cash App via ZKP2P. You'll be redirected to complete your purchase."
@@ -48,8 +55,8 @@ export function Buy() {
         </Body>
 
         {isMobile && (
-          <div className="flex items-center gap-2 mb-4">
-            <Desktop size={20} className="text-surface-grey" />
+          <div className="flex items-center gap-2 mb-4" role="alert" aria-live="polite">
+            <Desktop size={20} className="text-surface-grey" aria-hidden="true" />
             <Body className="text-surface-grey text-xs">
               Desktop only - this feature is not available on mobile devices.
             </Body>
@@ -72,7 +79,11 @@ export function Buy() {
         )}
       </div>
 
-      <div className={`relative lifted-button-container ${isMobile ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}`}>
+      <div
+        className={`relative lifted-button-container ${isMobile ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}`}
+        aria-disabled={isMobile}
+        aria-describedby={isMobile ? "zkp2p-description" : undefined}
+      >
         <LiftedButton
           onClick={handleBuy}
           disabled={isMobile}
