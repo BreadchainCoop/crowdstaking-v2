@@ -15,7 +15,10 @@ interface GapModalContentProps {
 /**
  * Markdown renderer component with consistent styling and linkification fallback
  */
-function MarkdownContent({ content }: { content: string }) {
+function MarkdownContent({ content }: { content: string | undefined }) {
+  // Guard against undefined/null content
+  if (!content) return null;
+
   // First try to linkify plain URLs that markdown might miss
   const urlRegex = /(https?:\/\/[^\s\)]+)/g;
   const processedContent = content.replace(urlRegex, (url) => {
