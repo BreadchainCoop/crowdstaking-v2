@@ -1,6 +1,7 @@
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
-import React, { ChangeEvent, useCallback, useState } from "react";
+import React, { ChangeEvent, useCallback, useState, useEffect } from "react";
 import { Address } from "viem";
+import { useSearchParams } from "next/navigation";
 // import { FromPanel } from "./FromPanel";
 import SwapReverse from "../SwapReverse";
 // import ToPanel from "./ToPanel";
@@ -19,6 +20,8 @@ import { InsufficentBalance } from "./InsufficentBalance";
 // import { useModal } from "@/app/core/context/ModalContext";
 // import { sleep } from "@/utils/sleep";
 import { Bridge } from "./Bridge";
+import { Buy } from "./Buy";
+import { useToast } from "@/app/core/context/ToastContext/ToastContext";
 
 // export type TSwapMode = "BAKE" | "BURN" | "BRIDGE";
 
@@ -31,6 +34,7 @@ const notes: Record<TSwapState["mode"], string> = {
 	"BAKE": 'Baking adds new BREAD into circulation. You can redeem your BREAD through the "Burn" tab at any time',
 	"BURN": "When you Burn BREAD, you are no longer contributing to the Solidarity Fund, and all voting power will be removed.",
 	"BRIDGE": "This bridge is powered by LI.FI",
+	"BUY": "Buy crypto with Venmo, Revolut, Wise, or Cash App via ZKP2P",
 };
 
 const initialSwapState: TSwapState = {
@@ -43,6 +47,23 @@ const NewSwap = () => {
 	const [connectedAccountAddress, setConnectedAccountAddress] =
 		useState<null | Address>(null);
 	const [swapState, setSwapState] = useState<TSwapState>(initialSwapState);
+	const searchParams = useSearchParams();
+	const { toastDispatch } = useToast();
+
+	// Handle ZKP2P callback
+	useEffect(() => {
+		if (searchParams.get("zkp2p") === "success") {
+			toastDispatch({
+				type: "CUSTOM",
+				payload: {
+					variant: "success",
+					message: "Purchase completed! Your xDAI should arrive shortly.",
+				},
+			});
+			// Clean up URL
+			window.history.replaceState({}, "", "/bakery");
+		}
+	}, [searchParams, toastDispatch]);
 
 	if (
 		user.status === "CONNECTED" &&
@@ -97,7 +118,7 @@ const NewSwap = () => {
 	return (
 		<div className="bg-[#FDFAF3] shadow-[0px_4px_12px_0px_#1B201A26] p-8 mb-12">
 			<div>
-				<div className="bg-paper-main p-1 flex items-center justify-between max-w-[15rem]">
+				<div className="bg-paper-main p-1 flex items-center justify-between max-w-[20rem]">
 					<ModeBtn
 						label="Bake"
 						selected={swapState.mode === "BAKE"}
@@ -117,6 +138,13 @@ const NewSwap = () => {
 						selected={swapState.mode === "BRIDGE"}
 						onClick={() =>
 							setSwapState({ mode: "BRIDGE", value: "" })
+						}
+					/>
+					<ModeBtn
+						label="Buy"
+						selected={swapState.mode === "BUY"}
+						onClick={() =>
+							setSwapState({ mode: "BUY", value: "" })
 						}
 					/>
 				</div>
@@ -165,12 +193,14 @@ const NewSwap = () => {
 							}
 						/> */}
 					</>
-				) : (
+				) : swapState.mode === "BRIDGE" ? (
 					<Bridge />
+				) : (
+					<Buy />
 				)}
 			</div>
 			{/* TODO: Remove some nested element here when the button is fixed */}
-			{swapState.mode !== "BRIDGE" && (
+			{swapState.mode !== "BRIDGE" && swapState.mode !== "BUY" && (
 				<div className="mt-6">
 					{user.status === "CONNECTED" ? (
 						<div className="[&>*]:w-full">
