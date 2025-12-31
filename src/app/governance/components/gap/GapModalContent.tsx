@@ -236,17 +236,21 @@ export function GapModalContent({ address }: GapModalContentProps) {
           <div className="mt-6 flex justify-center gap-3 flex-wrap">
             {gapUrl && (
               <a href={gapUrl} target="_blank" rel="noopener noreferrer">
-                <LiftedButton className="flex items-center gap-2 whitespace-nowrap">
-                  Learn More
-                  <ArrowUpRightIcon size={20} />
+                <LiftedButton>
+                  <span className="flex items-center gap-2 whitespace-nowrap">
+                    Learn More
+                    <ArrowUpRightIcon size={20} />
+                  </span>
                 </LiftedButton>
               </a>
             )}
             {projectHomepage && (
               <a href={projectHomepage} target="_blank" rel="noopener noreferrer">
-                <LiftedButton className="flex items-center gap-2 whitespace-nowrap">
-                  Homepage
-                  <ArrowUpRightIcon size={20} />
+                <LiftedButton>
+                  <span className="flex items-center gap-2 whitespace-nowrap">
+                    Homepage
+                    <ArrowUpRightIcon size={20} />
+                  </span>
                 </LiftedButton>
               </a>
             )}
