@@ -87,6 +87,6 @@ export const projectsMeta: {
     description: "Next generation community governance.",
     logoSrc: "project/gardens.png",
     active: true,
-    link: "https://app.gardens.fund/gardens/100/0xa555d5344f6fb6c65da19e403cb4c1ec4a1a5ee3/0xe33e18b5887cf16ad4e351e98980eb5f50727c31/76",
+    link: "https://gap.karmahq.xyz/project/gardens",
   },
 };
