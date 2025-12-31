@@ -93,7 +93,7 @@ export function GapModalContent({ address }: GapModalContentProps) {
 
   return (
     <>
-      <ModalHeading>{data.title || "Project Details"}</ModalHeading>
+      <ModalHeading>{projectMeta?.name || data.title || "Project Details"}</ModalHeading>
       <ModalContent>
         {/* Project Description Section */}
         {(data.description || data.missionSummary || data.problem || data.solution) && (
