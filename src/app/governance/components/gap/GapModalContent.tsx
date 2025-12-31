@@ -40,7 +40,8 @@ function MarkdownContent({ content }: { content: string | undefined }) {
             className="text-blue-500 hover:underline break-words"
           />
         ),
-        p: ({ node, ...props }) => <span {...props} />,
+        p: ({ node, ...props }) => <p {...props} className="mb-2 last:mb-0 whitespace-pre-wrap" />,
+        br: () => <br />,
       }}
     >
       {processedContent}
@@ -156,39 +157,6 @@ export function GapModalContent({ address }: GapModalContentProps) {
           </div>
         )}
 
-        {/* Impacts Section */}
-        {impacts.length > 0 && (
-          <div className="mb-6 pb-6 border-b border-surface-grey-3">
-            <Heading4 className="text-lg mb-3">
-              Impact ({impacts.length})
-            </Heading4>
-            <div className="space-y-4">
-              {impacts.map((impact) => (
-                <div key={impact.uid} className="border-l-2 border-green-500 pl-4 py-1">
-                  <Body className="text-sm font-bold text-surface-grey-2 mb-1">
-                    <MarkdownContent content={impact.data.title} />
-                  </Body>
-                  {impact.data.description && (
-                    <Body className="text-xs text-surface-grey-2 mb-2">
-                      <MarkdownContent content={impact.data.description} />
-                    </Body>
-                  )}
-                  {impact.data.proof && (
-                    <Body className="text-xs text-surface-grey-2 mb-2 italic">
-                      Proof: <MarkdownContent content={impact.data.proof} />
-                    </Body>
-                  )}
-                  {impact.createdAt && (
-                    <Body className="text-xs text-surface-grey-2 opacity-70">
-                      {format(new Date(impact.createdAt), "MMM d, yyyy")}
-                    </Body>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Milestones Section - Show ALL milestones */}
         {milestones.length > 0 && (
           <div className="mb-6 pb-6 border-b border-surface-grey-3">
@@ -268,7 +236,7 @@ export function GapModalContent({ address }: GapModalContentProps) {
           <div className="mt-6 flex justify-center gap-3 flex-wrap">
             {gapUrl && (
               <a href={gapUrl} target="_blank" rel="noopener noreferrer">
-                <LiftedButton className="flex items-center gap-2">
+                <LiftedButton className="flex items-center gap-2 whitespace-nowrap">
                   Learn More
                   <ArrowUpRightIcon size={20} />
                 </LiftedButton>
@@ -276,7 +244,7 @@ export function GapModalContent({ address }: GapModalContentProps) {
             )}
             {projectHomepage && (
               <a href={projectHomepage} target="_blank" rel="noopener noreferrer">
-                <LiftedButton className="flex items-center gap-2">
+                <LiftedButton className="flex items-center gap-2 whitespace-nowrap">
                   Homepage
                   <ArrowUpRightIcon size={20} />
                 </LiftedButton>
