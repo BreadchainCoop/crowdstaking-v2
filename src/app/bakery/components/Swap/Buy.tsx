@@ -47,12 +47,14 @@ export function Buy() {
   return (
     <div className="space-y-4">
       <div className="bg-paper-1 p-5">
-        <Body className="text-surface-grey-2 text-sm mb-4" id="zkp2p-description">
-          {isMobile
-            ? "This feature is only available on desktop devices."
-            : "Buy xDAI with Venmo, Revolut, Wise, or Cash App via ZKP2P. You'll be redirected to complete your purchase."
-          }
-        </Body>
+        <div id="zkp2p-description">
+          <Body className="text-surface-grey-2 text-sm mb-4">
+            {isMobile
+              ? "This feature is only available on desktop devices."
+              : "Buy xDAI with Venmo, Revolut, Wise, or Cash App via ZKP2P. You'll be redirected to complete your purchase."
+            }
+          </Body>
+        </div>
 
         {isMobile && (
           <div className="flex items-center gap-2 mb-4" role="alert" aria-live="polite">
