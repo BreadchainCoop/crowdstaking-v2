@@ -13,9 +13,19 @@ interface GapModalContentProps {
 }
 
 /**
- * Markdown renderer component with consistent styling
+ * Markdown renderer component with consistent styling and linkification fallback
  */
 function MarkdownContent({ content }: { content: string }) {
+  // First try to linkify plain URLs that markdown might miss
+  const urlRegex = /(https?:\/\/[^\s\)]+)/g;
+  const processedContent = content.replace(urlRegex, (url) => {
+    // If the URL is not already wrapped in markdown link syntax
+    if (!content.includes(`[`) || !content.includes(`](${url})`)) {
+      return `[${url}](${url})`;
+    }
+    return url;
+  });
+
   return (
     <ReactMarkdown
       components={{
@@ -24,13 +34,13 @@ function MarkdownContent({ content }: { content: string }) {
             {...props}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-500 hover:underline"
+            className="text-blue-500 hover:underline break-words"
           />
         ),
         p: ({ node, ...props }) => <span {...props} />,
       }}
     >
-      {content}
+      {processedContent}
     </ReactMarkdown>
   );
 }
@@ -85,9 +95,10 @@ export function GapModalContent({ address }: GapModalContentProps) {
     <>
       <ModalHeading>{data.title || "Project Details"}</ModalHeading>
       <ModalContent>
-        {/* Project Description - Use missionSummary if description is not available */}
+        {/* Project Description Section */}
         {(data.description || data.missionSummary || data.problem || data.solution) && (
-          <div className="mb-6">
+          <div className="mb-6 pb-6 border-b border-surface-grey-3">
+            <Heading4 className="text-lg mb-3">About</Heading4>
             {data.description && (
               <Body className="text-sm text-surface-grey-2 mb-3">
                 <MarkdownContent content={data.description} />
@@ -111,18 +122,40 @@ export function GapModalContent({ address }: GapModalContentProps) {
           </div>
         )}
 
-        {/* Endorsements Count */}
+        {/* Endorsements Section */}
         {endorsements.length > 0 && (
-          <div className="mb-4 p-3 bg-surface-grey-4 rounded-lg">
-            <Body className="text-sm font-bold text-surface-grey-2">
-              {endorsements.length} Endorsement{endorsements.length !== 1 ? "s" : ""}
-            </Body>
+          <div className="mb-6 pb-6 border-b border-surface-grey-3">
+            <Heading4 className="text-lg mb-3">
+              Endorsements ({endorsements.length})
+            </Heading4>
+            <div className="space-y-3">
+              {endorsements.map((endorsement) => (
+                <div key={endorsement.uid} className="p-3 bg-surface-grey-4 rounded-lg">
+                  {endorsement.data.comment && (
+                    <Body className="text-xs text-surface-grey-2 mb-2">
+                      <MarkdownContent content={endorsement.data.comment} />
+                    </Body>
+                  )}
+                  <div className="flex items-center gap-2 text-xs text-surface-grey-2 opacity-70">
+                    <span className="font-mono text-[10px] truncate max-w-[120px]">
+                      {endorsement.attester}
+                    </span>
+                    {endorsement.createdAt && (
+                      <>
+                        <span>•</span>
+                        <span>{format(new Date(endorsement.createdAt), "MMM d, yyyy")}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
         {/* Impacts Section */}
         {impacts.length > 0 && (
-          <div className="mb-6">
+          <div className="mb-6 pb-6 border-b border-surface-grey-3">
             <Heading4 className="text-lg mb-3">
               Impact ({impacts.length})
             </Heading4>
@@ -155,7 +188,7 @@ export function GapModalContent({ address }: GapModalContentProps) {
 
         {/* Milestones Section - Show ALL milestones */}
         {milestones.length > 0 && (
-          <div className="mb-6">
+          <div className="mb-6 pb-6 border-b border-surface-grey-3">
             <Heading4 className="text-lg mb-3">
               Milestones ({milestones.length})
             </Heading4>
@@ -201,7 +234,7 @@ export function GapModalContent({ address }: GapModalContentProps) {
 
         {/* Updates Section - Show ALL updates */}
         {updates.length > 0 && (
-          <div className="mb-6">
+          <div className="mb-6 pb-6 border-b border-surface-grey-3">
             <Heading4 className="text-lg mb-3">
               Updates ({updates.length})
             </Heading4>
@@ -241,7 +274,7 @@ export function GapModalContent({ address }: GapModalContentProps) {
             {projectHomepage && (
               <a href={projectHomepage} target="_blank" rel="noopener noreferrer">
                 <LiftedButton className="flex items-center gap-2">
-                  Project Homepage
+                  Homepage
                   <ArrowUpRightIcon size={20} />
                 </LiftedButton>
               </a>
