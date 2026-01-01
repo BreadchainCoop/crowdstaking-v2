@@ -106,14 +106,12 @@ export function GapModalContent({ address }: GapModalContentProps) {
 
   return (
     <>
-      <ModalHeading>
-        <div className="flex items-center gap-3 flex-1 mr-2">
-          <span>{projectMeta?.name || data.title || "Project Details"}</span>
-          <span className="text-sm font-normal bg-surface-grey-4 px-3 py-1 rounded-full">
-            {endorsements.length} {endorsements.length === 1 ? 'endorsement' : 'endorsements'}
-          </span>
-        </div>
-      </ModalHeading>
+      <ModalHeading>{projectMeta?.name || data.title || "Project Details"}</ModalHeading>
+      <div className="px-2 mb-2">
+        <Body className="text-sm text-surface-grey-2">
+          👍 {endorsements.length} {endorsements.length === 1 ? 'endorsement' : 'endorsements'}
+        </Body>
+      </div>
       <ModalContent>
         {/* Project Description Section */}
         {(data.description || data.missionSummary || data.problem || data.solution) && (
