@@ -146,13 +146,13 @@ export function GapModalContent({ address }: GapModalContentProps) {
         {endorsements.length > 0 && (
           <div className="mb-6 pb-6 border-b border-surface-grey-3">
             <Heading4 className="text-lg mb-3">
-              Endorsements ({endorsements.length})
+              👍 Endorsements ({endorsements.length})
             </Heading4>
             <div className="space-y-3">
               {endorsements.map((endorsement) => (
                 <div key={endorsement.uid} className="p-3 bg-surface-grey-4 rounded-lg">
                   {endorsement.data.comment && (
-                    <Body className="text-xs text-surface-grey-2 mb-2">
+                    <Body className="text-xs text-surface-grey-2 mb-2 italic">
                       <MarkdownContent content={endorsement.data.comment} />
                     </Body>
                   )}
