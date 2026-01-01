@@ -107,8 +107,8 @@ export function GapModalContent({ address }: GapModalContentProps) {
   return (
     <>
       <ModalHeading>{projectMeta?.name || data.title || "Project Details"}</ModalHeading>
-      <div className="px-2 mb-2">
-        <Body className="text-sm text-surface-grey-2">
+      <div className="px-2 mb-2 text-left">
+        <Body className="text-sm text-surface-grey-2 italic">
           👍 {endorsements.length} {endorsements.length === 1 ? 'endorsement' : 'endorsements'}
         </Body>
       </div>
@@ -140,45 +140,14 @@ export function GapModalContent({ address }: GapModalContentProps) {
           </div>
         )}
 
-        {/* Endorsements Section */}
-        {endorsements.length > 0 && (
-          <div className="mb-6 pb-6 border-b border-surface-grey-3">
-            <Heading4 className="text-lg mb-3">
-              👍 Endorsements ({endorsements.length})
-            </Heading4>
-            <div className="space-y-3">
-              {endorsements.map((endorsement) => (
-                <div key={endorsement.uid} className="p-3 bg-surface-grey-4 rounded-lg">
-                  {endorsement.data.comment && (
-                    <Body className="text-xs text-surface-grey-2 mb-2 italic">
-                      <MarkdownContent content={endorsement.data.comment} />
-                    </Body>
-                  )}
-                  <div className="flex items-center gap-2 text-xs text-surface-grey-2 opacity-70">
-                    <span className="font-mono text-[10px] truncate max-w-[120px]">
-                      {endorsement.attester}
-                    </span>
-                    {endorsement.createdAt && (
-                      <>
-                        <span>•</span>
-                        <span>{format(new Date(endorsement.createdAt), "MMM d, yyyy")}</span>
-                      </>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Milestones Section - Show ALL milestones */}
+        {/* Milestones Section - Show up to 3 milestones */}
         {milestones.length > 0 && (
           <div className="mb-6 pb-6 border-b border-surface-grey-3">
             <Heading4 className="text-lg mb-3">
               Milestones ({milestones.length})
             </Heading4>
             <div className="space-y-3">
-              {milestones.map((milestone) => (
+              {milestones.slice(0, 3).map((milestone) => (
                 <div
                   key={milestone.uid}
                   className="border-l-2 border-surface-grey-3 pl-4 py-1"
@@ -217,14 +186,14 @@ export function GapModalContent({ address }: GapModalContentProps) {
           </div>
         )}
 
-        {/* Updates Section - Show ALL updates */}
+        {/* Updates Section - Show up to 3 updates */}
         {updates.length > 0 && (
           <div className="mb-6 pb-6 border-b border-surface-grey-3">
             <Heading4 className="text-lg mb-3">
               Updates ({updates.length})
             </Heading4>
             <div className="space-y-4">
-              {updates.map((update) => (
+              {updates.slice(0, 3).map((update) => (
                 <div key={update.uid} className="border-l-2 border-blue-500 pl-4 py-1">
                   <Body className="text-sm font-bold text-surface-grey-2 mb-1">
                     <MarkdownContent content={update.data.title} />
