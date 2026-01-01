@@ -42,6 +42,15 @@ function MarkdownContent({ content }: { content: string | undefined }) {
         ),
         p: ({ node, ...props }) => <p {...props} className="mb-2 last:mb-0 whitespace-pre-wrap" />,
         br: () => <br />,
+        ul: ({ node, ...props }) => (
+          <ul {...props} className="list-disc list-outside ml-5 mb-2 space-y-1" />
+        ),
+        ol: ({ node, ...props }) => (
+          <ol {...props} className="list-decimal list-outside ml-5 mb-2 space-y-1" />
+        ),
+        li: ({ node, ...props }) => (
+          <li {...props} className="text-sm text-surface-grey-2" />
+        ),
       }}
     >
       {processedContent}
