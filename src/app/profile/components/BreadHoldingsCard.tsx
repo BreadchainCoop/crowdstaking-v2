@@ -1,6 +1,6 @@
 "use client";
 
-import { Heading3, Heading2, Caption, Body } from "@breadcoop/ui";
+import { Heading3, Heading2, Caption, Body, LiftedButton } from "@breadcoop/ui";
 import { CardBox } from "@/app/core/components/CardBox";
 import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
 import { formatBalance } from "@/app/core/util/formatter";
@@ -59,20 +59,24 @@ export function BreadHoldingsCard() {
             </Heading2>
             <Caption className="text-surface-grey-2">$BREAD</Caption>
           </div>
-          <Caption className="text-surface-grey-2 text-center block text-xs">
+          <Caption className="text-surface-grey-2 text-center block text-xs mb-6">
             Total balance across wallet and LP vaults
           </Caption>
+          <Link href="/" className="block">
+            <LiftedButton className="w-full">
+              Bake BREAD
+            </LiftedButton>
+          </Link>
         </>
       ) : (
         <div className="text-center py-6">
           <Body className="text-surface-grey-2 mb-4">
             You don&apos;t have any BREAD yet
           </Body>
-          <Link
-            href="/"
-            className="text-primary-orange hover:underline text-sm"
-          >
-            Get BREAD →
+          <Link href="/">
+            <LiftedButton>
+              Bake BREAD
+            </LiftedButton>
           </Link>
         </div>
       )}

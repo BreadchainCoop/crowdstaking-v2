@@ -3,9 +3,10 @@
 import { Body, Heading5, Caption, LiftedButton } from "@breadcoop/ui";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { useUserVotingHistoryByCycle } from "@/app/governance/useUserVotingHistoryByCycle";
+import { useDistributions } from "@/app/governance/useDistributions";
 import { Spinner } from "@/app/core/components/Icons/Spinner";
 import { projectsMeta } from "@/app/projectsMeta";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { Hex } from "viem";
 import { useState } from "react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react";
@@ -21,7 +22,7 @@ export function UserVotingHistory() {
   const { user } = useConnectedUser();
   const userAddress = user.status === "CONNECTED" ? user.address : undefined;
   const { data: votingHistory, isLoading } = useUserVotingHistoryByCycle(userAddress);
-  const [voteIndex, setVoteIndex] = useState(0); // 0 returns the latest vote
+  const [cycleIndex, setCycleIndex] = useState(0); // 0 returns the latest vote
 
   if (!userAddress) {
     return (
@@ -52,11 +53,11 @@ export function UserVotingHistory() {
     );
   }
 
-  const currentVoteCycle = votingHistory[voteIndex];
+  const currentVoteCycle = votingHistory[cycleIndex];
   const totalCycles = votingHistory.length;
 
-  const updateVoteIndex = (delta: number) => {
-    setVoteIndex((prev) => {
+  const updateCycleIndex = (delta: number) => {
+    setCycleIndex((prev) => {
       let newIndex = prev + delta;
       if (newIndex < 0) {
         newIndex = 0;
@@ -79,10 +80,10 @@ export function UserVotingHistory() {
             <LiftedButton
               preset="stroke"
               onClick={() => {
-                if (voteIndex === totalCycles - 1) return;
-                updateVoteIndex(1);
+                if (cycleIndex === totalCycles - 1) return;
+                updateCycleIndex(1);
               }}
-              disabled={voteIndex === totalCycles - 1}
+              disabled={cycleIndex === totalCycles - 1}
               className="h-[32px] w-[32px] p-0"
             >
               <ArrowLeftIcon size={20} className="text-primary-orange" />
@@ -93,10 +94,10 @@ export function UserVotingHistory() {
             <LiftedButton
               preset="stroke"
               onClick={() => {
-                if (voteIndex === 0) return;
-                updateVoteIndex(-1);
+                if (cycleIndex === 0) return;
+                updateCycleIndex(-1);
               }}
-              disabled={voteIndex === 0}
+              disabled={cycleIndex === 0}
               className="h-[32px] w-[32px] p-0"
             >
               <ArrowRightIcon size={20} className="text-primary-orange" />
@@ -106,7 +107,10 @@ export function UserVotingHistory() {
       </div>
 
       {/* Projects List */}
-      <VoteProjectsList vote={currentVoteCycle.vote} />
+      <VoteProjectsList
+        vote={currentVoteCycle.vote}
+        cycleNumber={currentVoteCycle.cycleNumber}
+      />
     </div>
   );
 }
@@ -121,21 +125,42 @@ interface VoteProjectsListProps {
       percentage: number;
     }>;
   };
+  cycleNumber: number;
 }
 
-function VoteProjectsList({ vote }: VoteProjectsListProps) {
-  // Get all active projects
-  const allProjects = Object.entries(projectsMeta)
-    .filter(([_, meta]) => meta.active)
-    .map(([address]) => address as Hex);
+function VoteProjectsList({ vote, cycleNumber }: VoteProjectsListProps) {
+  // Get the actual cycle distribution data to know which projects existed in this cycle
+  // We need to calculate the cycleIndex from cycleNumber
+  // cycleIndex 0 = most recent cycle, so we need to reverse the mapping
+  const { cycleDistribution, totalDistributions } = useDistributions();
+
+  // Calculate the correct index for this cycle
+  // If totalDistributions is 10 and we want cycle 10, index should be 0
+  // If totalDistributions is 10 and we want cycle 9, index should be 1
+  const cycleIndexForDistribution = totalDistributions ? totalDistributions - cycleNumber : 0;
+  const { cycleDistribution: specificCycleDistribution } = useDistributions(cycleIndexForDistribution);
+
+  // If we don't have the cycle distribution data yet, show loading
+  if (!specificCycleDistribution) {
+    return (
+      <div className="bg-paper-1 p-6 text-center">
+        <Spinner />
+      </div>
+    );
+  }
+
+  // Get projects that existed in this specific cycle from the distribution data
+  const cycleProjects = specificCycleDistribution.projectDistributions.map(
+    (pd) => pd.projectAddress
+  );
 
   // Create a map of voted projects for quick lookup
   const votedProjectsMap = new Map(
     vote.votes.map((v) => [v.projectAddress.toLowerCase(), v])
   );
 
-  // Combine all projects with vote data
-  const allProjectsWithVotes = allProjects.map((projectAddress) => {
+  // Combine cycle projects with vote data
+  const allProjectsWithVotes = cycleProjects.map((projectAddress) => {
     const votedProject = votedProjectsMap.get(projectAddress.toLowerCase());
     return {
       projectAddress,
