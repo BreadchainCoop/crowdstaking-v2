@@ -53,6 +53,10 @@ export function Buy() {
               ? "This feature is only available on desktop devices."
               : (
                 <>
+                  <div className="flex items-center gap-3 mb-4">
+                    <img src="https://www.zkp2p.xyz/logo192.png" alt="ZKP2P" className="h-10 w-10" />
+                    <span className="text-base font-bold text-surface-ink">Buy with ZKP2P</span>
+                  </div>
                   <p className="mb-3">
                     ZKP2P is a service where you can buy crypto without KYC using various neobanking applications.
                   </p>
