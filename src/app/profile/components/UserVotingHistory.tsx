@@ -42,7 +42,7 @@ export function UserVotingHistory() {
     return (
       <div className="bg-paper-1 p-6 text-center">
         <Body className="text-surface-grey-2">
-          You haven't cast any votes yet
+          You haven&apos;t cast any votes yet
         </Body>
       </div>
     );
