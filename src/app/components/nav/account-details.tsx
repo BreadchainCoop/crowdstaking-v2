@@ -136,6 +136,12 @@ const NavAccountDetails = ({
 					<Body className="font-bold">Gnosis chain</Body>
 				</div>
 			</Item>
+			<Link href="/profile" className="w-full mt-2">
+				<LiftedButton className="w-full flex items-center justify-center gap-2">
+					View Full Profile
+					<ArrowUpRightIcon size={20} />
+				</LiftedButton>
+			</Link>
 			<LogoutButton className="mt-1" />
 		</section>
 	);
