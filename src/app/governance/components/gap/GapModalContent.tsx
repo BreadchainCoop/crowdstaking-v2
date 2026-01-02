@@ -150,34 +150,32 @@ export function GapModalContent({ address }: GapModalContentProps) {
               {milestones.slice(0, 3).map((milestone) => (
                 <div
                   key={milestone.uid}
-                  className="border-l-2 border-surface-grey-3 pl-4 py-1"
+                  className="flex items-start gap-2"
                 >
-                  <div className="flex items-start gap-2 mb-1">
-                    <span className="text-base mt-0.5 font-bold">
-                      {milestone.completed ? "✓" : "○"}
-                    </span>
-                    <div className="flex-1">
-                      <Body className="text-sm font-bold text-surface-grey-2">
-                        <MarkdownContent content={milestone.data.title} />
+                  <span className="text-base mt-0.5 font-bold flex-shrink-0">
+                    {milestone.completed ? "✓" : "○"}
+                  </span>
+                  <div className="flex-1 border-l-2 border-surface-grey-3 pl-4 py-1">
+                    <Body className="text-sm font-bold text-surface-grey-2">
+                      <MarkdownContent content={milestone.data.title} />
+                    </Body>
+                    {milestone.data.description && (
+                      <Body className="text-xs text-surface-grey-2 mt-1">
+                        <MarkdownContent content={milestone.data.description} />
                       </Body>
-                      {milestone.data.description && (
-                        <Body className="text-xs text-surface-grey-2 mt-1">
-                          <MarkdownContent content={milestone.data.description} />
-                        </Body>
+                    )}
+                    <div className="flex gap-3 mt-2 text-xs text-surface-grey-2 opacity-70">
+                      {milestone.completed?.createdAt && (
+                        <span>
+                          Completed:{" "}
+                          {format(new Date(milestone.completed.createdAt), "MMM d, yyyy")}
+                        </span>
                       )}
-                      <div className="flex gap-3 mt-2 text-xs text-surface-grey-2 opacity-70">
-                        {milestone.completed?.createdAt && (
-                          <span>
-                            Completed:{" "}
-                            {format(new Date(milestone.completed.createdAt), "MMM d, yyyy")}
-                          </span>
-                        )}
-                        {milestone.data.endsAt && !milestone.completed && (
-                          <span>
-                            Due: {format(new Date(milestone.data.endsAt * 1000), "MMM d, yyyy")}
-                          </span>
-                        )}
-                      </div>
+                      {milestone.data.endsAt && !milestone.completed && (
+                        <span>
+                          Due: {format(new Date(milestone.data.endsAt * 1000), "MMM d, yyyy")}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>

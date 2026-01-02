@@ -31,7 +31,7 @@ export const projectsMeta: {
     link: "https://gap.karmahq.xyz/project/symbiota",
   },
   "0x5c22B3F03b3d8FFf56C9B2e90151512Cb3F3dE0F": {
-    name: "Crypto Commons Acc",
+    name: "Crypto Commons Association",
     order: 2,
     description:
       "Creating research and events on decentralized tech and the commons.",
