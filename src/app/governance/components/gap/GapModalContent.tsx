@@ -153,7 +153,7 @@ export function GapModalContent({ address }: GapModalContentProps) {
                   className="flex items-start gap-2"
                 >
                   <span className="text-base mt-0.5 font-bold flex-shrink-0">
-                    {milestone.completed ? "✓" : "○"}
+                    ✓
                   </span>
                   <div className="flex-1 border-l-2 border-surface-grey-3 pl-4 py-1">
                     <Body className="text-sm font-bold text-surface-grey-2">
