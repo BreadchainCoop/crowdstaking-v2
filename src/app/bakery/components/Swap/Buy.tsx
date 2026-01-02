@@ -51,7 +51,31 @@ export function Buy() {
           <Body className="text-surface-grey-2 text-sm mb-4">
             {isMobile
               ? "This feature is only available on desktop devices."
-              : "Buy xDAI with Venmo, Revolut, Wise, or Cash App via ZKP2P. You'll be redirected to complete your purchase."
+              : (
+                <>
+                  <p className="mb-3">
+                    ZKP2P is a service where you can buy crypto without KYC using various neobanking applications.
+                  </p>
+                  <p className="mb-3">
+                    Insert the amount of BREAD you would like to purchase and continue the process by clicking the button below.
+                  </p>
+                  <p className="mb-3">
+                    You will need to download a browser extension called <a href="https://chromewebstore.google.com/detail/peerauth/jhogijpkpihcponbbhebpplncjjoikfg" target="_blank" rel="noopener noreferrer" className="text-primary-orange hover:underline">PeerAuth</a> in order to complete your purchase.
+                  </p>
+                  <p className="mb-4">
+                    <a href="#" className="text-primary-orange hover:underline">Learn more about the process →</a>
+                  </p>
+                  <div className="flex items-center gap-3 mt-4">
+                    <span className="text-xs font-semibold text-surface-grey">Supported apps:</span>
+                    <div className="flex items-center gap-3">
+                      <img src="/payment-logos/venmo.svg" alt="Venmo" className="h-6" />
+                      <img src="/payment-logos/revolut.svg" alt="Revolut" className="h-6" />
+                      <img src="/payment-logos/wise.svg" alt="Wise" className="h-6" />
+                      <img src="/payment-logos/cashapp.svg" alt="Cash App" className="h-6" />
+                    </div>
+                  </div>
+                </>
+              )
             }
           </Body>
         </div>
