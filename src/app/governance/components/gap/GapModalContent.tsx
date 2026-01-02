@@ -43,10 +43,10 @@ function MarkdownContent({ content }: { content: string | undefined }) {
         p: ({ node, ...props }) => <p {...props} className="mb-2 last:mb-0 whitespace-pre-wrap" />,
         br: () => <br />,
         ul: ({ node, ...props }) => (
-          <ul {...props} className="list-disc list-outside ml-5 mb-2 space-y-1" />
+          <ul {...props} className="list-disc list-outside ml-4 mb-2 space-y-1" />
         ),
         ol: ({ node, ...props }) => (
-          <ol {...props} className="list-decimal list-outside ml-5 mb-2 space-y-1" />
+          <ol {...props} className="list-decimal list-outside ml-4 mb-2 space-y-1" />
         ),
         li: ({ node, ...props }) => (
           <li {...props} className="text-sm text-surface-grey-2" />
@@ -150,12 +150,12 @@ export function GapModalContent({ address }: GapModalContentProps) {
               {milestones.filter(m => m.completed).slice(0, 3).map((milestone) => (
                 <div
                   key={milestone.uid}
-                  className="flex items-start gap-2 min-w-0"
+                  className="flex items-start gap-3"
                 >
-                  <span className="text-base mt-0.5 font-bold flex-shrink-0 w-4">
+                  <span className="text-base flex-shrink-0">
                     ✓
                   </span>
-                  <div className="flex-1 min-w-0 border-l-2 border-surface-grey-3 pl-4 py-1">
+                  <div className="flex-1 border-l-2 border-surface-grey-3 pl-3 py-1">
                     <Body className="text-sm font-bold text-surface-grey-2 break-words">
                       <MarkdownContent content={milestone.data.title} />
                     </Body>
