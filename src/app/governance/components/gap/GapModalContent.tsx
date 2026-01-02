@@ -107,8 +107,8 @@ export function GapModalContent({ address }: GapModalContentProps) {
   return (
     <>
       <ModalHeading>{projectMeta?.name || data.title || "Project Details"}</ModalHeading>
-      <div className="px-2 mb-2 text-left">
-        <Body className="text-sm text-surface-grey-2 italic">
+      <div className="px-2 mb-2 w-full">
+        <Body className="text-sm text-surface-grey-2 italic text-left">
           👍 {endorsements.length} {endorsements.length === 1 ? 'endorsement' : 'endorsements'}
         </Body>
       </div>
