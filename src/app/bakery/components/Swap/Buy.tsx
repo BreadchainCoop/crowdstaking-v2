@@ -60,7 +60,7 @@ export function Buy() {
                     Insert the amount of BREAD you would like to purchase and continue the process by clicking the button below.
                   </p>
                   <p className="mb-3">
-                    You will need to download a browser extension called <a href="https://chromewebstore.google.com/detail/peerauth/jhogijpkpihcponbbhebpplncjjoikfg" target="_blank" rel="noopener noreferrer" className="text-primary-orange hover:underline">PeerAuth</a> in order to complete your purchase.
+                    You will need to download a browser extension called <a href="https://chromewebstore.google.com/detail/peerauth-authenticate-and/ijpgccednehjpeclfcllnjjcmiohdjih" target="_blank" rel="noopener noreferrer" className="text-primary-orange hover:underline">PeerAuth</a> in order to complete your purchase.
                   </p>
                   <p className="mb-4">
                     <a href="#" className="text-primary-orange hover:underline">Learn more about the process →</a>
