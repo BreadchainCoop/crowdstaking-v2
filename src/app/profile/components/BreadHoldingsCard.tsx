@@ -17,7 +17,7 @@ export function BreadHoldingsCard() {
   const breadBalance = tokenBalances.BREAD;
 
   // Loading state
-  if (breadBalance.status === "LOADING") {
+  if (!breadBalance || breadBalance.status === "LOADING") {
     return (
       <CardBox className="p-6">
         <Heading3 className="mb-4">BREAD Holdings</Heading3>
