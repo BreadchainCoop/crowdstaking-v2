@@ -1,23 +1,27 @@
 "use client";
 
-import { Body, Heading5, Caption } from "@breadcoop/ui";
+import { Body, Heading5, Caption, LiftedButton } from "@breadcoop/ui";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { useUserVotingHistory } from "@/app/governance/useUserVotingHistory";
 import { Spinner } from "@/app/core/components/Icons/Spinner";
 import { projectsMeta } from "@/app/projectsMeta";
 import { format } from "date-fns";
 import { Hex } from "viem";
+import { useState } from "react";
+import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react";
 
 /**
  * UserVotingHistory Component
  *
  * Displays the voting history for the connected user
  * Shows all past votes with project names and vote percentages
+ * Allows cycling through vote history similar to governance page
  */
 export function UserVotingHistory() {
   const { user } = useConnectedUser();
   const userAddress = user.status === "CONNECTED" ? user.address : undefined;
   const { data: votingHistory, isLoading } = useUserVotingHistory(userAddress);
+  const [voteIndex, setVoteIndex] = useState(0); // 0 returns the latest vote
 
   if (!userAddress) {
     return (
@@ -48,16 +52,66 @@ export function UserVotingHistory() {
     );
   }
 
+  const currentVote = votingHistory[voteIndex];
+  const totalVotes = votingHistory.length;
+
+  const updateVoteIndex = (delta: number) => {
+    setVoteIndex((prev) => {
+      let newIndex = prev + delta;
+      if (newIndex < 0) {
+        newIndex = 0;
+      } else if (newIndex >= totalVotes) {
+        newIndex = totalVotes - 1;
+      }
+      return newIndex;
+    });
+  };
+
   return (
     <div className="space-y-4">
-      {votingHistory.map((vote, index) => (
-        <VoteCard key={vote.transactionHash} vote={vote} isRecent={index === 0} />
-      ))}
+      {/* Navigation Controls */}
+      <div className="bg-paper-1 p-4 border border-paper-2">
+        <div className="flex items-center justify-between">
+          <Caption className="text-surface-grey">
+            {format(new Date(currentVote.timestamp * 1000), "MMM d, yyyy")}
+          </Caption>
+          <div className="flex items-center gap-3">
+            <LiftedButton
+              preset="stroke"
+              onClick={() => {
+                if (voteIndex === totalVotes - 1) return;
+                updateVoteIndex(1);
+              }}
+              disabled={voteIndex === totalVotes - 1}
+              className="h-[32px] w-[32px] p-0"
+            >
+              <ArrowLeftIcon size={20} className="text-primary-orange" />
+            </LiftedButton>
+            <Body bold className="text-[20px]">
+              Vote {totalVotes - voteIndex} of {totalVotes}
+            </Body>
+            <LiftedButton
+              preset="stroke"
+              onClick={() => {
+                if (voteIndex === 0) return;
+                updateVoteIndex(-1);
+              }}
+              disabled={voteIndex === 0}
+              className="h-[32px] w-[32px] p-0"
+            >
+              <ArrowRightIcon size={20} className="text-primary-orange" />
+            </LiftedButton>
+          </div>
+        </div>
+      </div>
+
+      {/* Projects List */}
+      <VoteProjectsList vote={currentVote} />
     </div>
   );
 }
 
-interface VoteCardProps {
+interface VoteProjectsListProps {
   vote: {
     timestamp: number;
     transactionHash: string;
@@ -67,55 +121,67 @@ interface VoteCardProps {
       percentage: number;
     }>;
   };
-  isRecent: boolean;
 }
 
-function VoteCard({ vote, isRecent }: VoteCardProps) {
-  const date = new Date(vote.timestamp * 1000);
-  const formattedDate = format(date, "MMM d, yyyy");
+function VoteProjectsList({ vote }: VoteProjectsListProps) {
+  // Get all active projects
+  const allProjects = Object.entries(projectsMeta)
+    .filter(([_, meta]) => meta.active)
+    .map(([address]) => address as Hex);
+
+  // Create a map of voted projects for quick lookup
+  const votedProjectsMap = new Map(
+    vote.votes.map((v) => [v.projectAddress.toLowerCase(), v])
+  );
+
+  // Combine all projects with vote data
+  const allProjectsWithVotes = allProjects.map((projectAddress) => {
+    const votedProject = votedProjectsMap.get(projectAddress.toLowerCase());
+    return {
+      projectAddress,
+      percentage: votedProject?.percentage || 0,
+      points: votedProject?.points || 0,
+    };
+  });
+
+  // Sort by percentage descending
+  const sortedProjects = allProjectsWithVotes.sort(
+    (a, b) => b.percentage - a.percentage
+  );
 
   return (
-    <div className="bg-paper-1 p-4 border border-paper-2">
-      <div className="flex items-center justify-between mb-3">
-        <Caption className="text-surface-grey">
-          {formattedDate}
-          {isRecent && (
-            <span className="ml-2 text-xs text-primary-orange font-bold">
-              • Most Recent
-            </span>
-          )}
-        </Caption>
-      </div>
+    <div className="bg-paper-1 border border-paper-2">
+      {sortedProjects.map((project) => {
+        const meta = projectsMeta[project.projectAddress];
+        if (!meta) return null;
 
-      <div className="space-y-2">
-        {vote.votes.map((v) => {
-          const meta = projectsMeta[v.projectAddress];
-          if (!meta) return null;
-
-          return (
-            <div
-              key={v.projectAddress}
-              className="flex items-center justify-between py-2 border-b border-paper-2 last:border-b-0"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 flex items-center justify-center bg-paper-0 border border-paper-2">
-                  <img
-                    src={meta.logoSrc}
-                    className="w-[1.2rem] h-[1.2rem]"
-                    alt={`${meta.name}'s logo`}
-                    width={19.2}
-                    height={19.2}
-                  />
-                </div>
-                <Body className="text-surface-grey">{meta.name}</Body>
+        return (
+          <div
+            key={project.projectAddress}
+            className="flex items-center justify-between p-4 border-b border-paper-2 last:border-b-0"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 flex items-center justify-center bg-paper-0 border border-paper-2">
+                <img
+                  src={meta.logoSrc}
+                  className="w-[1.2rem] h-[1.2rem]"
+                  alt={`${meta.name}'s logo`}
+                  width={19.2}
+                  height={19.2}
+                />
               </div>
-              <Heading5 className="font-bold text-primary-orange">
-                {v.percentage.toFixed(1)}%
-              </Heading5>
+              <Body className="text-surface-grey">{meta.name}</Body>
             </div>
-          );
-        })}
-      </div>
+            <Heading5
+              className={`font-bold ${
+                project.percentage > 0 ? "text-primary-orange" : "text-surface-grey-2"
+              }`}
+            >
+              {project.percentage.toFixed(1)}%
+            </Heading5>
+          </div>
+        );
+      })}
     </div>
   );
 }
