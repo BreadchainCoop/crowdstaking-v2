@@ -1,22 +1,21 @@
+import { getPublicClient } from "@wagmi/core";
+import { getConfig } from "@/app/core/hooks/WagmiProvider/config/getConfig";
+import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 import { useQuery } from "@tanstack/react-query";
-import { GraphQLClient } from "graphql-request";
 import { Address, Hex } from "viem";
-import { SUBGRAPH_QUERY_URL } from "@/constants";
+import { DISTRIBUTOR_ABI } from "@/abi";
 
-interface BreadHolderVotedEvent {
-  id: string;
-  account: Address;
-  blockTimestamp: string;
-  transactionHash: string;
-  points: string[];
-  projects: Address[];
-}
-
-interface QueryResponse {
-  breadHolderVoteds: BreadHolderVotedEvent[];
-}
+type VoteLogData = {
+  blockNumber: bigint;
+  args: {
+    account: Hex;
+    points: Array<bigint>;
+    projects: Array<Hex>;
+  };
+};
 
 export interface UserVote {
+  blockNumber: bigint;
   timestamp: number;
   transactionHash: string;
   votes: Array<{
@@ -27,12 +26,9 @@ export interface UserVote {
 }
 
 export function useUserVotingHistory(userAddress: Address | undefined) {
-  const API_KEY = process.env.NEXT_PUBLIC_SUBGRAPH_API_KEY;
-  const client = new GraphQLClient(SUBGRAPH_QUERY_URL, {
-    headers: {
-      Authorization: `Bearer ${API_KEY}`,
-    },
-  });
+  const chainConfig = useActiveChain();
+  const distributorAddress = chainConfig.DISBURSER.address;
+  const publicClient = getPublicClient(getConfig().config);
 
   return useQuery<UserVote[]>({
     queryKey: ["userVotingHistory", userAddress],
@@ -42,52 +38,59 @@ export function useUserVotingHistory(userAddress: Address | undefined) {
 
       console.log("Fetching voting history for address:", userAddress);
 
-      const response = await client.request<QueryResponse>(`
-        query {
-          breadHolderVoteds(
-            where: { account: "${userAddress.toLowerCase()}" }
-            orderBy: blockTimestamp
-            orderDirection: desc
-          ) {
-            id
-            account
-            blockTimestamp
-            transactionHash
-            points
-            projects
-          }
-        }
-      `);
+      // Get all BreadHolderVoted events for this user from the beginning
+      const logs = await publicClient.getContractEvents({
+        address: distributorAddress,
+        abi: DISTRIBUTOR_ABI,
+        eventName: "BreadHolderVoted",
+        args: {
+          account: userAddress,
+        },
+        fromBlock: BigInt(0),
+        toBlock: "latest",
+      });
 
-      console.log("Subgraph response:", response);
-      console.log("Number of votes found:", response.breadHolderVoteds.length);
+      console.log("Found vote events:", logs.length);
 
-      // Transform the data into a more usable format
-      return response.breadHolderVoteds.map((vote) => {
-        const totalPoints = vote.points.reduce(
-          (acc, p) => acc + BigInt(p),
-          BigInt(0)
-        );
+      // Get block details to retrieve timestamps
+      const votesWithTimestamps = await Promise.all(
+        (logs as unknown as Array<VoteLogData>).map(async (log) => {
+          const block = await publicClient.getBlock({
+            blockNumber: log.blockNumber,
+          });
 
-        const votes = vote.projects.map((project, index) => {
-          const points = Number(vote.points[index]);
-          const percentage = totalPoints > 0
-            ? (Number(vote.points[index]) / Number(totalPoints)) * 100
-            : 0;
+          const totalPoints = log.args.points.reduce(
+            (acc, p) => acc + p,
+            BigInt(0)
+          );
+
+          const votes = log.args.projects.map((project, index) => {
+            const points = Number(log.args.points[index]);
+            const percentage =
+              totalPoints > 0
+                ? (Number(log.args.points[index]) / Number(totalPoints)) * 100
+                : 0;
+
+            return {
+              projectAddress: project as Hex,
+              points,
+              percentage,
+            };
+          });
 
           return {
-            projectAddress: project as Hex,
-            points,
-            percentage,
+            blockNumber: log.blockNumber,
+            timestamp: Number(block.timestamp),
+            transactionHash: block.hash,
+            votes: votes.filter((v) => v.points > 0),
           };
-        });
+        })
+      );
 
-        return {
-          timestamp: Number(vote.blockTimestamp),
-          transactionHash: vote.transactionHash,
-          votes: votes.filter((v) => v.points > 0), // Only include projects with actual votes
-        };
-      });
+      // Sort by block number descending (most recent first)
+      return votesWithTimestamps.sort((a, b) =>
+        a.blockNumber > b.blockNumber ? -1 : 1
+      );
     },
   });
 }
