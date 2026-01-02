@@ -69,14 +69,9 @@ export function Buy() {
                   <p className="mb-4">
                     <a href="#" className="text-primary-orange hover:underline">Learn more about the process →</a>
                   </p>
-                  <div className="flex items-center gap-3 mt-4">
+                  <div className="flex items-center gap-2 mt-4">
                     <span className="text-xs font-semibold text-surface-grey">Supported apps:</span>
-                    <div className="flex items-center gap-3">
-                      <img src="/payment-logos/venmo.svg" alt="Venmo" className="h-6" />
-                      <img src="/payment-logos/revolut.svg" alt="Revolut" className="h-6" />
-                      <img src="/payment-logos/wise.svg" alt="Wise" className="h-6" />
-                      <img src="/payment-logos/cashapp.svg" alt="Cash App" className="h-6" />
-                    </div>
+                    <span className="text-xs text-surface-grey-2">Venmo, Revolut, Wise, Cash App, Zelle, N26, and more</span>
                   </div>
                 </>
               )
