@@ -49,6 +49,19 @@ const NewSwap = () => {
 	const [swapState, setSwapState] = useState<TSwapState>(initialSwapState);
 	const searchParams = useSearchParams();
 	const { toastDispatch } = useToast();
+	const [isMobile, setIsMobile] = useState(false);
+
+	// Handle mobile detection
+	useEffect(() => {
+		const checkMobile = () => {
+			setIsMobile(window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+		};
+
+		checkMobile();
+		window.addEventListener('resize', checkMobile);
+
+		return () => window.removeEventListener('resize', checkMobile);
+	}, []);
 
 	// Handle ZKP2P callback
 	useEffect(() => {
@@ -241,9 +254,11 @@ const NewSwap = () => {
 					)}
 				</div>
 			)}
-			<Body className="text-surface-grey text-sm mt-1">
-				<span className="font-bold">Note</span>: {notes[swapState.mode]}
-			</Body>
+			{!(swapState.mode === "BUY" && isMobile) && (
+				<Body className="text-surface-grey text-sm mt-1">
+					<span className="font-bold">Note</span>: {notes[swapState.mode]}
+				</Body>
+			)}
 		</div>
 	);
 };
