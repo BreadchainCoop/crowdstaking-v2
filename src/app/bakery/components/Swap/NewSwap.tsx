@@ -34,7 +34,7 @@ const notes: Record<TSwapState["mode"], string> = {
 	"BAKE": 'Baking adds new BREAD into circulation. You can redeem your BREAD through the "Burn" tab at any time',
 	"BURN": "When you Burn BREAD, you are no longer contributing to the Solidarity Fund, and all voting power will be removed.",
 	"BRIDGE": "This bridge is powered by LI.FI",
-	"BUY": "Buy crypto with Venmo, Revolut, Wise, or Cash App via ZKP2P",
+	"BUY": "Clicking the button will open the ZKP2P website where you can complete your purchase of xDAI to bake into BREAD.",
 };
 
 const initialSwapState: TSwapState = {
