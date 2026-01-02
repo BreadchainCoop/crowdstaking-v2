@@ -87,15 +87,6 @@ export function Buy() {
           </Body>
         </div>
 
-        {isMobile && (
-          <div className="flex items-center gap-2 mb-4" role="alert" aria-live="polite">
-            <Desktop size={20} className="text-surface-grey" aria-hidden="true" />
-            <Body className="text-surface-grey text-xs">
-              Desktop only - this feature is not available on mobile devices.
-            </Body>
-          </div>
-        )}
-
         {!isMobile && (
           <div className="space-y-2">
             <label className="text-sm font-bold text-black">
