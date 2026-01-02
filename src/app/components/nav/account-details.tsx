@@ -138,7 +138,7 @@ const NavAccountDetails = ({
 			</Item>
 			<Link href="/profile" className="w-full mt-2">
 				<LiftedButton className="w-full flex items-center justify-center gap-2">
-					View Full Profile
+					View Profile
 					<ArrowUpRightIcon size={20} />
 				</LiftedButton>
 			</Link>
