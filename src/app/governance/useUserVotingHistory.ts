@@ -40,6 +40,8 @@ export function useUserVotingHistory(userAddress: Address | undefined) {
     async queryFn() {
       if (!userAddress) return [];
 
+      console.log("Fetching voting history for address:", userAddress);
+
       const response = await client.request<QueryResponse>(`
         query {
           breadHolderVoteds(
@@ -56,6 +58,9 @@ export function useUserVotingHistory(userAddress: Address | undefined) {
           }
         }
       `);
+
+      console.log("Subgraph response:", response);
+      console.log("Number of votes found:", response.breadHolderVoteds.length);
 
       // Transform the data into a more usable format
       return response.breadHolderVoteds.map((vote) => {
