@@ -20,7 +20,7 @@ export function YieldInfoCard() {
   const { data: apyData, isLoading: apyLoading } = useVaultAPY();
 
   // Loading state
-  if (breadBalance.status === "LOADING" || apyLoading) {
+  if (!breadBalance || breadBalance.status === "LOADING" || apyLoading) {
     return (
       <CardBox className="p-6">
         <Heading3 className="mb-4">Yield Information</Heading3>
