@@ -150,21 +150,21 @@ export function GapModalContent({ address }: GapModalContentProps) {
               {milestones.filter(m => m.completed).slice(0, 3).map((milestone) => (
                 <div
                   key={milestone.uid}
-                  className="flex items-start gap-2"
+                  className="flex items-start gap-2 min-w-0"
                 >
-                  <span className="text-base mt-0.5 font-bold flex-shrink-0">
+                  <span className="text-base mt-0.5 font-bold flex-shrink-0 w-4">
                     ✓
                   </span>
-                  <div className="flex-1 border-l-2 border-surface-grey-3 pl-4 py-1">
-                    <Body className="text-sm font-bold text-surface-grey-2">
+                  <div className="flex-1 min-w-0 border-l-2 border-surface-grey-3 pl-4 py-1">
+                    <Body className="text-sm font-bold text-surface-grey-2 break-words">
                       <MarkdownContent content={milestone.data.title} />
                     </Body>
                     {milestone.data.description && (
-                      <Body className="text-xs text-surface-grey-2 mt-1">
+                      <Body className="text-xs text-surface-grey-2 mt-1 break-words">
                         <MarkdownContent content={milestone.data.description} />
                       </Body>
                     )}
-                    <div className="flex gap-3 mt-2 text-xs text-surface-grey-2 opacity-70">
+                    <div className="flex gap-3 mt-2 text-xs text-surface-grey-2 opacity-70 flex-wrap">
                       {milestone.completed?.createdAt && (
                         <span>
                           Completed:{" "}
