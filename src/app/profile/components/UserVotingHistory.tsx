@@ -2,7 +2,7 @@
 
 import { Body, Heading5, Caption, LiftedButton } from "@breadcoop/ui";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
-import { useUserVotingHistory } from "@/app/governance/useUserVotingHistory";
+import { useUserVotingHistoryByCycle } from "@/app/governance/useUserVotingHistoryByCycle";
 import { Spinner } from "@/app/core/components/Icons/Spinner";
 import { projectsMeta } from "@/app/projectsMeta";
 import { format } from "date-fns";
@@ -13,14 +13,14 @@ import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react";
 /**
  * UserVotingHistory Component
  *
- * Displays the voting history for the connected user
- * Shows all past votes with project names and vote percentages
+ * Displays the voting history for the connected user grouped by cycle
+ * Shows only the last vote per cycle (in case user recast their vote)
  * Allows cycling through vote history similar to governance page
  */
 export function UserVotingHistory() {
   const { user } = useConnectedUser();
   const userAddress = user.status === "CONNECTED" ? user.address : undefined;
-  const { data: votingHistory, isLoading } = useUserVotingHistory(userAddress);
+  const { data: votingHistory, isLoading } = useUserVotingHistoryByCycle(userAddress);
   const [voteIndex, setVoteIndex] = useState(0); // 0 returns the latest vote
 
   if (!userAddress) {
@@ -52,16 +52,16 @@ export function UserVotingHistory() {
     );
   }
 
-  const currentVote = votingHistory[voteIndex];
-  const totalVotes = votingHistory.length;
+  const currentVoteCycle = votingHistory[voteIndex];
+  const totalCycles = votingHistory.length;
 
   const updateVoteIndex = (delta: number) => {
     setVoteIndex((prev) => {
       let newIndex = prev + delta;
       if (newIndex < 0) {
         newIndex = 0;
-      } else if (newIndex >= totalVotes) {
-        newIndex = totalVotes - 1;
+      } else if (newIndex >= totalCycles) {
+        newIndex = totalCycles - 1;
       }
       return newIndex;
     });
@@ -73,22 +73,22 @@ export function UserVotingHistory() {
       <div className="bg-paper-1 p-4 border border-paper-2">
         <div className="flex items-center justify-between">
           <Caption className="text-surface-grey">
-            {format(new Date(currentVote.timestamp * 1000), "MMM d, yyyy")}
+            {format(new Date(currentVoteCycle.vote.timestamp * 1000), "MMM d, yyyy")}
           </Caption>
           <div className="flex items-center gap-3">
             <LiftedButton
               preset="stroke"
               onClick={() => {
-                if (voteIndex === totalVotes - 1) return;
+                if (voteIndex === totalCycles - 1) return;
                 updateVoteIndex(1);
               }}
-              disabled={voteIndex === totalVotes - 1}
+              disabled={voteIndex === totalCycles - 1}
               className="h-[32px] w-[32px] p-0"
             >
               <ArrowLeftIcon size={20} className="text-primary-orange" />
             </LiftedButton>
             <Body bold className="text-[20px]">
-              Vote {totalVotes - voteIndex} of {totalVotes}
+              Cycle #{currentVoteCycle.cycleNumber}
             </Body>
             <LiftedButton
               preset="stroke"
@@ -106,7 +106,7 @@ export function UserVotingHistory() {
       </div>
 
       {/* Projects List */}
-      <VoteProjectsList vote={currentVote} />
+      <VoteProjectsList vote={currentVoteCycle.vote} />
     </div>
   );
 }
