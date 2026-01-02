@@ -140,14 +140,14 @@ export function GapModalContent({ address }: GapModalContentProps) {
           </div>
         )}
 
-        {/* Milestones Section - Show up to 3 milestones */}
-        {milestones.length > 0 && (
+        {/* Milestones Section - Show up to 3 completed milestones */}
+        {milestones.filter(m => m.completed).length > 0 && (
           <div className="mb-6 pb-6 border-b border-surface-grey-3">
             <Heading4 className="text-lg mb-3">
-              Milestones ({milestones.length})
+              Milestones ({milestones.filter(m => m.completed).length})
             </Heading4>
             <div className="space-y-3">
-              {milestones.slice(0, 3).map((milestone) => (
+              {milestones.filter(m => m.completed).slice(0, 3).map((milestone) => (
                 <div
                   key={milestone.uid}
                   className="flex items-start gap-2"
