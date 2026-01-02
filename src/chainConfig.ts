@@ -40,8 +40,12 @@ function makeAllConfigs() {
   let BUTTERED_BREAD_DEPLOYED = { ADDRESS: "0x" };
 
   if (process.env.NODE_ENV === "development") {
-    DISTRIBUTOR_DEPLOYED = require("../contracts/out/DISTRIBUTOR.json");
-    BUTTERED_BREAD_DEPLOYED = require("../contracts/out/BUTTERED_BREAD.json");
+    try {
+      DISTRIBUTOR_DEPLOYED = require("../contracts/out/DISTRIBUTOR.json");
+      BUTTERED_BREAD_DEPLOYED = require("../contracts/out/BUTTERED_BREAD.json");
+    } catch (e) {
+      // Contract files not found, using default values
+    }
   }
 
   const sepolia: ChainConfiguration = {
