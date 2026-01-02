@@ -115,7 +115,7 @@ export function GapModalContent({ address }: GapModalContentProps) {
       <ModalContent>
         {/* Project Description Section */}
         {(data.description || data.missionSummary || data.problem || data.solution) && (
-          <div className="mb-6 pb-6 border-b border-surface-grey-3">
+          <div className="w-full mb-6 pb-6 border-b border-surface-grey-3">
             <Heading4 className="text-lg mb-3">About</Heading4>
             {data.description && (
               <Body className="text-sm text-surface-grey-2 mb-3">
@@ -142,7 +142,7 @@ export function GapModalContent({ address }: GapModalContentProps) {
 
         {/* Milestones Section - Show up to 3 completed milestones */}
         {milestones.filter(m => m.completed).length > 0 && (
-          <div className="mb-6 pb-6 border-b border-surface-grey-3">
+          <div className="w-full mb-6 pb-6 border-b border-surface-grey-3">
             <Heading4 className="text-lg mb-3">
               Milestones ({milestones.filter(m => m.completed).length})
             </Heading4>
@@ -186,7 +186,7 @@ export function GapModalContent({ address }: GapModalContentProps) {
 
         {/* Updates Section - Show up to 3 updates */}
         {updates.length > 0 && (
-          <div className="mb-6 pb-6 border-b border-surface-grey-3">
+          <div className="w-full mb-6 pb-6 border-b border-surface-grey-3">
             <Heading4 className="text-lg mb-3">
               Updates ({updates.length})
             </Heading4>
