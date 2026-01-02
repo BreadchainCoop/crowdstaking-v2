@@ -51,7 +51,7 @@ export function Buy() {
           <Body className="text-surface-grey-2 text-sm mb-4">
             {isMobile
               ? "This feature is only available on desktop devices."
-              : "Buy xDAI with Venmo, Revolut, Wise, or Cash App via ZKP2P. You'll be redirected to complete your purchase."
+              : "Clicking the button below will take you to the ZKP2P website where you can complete your purchase using Venmo, Revolut, Wise, or Cash App."
             }
           </Body>
         </div>
