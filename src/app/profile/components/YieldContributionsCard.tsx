@@ -4,6 +4,7 @@ import { Heading3, Body, Caption, Logo } from "@breadcoop/ui";
 import { CardBox } from "@/app/core/components/CardBox";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { useUserYieldContributions } from "@/app/governance/useUserYieldContributions";
+import { useUserVotingHistoryByCycle } from "@/app/governance/useUserVotingHistoryByCycle";
 import { Spinner } from "@/app/core/components/Icons/Spinner";
 import { projectsMeta } from "@/app/projectsMeta";
 import { formatBalance } from "@/app/core/util/formatter";
@@ -18,6 +19,7 @@ export function YieldContributionsCard() {
   const { user } = useConnectedUser();
   const userAddress = user.status === "CONNECTED" ? user.address : undefined;
   const { data: contributions, isLoading } = useUserYieldContributions(userAddress);
+  const { data: votingHistory, isLoading: votingHistoryLoading } = useUserVotingHistoryByCycle(userAddress);
 
   if (!userAddress) {
     return (
@@ -30,7 +32,7 @@ export function YieldContributionsCard() {
     );
   }
 
-  if (isLoading) {
+  if (isLoading || votingHistoryLoading) {
     return (
       <CardBox className="p-6">
         <Heading3 className="mb-4">Yield Impact</Heading3>
@@ -43,12 +45,18 @@ export function YieldContributionsCard() {
     );
   }
 
-  if (!contributions || contributions.length === 0) {
+  // Check if user has voted but yield hasn't been distributed yet
+  const hasVotingHistory = votingHistory && votingHistory.length > 0;
+  const hasContributions = contributions && contributions.length > 0;
+
+  if (!hasContributions) {
     return (
       <CardBox className="p-6">
         <Heading3 className="mb-4">Yield Impact</Heading3>
         <Body className="text-surface-grey-2 text-center py-4">
-          Vote to start contributing yield to projects
+          {hasVotingHistory
+            ? "Your votes will contribute to yield distribution in the next cycle"
+            : "Vote to start contributing yield to projects"}
         </Body>
       </CardBox>
     );

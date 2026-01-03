@@ -8,7 +8,6 @@ import { Spinner } from "@/app/core/components/Icons/Spinner";
 import { LoginButton } from "@/app/components/login-button";
 import { UsernameCard } from "./components/UsernameCard";
 import { BreadHoldingsCard } from "./components/BreadHoldingsCard";
-import { YieldInfoCard } from "./components/YieldInfoCard";
 import { LPPositionCard } from "./components/LPPositionCard";
 import { YieldContributionsCard } from "./components/YieldContributionsCard";
 import { VotingHistorySection } from "./components/VotingHistorySection";
@@ -65,13 +64,10 @@ export function ProfilePage() {
           <UsernameCard />
         </div>
 
-        {/* BREAD Holdings */}
+        {/* BREAD Holdings & Yield */}
         <BreadHoldingsCard />
 
-        {/* Yield Info */}
-        <YieldInfoCard />
-
-        {/* LP Position - Left column */}
+        {/* LP Position - Right column */}
         <LPPositionCard />
 
         {/* Yield Contributions - Right column, spans 2 rows */}

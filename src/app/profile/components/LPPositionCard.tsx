@@ -5,6 +5,7 @@ import { CardBox } from "@/app/core/components/CardBox";
 import { useVaultTokenBalance } from "@/app/governance/lp-vaults/context/VaultTokenBalanceContext";
 import { formatBalance } from "@/app/core/util/formatter";
 import { Spinner } from "@/app/core/components/Icons/Spinner";
+import { Scales } from "@phosphor-icons/react";
 import Link from "next/link";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 
@@ -90,9 +91,12 @@ export function LPPositionCard() {
               <Caption className="text-surface-grey-2 block text-xs mb-1">
                 Voting Power from LP
               </Caption>
-              <Body className="text-lg font-bold">
-                {formatBalance(lpBalance, 2)}
-              </Body>
+              <div className="flex items-center gap-2">
+                <Scales size={20} weight="duotone" className="text-primary-orange" />
+                <Body className="text-lg font-bold">
+                  {formatBalance(lpBalance, 2)}
+                </Body>
+              </div>
             </div>
           </div>
 
