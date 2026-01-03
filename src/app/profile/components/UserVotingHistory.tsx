@@ -175,7 +175,7 @@ function VoteProjectsList({ vote, cycleNumber }: VoteProjectsListProps) {
   );
 
   return (
-    <div className="bg-paper-1 border border-paper-2">
+    <div className="bg-paper-1 border border-paper-2 min-h-[400px] max-h-[600px] overflow-y-auto">
       {sortedProjects.map((project) => {
         const meta = projectsMeta[project.projectAddress];
         if (!meta) return null;

@@ -71,13 +71,15 @@ export function ProfilePage() {
         {/* Yield Info */}
         <YieldInfoCard />
 
-        {/* LP Position */}
+        {/* Yield Contributions - Full width */}
+        <div className="lg:col-span-2">
+          <YieldContributionsCard />
+        </div>
+
+        {/* LP Position - Half width */}
         <LPPositionCard />
 
-        {/* Yield Contributions */}
-        <YieldContributionsCard />
-
-        {/* Gnosis Pay Card */}
+        {/* Gnosis Pay Card - Half width, side by side with LP Position */}
         <GnosisPayCard />
 
         {/* Stacks Card (feature-flagged) */}
