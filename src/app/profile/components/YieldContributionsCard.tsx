@@ -61,7 +61,7 @@ export function YieldContributionsCard() {
   );
 
   return (
-    <CardBox className="p-6">
+    <CardBox className="p-6 h-full flex flex-col">
       <Heading3 className="mb-4">Yield Impact</Heading3>
 
       {/* Total Contribution */}
@@ -78,7 +78,7 @@ export function YieldContributionsCard() {
       </div>
 
       {/* Per-Project Breakdown */}
-      <div className="space-y-1">
+      <div className="space-y-1 flex-1 overflow-y-auto">
         <Caption className="text-surface-grey-2 block text-xs mb-2">
           Breakdown by Project
         </Caption>

@@ -29,7 +29,7 @@ export function GnosisPayCard() {
       </Caption>
 
       <a
-        href="https://bread.coop"
+        href="https://paragraph.com/@breadcoop"
         target="_blank"
         rel="noopener noreferrer"
         className="block"
