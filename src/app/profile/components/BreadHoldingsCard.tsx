@@ -5,7 +5,6 @@ import { CardBox } from "@/app/core/components/CardBox";
 import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
 import { useVaultAPY, FALLBACK_APY_VALUE } from "@/app/core/hooks/useVaultAPY";
 import { useVaultTokenBalance } from "@/app/governance/lp-vaults/context/VaultTokenBalanceContext";
-import { useUserYieldContributions } from "@/app/governance/useUserYieldContributions";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { formatBalance } from "@/app/core/util/formatter";
 import { formatUnits } from "viem";
@@ -20,7 +19,6 @@ import Link from "next/link";
  * - Total BREAD token balance
  * - LP position and voting power
  * - Current APY and yield projections
- * - Total yield contributed to projects
  */
 export function BreadHoldingsCard() {
   const tokenBalances = useTokenBalances();
@@ -28,14 +26,6 @@ export function BreadHoldingsCard() {
   const { data: apyData, isLoading: apyLoading } = useVaultAPY();
   const vaultBalance = useVaultTokenBalance();
   const { user } = useConnectedUser();
-  const userAddress = user.status === "CONNECTED" ? user.address : undefined;
-  const { data: yieldContributions, isLoading: contributionsLoading } = useUserYieldContributions(userAddress);
-
-  // Calculate total yield contributed
-  const totalYieldContributed = yieldContributions?.reduce(
-    (sum, c) => sum + c.totalYieldContributed,
-    0
-  ) || 0;
 
   // Loading state
   if (!breadBalance || breadBalance.status === "LOADING" || apyLoading) {
@@ -123,7 +113,9 @@ export function BreadHoldingsCard() {
                     Voting Power from LP
                   </Caption>
                   <div className="flex items-center gap-2">
-                    <FistIcon />
+                    <span className="flex items-center">
+                      <FistIcon />
+                    </span>
                     <Body className="text-lg font-bold">
                       {formatBalance(lpBalance, 2)}
                     </Body>
@@ -152,7 +144,9 @@ export function BreadHoldingsCard() {
                 Monthly Yield
               </Caption>
               <div className="flex items-center gap-2">
-                <Logo size={20} />
+                <span className="flex items-center">
+                  <Logo size={20} />
+                </span>
                 <Body className="text-lg font-bold">
                   {formatBalance(monthlyYield, 2)}
                 </Body>
@@ -167,30 +161,14 @@ export function BreadHoldingsCard() {
                 Yearly Yield
               </Caption>
               <div className="flex items-center gap-2">
-                <Logo size={20} />
+                <span className="flex items-center">
+                  <Logo size={20} />
+                </span>
                 <Body className="text-lg font-bold">
                   {formatBalance(yearlyYield, 2)}
                 </Body>
               </div>
             </div>
-
-            {/* Total Yield Contributed */}
-            {!contributionsLoading && totalYieldContributed > 0 && (
-              <>
-                <div className="h-px bg-paper-2" />
-                <div>
-                  <Caption className="text-surface-grey-2 block text-xs mb-1">
-                    Total Yield Contributed to Projects
-                  </Caption>
-                  <div className="flex items-center gap-2">
-                    <Logo size={20} />
-                    <Body className="text-lg font-bold">
-                      {formatBalance(totalYieldContributed, 2)}
-                    </Body>
-                  </div>
-                </div>
-              </>
-            )}
           </div>
 
           <Caption className="text-surface-grey-2 text-center block text-xs mb-4 opacity-70">
