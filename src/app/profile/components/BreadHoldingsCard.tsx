@@ -10,7 +10,7 @@ import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { formatBalance } from "@/app/core/util/formatter";
 import { formatUnits } from "viem";
 import { Spinner } from "@/app/core/components/Icons/Spinner";
-import { Scales } from "@phosphor-icons/react";
+import { FistIcon } from "@/app/core/components/Icons/FistIcon";
 import Link from "next/link";
 
 /**
@@ -112,7 +112,7 @@ export function BreadHoldingsCard() {
                     Locked LP Tokens
                   </Caption>
                   <Body className="text-lg font-bold">
-                    {formatBalance(lpBalance, 2)} BUTTER/BREAD LP
+                    {formatBalance(lpBalance, 2)}
                   </Body>
                 </div>
 
@@ -123,7 +123,7 @@ export function BreadHoldingsCard() {
                     Voting Power from LP
                   </Caption>
                   <div className="flex items-center gap-2">
-                    <Scales size={20} weight="duotone" className="text-primary-orange" />
+                    <FistIcon />
                     <Body className="text-lg font-bold">
                       {formatBalance(lpBalance, 2)}
                     </Body>
@@ -151,9 +151,12 @@ export function BreadHoldingsCard() {
               <Caption className="text-surface-grey-2 block text-xs mb-1">
                 Monthly Yield
               </Caption>
-              <Body className="text-lg font-bold">
-                {formatBalance(monthlyYield, 2)} BREAD
-              </Body>
+              <div className="flex items-center gap-2">
+                <Logo size={20} />
+                <Body className="text-lg font-bold">
+                  {formatBalance(monthlyYield, 2)}
+                </Body>
+              </div>
             </div>
 
             <div className="h-px bg-paper-2" />
@@ -163,9 +166,12 @@ export function BreadHoldingsCard() {
               <Caption className="text-surface-grey-2 block text-xs mb-1">
                 Yearly Yield
               </Caption>
-              <Body className="text-lg font-bold">
-                {formatBalance(yearlyYield, 2)} BREAD
-              </Body>
+              <div className="flex items-center gap-2">
+                <Logo size={20} />
+                <Body className="text-lg font-bold">
+                  {formatBalance(yearlyYield, 2)}
+                </Body>
+              </div>
             </div>
 
             {/* Total Yield Contributed */}
