@@ -34,9 +34,14 @@ export function useUserYieldContributions(userAddress: Address | undefined) {
   const { data: votingHistory, isLoading: votingHistoryLoading } =
     useUserVotingHistoryByCycle(userAddress);
 
+  console.log("useUserYieldContributions - Address:", userAddress, "Loading:", votingHistoryLoading, "History length:", votingHistory?.length);
+
+  const queryEnabled = !!userAddress && !votingHistoryLoading && !!votingHistory && votingHistory.length > 0;
+  console.log("Yield contributions query enabled:", queryEnabled);
+
   return useQuery<ProjectYieldContribution[]>({
     queryKey: ["userYieldContributions", userAddress],
-    enabled: !!userAddress && !votingHistoryLoading && !!votingHistory && votingHistory.length > 0,
+    enabled: queryEnabled,
     async queryFn() {
       if (!userAddress || !votingHistory || votingHistory.length === 0) {
         console.log("No voting history found for user:", userAddress);
