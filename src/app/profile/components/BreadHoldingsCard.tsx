@@ -4,27 +4,44 @@ import { Heading3, Heading2, Caption, Body, LiftedButton, Logo } from "@breadcoo
 import { CardBox } from "@/app/core/components/CardBox";
 import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
 import { useVaultAPY, FALLBACK_APY_VALUE } from "@/app/core/hooks/useVaultAPY";
+import { useVaultTokenBalance } from "@/app/governance/lp-vaults/context/VaultTokenBalanceContext";
+import { useUserYieldContributions } from "@/app/governance/useUserYieldContributions";
+import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { formatBalance } from "@/app/core/util/formatter";
 import { formatUnits } from "viem";
 import { Spinner } from "@/app/core/components/Icons/Spinner";
+import { Scales } from "@phosphor-icons/react";
 import Link from "next/link";
 
 /**
- * BreadHoldingsCard Component
+ * BreadHoldingsCard Component (now includes LP position)
  *
- * Displays user's total BREAD token balance and yield information
- * Combined card showing holdings, APY, monthly yield, and yearly yield
+ * Displays comprehensive BREAD overview:
+ * - Total BREAD token balance
+ * - LP position and voting power
+ * - Current APY and yield projections
+ * - Total yield contributed to projects
  */
 export function BreadHoldingsCard() {
   const tokenBalances = useTokenBalances();
   const breadBalance = tokenBalances.BREAD;
   const { data: apyData, isLoading: apyLoading } = useVaultAPY();
+  const vaultBalance = useVaultTokenBalance();
+  const { user } = useConnectedUser();
+  const userAddress = user.status === "CONNECTED" ? user.address : undefined;
+  const { data: yieldContributions, isLoading: contributionsLoading } = useUserYieldContributions(userAddress);
+
+  // Calculate total yield contributed
+  const totalYieldContributed = yieldContributions?.reduce(
+    (sum, c) => sum + c.totalYieldContributed,
+    0
+  ) || 0;
 
   // Loading state
   if (!breadBalance || breadBalance.status === "LOADING" || apyLoading) {
     return (
       <CardBox className="p-6">
-        <Heading3 className="mb-4">BREAD Holdings</Heading3>
+        <Heading3 className="mb-4">BREAD Overview</Heading3>
         <div className="flex justify-center py-8">
           <div className="size-8 text-breadgray-grey">
             <Spinner />
@@ -38,7 +55,7 @@ export function BreadHoldingsCard() {
   if (breadBalance.status === "ERROR") {
     return (
       <CardBox className="p-6">
-        <Heading3 className="mb-4">BREAD Holdings</Heading3>
+        <Heading3 className="mb-4">BREAD Overview</Heading3>
         <Body className="text-surface-grey-2 text-center py-4">
           Unable to load balance
         </Body>
@@ -58,9 +75,19 @@ export function BreadHoldingsCard() {
   const yearlyYield = balance * (apyPercentage / 100);
   const monthlyYield = yearlyYield / 12;
 
+  // LP balance
+  const butterBalance = vaultBalance?.butter;
+  const lpBalance = butterBalance?.status === "success"
+    ? Number(butterBalance.value) / 10 ** 18
+    : 0;
+  const hasLPPosition = lpBalance > 0;
+
+  // Check if LP vaults feature is enabled
+  const lpVaultsEnabled = user.status === "CONNECTED" && user.features.lpVaults;
+
   return (
     <CardBox className="p-6">
-      <Heading3 className="mb-4">BREAD Holdings & Yield</Heading3>
+      <Heading3 className="mb-4">BREAD Overview</Heading3>
 
       {hasBalance ? (
         <>
@@ -75,8 +102,38 @@ export function BreadHoldingsCard() {
             <Caption className="text-surface-grey-2">Total $BREAD Balance</Caption>
           </div>
 
-          {/* Yield Information */}
+          {/* Combined Stats */}
           <div className="space-y-4 mb-6">
+            {/* LP Position */}
+            {hasLPPosition && (
+              <>
+                <div>
+                  <Caption className="text-surface-grey-2 block text-xs mb-1">
+                    Locked LP Tokens
+                  </Caption>
+                  <Body className="text-lg font-bold">
+                    {formatBalance(lpBalance, 2)} BUTTER/BREAD LP
+                  </Body>
+                </div>
+
+                <div className="h-px bg-paper-2" />
+
+                <div>
+                  <Caption className="text-surface-grey-2 block text-xs mb-1">
+                    Voting Power from LP
+                  </Caption>
+                  <div className="flex items-center gap-2">
+                    <Scales size={20} weight="duotone" className="text-primary-orange" />
+                    <Body className="text-lg font-bold">
+                      {formatBalance(lpBalance, 2)}
+                    </Body>
+                  </div>
+                </div>
+
+                <div className="h-px bg-paper-2" />
+              </>
+            )}
+
             {/* Current APY */}
             <div>
               <Caption className="text-surface-grey-2 block text-xs mb-1">
@@ -110,17 +167,51 @@ export function BreadHoldingsCard() {
                 {formatBalance(yearlyYield, 2)} BREAD
               </Body>
             </div>
+
+            {/* Total Yield Contributed */}
+            {!contributionsLoading && totalYieldContributed > 0 && (
+              <>
+                <div className="h-px bg-paper-2" />
+                <div>
+                  <Caption className="text-surface-grey-2 block text-xs mb-1">
+                    Total Yield Contributed to Projects
+                  </Caption>
+                  <div className="flex items-center gap-2">
+                    <Logo size={20} />
+                    <Body className="text-lg font-bold">
+                      {formatBalance(totalYieldContributed, 2)}
+                    </Body>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           <Caption className="text-surface-grey-2 text-center block text-xs mb-4 opacity-70">
             Yield automatically donated to Bread Solidarity Fund
           </Caption>
 
-          <Link href="/" className="block">
-            <LiftedButton className="w-full">
-              Bake BREAD
-            </LiftedButton>
-          </Link>
+          <div className="flex gap-2">
+            <Link href="/" className="flex-1">
+              <LiftedButton className="w-full">
+                Bake BREAD
+              </LiftedButton>
+            </Link>
+            {lpVaultsEnabled && hasLPPosition && (
+              <Link href="/governance/lp-vaults" className="flex-1">
+                <LiftedButton className="w-full">
+                  Manage LP
+                </LiftedButton>
+              </Link>
+            )}
+            {lpVaultsEnabled && !hasLPPosition && (
+              <Link href="/governance/lp-vaults" className="flex-1">
+                <LiftedButton className="w-full">
+                  Explore LP
+                </LiftedButton>
+              </Link>
+            )}
+          </div>
         </>
       ) : (
         <div className="text-center py-6">

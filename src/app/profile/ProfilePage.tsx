@@ -8,7 +8,6 @@ import { Spinner } from "@/app/core/components/Icons/Spinner";
 import { LoginButton } from "@/app/components/login-button";
 import { UsernameCard } from "./components/UsernameCard";
 import { BreadHoldingsCard } from "./components/BreadHoldingsCard";
-import { LPPositionCard } from "./components/LPPositionCard";
 import { YieldContributionsCard } from "./components/YieldContributionsCard";
 import { VotingHistorySection } from "./components/VotingHistorySection";
 import { GnosisPayCard } from "./components/GnosisPayCard";
@@ -64,18 +63,13 @@ export function ProfilePage() {
           <UsernameCard />
         </div>
 
-        {/* BREAD Holdings & Yield */}
+        {/* BREAD Overview (includes LP position) */}
         <BreadHoldingsCard />
 
-        {/* LP Position - Right column */}
-        <LPPositionCard />
+        {/* Yield Contributions - Right column */}
+        <YieldContributionsCard />
 
-        {/* Yield Contributions - Right column, spans 2 rows */}
-        <div className="lg:row-span-2">
-          <YieldContributionsCard />
-        </div>
-
-        {/* Gnosis Pay Card - Left column, below LP Position */}
+        {/* Gnosis Pay Card - Left column */}
         <GnosisPayCard />
 
         {/* Stacks Card (feature-flagged) */}
