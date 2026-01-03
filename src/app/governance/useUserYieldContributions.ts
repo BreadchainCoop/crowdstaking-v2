@@ -9,6 +9,8 @@ interface YieldDistribution {
   yield: string;
   totalVotes: string;
   timestamp: string;
+  projectDistributions: string[];
+  projectAddresses: Address[];
 }
 
 interface YieldDistributionsResponse {
@@ -29,29 +31,26 @@ export interface ProjectYieldContribution {
 /**
  * Calculate how much yield a user has helped distribute to each project
  * across all voting cycles
+ *
+ * This calculation uses the project distributions from the subgraph to determine
+ * how much voting power each project received, then calculates the user's
+ * proportional contribution based on their vote allocation percentages.
  */
 export function useUserYieldContributions(userAddress: Address | undefined) {
   const { data: votingHistory, isLoading: votingHistoryLoading } =
     useUserVotingHistoryByCycle(userAddress);
 
-  console.log("useUserYieldContributions - Address:", userAddress, "Loading:", votingHistoryLoading, "History length:", votingHistory?.length);
-
   const queryEnabled = !!userAddress && !votingHistoryLoading && !!votingHistory && votingHistory.length > 0;
-  console.log("Yield contributions query enabled:", queryEnabled);
 
   return useQuery<ProjectYieldContribution[]>({
     queryKey: ["userYieldContributions", userAddress],
     enabled: queryEnabled,
     async queryFn() {
       if (!userAddress || !votingHistory || votingHistory.length === 0) {
-        console.log("No voting history found for user:", userAddress);
         return [];
       }
 
-      console.log("Calculating yield contributions for user:", userAddress);
-      console.log("Voting history cycles:", votingHistory.length);
-
-      // Fetch all yield distributions to get cycle data
+      // Fetch all yield distributions with project distribution data
       const API_KEY = process.env.NEXT_PUBLIC_SUBGRAPH_API_KEY;
       const client = new GraphQLClient(SUBGRAPH_QUERY_URL, {
         headers: {
@@ -66,6 +65,8 @@ export function useUserYieldContributions(userAddress: Address | undefined) {
             yield
             totalVotes
             timestamp
+            projectDistributions
+            projectAddresses
           }
         }
       `);
@@ -86,7 +87,6 @@ export function useUserYieldContributions(userAddress: Address | undefined) {
         const distribution = cycleDistributionMap.get(voteCycle.cycleNumber);
 
         if (!distribution) {
-          console.log("No distribution found for cycle:", voteCycle.cycleNumber);
           continue;
         }
 
@@ -94,21 +94,27 @@ export function useUserYieldContributions(userAddress: Address | undefined) {
         const totalVotes = Number(formatUnits(BigInt(distribution.totalVotes), 18));
         const democraticPool = totalYield / 2; // 50% goes to democratic distribution
 
-        console.log("Cycle", voteCycle.cycleNumber, "- Total yield:", totalYield, "Total votes:", totalVotes, "Democratic pool:", democraticPool);
+        // Create a map of project -> its votes for this cycle
+        const projectVotesMap = new Map<string, number>();
+        distribution.projectAddresses.forEach((addr, index) => {
+          const projectVotes = Number(formatUnits(BigInt(distribution.projectDistributions[index]), 18));
+          projectVotesMap.set(addr.toLowerCase(), projectVotes);
+        });
 
         // For each project the user voted for in this cycle
         for (const vote of voteCycle.vote.votes) {
           if (vote.points === 0) continue;
 
-          // User's contribution to this project's democratic distribution
-          // = (user's points for project / total votes) * democratic pool
-          // Note: vote.points is a raw number from BigInt, we need to format it to match totalVotes units
-          const userVotesForProject = vote.points / 1e18; // Convert from wei to ether units
-          const yieldContributed = totalVotes > 0
-            ? (userVotesForProject / totalVotes) * democraticPool
-            : 0;
+          const projectVotes = projectVotesMap.get(vote.projectAddress.toLowerCase());
+          if (!projectVotes || totalVotes === 0) continue;
 
-          console.log("Project", vote.projectAddress, "- User votes:", userVotesForProject, "Yield contributed:", yieldContributed);
+          // Calculate how much this project received from the democratic pool
+          const projectDemocraticYield = (projectVotes / totalVotes) * democraticPool;
+
+          // User's contribution is proportional to their vote percentage
+          // If user allocated 25% of their votes to this project, they're responsible
+          // for roughly 25% of the project's democratic yield they could have influenced
+          const yieldContributed = projectDemocraticYield * (vote.percentage / 100);
 
           // Get or create project contribution record
           let projectContribution = projectContributionsMap.get(vote.projectAddress);
@@ -137,7 +143,6 @@ export function useUserYieldContributions(userAddress: Address | undefined) {
         (a, b) => b.totalYieldContributed - a.totalYieldContributed
       );
 
-      console.log("Final contributions:", result);
       return result;
     },
   });
