@@ -10,6 +10,7 @@ import { UsernameCard } from "./components/UsernameCard";
 import { BreadHoldingsCard } from "./components/BreadHoldingsCard";
 import { YieldInfoCard } from "./components/YieldInfoCard";
 import { LPPositionCard } from "./components/LPPositionCard";
+import { YieldContributionsCard } from "./components/YieldContributionsCard";
 import { VotingHistorySection } from "./components/VotingHistorySection";
 import { GnosisPayCard } from "./components/GnosisPayCard";
 import { StacksCard } from "./components/StacksCard";
@@ -72,6 +73,9 @@ export function ProfilePage() {
 
         {/* LP Position */}
         <LPPositionCard />
+
+        {/* Yield Contributions */}
+        <YieldContributionsCard />
 
         {/* Gnosis Pay Card */}
         <GnosisPayCard />
