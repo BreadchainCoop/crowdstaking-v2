@@ -1,6 +1,6 @@
 "use client";
 
-import { Heading3, Body, Caption } from "@breadcoop/ui";
+import { Heading3, Body, Caption, LiftedButton } from "@breadcoop/ui";
 import { CardBox } from "@/app/core/components/CardBox";
 import { CreditCard } from "@phosphor-icons/react";
 
@@ -20,13 +20,24 @@ export function GnosisPayCard() {
         <Heading3>Gnosis Pay Card</Heading3>
       </div>
 
-      <Body className="text-surface-grey-2 mb-3">
+      <Body className="text-surface-grey-2 mb-4">
         Coming soon: Spend your BREAD directly with the Gnosis Pay card
       </Body>
 
-      <Caption className="text-surface-grey-2 text-xs block opacity-70">
-        Stay tuned for updates on this feature
+      <Caption className="text-surface-grey-2 text-xs block mb-4">
+        Subscribe to our blog to get updates on this feature and more.
       </Caption>
+
+      <a
+        href="https://bread.coop"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block"
+      >
+        <LiftedButton className="w-full" preset="stroke">
+          Subscribe to Blog
+        </LiftedButton>
+      </a>
     </CardBox>
   );
 }

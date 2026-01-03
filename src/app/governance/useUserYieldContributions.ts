@@ -80,19 +80,14 @@ export function useUserYieldContributions(userAddress: Address | undefined) {
         const totalVotes = Number(formatUnits(BigInt(distribution.totalVotes), 18));
         const democraticPool = totalYield / 2; // 50% goes to democratic distribution
 
-        // Calculate user's total voting power in this cycle
-        const userTotalPoints = voteCycle.vote.votes.reduce(
-          (sum, v) => sum + v.points,
-          0
-        );
-
         // For each project the user voted for in this cycle
         for (const vote of voteCycle.vote.votes) {
           if (vote.points === 0) continue;
 
           // User's contribution to this project's democratic distribution
           // = (user's points for project / total votes) * democratic pool
-          const userVotesForProject = vote.points;
+          // Note: vote.points is a raw number from BigInt, we need to format it to match totalVotes units
+          const userVotesForProject = vote.points / 1e18; // Convert from wei to ether units
           const yieldContributed = totalVotes > 0
             ? (userVotesForProject / totalVotes) * democraticPool
             : 0;
