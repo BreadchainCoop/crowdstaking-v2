@@ -136,12 +136,14 @@ const NavAccountDetails = ({
 					<Body className="font-bold">Gnosis chain</Body>
 				</div>
 			</Item>
-			<Link href="/profile" className="w-full mt-2">
-				<LiftedButton className="w-full flex items-center justify-center gap-2">
-					View Profile
-				</LiftedButton>
-			</Link>
-			<LogoutButton className="mt-1" />
+			<div className="flex items-center gap-2 mt-2">
+				<Link href="/profile" className="flex-1">
+					<LiftedButton className="w-full flex items-center justify-center gap-2">
+						View Profile
+					</LiftedButton>
+				</Link>
+				<LogoutButton className="flex-shrink-0" />
+			</div>
 		</section>
 	);
 };
