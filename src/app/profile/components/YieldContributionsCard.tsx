@@ -122,8 +122,8 @@ export function YieldContributionsCard() {
         })}
       </div>
 
-      <Caption className="text-surface-grey-2 text-center block text-xs mt-4">
-        Your votes determine 50% of yield distribution (democratic amount)
+      <Caption className="text-surface-grey-2 text-center block text-xs mt-4 opacity-70">
+        Based on your voting power across all cycles
       </Caption>
     </CardBox>
   );

@@ -23,7 +23,7 @@ export interface ProjectYieldContribution {
   cycleContributions: Array<{
     cycleNumber: number;
     yieldContributed: number;
-    userVotePercentage: number;
+    userVotePoints: number;
     totalYieldInCycle: number;
   }>;
 }
@@ -32,9 +32,9 @@ export interface ProjectYieldContribution {
  * Calculate how much yield a user has helped distribute to each project
  * across all voting cycles
  *
- * This calculation uses the project distributions from the subgraph to determine
- * how much voting power each project received, then calculates the user's
- * proportional contribution based on their vote allocation percentages.
+ * For each cycle, the calculation is:
+ * - User's contribution to a project = (user's vote points for that project / total votes) × (total yield / 2)
+ * - The "/ 2" is because only 50% of yield goes to democratic distribution
  */
 export function useUserYieldContributions(userAddress: Address | undefined) {
   const { data: votingHistory, isLoading: votingHistoryLoading } =
@@ -92,29 +92,17 @@ export function useUserYieldContributions(userAddress: Address | undefined) {
 
         const totalYield = Number(formatUnits(BigInt(distribution.yield), 18));
         const totalVotes = Number(formatUnits(BigInt(distribution.totalVotes), 18));
-        const democraticPool = totalYield / 2; // 50% goes to democratic distribution
 
-        // Create a map of project -> its votes for this cycle
-        const projectVotesMap = new Map<string, number>();
-        distribution.projectAddresses.forEach((addr, index) => {
-          const projectVotes = Number(formatUnits(BigInt(distribution.projectDistributions[index]), 18));
-          projectVotesMap.set(addr.toLowerCase(), projectVotes);
-        });
+        if (totalVotes === 0) continue;
+
+        const democraticPool = totalYield / 2; // 50% goes to democratic distribution
 
         // For each project the user voted for in this cycle
         for (const vote of voteCycle.vote.votes) {
           if (vote.points === 0) continue;
 
-          const projectVotes = projectVotesMap.get(vote.projectAddress.toLowerCase());
-          if (!projectVotes || totalVotes === 0) continue;
-
-          // Calculate how much this project received from the democratic pool
-          const projectDemocraticYield = (projectVotes / totalVotes) * democraticPool;
-
-          // User's contribution is proportional to their vote percentage
-          // If user allocated 25% of their votes to this project, they're responsible
-          // for roughly 25% of the project's democratic yield they could have influenced
-          const yieldContributed = projectDemocraticYield * (vote.percentage / 100);
+          // User's contribution to this project = (their vote points / total votes) × democratic pool
+          const yieldContributed = (vote.points / totalVotes) * democraticPool;
 
           // Get or create project contribution record
           let projectContribution = projectContributionsMap.get(vote.projectAddress);
@@ -132,7 +120,7 @@ export function useUserYieldContributions(userAddress: Address | undefined) {
           projectContribution.cycleContributions.push({
             cycleNumber: voteCycle.cycleNumber,
             yieldContributed,
-            userVotePercentage: vote.percentage,
+            userVotePoints: vote.points,
             totalYieldInCycle: totalYield,
           });
         }
