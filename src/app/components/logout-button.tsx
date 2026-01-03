@@ -11,10 +11,11 @@ const LogoutButton = ({ className }: { className?: string }) => {
 		<div className={clsx("lifted-button-container", className)}>
 			<LiftedButton
 				preset="burn"
+				rightIcon={<SignOutIcon />}
 				onClick={() => disconnect()}
-				className="px-3"
+				className="w-full"
 			>
-				<SignOutIcon size={20} />
+				Sign out
 			</LiftedButton>
 		</div>
 	);

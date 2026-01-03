@@ -142,7 +142,9 @@ const NavAccountDetails = ({
 						View Profile
 					</LiftedButton>
 				</Link>
-				<LogoutButton className="flex-shrink-0" />
+				<div className="flex-1">
+					<LogoutButton />
+				</div>
 			</div>
 		</section>
 	);
