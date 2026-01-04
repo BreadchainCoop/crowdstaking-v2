@@ -11,6 +11,7 @@ import { formatUnits } from "viem";
 import { Spinner } from "@/app/core/components/Icons/Spinner";
 import { FistIcon } from "@/app/core/components/Icons/FistIcon";
 import Link from "next/link";
+import { useTotalYieldGenerated } from "../hooks/useTotalYieldGenerated";
 
 /**
  * BreadHoldingsCard Component (now includes LP position)
@@ -26,9 +27,10 @@ export function BreadHoldingsCard() {
   const { data: apyData, isLoading: apyLoading } = useVaultAPY();
   const vaultBalance = useVaultTokenBalance();
   const { user } = useConnectedUser();
+  const { data: totalYieldGenerated, isLoading: totalYieldLoading } = useTotalYieldGenerated();
 
   // Loading state
-  if (!breadBalance || breadBalance.status === "LOADING" || apyLoading) {
+  if (!breadBalance || breadBalance.status === "LOADING" || apyLoading || totalYieldLoading) {
     return (
       <CardBox className="p-6">
         <Heading3 className="mb-4">BREAD Overview</Heading3>
@@ -169,6 +171,25 @@ export function BreadHoldingsCard() {
                 </Body>
               </div>
             </div>
+
+            <div className="h-px bg-paper-2" />
+
+            {/* Total Yield Generated Since Beginning */}
+            {totalYieldGenerated !== undefined && (
+              <div>
+                <Caption className="text-surface-grey-2 block text-xs mb-1">
+                  Total Yield Generated
+                </Caption>
+                <div className="flex items-center gap-2">
+                  <span className="flex items-center">
+                    <Logo size={20} />
+                  </span>
+                  <Body className="text-lg font-bold">
+                    {formatBalance(totalYieldGenerated, 2)}
+                  </Body>
+                </div>
+              </div>
+            )}
           </div>
 
           <Caption className="text-surface-grey-2 text-center block text-xs mb-4 opacity-70">
