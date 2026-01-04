@@ -13,6 +13,7 @@ const LogoutButton = ({ className }: { className?: string }) => {
 				preset="burn"
 				rightIcon={<SignOutIcon />}
 				onClick={() => disconnect()}
+				className="w-full"
 			>
 				Sign out
 			</LiftedButton>

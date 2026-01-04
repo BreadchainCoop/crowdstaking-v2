@@ -21,6 +21,7 @@ const features = {
   votingHistory: parseFeatureVar(process.env.FEATURE_VOTING_HISTORY),
   lpVaults: parseFeatureVar(process.env.FEATURE_LP_VAULTS),
   bridge: parseFeatureVar(process.env.FEATURE_BRIDGE),
+  stacks: parseFeatureVar(process.env.FEATURE_STACKS),
 };
 
 export type Features = {

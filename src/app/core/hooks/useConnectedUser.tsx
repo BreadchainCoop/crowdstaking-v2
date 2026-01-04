@@ -55,6 +55,7 @@ const ConnectedUserContext = createContext<{
       recastVote: false,
       lpVaults: false,
       bridge: false,
+      stacks: false,
     },
   },
   isSafe: false,
