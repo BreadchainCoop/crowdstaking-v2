@@ -72,10 +72,10 @@ export function YieldContributionsCard() {
     <CardBox className="p-6 h-full flex flex-col">
       <Heading3 className="mb-4">Yield Impact</Heading3>
 
-      {/* Total Contribution */}
+      {/* Total Yield Influenced Through Voting */}
       <div className="text-center py-4 mb-4 bg-paper-2 border border-paper-1">
         <Caption className="text-surface-grey-2 block text-xs mb-2">
-          Total Yield You&apos;ve Helped Distribute
+          Total Yield Influenced Through Voting
         </Caption>
         <div className="flex items-center justify-center gap-2">
           <Logo size={24} />
