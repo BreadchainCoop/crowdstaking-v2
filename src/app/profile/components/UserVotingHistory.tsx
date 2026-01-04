@@ -25,6 +25,13 @@ export function UserVotingHistory() {
   const { data: votingHistory, isLoading } = useUserVotingHistoryByCycle(userAddress);
   const [cycleIndex, setCycleIndex] = useState(0); // 0 returns the latest vote
 
+  // Calculate cycle index for distribution (must be called before early returns)
+  const currentVoteCycle = votingHistory?.[cycleIndex];
+  const cycleIndexForDistribution = votingHistory && currentVoteCycle
+    ? votingHistory.length - currentVoteCycle.cycleNumber
+    : 0;
+  const { cycleDistribution: currentCycleDistribution } = useDistributions(cycleIndexForDistribution);
+
   if (!userAddress) {
     return (
       <div className="bg-paper-1 p-6 text-center">
@@ -44,7 +51,7 @@ export function UserVotingHistory() {
     );
   }
 
-  if (!votingHistory || votingHistory.length === 0) {
+  if (!votingHistory || votingHistory.length === 0 || !currentVoteCycle) {
     return (
       <div className="bg-paper-1 p-6 text-center">
         <Body className="text-surface-grey-2">
@@ -54,7 +61,6 @@ export function UserVotingHistory() {
     );
   }
 
-  const currentVoteCycle = votingHistory[cycleIndex];
   const totalCycles = votingHistory.length;
 
   const updateCycleIndex = (delta: number) => {
@@ -68,10 +74,6 @@ export function UserVotingHistory() {
       return newIndex;
     });
   };
-
-  // Get the cycle distribution for total yield display
-  const cycleIndexForDistribution = votingHistory.length - currentVoteCycle.cycleNumber;
-  const { cycleDistribution: currentCycleDistribution } = useDistributions(cycleIndexForDistribution);
 
   return (
     <div className="space-y-4">
