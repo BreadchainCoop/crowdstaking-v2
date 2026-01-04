@@ -82,7 +82,7 @@ function ConnectedUserProvider({
   const { isSafe } = useAutoConnect(activeConnector);
 
   const user = useMemo<TConnectedUserState>(() => {
-    if (status === "connecting" || status === "reconnecting") {
+    if (status === "connecting") {
       return { status: "LOADING", features };
     }
 
