@@ -3,11 +3,11 @@
 import { Heading3, Body, Caption, Logo } from "@breadcoop/ui";
 import { CardBox } from "@/app/core/components/CardBox";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
-import { useUserYieldContributions } from "@/app/governance/useUserYieldContributions";
 import { useUserVotingHistoryByCycle } from "@/app/governance/useUserVotingHistoryByCycle";
 import { Spinner } from "@/app/core/components/Icons/Spinner";
 import { projectsMeta } from "@/app/projectsMeta";
 import { formatBalance } from "@/app/core/util/formatter";
+import { useUserTotalYieldInfluenced } from "../hooks/useUserTotalYieldInfluenced";
 
 /**
  * YieldContributionsCard Component
@@ -18,7 +18,7 @@ import { formatBalance } from "@/app/core/util/formatter";
 export function YieldContributionsCard() {
   const { user } = useConnectedUser();
   const userAddress = user.status === "CONNECTED" ? user.address : undefined;
-  const { data: contributions, isLoading } = useUserYieldContributions(userAddress);
+  const { data: yieldData, isLoading } = useUserTotalYieldInfluenced(userAddress);
   const { data: votingHistory, isLoading: votingHistoryLoading } = useUserVotingHistoryByCycle(userAddress);
 
   if (!userAddress) {
@@ -45,28 +45,34 @@ export function YieldContributionsCard() {
     );
   }
 
-  // Check if user has voted but yield hasn't been distributed yet
+  // Check if user has voted
   const hasVotingHistory = votingHistory && votingHistory.length > 0;
-  const hasContributions = contributions && contributions.length > 0;
+  const hasYieldData = yieldData && yieldData.total > 0;
 
-  if (!hasContributions) {
+  if (!hasVotingHistory) {
     return (
       <CardBox className="p-6">
         <Heading3 className="mb-4">Yield Impact</Heading3>
         <Body className="text-surface-grey-2 text-center py-4">
-          {hasVotingHistory
-            ? "Your votes will contribute to yield distribution in the next cycle"
-            : "Vote to start contributing yield to projects"}
+          Vote to start contributing yield to projects
         </Body>
       </CardBox>
     );
   }
 
-  // Calculate total yield contributed across all projects
-  const totalYieldContributed = contributions.reduce(
-    (sum, c) => sum + c.totalYieldContributed,
-    0
-  );
+  if (!hasYieldData) {
+    return (
+      <CardBox className="p-6">
+        <Heading3 className="mb-4">Yield Impact</Heading3>
+        <Body className="text-surface-grey-2 text-center py-4">
+          Your votes will contribute to yield distribution in the next cycle
+        </Body>
+      </CardBox>
+    );
+  }
+
+  const totalYieldContributed = yieldData.total;
+  const projectBreakdown = Object.values(yieldData.byProject);
 
   return (
     <CardBox className="p-6 h-full flex flex-col">
@@ -90,36 +96,38 @@ export function YieldContributionsCard() {
         <Caption className="text-surface-grey-2 block text-xs mb-2">
           Breakdown by Project
         </Caption>
-        {contributions.map((contribution) => {
-          const meta = projectsMeta[contribution.projectAddress];
-          if (!meta) return null;
+        {projectBreakdown
+          .sort((a, b) => b.amount - a.amount)
+          .map((contribution) => {
+            const meta = projectsMeta[contribution.projectAddress as `0x${string}`];
+            if (!meta) return null;
 
-          return (
-            <div
-              key={contribution.projectAddress}
-              className="flex items-center justify-between p-3 bg-paper-0 border border-paper-2"
-            >
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 flex items-center justify-center bg-paper-0 border border-paper-2">
-                  <img
-                    src={meta.logoSrc}
-                    className="w-[1.2rem] h-[1.2rem]"
-                    alt={`${meta.name}'s logo`}
-                    width={19.2}
-                    height={19.2}
-                  />
+            return (
+              <div
+                key={contribution.projectAddress}
+                className="flex items-center justify-between p-3 bg-paper-0 border border-paper-2"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 flex items-center justify-center bg-paper-0 border border-paper-2">
+                    <img
+                      src={meta.logoSrc}
+                      className="w-[1.2rem] h-[1.2rem]"
+                      alt={`${meta.name}'s logo`}
+                      width={19.2}
+                      height={19.2}
+                    />
+                  </div>
+                  <Body className="text-surface-grey text-sm">{meta.name}</Body>
                 </div>
-                <Body className="text-surface-grey text-sm">{meta.name}</Body>
+                <div className="flex items-center gap-1">
+                  <Logo size={16} />
+                  <Body className="font-bold text-sm">
+                    {formatBalance(contribution.amount, 2)}
+                  </Body>
+                </div>
               </div>
-              <div className="flex items-center gap-1">
-                <Logo size={16} />
-                <Body className="font-bold text-sm">
-                  {formatBalance(contribution.totalYieldContributed, 2)}
-                </Body>
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
 
       <Caption className="text-surface-grey-2 text-center block text-xs mt-4 opacity-70">
