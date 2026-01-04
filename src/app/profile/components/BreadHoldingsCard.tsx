@@ -11,7 +11,7 @@ import { formatUnits } from "viem";
 import { Spinner } from "@/app/core/components/Icons/Spinner";
 import { FistIcon } from "@/app/core/components/Icons/FistIcon";
 import Link from "next/link";
-import { useTotalYieldGenerated } from "../hooks/useTotalYieldGenerated";
+import { useUserYieldGenerated } from "../hooks/useUserYieldGenerated";
 
 /**
  * BreadHoldingsCard Component (now includes LP position)
@@ -27,7 +27,7 @@ export function BreadHoldingsCard() {
   const { data: apyData, isLoading: apyLoading } = useVaultAPY();
   const vaultBalance = useVaultTokenBalance();
   const { user } = useConnectedUser();
-  const { data: totalYieldGenerated, isLoading: totalYieldLoading } = useTotalYieldGenerated();
+  const { data: totalYieldGenerated, isLoading: totalYieldLoading } = useUserYieldGenerated();
 
   // Loading state
   if (!breadBalance || breadBalance.status === "LOADING" || apyLoading || totalYieldLoading) {
