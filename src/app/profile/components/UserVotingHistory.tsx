@@ -1,15 +1,16 @@
 "use client";
 
-import { Body, Heading5, Caption, LiftedButton } from "@breadcoop/ui";
+import { Body, Heading5, Caption, LiftedButton, Logo } from "@breadcoop/ui";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { useUserVotingHistoryByCycle } from "@/app/governance/useUserVotingHistoryByCycle";
 import { useDistributions } from "@/app/governance/useDistributions";
 import { Spinner } from "@/app/core/components/Icons/Spinner";
 import { projectsMeta } from "@/app/projectsMeta";
 import { format, parse } from "date-fns";
-import { Hex } from "viem";
+import { Hex, formatUnits } from "viem";
 import { useState } from "react";
 import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react";
+import { formatBalance } from "@/app/core/util/formatter";
 
 /**
  * UserVotingHistory Component
@@ -68,6 +69,10 @@ export function UserVotingHistory() {
     });
   };
 
+  // Get the cycle distribution for total yield display
+  const cycleIndexForDistribution = votingHistory.length - currentVoteCycle.cycleNumber;
+  const { cycleDistribution: currentCycleDistribution } = useDistributions(cycleIndexForDistribution);
+
   return (
     <div className="space-y-4">
       {/* Navigation Controls */}
@@ -104,6 +109,22 @@ export function UserVotingHistory() {
             </LiftedButton>
           </div>
         </div>
+        {/* Total Distributed */}
+        {currentCycleDistribution && (
+          <div className="mt-3 pt-3 border-t border-paper-2 flex items-center gap-2">
+            <Caption className="text-surface-grey-2 text-xs">
+              Total Distributed:
+            </Caption>
+            <div className="flex items-center gap-1">
+              <span className="flex items-center">
+                <Logo size={16} />
+              </span>
+              <Body className="text-sm font-bold">
+                {formatBalance(Number(formatUnits(BigInt(currentCycleDistribution.totalYield), 18)), 2)}
+              </Body>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Projects List */}
@@ -149,6 +170,13 @@ function VoteProjectsList({ vote, cycleNumber }: VoteProjectsListProps) {
     );
   }
 
+  // Calculate total votes and democratic pool for yield calculations
+  const totalYield = Number(formatUnits(BigInt(specificCycleDistribution.totalYield), 18));
+  const democraticPool = totalYield / 2; // 50% goes to democratic distribution
+
+  // Calculate total votes by summing all project distribution votes
+  const totalVotes = vote.votes.reduce((sum, v) => sum + v.points, 0);
+
   // Get projects that existed in this specific cycle from the distribution data
   const cycleProjects = specificCycleDistribution.projectDistributions.map(
     (pd) => pd.projectAddress
@@ -159,13 +187,21 @@ function VoteProjectsList({ vote, cycleNumber }: VoteProjectsListProps) {
     vote.votes.map((v) => [v.projectAddress.toLowerCase(), v])
   );
 
-  // Combine cycle projects with vote data
+  // Combine cycle projects with vote data and calculate yield impact
   const allProjectsWithVotes = cycleProjects.map((projectAddress) => {
     const votedProject = votedProjectsMap.get(projectAddress.toLowerCase());
+    const points = votedProject?.points || 0;
+    const percentage = votedProject?.percentage || 0;
+
+    // Calculate yield influenced by user for this project
+    // Formula: (user's vote points / total votes) × democratic pool
+    const yieldInfluenced = totalVotes > 0 ? (points / totalVotes) * democraticPool : 0;
+
     return {
       projectAddress,
-      percentage: votedProject?.percentage || 0,
-      points: votedProject?.points || 0,
+      percentage,
+      points,
+      yieldInfluenced,
     };
   });
 
@@ -197,13 +233,25 @@ function VoteProjectsList({ vote, cycleNumber }: VoteProjectsListProps) {
               </div>
               <Body className="text-surface-grey">{meta.name}</Body>
             </div>
-            <Heading5
-              className={`font-bold ${
-                project.percentage > 0 ? "text-primary-orange" : "text-surface-grey-2"
-              }`}
-            >
-              {project.percentage.toFixed(1)}%
-            </Heading5>
+            <div className="flex items-center gap-3">
+              <Heading5
+                className={`font-bold ${
+                  project.percentage > 0 ? "text-primary-orange" : "text-surface-grey-2"
+                }`}
+              >
+                {project.percentage.toFixed(1)}%
+              </Heading5>
+              {project.yieldInfluenced > 0 && (
+                <div className="flex items-center gap-1">
+                  <span className="flex items-center opacity-70">
+                    <Logo size={16} />
+                  </span>
+                  <Caption className="text-xs text-surface-grey-2">
+                    {formatBalance(project.yieldInfluenced, 2)}
+                  </Caption>
+                </div>
+              )}
+            </div>
           </div>
         );
       })}
