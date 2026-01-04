@@ -71,6 +71,14 @@ function ConnectedUserProvider({
     chain: activeChain,
   } = useAccount();
 
+  console.log("__ ACCOUNT HOOK __", {
+    isConnected,
+    connector: activeConnector,
+    address: accountAddress,
+    status,
+    chain: activeChain,
+  });
+
   const { isSafe } = useAutoConnect(activeConnector);
 
   const user = useMemo<TConnectedUserState>(() => {
@@ -109,6 +117,9 @@ function ConnectedUserProvider({
   }, [isConnected, accountAddress, activeChain, status, features]);
 
   const value = useMemo(() => ({ user, isSafe }), [user, isSafe]);
+
+  console.log("__ USER STATE __", user);
+  console.log("__ VALUE USER STATE __", value.user);
 
   return (
     <ConnectedUserContext.Provider value={value}>
