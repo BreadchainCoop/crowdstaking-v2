@@ -58,19 +58,17 @@ export function ProfilePage() {
 
       {/* Cards Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        {/* Username Card - Full width on mobile, first position on desktop */}
-        <div className="lg:col-span-2">
-          <UsernameCard />
-        </div>
+        {/* Username Card - Left column */}
+        <UsernameCard />
+
+        {/* Gnosis Pay Card - Right column */}
+        <GnosisPayCard />
 
         {/* BREAD Overview (includes LP position) */}
         <BreadHoldingsCard />
 
         {/* Yield Contributions - Right column */}
         <YieldContributionsCard />
-
-        {/* Gnosis Pay Card - Left column */}
-        <GnosisPayCard />
 
         {/* Stacks Card (feature-flagged) */}
         {user.features.stacks && <StacksCard />}

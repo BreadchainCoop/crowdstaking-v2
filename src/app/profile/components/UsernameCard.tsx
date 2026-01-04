@@ -77,46 +77,54 @@ export function UsernameCard() {
   const isValid = username.length >= 3 && username.length <= 20 && /^[a-z0-9_-]+$/.test(username) && !validationError;
 
   return (
-    <CardBox className="p-4">
+    <CardBox className="p-6">
+      <Heading3 className="mb-4">Username</Heading3>
+
       {!hasUsername && !isEditing ? (
-        <div className="flex items-center gap-3">
-          <Caption className="text-surface-grey-2 text-xs whitespace-nowrap">
-            Username (Coming Soon)
+        <div>
+          <Body className="mb-4 text-surface-grey-2 text-sm">
+            Claim your personalized ENS subdomain
+          </Body>
+          <Caption className="mb-3 text-surface-grey-2 block text-xs opacity-70">
+            ⚠️ Feature coming soon
           </Caption>
-          <div className="flex gap-2 items-stretch flex-1">
+          <div className="flex gap-2 items-stretch mb-3">
             <input
               type="text"
               placeholder="yourname"
               value={username}
               onChange={handleUsernameChange}
-              className="flex-1 px-3 py-1 border border-surface-grey bg-paper-0 rounded text-sm focus:outline-none focus:ring-2 focus:ring-primary-orange"
+              className="flex-1 px-3 py-2 border border-surface-grey bg-paper-0 rounded text-sm focus:outline-none focus:ring-2 focus:ring-primary-orange"
               disabled
             />
-            <div className="px-2 py-1 border border-surface-grey bg-paper-2 rounded text-sm flex items-center">
-              <Caption className="text-xs whitespace-nowrap">.breadcooperative.eth</Caption>
+            <div className="px-2 py-2 border border-surface-grey bg-paper-2 rounded text-sm flex items-center whitespace-nowrap">
+              <Caption className="text-xs">.breadcooperative.eth</Caption>
             </div>
           </div>
+          <LiftedButton onClick={handleClaim} disabled>
+            Claim Username
+          </LiftedButton>
         </div>
       ) : hasUsername && !isEditing ? (
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Caption className="text-surface-grey-2 text-xs">Username:</Caption>
-            <Body className="text-sm font-bold">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <Body className="text-base font-bold break-all">
               {currentUsername}.breadcooperative.eth
             </Body>
-          </div>
-          <div className="flex items-center gap-2">
             <button
               onClick={handleCopy}
-              className="text-surface-grey-2 hover:text-primary-orange transition-colors"
+              className="text-surface-grey-2 hover:text-primary-orange transition-colors flex-shrink-0"
               aria-label="Copy username"
               type="button"
             >
-              <Copy size={16} />
+              <Copy size={20} />
             </button>
+          </div>
+          <div className="flex items-center justify-between">
+            <Caption className="text-surface-grey-2 text-xs">Your ENS subdomain</Caption>
             <button
               onClick={handleEdit}
-              className="text-xs text-primary-orange hover:underline"
+              className="text-sm text-primary-orange hover:underline"
               type="button"
             >
               Edit
@@ -124,34 +132,34 @@ export function UsernameCard() {
           </div>
         </div>
       ) : (
-        <div className="flex items-center gap-2">
-          <Caption className="text-surface-grey-2 text-xs whitespace-nowrap">
-            Username:
-          </Caption>
-          <div className="flex gap-2 items-stretch flex-1">
+        <div>
+          <Body className="mb-4 text-surface-grey-2 text-sm">
+            Update your ENS subdomain
+          </Body>
+          <div className="flex gap-2 items-stretch mb-3">
             <input
               type="text"
               placeholder="yourname"
               value={username}
               onChange={handleUsernameChange}
-              className="flex-1 px-3 py-1 border border-surface-grey bg-paper-0 rounded text-sm focus:outline-none focus:ring-2 focus:ring-primary-orange"
+              className="flex-1 px-3 py-2 border border-surface-grey bg-paper-0 rounded text-sm focus:outline-none focus:ring-2 focus:ring-primary-orange"
             />
-            <div className="px-2 py-1 border border-surface-grey bg-paper-2 rounded text-sm flex items-center">
-              <Caption className="text-xs whitespace-nowrap">.breadcooperative.eth</Caption>
+            <div className="px-2 py-2 border border-surface-grey bg-paper-2 rounded text-sm flex items-center whitespace-nowrap">
+              <Caption className="text-xs">.breadcooperative.eth</Caption>
             </div>
           </div>
+          {validationError && (
+            <Caption className="text-red-500 mb-3 block text-xs">
+              {validationError}
+            </Caption>
+          )}
           <div className="flex gap-2">
-            <button
-              onClick={handleSave}
-              disabled={!isValid}
-              className="px-3 py-1 bg-primary-orange text-paper-0 rounded text-xs hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
-              type="button"
-            >
+            <LiftedButton onClick={handleSave} disabled={!isValid}>
               Save
-            </button>
+            </LiftedButton>
             <button
               onClick={handleCancel}
-              className="px-3 py-1 border border-surface-grey rounded text-xs hover:bg-paper-2 transition-colors"
+              className="px-4 py-2 border border-surface-grey rounded text-sm hover:bg-paper-2 transition-colors"
               type="button"
             >
               Cancel
