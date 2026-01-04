@@ -1,12 +1,6 @@
 "use client";
-import {
-  type ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+
+import { type ReactNode, createContext, useContext, useMemo } from "react";
 import { useAccount } from "wagmi";
 import { type Chain } from "viem";
 
@@ -32,7 +26,7 @@ export type TUnsupportedChain = {
   status: "UNSUPPORTED_CHAIN";
   address: Hex;
   config: ChainConfiguration;
-  chain: Chain;
+  chain: Chain | undefined;
   features: Features;
 };
 
@@ -69,10 +63,6 @@ function ConnectedUserProvider({
   children,
   features,
 }: IConnectedUserProviderProps) {
-  const [user, setUser] = useState<TConnectedUserState>({
-    status: "LOADING",
-    features,
-  });
   const {
     isConnected,
     connector: activeConnector,
@@ -81,39 +71,42 @@ function ConnectedUserProvider({
     chain: activeChain,
   } = useAccount();
 
-  useEffect(() => {
-    const defaultChain = getChain("DEFAULT");
-    const config = activeChain ? defaultChain : false;
-
-    if (
-      activeConnector &&
-      activeChain &&
-      accountAddress &&
-      isConnected &&
-      config
-    ) {
-      setUser({
-        status: isChainSupported(activeChain.id)
-          ? "CONNECTED"
-          : "UNSUPPORTED_CHAIN",
-        address: accountAddress,
-        config,
-        chain: activeChain,
-        features,
-      });
-    } else if (status === "disconnected") {
-      setUser({ status: "NOT_CONNECTED", features });
-    }
-  }, [
-    isConnected,
-    activeConnector,
-    accountAddress,
-    activeChain,
-    status,
-    features,
-  ]);
-
   const { isSafe } = useAutoConnect(activeConnector);
+
+  const user = useMemo<TConnectedUserState>(() => {
+    if (status === "connecting" || status === "reconnecting") {
+      return { status: "LOADING", features };
+    }
+
+    if (status === "disconnected" || !isConnected || !accountAddress) {
+      return { status: "NOT_CONNECTED", features };
+    }
+
+    if (!activeChain) {
+      const defaultConfig = getChain("DEFAULT");
+      return {
+        status: "UNSUPPORTED_CHAIN",
+        address: accountAddress,
+        config: defaultConfig,
+        chain: undefined,
+        features,
+      };
+    }
+
+    const chainSupported = isChainSupported(activeChain.id);
+
+    const config = chainSupported
+      ? getChain(activeChain.id)
+      : getChain("DEFAULT");
+
+    return {
+      status: chainSupported ? "CONNECTED" : "UNSUPPORTED_CHAIN",
+      address: accountAddress,
+      config,
+      chain: activeChain,
+      features,
+    };
+  }, [isConnected, accountAddress, activeChain, status, features]);
 
   const value = useMemo(() => ({ user, isSafe }), [user, isSafe]);
 
