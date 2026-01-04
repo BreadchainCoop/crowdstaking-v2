@@ -77,8 +77,8 @@ export function UsernameCard() {
   const isValid = username.length >= 3 && username.length <= 20 && /^[a-z0-9_-]+$/.test(username) && !validationError;
 
   return (
-    <CardBox className="p-6">
-      <div className="flex items-center justify-between mb-4">
+    <CardBox className="p-4">
+      <div className="flex items-center justify-between mb-3">
         <Heading3>Username</Heading3>
         {hasUsername && !isEditing && (
           <button
@@ -93,27 +93,27 @@ export function UsernameCard() {
 
       {!hasUsername && !isEditing ? (
         <div>
-          <Body className="mb-4 text-surface-grey-2">
+          <Body className="mb-3 text-surface-grey-2 text-sm">
             Claim your personalized ENS subdomain
           </Body>
-          <Caption className="mb-3 text-surface-grey-2 block text-xs opacity-70">
+          <Caption className="mb-2 text-surface-grey-2 block text-xs opacity-70">
             ⚠️ Feature coming soon - Smart contract deployment required
           </Caption>
-          <div className="flex gap-2 items-stretch mb-3">
+          <div className="flex gap-2 items-stretch mb-2">
             <input
               type="text"
               placeholder="yourname"
               value={username}
               onChange={handleUsernameChange}
-              className="flex-1 px-4 py-2 border border-surface-grey bg-paper-0 rounded text-sm focus:outline-none focus:ring-2 focus:ring-primary-orange"
+              className="flex-1 px-3 py-1.5 border border-surface-grey bg-paper-0 rounded text-sm focus:outline-none focus:ring-2 focus:ring-primary-orange"
               disabled
             />
-            <div className="px-3 py-2 border border-surface-grey bg-paper-2 rounded text-sm flex items-center">
-              <Caption>.breadcooperative.eth</Caption>
+            <div className="px-2 py-1.5 border border-surface-grey bg-paper-2 rounded text-sm flex items-center">
+              <Caption className="text-xs">.breadcooperative.eth</Caption>
             </div>
           </div>
           {validationError && (
-            <Caption className="text-red-500 mb-3 block text-xs">
+            <Caption className="text-red-500 mb-2 block text-xs">
               {validationError}
             </Caption>
           )}
@@ -123,7 +123,7 @@ export function UsernameCard() {
         </div>
       ) : hasUsername && !isEditing ? (
         <div>
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-2 mb-1">
             <Heading3 className="text-base">
               {currentUsername}.breadcooperative.eth
             </Heading3>
@@ -133,30 +133,30 @@ export function UsernameCard() {
               aria-label="Copy username"
               type="button"
             >
-              <Copy size={20} />
+              <Copy size={18} />
             </button>
           </div>
-          <Caption className="text-surface-grey-2">Your personalized ENS subdomain</Caption>
+          <Caption className="text-surface-grey-2 text-xs">Your personalized ENS subdomain</Caption>
         </div>
       ) : (
         <div>
-          <Body className="mb-4 text-surface-grey-2">
+          <Body className="mb-3 text-surface-grey-2 text-sm">
             Update your ENS subdomain
           </Body>
-          <div className="flex gap-2 items-stretch mb-3">
+          <div className="flex gap-2 items-stretch mb-2">
             <input
               type="text"
               placeholder="yourname"
               value={username}
               onChange={handleUsernameChange}
-              className="flex-1 px-4 py-2 border border-surface-grey bg-paper-0 rounded text-sm focus:outline-none focus:ring-2 focus:ring-primary-orange"
+              className="flex-1 px-3 py-1.5 border border-surface-grey bg-paper-0 rounded text-sm focus:outline-none focus:ring-2 focus:ring-primary-orange"
             />
-            <div className="px-3 py-2 border border-surface-grey bg-paper-2 rounded text-sm flex items-center">
-              <Caption>.breadcooperative.eth</Caption>
+            <div className="px-2 py-1.5 border border-surface-grey bg-paper-2 rounded text-sm flex items-center">
+              <Caption className="text-xs">.breadcooperative.eth</Caption>
             </div>
           </div>
           {validationError && (
-            <Caption className="text-red-500 mb-3 block text-xs">
+            <Caption className="text-red-500 mb-2 block text-xs">
               {validationError}
             </Caption>
           )}
