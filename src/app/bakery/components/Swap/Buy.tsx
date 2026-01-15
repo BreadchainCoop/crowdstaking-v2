@@ -60,7 +60,14 @@ export function Buy() {
                     This feature is only available on desktop devices.
                   </p>
                   <p className="mb-4">
-                    <a href="#" className="text-primary-orange hover:underline">Learn more about the process →</a>
+                    <a
+                      href="https://docs.zkp2p.xyz/guides/for-buyers/complete-guide-to-onboarding"
+                      className="text-primary-orange hover:underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Learn more about the process →
+                    </a>
                   </p>
                 </>
               ) : (
@@ -75,7 +82,14 @@ export function Buy() {
                     You will need to download a browser extension called <a href="https://chromewebstore.google.com/detail/peerauth-authenticate-and/ijpgccednehjpeclfcllnjjcmiohdjih" target="_blank" rel="noopener noreferrer" className="text-primary-orange hover:underline">PeerAuth</a> in order to complete your purchase.
                   </p>
                   <p className="mb-4">
-                    <a href="#" className="text-primary-orange hover:underline">Learn more about the process →</a>
+                    <a
+                      href="https://docs.zkp2p.xyz/guides/for-buyers/complete-guide-to-onboarding"
+                      className="text-primary-orange hover:underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Learn more about the process →
+                    </a>
                   </p>
                   <div className="flex items-center gap-2 mt-4">
                     <span className="text-xs font-semibold text-surface-grey">Supported apps:</span>
