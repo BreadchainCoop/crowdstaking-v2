@@ -11,7 +11,7 @@ export function buildZkp2pUrl(options?: { inputAmount?: string; recipientAddress
     referrer: zkp2pConfig.referrer,
     referrerLogo: zkp2pConfig.referrerLogo,
     toToken: zkp2pConfig.toToken,
-    callbackUrl: `${window.location.origin}/bakery?zkp2p=success`,
+    callbackUrl: `${window.location.origin}/?zkp2p=success`,
   });
 
   if (options?.inputAmount) {
