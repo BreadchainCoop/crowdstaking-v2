@@ -74,7 +74,8 @@ const NewSwap = () => {
 				},
 			});
 			// Clean up URL
-			window.history.replaceState({}, "", "/bakery");
+			// window.history.replaceState({}, "", "/bakery");
+			window.history.replaceState({}, "", "/");
 		}
 	}, [searchParams, toastDispatch]);
 
