@@ -22,6 +22,7 @@ import { InsufficentBalance } from "./InsufficentBalance";
 import { Bridge } from "./Bridge";
 import { Buy } from "./Buy";
 import { useToast } from "@/app/core/context/ToastContext/ToastContext";
+import { useStrictMobile } from "@/hooks/use-is-device";
 
 // export type TSwapMode = "BAKE" | "BURN" | "BRIDGE";
 
@@ -49,19 +50,7 @@ const NewSwap = () => {
 	const [swapState, setSwapState] = useState<TSwapState>(initialSwapState);
 	const searchParams = useSearchParams();
 	const { toastDispatch } = useToast();
-	const [isMobile, setIsMobile] = useState(false);
-
-	// Handle mobile detection
-	useEffect(() => {
-		const checkMobile = () => {
-			setIsMobile(window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
-		};
-
-		checkMobile();
-		window.addEventListener('resize', checkMobile);
-
-		return () => window.removeEventListener('resize', checkMobile);
-	}, []);
+	const { isMobile } = useStrictMobile()
 
 	// Handle ZKP2P callback
 	useEffect(() => {

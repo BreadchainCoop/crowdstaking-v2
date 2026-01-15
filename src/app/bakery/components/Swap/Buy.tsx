@@ -1,28 +1,17 @@
 "use client";
 
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent } from "react";
 import { Body, LiftedButton } from "@breadcoop/ui";
 import { buildZkp2pUrl } from "@/lib/zkp2p";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
-import { Desktop } from "@phosphor-icons/react";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { isAddress } from "viem";
+import { useStrictMobile } from "@/hooks/use-is-device";
 
 export function Buy() {
   const [amount, setAmount] = useState("");
-  const [isMobile, setIsMobile] = useState(false);
+  const { isMobile } = useStrictMobile();
   const { user } = useConnectedUser();
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const sanitizedValue = sanitizeInputValue(event.target.value);
