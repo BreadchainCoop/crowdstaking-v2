@@ -77,7 +77,8 @@ const NewSwap = () => {
 			// window.history.replaceState({}, "", "/bakery");
 			window.history.replaceState({}, "", "/");
 		}
-	}, [searchParams, toastDispatch]);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [searchParams.get("zkp2p")]);
 
 	if (
 		user.status === "CONNECTED" &&
