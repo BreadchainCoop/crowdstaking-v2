@@ -42,6 +42,7 @@ export type GenericModalState = {
   showCloseButton: Boolean;
   includeContainerStyling: Boolean;
   children: ReactElement;
+  className?: string
 }
 
 export type ModalState =

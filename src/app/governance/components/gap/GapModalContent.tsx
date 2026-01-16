@@ -214,7 +214,7 @@ export function GapModalContent({ address }: GapModalContentProps) {
 
         {/* Action Buttons */}
         {(gapUrl || projectHomepage) && (
-          <div className="mt-6 flex justify-center gap-3 flex-wrap">
+          <div className="flex justify-center gap-3 flex-wrap">
             {gapUrl && (
               <a href={gapUrl} target="_blank" rel="noopener noreferrer">
                 <LiftedButton>
