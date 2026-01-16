@@ -24,6 +24,7 @@ export function GapInfoIcon({ address }: GapInfoIconProps) {
       type: "GENERIC_MODAL",
       showCloseButton: true,
       includeContainerStyling: true,
+      className: "sm:max-w-[36rem] md:max-w-[42rem] lg:max-w-[48rem]",
       children: <GapModalContent address={address} />,
     });
   };
