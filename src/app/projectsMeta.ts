@@ -37,7 +37,7 @@ export const projectsMeta: {
       "Creating research and events on decentralized tech and the commons.",
     logoSrc: "project/cca.png",
     active: true,
-    link: "https://gap.karmahq.xyz/project/crypto-commons-association",
+    link: "https://www.karmahq.xyz/project/crypto-commons-association-1",
   },
   "0xA232F16aB37C9a646f91Ba901E92Ed1Ba4B7b544": {
     name: "Citizen Wallet",
@@ -45,7 +45,7 @@ export const projectsMeta: {
     description: "Open source tool stack to support Web3 community currencies.",
     logoSrc: "project/citizen_wallet.png",
     active: true,
-    link: "https://gap.karmahq.xyz/project/citizen-wallet---an-open-source-wallet-with-account-abstraction-for-your-community-1",
+    link: "https://www.karmahq.xyz/project/citizen-wallet-2",
   },
   "0x918dEf5d593F46735f74F9E2B280Fe51AF3A99ad": {
     name: "Bread Coop Core",
@@ -79,7 +79,7 @@ export const projectsMeta: {
     description: "Global network driving the Regenerative Finance movement.",
     logoSrc: "project/regen.png",
     active: true,
-    link: "https://gap.karmahq.xyz/community/regen-coordination",
+    link: "https://www.karmahq.xyz/project/regen-coordination",
   },
   "0x1Bd2212C9aA332d22D61a0Be6bCc55b2A1de6C63": {
     name: "Gardens",
