@@ -25,7 +25,7 @@ export function useCastVote(
     status: "LOADING",
   });
 
-  const userAddress = user.status === "CONNECTED" ? user.address : "";
+  const userAddress = (user.status === "CONNECTED" || user.status === "UNSUPPORTED_CHAIN") ? user.address : "";
   const { transactionsState } = useTransactions();
 
   const { data: votesData } = useCurrentVotes(lastClaimedBlockNumber);
