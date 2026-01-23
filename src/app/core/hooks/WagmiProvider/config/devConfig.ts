@@ -21,7 +21,7 @@ if (!WALLET_CONNECT_PROJECT_ID)
 const devAccount = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
 const devAccount2 = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8";
 
-const foundryChain = defineChain({
+export const foundryChain = defineChain({
   ...foundry,
   id: 31337,
   contracts: {

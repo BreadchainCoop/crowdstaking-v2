@@ -1,9 +1,9 @@
-import { getPublicClient } from "@wagmi/core";
-import { getConfig } from "@/app/core/hooks/WagmiProvider/config/getConfig";
 import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 import { useQuery } from "@tanstack/react-query";
-import { Hex } from "viem";
+import { createPublicClient, Hex, http } from "viem";
 import { DISTRIBUTOR_ABI } from "@/abi";
+import { foundryChain } from "../core/hooks/WagmiProvider/config/devConfig";
+import { gnosis } from "viem/chains";
 
 type VoteLogData = {
   blockTimestamp: Hex;
@@ -17,14 +17,19 @@ type VoteLogData = {
 export function useCurrentVotes(lastClaimedBlockNumber: bigint | null) {
   const chainConfig = useActiveChain();
   const distributorAddress = chainConfig.DISBURSER.address;
-  const publicClient = getPublicClient(getConfig().config);
+
+  const publicClient = createPublicClient({
+    chain: chainConfig.ID === 31337 ? foundryChain : gnosis,
+    transport: http(
+      chainConfig.ID === 31337 ? "http://localhost:8545" : undefined,
+    ),
+  });
 
   return useQuery({
     queryKey: ["getVotesForCurrentRound"],
     refetchInterval: 500,
     enabled: !!lastClaimedBlockNumber,
     queryFn: async () => {
-      // TODO: Look into this and see if and how chain Id can be passed explicitly
       const logs = await publicClient.getContractEvents({
         address: distributorAddress,
         abi: DISTRIBUTOR_ABI,
