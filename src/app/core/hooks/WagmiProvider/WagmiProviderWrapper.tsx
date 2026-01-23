@@ -28,7 +28,7 @@ const customTheme: Theme = {
     modalBackground: "#FDFAF3",
     modalBorder: "#eae2d6",
     modalText: "#171717",
-    accentColorForeground: "#0f0",
+    accentColorForeground: "#171717",
   },
   fonts: {
     body: "var(--font-breadBody)",
