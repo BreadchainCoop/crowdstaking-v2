@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Hex } from "viem";
+import { Address, Hex } from "viem";
 import Image from "next/image";
 // import { Badge, LinkBadge } from "@/app/core/components/Badge/Badge";
 // import { BreadIcon } from "@/app/core/components/Icons/TokenIcons";
@@ -17,6 +17,20 @@ import { ArrowUpRightIcon } from "@phosphor-icons/react";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
 import { Chip } from "@/app/bakery/components/Chip";
 import { GapInfoIcon } from "./gap/GapInfoIcon";
+
+const RenderGapIcon = ({
+	link,
+	address,
+}: {
+	link: string;
+	address: Address;
+}) => {
+	if (link.includes("karmahq.xyz")) {
+		return <GapInfoIcon address={address} />;
+	}
+
+	return null;
+};
 
 export function ProjectRow({
 	address,
@@ -86,7 +100,7 @@ export function ProjectRow({
 								</Body>
 								<ArrowUpRightIcon size={24} />
 							</ExternalLink>
-							{link.includes('gap.karmahq.xyz') && <GapInfoIcon address={address} />}
+							<RenderGapIcon link={link} address={address} />
 						</div>
 					</div>
 					<Body className="text-xs mb-4">{description}</Body>
@@ -141,7 +155,7 @@ export function ProjectRow({
 									</Body>
 									<ArrowUpRightIcon size={24} />
 								</ExternalLink>
-								{link.includes('gap.karmahq.xyz') && <GapInfoIcon address={address} />}
+								<RenderGapIcon link={link} address={address} />
 							</div>
 							<div className="flex items-stretch justify-start gap-2">
 								{projectBread?.status === "SUCCESS" && (
