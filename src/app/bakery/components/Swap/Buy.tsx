@@ -58,7 +58,7 @@ export function Buy() {
                     ZKP2P is a service where you can buy crypto without KYC using various neobanking applications.
                   </Body>
                   <Body className="text-sm mb-3">
-                    Insert the amount of BREAD you would like to purchase and continue the process by clicking the button below.
+                    Insert the amount of xDAI you would like to purchase and bake into BREAD, then continue the process by clicking the buy button below.
                   </Body>
                   <Body className="text-sm mb-3">
                     You will need to download a browser extension called <a href="https://chromewebstore.google.com/detail/peerauth-authenticate-and/ijpgccednehjpeclfcllnjjcmiohdjih" target="_blank" rel="noopener noreferrer" className="text-primary-orange hover:underline">PeerAuth</a> in order to complete your purchase.
