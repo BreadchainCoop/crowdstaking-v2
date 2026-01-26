@@ -28,41 +28,60 @@ export type Features = {
 };
 
 export const metadata: Metadata = {
-  // metadataBase: new URL("https://app.breadchain.xyz/"),
-  metadataBase: new URL("https://fund.bread.coop/"),
+	metadataBase: new URL("https://fund.bread.coop/"),
+	title: "Bread Crowdstaking",
+	description: "Bake and burn BREAD. Fund post-capitalist web3.",
+	openGraph: {
+		title: "Bread Crowdstaking",
+		description: "Bake and burn BREAD. Fund post-capitalist web3.",
+		url: "https://fund.bread.coop/",
+		siteName: "Bread Crowdstaking",
+		images: [
+			{
+				url: "https://fund.bread.coop/preview.png?v=2",
+				width: 1200,
+				height: 630,
+				alt: "Bread Crowdstaking",
+			},
+		],
+		locale: "en_US",
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Bread Crowdstaking",
+		description: "Bake and burn BREAD. Fund post-capitalist web3.",
+		images: ["https://fund.bread.coop/preview.png?v=2"],
+	},
+	icons: {
+		icon: [
+			{ url: "/favicon.ico" },
+			{ url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+			{ url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+		],
+		apple: [
+			{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+		],
+	},
+	manifest: "/manifest.json",
+	themeColor: "#ffffff",
+	other: {
+		"msapplication-TileColor": "#da532c",
+	},
 };
 
 export default function App({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-      <link
-        rel="apple-touch-icon"
-        sizes="180x180"
-        href="/apple-touch-icon.png"
-      />
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="32x32"
-        href="/favicon-32x32.png"
-      />
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="16x16"
-        href="/favicon-16x16.png"
-      />
-      <link rel="manifest" href="/manifest.json" />
-      <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#da532c" />
-      <meta name="msapplication-TileColor" content="#da532c" />
-      <meta name="theme-color" content="#ffffff" />
+      <head>
+				<link rel="icon" type="image/svg+xml" href="/favicon.ico" />
 
-      <Script
-        defer
-        data-domain="app.breadchain.xyz"
-        src="https://analytics.breadchain.xyz/js/script.tagged-events.outbound-links.js"
-      />
+				<Script
+					defer
+					data-domain="app.breadchain.xyz"
+					src="https://analytics.breadchain.xyz/js/script.tagged-events.outbound-links.js"
+				/>
+			</head>
 
       <body
         className={clsx(
