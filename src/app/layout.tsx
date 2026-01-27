@@ -13,6 +13,7 @@ import { ModalPresenter } from "./core/components/Modal/ModalPresenter";
 import { Toaster } from "./core/components/Toaster/Toaster";
 import { Footer } from "./core/components/Footer";
 import { parseFeatureVar } from "./core/util/parseFeatureVar";
+import { generateMetadata } from "@/lib/site-metadata";
 
 const features = {
   governancePage: parseFeatureVar(process.env.FEATURE_GOVERNANCE),
@@ -27,42 +28,20 @@ export type Features = {
   [K in keyof typeof features]: boolean;
 };
 
-export const metadata: Metadata = {
-  // metadataBase: new URL("https://app.breadchain.xyz/"),
-  metadataBase: new URL("https://fund.bread.coop/"),
-};
+export const metadata = generateMetadata();
 
 export default function App({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-      <link
-        rel="apple-touch-icon"
-        sizes="180x180"
-        href="/apple-touch-icon.png"
-      />
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="32x32"
-        href="/favicon-32x32.png"
-      />
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="16x16"
-        href="/favicon-16x16.png"
-      />
-      <link rel="manifest" href="/manifest.json" />
-      <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#da532c" />
-      <meta name="msapplication-TileColor" content="#da532c" />
-      <meta name="theme-color" content="#ffffff" />
+      <head>
+				<link rel="icon" type="image/svg+xml" href="/favicon.ico" />
 
-      <Script
-        defer
-        data-domain="app.breadchain.xyz"
-        src="https://analytics.breadchain.xyz/js/script.tagged-events.outbound-links.js"
-      />
+				<Script
+					defer
+					data-domain="app.breadchain.xyz"
+					src="https://analytics.breadchain.xyz/js/script.tagged-events.outbound-links.js"
+				/>
+			</head>
 
       <body
         className={clsx(

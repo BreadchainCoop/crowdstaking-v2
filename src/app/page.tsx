@@ -15,11 +15,7 @@ import { ProjectBackers } from "./bakery/components/Backers";
 import { MonthlyVoters } from "./bakery/components/MonthlyVoters";
 import { ViewAnalytics } from "./bakery/components/Analytics";
 import Actions from "./bakery/components/Actions";
-
-export const metadata: Metadata = {
-  title: "Bread Crowdstaking",
-  description: "Bake and burn BREAD. Fund post-capitalist web3.",
-};
+import { generateMetadata } from "@/lib/site-metadata";
 
 export default function Home() {
   return (
