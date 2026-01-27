@@ -140,74 +140,133 @@ export function GapModalContent({ address }: GapModalContentProps) {
           </div>
         )}
 
-        {/* Milestones Section - Show up to 3 completed milestones */}
-        {milestones.filter(m => m.completed).length > 0 && (
+        {/* Milestones Section - Show up to 3 most recent completed milestones */}
+        {milestones.filter((m) => m.completed).length > 0 && (
           <div className="w-full mb-6 pb-6 border-b border-surface-grey-3">
             <Heading4 className="text-lg mb-3">
-              Milestones ({milestones.filter(m => m.completed).length})
+              Milestones (
+              {milestones.filter((m) => m.completed).length})
             </Heading4>
             <div className="space-y-3">
-              {milestones.filter(m => m.completed).slice(0, 3).map((milestone) => (
-                <div
-                  key={milestone.uid}
-                  className="flex items-start gap-3"
-                >
-                  <span className="text-base flex-shrink-0">
-                    ✓
-                  </span>
-                  <div className="flex-1 border-l-2 border-surface-grey-3 pl-3 py-1">
-                    <Body className="text-sm font-bold text-surface-grey-2 break-words">
-                      <MarkdownContent content={milestone.data.title} />
-                    </Body>
-                    {milestone.data.description && (
-                      <Body className="text-xs text-surface-grey-2 mt-1 break-words">
-                        <MarkdownContent content={milestone.data.description} />
+              {milestones
+                .filter((m) => m.completed)
+                .sort((a, b) => {
+                  const dateA = new Date(
+                    a.completed?.createdAt || 0,
+                  ).getTime();
+                  const dateB = new Date(
+                    b.completed?.createdAt || 0,
+                  ).getTime();
+                  return dateB - dateA;
+                })
+                .slice(0, 3)
+                .map((milestone) => (
+                  <div
+                    key={milestone.uid}
+                    className="flex items-start gap-3"
+                  >
+                    <span className="text-base flex-shrink-0">
+                      ✓
+                    </span>
+                    <div className="flex-1 border-l-2 border-surface-grey-3 pl-3 py-1">
+                      <Body className="text-sm font-bold text-surface-grey-2 break-words">
+                        <MarkdownContent
+                          content={
+                            milestone.data.title
+                          }
+                        />
                       </Body>
-                    )}
-                    <div className="flex gap-3 mt-2 text-xs text-surface-grey-2 opacity-70 flex-wrap">
-                      {milestone.completed?.createdAt && (
-                        <span>
-                          Completed:{" "}
-                          {format(new Date(milestone.completed.createdAt), "MMM d, yyyy")}
-                        </span>
+                      {milestone.data.description && (
+                        <Body className="text-xs text-surface-grey-2 mt-1 break-words">
+                          <MarkdownContent
+                            content={
+                              milestone.data
+                                .description
+                            }
+                          />
+                        </Body>
                       )}
-                      {milestone.data.endsAt && !milestone.completed && (
-                        <span>
-                          Due: {format(new Date(milestone.data.endsAt * 1000), "MMM d, yyyy")}
-                        </span>
-                      )}
+                      <div className="flex gap-3 mt-2 text-xs text-surface-grey-2 opacity-70 flex-wrap">
+                        {milestone.completed
+                          ?.createdAt && (
+                          <span>
+                            Completed:{" "}
+                            {format(
+                              new Date(
+                                milestone.completed.createdAt,
+                              ),
+                              "MMM d, yyyy",
+                            )}
+                          </span>
+                        )}
+                        {milestone.data.endsAt &&
+                          !milestone.completed && (
+                            <span>
+                              Due:{" "}
+                              {format(
+                                new Date(
+                                  milestone
+                                    .data
+                                    .endsAt *
+                                    1000,
+                                ),
+                                "MMM d, yyyy",
+                              )}
+                            </span>
+                          )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         )}
 
-        {/* Updates Section - Show up to 3 updates */}
+        {/* Updates Section - Show up to 3 most recent updates */}
         {updates.length > 0 && (
           <div className="w-full mb-6 pb-6 border-b border-surface-grey-3">
             <Heading4 className="text-lg mb-3">
               Updates ({updates.length})
             </Heading4>
             <div className="space-y-4">
-              {updates.slice(0, 3).map((update) => (
-                <div key={update.uid} className="border-l-2 border-blue-500 pl-4 py-1">
-                  <Body className="text-sm font-bold text-surface-grey-2 mb-1">
-                    <MarkdownContent content={update.data.title} />
-                  </Body>
-                  {update.data.text && (
-                    <Body className="text-xs text-surface-grey-2 mb-2">
-                      <MarkdownContent content={update.data.text} />
+              {updates
+                .sort((a, b) => {
+                  const dateA = new Date(
+                    a.createdAt || 0,
+                  ).getTime();
+                  const dateB = new Date(
+                    b.createdAt || 0,
+                  ).getTime();
+                  return dateB - dateA;
+                })
+                .slice(0, 3)
+                .map((update) => (
+                  <div
+                    key={update.uid}
+                    className="border-l-2 border-blue-500 pl-4 py-1"
+                  >
+                    <Body className="text-sm font-bold text-surface-grey-2 mb-1">
+                      <MarkdownContent
+                        content={update.data.title}
+                      />
                     </Body>
-                  )}
-                  {update.createdAt && (
-                    <Body className="text-xs text-surface-grey-2 opacity-70">
-                      {format(new Date(update.createdAt), "MMM d, yyyy")}
-                    </Body>
-                  )}
-                </div>
-              ))}
+                    {update.data.text && (
+                      <Body className="text-xs text-surface-grey-2 mb-2">
+                        <MarkdownContent
+                          content={update.data.text}
+                        />
+                      </Body>
+                    )}
+                    {update.createdAt && (
+                      <Body className="text-xs text-surface-grey-2 opacity-70">
+                        {format(
+                          new Date(update.createdAt),
+                          "MMM d, yyyy",
+                        )}
+                      </Body>
+                    )}
+                  </div>
+                ))}
             </div>
           </div>
         )}
