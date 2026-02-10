@@ -2,7 +2,7 @@
 
 import { useState, ChangeEvent } from "react";
 import { Body, LiftedButton } from "@breadcoop/ui";
-import { buildZkp2pUrl } from "@/lib/zkp2p";
+import { buildPeerUrl } from "@/lib/peer";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { isAddress } from "viem";
@@ -26,7 +26,7 @@ export function Buy() {
       recipientAddress = user.address;
     }
 
-    const url = buildZkp2pUrl({
+    const url = buildPeerUrl({
       ...(amount && { inputAmount: amount }),
       ...(recipientAddress && { recipientAddress }),
     });
@@ -36,12 +36,12 @@ export function Buy() {
   return (
     <div className="space-y-4">
       <div className="bg-paper-1 p-5">
-        <div id="zkp2p-description">
+        <div id="peer-description">
           <div className="text-surface-grey-2 text-sm mb-4">
             <>
               <div className="flex items-center gap-3 mb-4">
-                <img src="https://www.zkp2p.xyz/logo192.png" alt="ZKP2P" className="h-10 w-10" />
-                <Body className="text-base font-bold text-surface-ink">Buy with ZKP2P</Body>
+                <img src="https://www.peer.xyz/logo192.png" alt="Peer" className="h-10 w-10" />
+                <Body className="text-base font-bold text-surface-ink">Buy with Peer</Body>
               </div>
               {isMobile ? (
                 <>
@@ -55,7 +55,7 @@ export function Buy() {
               ) : (
                 <>
                   <Body className="text-sm mb-3">
-                    ZKP2P is a service where you can buy crypto without KYC using various neobanking applications.
+                    Peer is a service where you can buy crypto without KYC using various neobanking applications.
                   </Body>
                   <Body className="text-sm mb-3">
                     Insert the amount of xDAI you would like to purchase and bake into BREAD, then continue the process by clicking the buy button below.
@@ -77,7 +77,7 @@ export function Buy() {
         </div>
 
         {!isMobile && (
-          <form onSubmit={e => e.preventDefault} id="zkp2p-form" className="space-y-2">
+          <form onSubmit={e => e.preventDefault} id="peer-form" className="space-y-2">
             <label className="text-sm font-bold text-black">
               Amount (USD) - Optional
             </label>
@@ -100,15 +100,15 @@ export function Buy() {
       <div
         className={`relative lifted-button-container ${isMobile ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}`}
         aria-disabled={isMobile}
-        aria-describedby={isMobile ? "zkp2p-description" : undefined}
+        aria-describedby={isMobile ? "peer-description" : undefined}
       >
         <LiftedButton
           onClick={handleBuy}
           disabled={isMobile}
           className=""
-          form="zkp2p-form"
+          form="peer-form"
         >
-          Buy with ZKP2P
+          Buy with Peer
         </LiftedButton>
       </div>
     </div>
@@ -118,7 +118,7 @@ export function Buy() {
 function LearnMoreLink() {
 	return (
 		<a
-			href="https://docs.zkp2p.xyz/guides/for-buyers/complete-guide-to-onboarding"
+			href="https://docs.peer.xyz/guides/for-buyers/complete-guide-to-onboarding"
 			className="text-primary-orange hover:underline"
 			target="_blank"
 			rel="noopener noreferrer"
