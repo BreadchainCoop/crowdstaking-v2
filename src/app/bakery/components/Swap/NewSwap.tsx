@@ -35,7 +35,7 @@ const notes: Record<TSwapState["mode"], string> = {
 	"BAKE": 'Baking adds new BREAD into circulation. You can redeem your BREAD through the "Burn" tab at any time',
 	"BURN": "When you Burn BREAD, you are no longer contributing to the Solidarity Fund, and all voting power will be removed.",
 	"BRIDGE": "This bridge is powered by LI.FI",
-	"BUY": "Clicking the button will open the ZKP2P website where you can complete your purchase of xDAI to bake into BREAD.",
+	"BUY": "Clicking the button will open the Peer website where you can complete your purchase of xDAI to bake into BREAD.",
 };
 
 const initialSwapState: TSwapState = {
@@ -52,9 +52,9 @@ const NewSwap = () => {
 	const { toastDispatch } = useToast();
 	const { isMobile } = useStrictMobile()
 
-	// Handle ZKP2P callback
+	// Handle Peer callback
 	useEffect(() => {
-		if (searchParams.get("zkp2p") === "success") {
+		if (searchParams.get("peer") === "success") {
 			toastDispatch({
 				type: "CUSTOM",
 				payload: {
@@ -67,7 +67,7 @@ const NewSwap = () => {
 			window.history.replaceState({}, "", "/");
 		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [searchParams.get("zkp2p")]);
+	}, [searchParams.get("peer")]);
 
 	if (
 		user.status === "CONNECTED" &&
