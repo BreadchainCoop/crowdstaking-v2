@@ -100,9 +100,13 @@ export function GapModalContent({ address }: GapModalContentProps) {
   const endorsements = data.endorsements || [];
 
   // Find project homepage from links (look for website type)
-  const projectHomepage = data.links?.find(
+  let projectHomepage = data.links?.find(
     (link) => link.type?.toLowerCase() === "website" || link.type?.toLowerCase() === "homepage"
   )?.url;
+
+  if (projectHomepage && !(projectHomepage.startsWith("http://") || projectHomepage.startsWith("https://"))) {
+    projectHomepage = "https://" + projectHomepage;
+  }
 
   return (
     <>
