@@ -19,6 +19,7 @@ import { InsufficentBalance } from "./InsufficentBalance";
 // import { useModal } from "@/app/core/context/ModalContext";
 // import { sleep } from "@/utils/sleep";
 import { Bridge } from "./Bridge";
+import { Buy } from "./Buy";
 
 // export type TSwapMode = "BAKE" | "BURN" | "BRIDGE";
 
@@ -31,6 +32,7 @@ const notes: Record<TSwapState["mode"], string> = {
 	"BAKE": 'Baking adds new BREAD into circulation. You can redeem your BREAD through the "Burn" tab at any time',
 	"BURN": "When you Burn BREAD, you are no longer contributing to the Solidarity Fund, and all voting power will be removed.",
 	"BRIDGE": "This bridge is powered by LI.FI",
+	"BUY": "Purchase xDAI directly with fiat currency through Peer (formerly ZKP2P)",
 };
 
 const initialSwapState: TSwapState = {
@@ -97,7 +99,7 @@ const NewSwap = () => {
 	return (
 		<div className="bg-[#FDFAF3] shadow-[0px_4px_12px_0px_#1B201A26] p-8 mb-12">
 			<div>
-				<div className="bg-paper-main p-1 flex items-center justify-between max-w-[15rem]">
+				<div className="bg-paper-main p-1 flex items-center justify-between max-w-[20rem]">
 					<ModeBtn
 						label="Bake"
 						selected={swapState.mode === "BAKE"}
@@ -117,6 +119,13 @@ const NewSwap = () => {
 						selected={swapState.mode === "BRIDGE"}
 						onClick={() =>
 							setSwapState({ mode: "BRIDGE", value: "" })
+						}
+					/>
+					<ModeBtn
+						label="Buy"
+						selected={swapState.mode === "BUY"}
+						onClick={() =>
+							setSwapState({ mode: "BUY", value: "" })
 						}
 					/>
 				</div>
@@ -165,12 +174,14 @@ const NewSwap = () => {
 							}
 						/> */}
 					</>
-				) : (
+				) : swapState.mode === "BRIDGE" ? (
 					<Bridge />
-				)}
+				) : swapState.mode === "BUY" ? (
+					<Buy />
+				) : null}
 			</div>
 			{/* TODO: Remove some nested element here when the button is fixed */}
-			{swapState.mode !== "BRIDGE" && (
+			{swapState.mode !== "BRIDGE" && swapState.mode !== "BUY" && (
 				<div className="mt-6">
 					{user.status === "CONNECTED" ? (
 						<div className="[&>*]:w-full">
