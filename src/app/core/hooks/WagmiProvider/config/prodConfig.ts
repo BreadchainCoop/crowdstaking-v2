@@ -37,32 +37,31 @@ const sepoliaChain =
 
 const projectId = NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
 
-const GETBLOCK_RPC_URL = process.env.NEXT_PUBLIC_GETBLOCK_RPC_URL;
-const ANKR_RPC_URL = process.env.NEXT_PUBLIC_ANKR_RPC_URL;
-const CHAINSTACK_RPC_URL = process.env.NEXT_PUBLIC_CHAINSTACK_RPC_URL;
-const DRPC_RPC_URL = process.env.NEXT_PUBLIC_DRPC_RPC_URL;
+const publicRpcUrls = [
+	"https://rpc.gnosischain.com",
+	"https://gnosis-rpc.publicnode.com",
+];
 
 const transportsRpcUrl = [
-  'https://rpc.gnosischain.com',
-  'https://gnosis-rpc.publicnode.com',
-  GETBLOCK_RPC_URL,
-  ANKR_RPC_URL,
-  DRPC_RPC_URL,
-  CHAINSTACK_RPC_URL,
-  // I'm placing these as the last options. I noticed Quicknode is only used in development
-  NEXT_PUBLIC_QUIKNODE_URL,
-  // default back to public
-  'https://rpc.gnosischain.com',
-].map((rpc, index) => {
-  if (!rpc) throw new Error(`Provide all env variables`);
+	process.env.NEXT_PUBLIC_ANKR_RPC_URL,
+	process.env.NEXT_PUBLIC_DRPC_RPC_URL,
+	...publicRpcUrls,
+	process.env.NEXT_PUBLIC_GETBLOCK_RPC_URL,
+	process.env.NEXT_PUBLIC_CHAINSTACK_RPC_URL,
+	// I'm placing these as the last options. I noticed Quicknode is only used in development
+	NEXT_PUBLIC_QUIKNODE_URL,
+	// default back to public
+	publicRpcUrls[0],
+].map((rpc) => {
+	if (!rpc) throw new Error(`Provide all env variables`);
 
-  const isPublicRpc = index <= 1;
+	const isPublicRpc = publicRpcUrls.includes(rpc);
 
-  return http(rpc, {
-    timeout: isPublicRpc ? 7_000 : 10_000,
-    retryCount: isPublicRpc ? 1 : 3,
-    retryDelay: 1000,
-  });
+	return http(rpc, {
+		timeout: isPublicRpc ? 7_000 : 10_000,
+		retryCount: isPublicRpc ? 1 : 3,
+		retryDelay: 500,
+	});
 });
 
 const config = getDefaultConfig({
