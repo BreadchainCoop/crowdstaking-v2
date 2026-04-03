@@ -42,7 +42,7 @@ export function LiFiBridgeModal({
 	const formattedXdaiAmount = formatBalance(Number(xDaiInEther), 2);
 
 	useEffect(() => {
-		switchChain({ chainId: defaultChain.ID });
+		switchChain({ chainId: defaultChain.ID as number });
 	}, []);
 
 	return (

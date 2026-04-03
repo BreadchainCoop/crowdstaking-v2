@@ -1,9 +1,9 @@
 import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 import { useQuery } from "@tanstack/react-query";
-import { createPublicClient, Hex, http } from "viem";
+import { Hex } from "viem";
 import { DISTRIBUTOR_ABI } from "@/abi";
-import { foundryChain } from "../core/hooks/WagmiProvider/config/devConfig";
-import { gnosis } from "viem/chains";
+import { usePublicClient } from "wagmi";
+import { publicConfig } from "../core/hooks/WagmiProvider/config/publicConfig";
 
 type VoteLogData = {
   blockTimestamp: Hex;
@@ -18,11 +18,9 @@ export function useCurrentVotes(lastClaimedBlockNumber: bigint | null) {
   const chainConfig = useActiveChain();
   const distributorAddress = chainConfig.DISBURSER.address;
 
-  const publicClient = createPublicClient({
-    chain: chainConfig.ID === 31337 ? foundryChain : gnosis,
-    transport: http(
-      chainConfig.ID === 31337 ? "http://localhost:8545" : undefined,
-    ),
+  const publicClient = usePublicClient({
+    config: publicConfig,
+    chainId: chainConfig.ID,
   });
 
   return useQuery({
