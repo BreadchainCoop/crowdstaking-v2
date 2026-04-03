@@ -12,7 +12,7 @@ interface IToken {
 }
 
 export interface ChainConfiguration {
-  ID: number;
+  ID: 100 | 31337 | 11155111 | undefined;
   NETWORK_STRING: string;
   EXPLORER: string;
   BREAD: IToken;
