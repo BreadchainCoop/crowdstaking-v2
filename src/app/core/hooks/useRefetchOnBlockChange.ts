@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useBalance, useBlockNumber, useReadContract } from "wagmi";
 import { Hex } from "viem";
 import { useActiveChain } from "./useActiveChain";
+import { publicConfig } from "./WagmiProvider/config/publicConfig";
 
 export function useRefetchOnBlockChangeForUser(
   userAddress: Hex,
@@ -10,13 +11,18 @@ export function useRefetchOnBlockChangeForUser(
   functionName: string,
   args: any[]
 ) {
-  const { data: blockNumber } = useBlockNumber({ watch: true, chainId: useActiveChain().ID });
+  const { data: blockNumber } = useBlockNumber({
+    watch: true,
+    chainId: useActiveChain().ID,
+    config: publicConfig,
+  });
   const { status, data, error, refetch } = useReadContract({
     address: contractAddress,
     abi: abi,
     functionName: functionName,
     args: args,
     chainId: useActiveChain().ID,
+    config: publicConfig,
   });
 
   useEffect(() => {
@@ -35,7 +41,11 @@ export function useRefetchOnBlockChange(
   args: any[],
   query?: { enabled: boolean }
 ) {
-  const { data: blockNumber } = useBlockNumber({ watch: true, chainId: useActiveChain().ID });
+  const { data: blockNumber } = useBlockNumber({
+    watch: true,
+    chainId: useActiveChain().ID,
+    config: publicConfig,
+  });
   const { status, data, error, refetch } = useReadContract({
     address: contractAddress,
     abi: abi,
@@ -43,6 +53,7 @@ export function useRefetchOnBlockChange(
     args: args,
     query: query,
     chainId: useActiveChain().ID,
+    config: publicConfig,
   });
 
   useEffect(() => {
@@ -56,10 +67,12 @@ export function useRefetchBalanceOnBlockChange(userAddress: Hex) {
   const { data: blockNumber } = useBlockNumber({
     watch: true,
     chainId: useActiveChain().ID,
+    config: publicConfig,
   });
   const { data, status, error, refetch } = useBalance({
     address: userAddress,
     chainId: useActiveChain().ID,
+    config: publicConfig,
   });
 
   useEffect(() => {
