@@ -89,4 +89,12 @@ export const projectsMeta: {
     active: true,
     link: "https://gap.karmahq.xyz/project/gardens-",
   },
+  "0xB3dA7e85Be62460C867e059D42C434E2A53F5498": {
+    name: "Traditional Dream Factory",
+    order: 4,
+    description: "Web3-enabled regenerative ecovillage in Portugal for collective living.",
+    logoSrc: "project/traditional_dream_factory.png",
+    active: true,
+    link: "https://www.karmahq.xyz/project/traditional-dream-factory-1/about",
+  },
 };
