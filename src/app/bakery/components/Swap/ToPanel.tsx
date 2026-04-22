@@ -13,7 +13,7 @@ import {
 	TokenValueInDollars,
 } from "./SwapUI";
 import { formatBalance } from "@/app/core/util/formatter";
-import { TSwapMode } from "./Swap";
+import type { TSwapMode } from "./interfaces";
 import { TTokenBalanceState } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
 import { BreadIcon, XDAIIcon } from "@/app/core/components/Icons/TokenIcons";
 import { Logo } from "@breadcoop/ui";

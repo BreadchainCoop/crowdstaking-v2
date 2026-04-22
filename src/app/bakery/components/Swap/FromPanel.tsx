@@ -3,7 +3,7 @@ import Input from "../Input";
 
 import { formatBalance } from "@/app/core/util/formatter";
 import Elipsis from "@/app/core/components/Elipsis";
-import type { TSwapMode } from "./Swap";
+import type { TSwapMode } from "./interfaces";
 import { TTokenBalanceState } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
 import { XDAIIcon, BreadIcon } from "@/app/core/components/Icons/TokenIcons";
 import {

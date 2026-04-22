@@ -18,8 +18,7 @@ import { BridgeBanner } from "../Banners/BridgeBanner";
 import { TotalSupply } from "../TotalSupply";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
 import { Bridge } from "./Bridge";
-
-export type TSwapMode = "BAKE" | "BURN" | "BRIDGE";
+import { TSwapMode } from "./interfaces";
 
 export type TSwapState = {
   mode: TSwapMode;

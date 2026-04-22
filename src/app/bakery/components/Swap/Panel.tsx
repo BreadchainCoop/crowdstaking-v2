@@ -6,8 +6,7 @@ import { TTokenBalanceState } from "@/app/core/context/TokenBalanceContext/Token
 import { MaxButton } from "@/app/core/components/MaxButton";
 import Elipsis from "@/app/core/components/Elipsis";
 import { formatBalance } from "@/app/core/util/formatter";
-
-export type TSwapMode = "BAKE" | "BURN" | "BRIDGE" | "BUY";
+import type { TSwapMode } from "./interfaces";
 
 export type TSwapState = {
 	mode: TSwapMode;

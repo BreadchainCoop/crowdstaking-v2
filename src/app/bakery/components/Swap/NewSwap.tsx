@@ -23,13 +23,7 @@ import { Bridge } from "./Bridge";
 import { Buy } from "./Buy";
 import { useToast } from "@/app/core/context/ToastContext/ToastContext";
 import { useStrictMobile } from "@/hooks/use-is-device";
-
-// export type TSwapMode = "BAKE" | "BURN" | "BRIDGE";
-
-// export type TSwapState = {
-// 	mode: TSwapMode;
-// 	value: string;
-// };
+import { TSwapMode } from "./interfaces";
 
 const notes: Record<TSwapState["mode"], string> = {
 	"BAKE": 'Baking adds new BREAD into circulation. You can redeem your BREAD through the "Burn" tab at any time',
@@ -38,19 +32,30 @@ const notes: Record<TSwapState["mode"], string> = {
 	"BUY": "Clicking the button will open the Peer website where you can complete your purchase of xDAI to bake into BREAD.",
 };
 
-const initialSwapState: TSwapState = {
-	mode: "BAKE",
-	value: "",
-};
+const validModes: TSwapMode[] = ["BAKE", "BRIDGE", "BURN", "BUY"];
 
 const NewSwap = () => {
+	const searchParams = useSearchParams();
 	const { user, isSafe } = useConnectedUser();
 	const [connectedAccountAddress, setConnectedAccountAddress] =
 		useState<null | Address>(null);
-	const [swapState, setSwapState] = useState<TSwapState>(initialSwapState);
-	const searchParams = useSearchParams();
+	const tabParams = (searchParams.get("tab") || "BAKE") as TSwapMode;
+	const [swapState, setSwapState] = useState<TSwapState>({
+		mode: validModes.includes(tabParams) ? tabParams : "BAKE",
+		value: "",
+	});
 	const { toastDispatch } = useToast();
-	const { isMobile } = useStrictMobile()
+	const { isMobile } = useStrictMobile();
+
+	useEffect(() => {
+		const params = searchParams.get("tab") as unknown as TSwapMode;
+		if (validModes.includes(params)) {
+			setSwapState({
+				mode: params,
+				value: "",
+			});
+		}
+	}, [searchParams.get("tab"), searchParams.get("v")]);
 
 	// Handle Peer callback
 	useEffect(() => {
@@ -59,14 +64,15 @@ const NewSwap = () => {
 				type: "CUSTOM",
 				payload: {
 					variant: "success",
-					message: "Purchase completed! Your xDAI should arrive shortly.",
+					message:
+						"Purchase completed! Your xDAI should arrive shortly.",
 				},
 			});
 			// Clean up URL
 			// window.history.replaceState({}, "", "/bakery");
 			window.history.replaceState({}, "", "/");
 		}
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [searchParams.get("peer")]);
 
 	if (
@@ -111,8 +117,8 @@ const NewSwap = () => {
 						? (parseFloat(value) - 0.01).toString()
 						: "00.00"
 					: parseFloat(value) === 0
-					? "00.00"
-					: value,
+						? "00.00"
+						: value,
 		}));
 	};
 
@@ -120,7 +126,10 @@ const NewSwap = () => {
 	// const { setModal } = useModal();
 
 	return (
-		<div className="bg-[#FDFAF3] shadow-[0px_4px_12px_0px_#1B201A26] p-8 mb-12">
+		<div
+			id="swapper"
+			className="bg-[#FDFAF3] shadow-[0px_4px_12px_0px_#1B201A26] p-8 mb-12"
+		>
 			<div>
 				<div className="bg-paper-main p-1 flex items-center justify-between max-w-[20rem]">
 					<ModeBtn
@@ -147,9 +156,7 @@ const NewSwap = () => {
 					<ModeBtn
 						label="Buy"
 						selected={swapState.mode === "BUY"}
-						onClick={() =>
-							setSwapState({ mode: "BUY", value: "" })
-						}
+						onClick={() => setSwapState({ mode: "BUY", value: "" })}
 					/>
 				</div>
 				{/* <button>filter icon</button> */}
@@ -247,7 +254,8 @@ const NewSwap = () => {
 			)}
 			{!(swapState.mode === "BUY" && isMobile) && (
 				<Body className="text-surface-grey text-sm mt-1">
-					<span className="font-bold">Note</span>: {notes[swapState.mode]}
+					<span className="font-bold">Note</span>:{" "}
+					{notes[swapState.mode]}
 				</Body>
 			)}
 		</div>
