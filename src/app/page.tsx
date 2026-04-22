@@ -4,6 +4,7 @@ import { type Metadata } from "next";
 
 import { AppTitle } from "./bakery/components/AppTitle";
 import FAQWrapper from "./components/FAQWrapper";
+import HomeBanner from "./components/HomeBanner";
 import SwapWrapper from "./components/SwapWrapper";
 import { Body, Heading1, Heading2, LiftedButton } from "@breadcoop/ui";
 import { Apy } from "./bakery/components/Apy";
@@ -19,6 +20,8 @@ import { generateMetadata } from "@/lib/site-metadata";
 
 export default function Home() {
   return (
+    <>
+    <HomeBanner />
     <div className={clsx(WRAPPER_CLASSES, "")}>
       <div className="md:grid md:grid-cols-2 md:gap-x-6 lg:gap-x-[9.5rem]">
         <Heading1 className="text-[2.5rem] text-primary-orange mb-4 md:max-w-[32rem] md:flex md:flex-col md:leading-[0.9] md:text-[3.5rem] lg:text-[4rem]">
@@ -78,5 +81,6 @@ export default function Home() {
       </div>
       <FAQWrapper />
     </div>
+    </>
   );
 }

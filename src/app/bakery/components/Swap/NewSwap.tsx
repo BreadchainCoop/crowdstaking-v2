@@ -1,5 +1,12 @@
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
-import React, { ChangeEvent, useCallback, useState, useEffect } from "react";
+import React, {
+	ChangeEvent,
+	Dispatch,
+	SetStateAction,
+	useCallback,
+	useState,
+	useEffect,
+} from "react";
 import { Address } from "viem";
 import { useSearchParams } from "next/navigation";
 // import { FromPanel } from "./FromPanel";
@@ -38,16 +45,15 @@ const notes: Record<TSwapState["mode"], string> = {
 	"BUY": "Clicking the button will open the Peer website where you can complete your purchase of xDAI to bake into BREAD.",
 };
 
-const initialSwapState: TSwapState = {
-	mode: "BAKE",
-	value: "",
+type NewSwapProps = {
+	swapState: TSwapState;
+	setSwapState: Dispatch<SetStateAction<TSwapState>>;
 };
 
-const NewSwap = () => {
+const NewSwap = ({ swapState, setSwapState }: NewSwapProps) => {
 	const { user, isSafe } = useConnectedUser();
 	const [connectedAccountAddress, setConnectedAccountAddress] =
 		useState<null | Address>(null);
-	const [swapState, setSwapState] = useState<TSwapState>(initialSwapState);
 	const searchParams = useSearchParams();
 	const { toastDispatch } = useToast();
 	const { isMobile } = useStrictMobile()
@@ -69,13 +75,15 @@ const NewSwap = () => {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [searchParams.get("peer")]);
 
-	if (
-		user.status === "CONNECTED" &&
-		user.address !== connectedAccountAddress
-	) {
-		setConnectedAccountAddress(user.address);
-		setSwapState((state) => ({ ...state, value: "" }));
-	}
+	useEffect(() => {
+		if (
+			user.status === "CONNECTED" &&
+			user.address !== connectedAccountAddress
+		) {
+			setConnectedAccountAddress(user.address);
+			setSwapState((state) => ({ ...state, value: "" }));
+		}
+	}, [user, connectedAccountAddress, setSwapState]);
 
 	const clearInputValue = useCallback(() => {
 		setSwapState((state) => ({ ...state, value: "" }));
