@@ -10,9 +10,48 @@ These few terms are used throughout the codebase.
 - *Buttered BREAD* - LP tokens from buttering staked to be used for voting.
 
 ## Development Setup
-With foundry, nodejs etc installed
 
-### Install dependencies
+With foundry, nodejs etc installed.
+
+There are two ways to get your local environment running: using the **Makefile** (recommended) or **manually**.
+
+---
+
+### Option A — Makefile (recommended)
+
+A Makefile is provided to automate the setup steps. Run `make help` at any time to see all available commands.
+
+#### First-time setup
+
+Start Anvil in one terminal:
+
+```sh
+make anvil
+```
+
+Then, in a second terminal, run the first-time setup command. This installs all dependencies, scaffolds `.env.local`, and boots the local dev environment:
+
+```sh
+make first-time-start-local
+```
+
+> Open `.env.local` and fill in the required API keys (see [Obtain necessary API keys](#obtain-necessary-api-keys) below).
+
+#### Day-to-day local development
+
+With Anvil already running in one terminal:
+
+```sh
+make start-local
+```
+
+This cleans previous contract artefacts, redeploys the contracts, and starts the dev server.
+
+---
+
+### Option B — Manual setup
+
+#### Install dependencies
 
 Node modules and foundry dependencies for compiling the smart contracts.
 
@@ -23,16 +62,18 @@ $ cd contracts
 $ forge install
 ```
 
-### Create .env.local file
+#### Create .env.local file
+
 ```sh
 $ cp .env.example .env.local
 ```
 
-### Obtain necessary API keys
+#### Obtain necessary API keys
+
 1. [Alchemy](https://www.alchemy.com) is used to resolve ENS domains. Copy the API key into `NEXT_PUBLIC_ALCHEMY_MAINNET_API_KEY` variable in `.env.local`.
 2. [Reown](https://cloud.reown.com) is used for WalletConnect functionality. Create an "Appkit" and copy the project id into `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID` variable in `.env.local`.
 
-### Start local node
+#### Start local node
 
 [Anvil](https://book.getfoundry.sh/reference/anvil/) starts a local fork from the most recent block based on the rpc url provided. The chain id is used to identify the anvil network in the app config. Block time is 5 seconds to match gnosis chain.
 
@@ -40,7 +81,7 @@ $ cp .env.example .env.local
 $ anvil --fork-url https://rpc.gnosis.gateway.fm --chain-id 31337 --block-time 5
 ```
 
-### Setup wallet
+#### Setup wallet
 
 1. We need a wallet for working locally. To set this up take the private key for the first wallet in the list displayed when you start anvil and add this account to metamask. This is the `DEV_ACCOUNT` address in the setup script.
 
@@ -52,7 +93,7 @@ $ anvil --fork-url https://rpc.gnosis.gateway.fm --chain-id 31337 --block-time 5
 $ pnpm run chain:setup
 ```
 
-### Deploy contracts
+#### Deploy contracts
 
 We have the bread smart contracts in this repo as a submodule so we can compile and deploy any version we like to our anvil node.
 
@@ -65,7 +106,7 @@ This will run the solidity script in contracts/script/Deploy.s.sol to deploy bot
 
 The contract addresses will be written to file as JSON in `contracts/out` so they can be imported in `src/chainConfig.ts`
 
-### What else?
+#### What else?
 
 Dont forget to start the dev server
 
