@@ -57,10 +57,10 @@ export const projectsMeta: {
     link: "https://gap.karmahq.xyz/project/bread-cooperative",
   },
   "0x6A148b997e6651237F2fCfc9E30330a6480519f0": {
-    name: "Bread Coop Treasury",
+    name: "Solidarity Fund Treasury",
     order: 7,
     description:
-      "A co-owned treasury in Bread Coop used for grants and sponsorships.",
+      "A co-owned treasury in the Solidarity Fund used for grants and sponsorships.",
     logoSrc: "project/treasury.svg",
     active: true,
     link: "https://docs.bread.coop/solidarity-primitives/crowdstaking/member-projects/shared-treasury",
