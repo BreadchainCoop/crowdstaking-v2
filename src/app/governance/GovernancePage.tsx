@@ -279,7 +279,7 @@ export function GovernancePage() {
 					</Heading2>
 					<Body className="py-4 max-w-xl">
 						Distribute your voting power across the various projects
-						in the Bread Cooperative Network to influence how much
+						in the Solidarity Fund to influence how much
 						yield is given to each.
 					</Body>
 					<Caption>
