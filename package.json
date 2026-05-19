@@ -64,5 +64,6 @@
     "storybook": "^7.6.17",
     "ts-prune": "^0.10.3",
     "tsx": "^4.19.1"
-  }
+  },
+  "packageManager": "pnpm@11.0.0"
 }

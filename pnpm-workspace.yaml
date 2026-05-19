@@ -1,0 +1,18 @@
+packages:
+    - "."
+
+# pnpm v11: explicit per-package build script approval
+allowBuilds:
+    "@reown/appkit": true
+    "@sentry/cli": true
+    bufferutil: true
+    esbuild: true
+    keccak: true
+    sharp: true
+    unrs-resolver: true
+    utf-8-validate: true
+
+blockExoticSubdeps: true
+minimumReleaseAge: 864000 # 10 days
+strictDepBuilds: true
+trustPolicy: no-downgrade
