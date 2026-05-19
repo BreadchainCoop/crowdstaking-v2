@@ -10,11 +10,9 @@ import AnimatedNumber from "@/app/components/animated-number";
 const formatter = (val: number) => val.toFixed(1);
 
 export const Apy = () => {
-	const { data } = useVaultAPY();
+	const { data = FALLBACK_APY_VALUE } = useVaultAPY();
 
-	const apy = data
-		? Number(formatUnits(data as bigint, 18)) * 100
-		: FALLBACK_APY_VALUE;
+	const apy = Number(formatUnits(data, 18)) * 100;
 
 	return (
 		<ExternalLink

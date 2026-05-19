@@ -58,7 +58,7 @@ const NavAccountDetails = ({
 		<section
 			className={clsx(
 				"bg-paper-2 p-5 flex flex-col gap-4 w-full max-w-[28rem]",
-				className
+				className,
 			)}
 		>
 			<Item
@@ -72,7 +72,7 @@ const NavAccountDetails = ({
 					disabled={!ensNameResult.data || !account.address}
 					onClick={() =>
 						copyToClipboard(
-							ensNameResult.data || account.address || ""
+							ensNameResult.data || account.address || "",
 						)
 					}
 				>
@@ -93,7 +93,7 @@ const NavAccountDetails = ({
 							BREAD.status === "SUCCESS" &&
 							BREAD.value &&
 							renderFormattedDecimalNumber(
-								formatBalance(parseFloat(BREAD.value), 2)
+								formatBalance(parseFloat(BREAD.value), 2),
 							)}
 					</Body>
 				</>
@@ -101,27 +101,27 @@ const NavAccountDetails = ({
 			<Item Icon={HandHeartSvg} label="Donation">
 				<>
 					<Logo size={24} />
-					{BREAD && BREAD.status === "SUCCESS" && BREAD.value && (
-						<>
-							<Caption className="text-[#EA5817]">
-								{renderFormattedDecimalNumber(
-									formatBalance(
-										parseFloat(BREAD.value) *
-											Number(
-												formatUnits(
-													apyData as bigint,
-													18
-												)
-											),
-										2
-									)
-								)}
-							</Caption>
-							<Caption className="text-sm text-surface-ink">
-								/Yearly
-							</Caption>
-						</>
-					)}
+					{BREAD &&
+						BREAD.status === "SUCCESS" &&
+						BREAD.value &&
+						apyData !== undefined && (
+							<>
+								<Caption className="text-[#EA5817]">
+									{renderFormattedDecimalNumber(
+										formatBalance(
+											parseFloat(BREAD.value) *
+												Number(
+													formatUnits(apyData, 18),
+												),
+											2,
+										),
+									)}
+								</Caption>
+								<Caption className="text-sm text-surface-ink">
+									/Yearly
+								</Caption>
+							</>
+						)}
 				</>
 			</Item>
 			<Item Icon={GraphSvg} label="Network">
