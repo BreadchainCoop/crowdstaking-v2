@@ -24,10 +24,15 @@ export default function Home() {
 			<BalanceBanner />
 			<div className={clsx(WRAPPER_CLASSES, "")}>
 				<div className="md:grid md:grid-cols-2 md:gap-x-6 lg:gap-x-[9.5rem]">
-					<Heading1 className="text-[2.5rem] text-primary-orange mb-4 md:max-w-[32rem] md:flex md:flex-col md:leading-[0.9] md:text-[3.5rem] lg:text-[4rem]">
-						<span>THE</span> <span>SOLIDARITY</span>{" "}
-						<span>FUND</span>
-					</Heading1>
+					<div>
+						<Heading1 className="text-[2.5rem] text-primary-orange mb-4 md:max-w-[32rem] md:flex md:flex-col md:leading-[0.9] md:text-[3.5rem] lg:text-[4rem]">
+							<span>THE</span> <span>SOLIDARITY</span>{" "}
+							<span>FUND</span>
+						</Heading1>
+						<Body className="font-breadDisplay text-surface-grey-2 mb-4 md:mb-6">
+							give without giving.
+						</Body>
+					</div>
 					<div className="row-span-2 md:w-full md:max-w-[451px]">
 						<Suspense>
 							<SwapWrapper />
