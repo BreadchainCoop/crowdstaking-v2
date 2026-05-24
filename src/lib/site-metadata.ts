@@ -14,15 +14,16 @@ type MetadataConfig = {
 };
 
 const DEFAULT_METADATA = {
-  title: "Bread Crowdstaking",
-  description: "Bake and burn BREAD. Fund post-capitalist web3.",
+  title: "Bread Solidarity Fund",
+  description:
+    "The Bread Solidarity Fund pools stablecoin yield to democratically fund post-capitalist web3 projects.",
   url: "https://fund.bread.coop/",
-  siteName: "Bread Crowdstaking",
+  siteName: "Bread Solidarity Fund",
   image: {
     url: "https://bread.coop/preview.png?v=33",
     width: 2048,
     height: 1536,
-    alt: "Bread Crowdstaking",
+    alt: "Bread Solidarity Fund",
   },
 } as const;
 
