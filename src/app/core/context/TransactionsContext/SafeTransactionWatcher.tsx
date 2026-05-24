@@ -23,15 +23,16 @@ export function SafeTransactionWatcher({
   transactionsDispatch: TTransactionsDispatch;
 }) {
   const { hash } = transaction;
+  const typedHash = hash as `0x${string}`;
   const { toastDispatch } = useToast();
   const sdkRef = useRef(new SafeAppsSDK());
 
   useEffect(() => {
     toastDispatch({
       type: "NEW",
-      payload: { toastType: "SUBMITTED", txHash: hash },
+      payload: { toastType: "SUBMITTED", txHash: typedHash },
     });
-  }, [hash, toastDispatch]);
+  }, [typedHash, toastDispatch]);
 
   useEffect(() => {
     const sdk = sdkRef.current;
@@ -39,12 +40,12 @@ export function SafeTransactionWatcher({
 
     const poll = async () => {
       try {
-        const tx = await sdk.txs.getBySafeTxHash(hash as string);
+        const tx = await sdk.txs.getBySafeTxHash(typedHash);
 
         if (tx.txStatus === TransactionStatus.SUCCESS) {
           transactionsDispatch({
             type: "SET_SUCCESS",
-            payload: { hash: hash as string },
+            payload: { hash: typedHash },
           });
           clearInterval(intervalId);
         } else if (
@@ -53,11 +54,11 @@ export function SafeTransactionWatcher({
         ) {
           transactionsDispatch({
             type: "SET_REVERTED",
-            payload: { hash: hash as string },
+            payload: { hash: typedHash },
           });
           toastDispatch({
             type: "NEW",
-            payload: { toastType: "REVERTED", txHash: hash as string },
+            payload: { toastType: "REVERTED", txHash: typedHash },
           });
           clearInterval(intervalId);
         }
@@ -72,7 +73,7 @@ export function SafeTransactionWatcher({
     intervalId = setInterval(poll, POLL_INTERVAL_MS);
 
     return () => clearInterval(intervalId);
-  }, [hash, transactionsDispatch, toastDispatch]);
+  }, [typedHash, transactionsDispatch, toastDispatch]);
 
   return null;
 }
