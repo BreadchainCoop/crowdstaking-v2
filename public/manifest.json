@@ -1,7 +1,7 @@
 {
-  "name": "Bread Crowdstaking",
-  "description": "Bake and Burn BREAD",
-  "short_name": "Bread Crowdstaking",
+  "name": "Bread Solidarity Fund",
+  "description": "Pool yield. Fund solidarity. Bread Cooperative's community-governed fund.",
+  "short_name": "Bread Solidarity Fund",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",

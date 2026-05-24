@@ -1,6 +1,6 @@
 export const peerConfig = {
   baseUrl: "https://peer.xyz/swap",
-  referrer: "Bread Crowdstaking",
+  referrer: "Bread Solidarity Fund",
   referrerLogo: "https://fund.bread.coop/logo.svg",
   // xDAI on Gnosis Chain (chainId: 100, native token)
   toToken: "100:0x0000000000000000000000000000000000000000",
