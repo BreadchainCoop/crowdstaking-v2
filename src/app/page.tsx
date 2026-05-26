@@ -29,9 +29,9 @@ export default function Home() {
 							<span>THE</span> <span>SOLIDARITY</span>{" "}
 							<span>FUND</span>
 						</Heading1>
-						<Body className="font-breadDisplay text-surface-grey-2 mb-4 md:mb-6">
+						<Heading2 className="font-breadDisplay text-surface-grey-2 mb-4 md:mb-6">
 							give without giving.
-						</Body>
+						</Heading2>
 					</div>
 					<div className="row-span-2 md:w-full md:max-w-[451px]">
 						<Suspense>
