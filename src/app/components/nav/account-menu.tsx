@@ -1,9 +1,13 @@
 "use client";
-import { truncateAddress } from "@/app/core/util/formatter";
+import { truncateAddress, formatBalance, renderFormattedDecimalNumber } from "@/app/core/util/formatter";
 import { Body } from "@breadcoop/ui";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { useAccount, useEnsName } from "wagmi";
 import NavAccountDetails from "./account-details";
+import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
+import { useFundWallet } from "@privy-io/react-auth";
+import { blo } from "blo";
+import Image from "next/image";
 
 const Caret = () => (
 	<svg
@@ -29,26 +33,69 @@ const NavAccountMenu = () => {
 		address: account.address,
 		query: { enabled: Boolean(account.address) },
 	});
+	const { BREAD } = useTokenBalances();
+	const { fundWallet } = useFundWallet();
+
+	const breadBalance =
+		BREAD?.status === "SUCCESS" && BREAD.value
+			? renderFormattedDecimalNumber(formatBalance(parseFloat(BREAD.value), 2))
+			: "0.00";
+
+	const handleDeposit = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		e.preventDefault();
+		if (account.address) {
+			fundWallet({ address: account.address });
+		}
+	};
+
+	const avatarSrc = account.address
+		? blo(account.address as `0x${string}`)
+		: null;
 
 	return (
 		<NavigationMenu.Root className="relative">
 			<NavigationMenu.List>
 				<NavigationMenu.Item>
-					<NavigationMenu.Trigger className="group">
-						<Body
-							bold
-							className={
-								"w-full flex items-center justify-center gap-2.5 truncate text-ellipsis py-3 px-6 bg-paper-2 border border-surface-ink font-bold"
-							}
-						>
-							{ensNameResult.data ||
-								truncateAddress(account.address || "")}
-							{/* <span className="text-[#EA5817] transition-transform duration-200 group-data-[state=open]:rotate-180"> */}
-							<span className="text-[#EA5817]">
+					<div className="flex items-center bg-paper-2 border border-surface-ink">
+						{/* Balance + Deposit — outside trigger so clicks don't open dropdown */}
+						<div className="flex items-center gap-2.5 pl-6 pr-3 py-3">
+							<span className="border border-[#808080] px-2 py-1 font-bold text-sm whitespace-nowrap">
+								${breadBalance}
+							</span>
+							<button
+								onPointerDown={(e) => e.stopPropagation()}
+								onClick={handleDeposit}
+								className="border border-[#EA5817] px-4 py-1 text-[#EA5817] font-bold text-sm whitespace-nowrap drop-shadow-[2px_2px_0px_#595959] hover:bg-[#EA5817] hover:text-white transition-colors"
+							>
+								Deposit
+							</button>
+						</div>
+
+						{/* Divider */}
+						<div className="h-7 w-px bg-[#d9d9d9] shrink-0" />
+
+						{/* Account trigger — opens dropdown */}
+						<NavigationMenu.Trigger className="group flex items-center gap-2 px-3 py-3">
+							{avatarSrc && (
+								<Image
+									src={avatarSrc}
+									alt=""
+									width={24}
+									height={24}
+									className="rounded-full shrink-0"
+								/>
+							)}
+							<Body bold className="whitespace-nowrap">
+								{ensNameResult.data ||
+									truncateAddress(account.address || "")}
+							</Body>
+							<span className="text-[#EA5817] shrink-0">
 								<Caret />
 							</span>
-						</Body>
-					</NavigationMenu.Trigger>
+						</NavigationMenu.Trigger>
+					</div>
+
 					<NavigationMenu.Content className="w-max">
 						<NavAccountDetails
 							className="w-screen max-w-[27.6875rem] bg-paper-main border border-paper-2"

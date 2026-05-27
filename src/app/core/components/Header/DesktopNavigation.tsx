@@ -22,6 +22,14 @@ function DesktopNavigation({ currentPath }: { currentPath: string }) {
 						Governance
 					</PageMenuLink>
 				)}
+				{user.status === "CONNECTED" && (
+					<PageMenuLink
+						isCurrentPage={currentPath.includes("/profile")}
+						href="/profile"
+					>
+						My Account
+					</PageMenuLink>
+				)}
 				{/* <LiftedButton className="h-14 mt-0.5" rightIcon={<SignIn />}>Sign in</LiftedButton> */}
 				{/* <DesktopNavigationLink
         href="https://dune.com/bread_cooperative/solidarity"
