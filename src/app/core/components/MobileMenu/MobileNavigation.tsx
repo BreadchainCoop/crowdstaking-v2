@@ -56,6 +56,16 @@ export function MobileNavigation({ handleNavToggle }: IProps) {
 					</Link>
 				</>
 			)}
+			{(user.user.status === "CONNECTED" ||
+				user.user.status === "UNSUPPORTED_CHAIN") && (
+				<PageMenuLink
+					isCurrentPage={pathname === "/profile"}
+					href="/profile"
+					onClick={() => handleNavToggle()}
+				>
+					My Account
+				</PageMenuLink>
+			)}
 		</nav>
 	);
 }
