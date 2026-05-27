@@ -15,6 +15,8 @@ import { ModalProvider } from "../context/ModalContext";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { PrivyProvider } from "@privy-io/react-auth";
 
+const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
+
 export function AppProvider({
   children,
   features,
@@ -24,11 +26,7 @@ export function AppProvider({
 }) {
   useSentry();
 
-  return (
-    <PrivyProvider
-      appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
-      config={{ appearance: { theme: "light" } }}
-    >
+  const inner = (
     <WagmiProviderWrapper>
       <ConnectedUserProvider features={features}>
         <TokenBalancesProvider>
@@ -41,6 +39,16 @@ export function AppProvider({
         <ReactQueryDevtools initialIsOpen={true} />
       </ConnectedUserProvider>
     </WagmiProviderWrapper>
+  );
+
+  if (!PRIVY_APP_ID) return inner;
+
+  return (
+    <PrivyProvider
+      appId={PRIVY_APP_ID}
+      config={{ appearance: { theme: "light" } }}
+    >
+      {inner}
     </PrivyProvider>
   );
 }

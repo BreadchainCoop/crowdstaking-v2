@@ -4,8 +4,11 @@ import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { useAccount, useEnsName } from "wagmi";
 import NavAccountDetails from "./account-details";
 import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
-import { useFundWallet } from "@privy-io/react-auth";
+import { PrivyDepositButton } from "./privy-deposit-button";
 import { blo } from "blo";
+
+// Baked in at build time — stable, no hydration mismatch
+const PRIVY_ENABLED = Boolean(process.env.NEXT_PUBLIC_PRIVY_APP_ID);
 
 const NavAccountMenu = () => {
 	const account = useAccount();
@@ -14,21 +17,12 @@ const NavAccountMenu = () => {
 		query: { enabled: Boolean(account.address) },
 	});
 	const { BREAD } = useTokenBalances();
-	const { fundWallet } = useFundWallet();
 
 	const rawBalance =
 		BREAD?.status === "SUCCESS" && BREAD.value
 			? formatBalance(parseFloat(BREAD.value), 2)
 			: "0.00";
 	const [balInt, balDec] = rawBalance.split(".");
-
-	const handleDeposit = (e: React.MouseEvent) => {
-		e.stopPropagation();
-		e.preventDefault();
-		if (account.address) {
-			fundWallet({ address: account.address });
-		}
-	};
 
 	const avatarSrc = account.address
 		? blo(account.address as `0x${string}`)
@@ -38,7 +32,7 @@ const NavAccountMenu = () => {
 		<NavigationMenu.Root className="relative">
 			<NavigationMenu.List>
 				<NavigationMenu.Item>
-					{/* Outer chip — bg Surface/Main, Ink border */}
+					{/* Outer chip — Surface/Main bg, Ink border */}
 					<div className="flex items-center gap-[10px] bg-[#f6f3eb] border border-[#1b201a] overflow-hidden px-6 py-3">
 						{/* Balance chip */}
 						<div className="flex items-center bg-[#f6f3eb] border border-[#808080] overflow-hidden px-2 py-1">
@@ -48,16 +42,19 @@ const NavAccountMenu = () => {
 							</p>
 						</div>
 
-						{/* Deposit button */}
-						<div className="drop-shadow-[2px_2px_0px_#595959]">
-							<button
-								onPointerDown={(e) => e.stopPropagation()}
-								onClick={handleDeposit}
-								className="flex items-center bg-[#f6f3eb] border border-[#ea5817] overflow-hidden px-4 py-1 font-breadBody font-bold text-base text-[#ea5817] whitespace-nowrap hover:bg-[#ea5817] hover:text-white transition-colors"
-							>
-								Deposit
-							</button>
-						</div>
+						{/* Deposit — only rendered when NEXT_PUBLIC_PRIVY_APP_ID is set */}
+						{PRIVY_ENABLED && account.address ? (
+							<PrivyDepositButton address={account.address} />
+						) : (
+							<div className="drop-shadow-[2px_2px_0px_#595959]">
+								<button
+									disabled
+									className="flex items-center bg-[#f6f3eb] border border-[#ea5817] overflow-hidden px-4 py-1 font-breadBody font-bold text-base text-[#ea5817] whitespace-nowrap opacity-50 cursor-not-allowed"
+								>
+									Deposit
+								</button>
+							</div>
+						)}
 
 						{/* Divider */}
 						<div className="h-7 w-px bg-[#d9d9d9] shrink-0" />
@@ -76,14 +73,14 @@ const NavAccountMenu = () => {
 								{ensNameResult.data ||
 									truncateAddress(account.address || "")}
 							</span>
-							{/* Caret */}
+							{/* CaretDown */}
 							<svg
 								width="24"
 								height="24"
 								viewBox="0 0 24 24"
 								fill="none"
 								xmlns="http://www.w3.org/2000/svg"
-								className="shrink-0 text-[#ea5817]"
+								className="shrink-0"
 							>
 								<path
 									d="M19.5 9L12 16.5L4.5 9"
