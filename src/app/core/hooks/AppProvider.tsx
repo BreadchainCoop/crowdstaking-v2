@@ -16,6 +16,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { PrivyProvider } from "@privy-io/react-auth";
 
 const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
+const PRIVY_CLIENT_ID = process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID;
 
 export function AppProvider({
   children,
@@ -46,6 +47,7 @@ export function AppProvider({
   return (
     <PrivyProvider
       appId={PRIVY_APP_ID}
+      clientId={PRIVY_CLIENT_ID}
       config={{ appearance: { theme: "light" } }}
     >
       {inner}
