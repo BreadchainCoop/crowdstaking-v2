@@ -33,7 +33,7 @@ const NavAccountMenu = () => {
 			<NavigationMenu.List>
 				<NavigationMenu.Item>
 					{/* Outer chip — Surface/Main bg, Ink border */}
-					<div className="flex items-center gap-[10px] bg-[#f6f3eb] border border-[#1b201a] overflow-hidden px-6 py-3">
+					<div className="flex items-center gap-[10px] bg-[#f6f3eb] border border-[#1b201a] overflow-hidden px-3 py-3">
 						{/* Balance chip */}
 						<div className="flex items-center bg-[#f6f3eb] border border-[#808080] overflow-hidden px-2 py-1">
 							<p className="font-breadBody font-bold text-[#1b201a] whitespace-nowrap leading-none">
