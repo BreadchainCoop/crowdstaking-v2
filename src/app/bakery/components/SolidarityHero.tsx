@@ -1,6 +1,5 @@
 "use client";
 
-import { blo } from "blo";
 import { formatUnits } from "viem";
 import { useQuery } from "@tanstack/react-query";
 import { Body, Heading1, LiftedButton } from "@breadcoop/ui";
@@ -19,15 +18,15 @@ const ACTIVE_PROJECTS = Object.values(projectsMeta)
 const HERO_PROJECTS = ACTIVE_PROJECTS.slice(0, 5);
 const MORE_PROJECTS = ACTIVE_PROJECTS.length - HERO_PROJECTS.length;
 
-// Decorative, deterministic identicons standing in for the community of
+// Decorative, diverse member illustrations standing in for the community of
 // backers. The real headcount is the number; these just make it a picture.
-const AVATAR_SEEDS = [
-	"0x4a1f8e2b9c0d7e6f5a3b2c1d0e9f8a7b6c5d4e3f",
-	"0x7c3d9a1b2e4f6a8c0d2e4f6a8b0c2d4e6f8a0b2c",
-	"0x9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d",
-	"0x2b4d6f8a0c2e4f6a8b0d2f4a6c8e0b2d4f6a8c0e",
-	"0xf0e1d2c3b4a5968778695a4b3c2d1e0f0a1b2c3d",
-	"0x5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b",
+const MEMBER_AVATARS = [
+	"/avatars/member-1.svg",
+	"/avatars/member-2.svg",
+	"/avatars/member-3.svg",
+	"/avatars/member-4.svg",
+	"/avatars/member-5.svg",
+	"/avatars/member-6.svg",
 ] as const;
 
 const FALLBACK_BREAD_BACKERS = 209;
@@ -108,11 +107,11 @@ export function SolidarityHero() {
 				<div>
 					<div className="flex items-center">
 						<div className="flex">
-							{AVATAR_SEEDS.map((seed) => (
+							{MEMBER_AVATARS.map((src) => (
 								// eslint-disable-next-line @next/next/no-img-element
 								<img
-									key={seed}
-									src={blo(seed)}
+									key={src}
+									src={src}
 									alt=""
 									className="size-10 rounded-full border-2 border-paper-main -ml-3 first:ml-0 shadow-sm"
 								/>
