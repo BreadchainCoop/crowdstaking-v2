@@ -32,8 +32,8 @@ const NavAccountMenu = () => {
 		<NavigationMenu.Root className="relative">
 			<NavigationMenu.List>
 				<NavigationMenu.Item>
-					{/* Outer chip — Surface/Main bg, Ink border */}
-					<div className="flex items-center gap-[10px] bg-[#f6f3eb] border border-[#1b201a] overflow-hidden px-3 py-3">
+					{/* Outer chip — Surface/Main bg, Ink border, 8px padding */}
+					<div className="flex items-center gap-[10px] bg-[#f6f3eb] border border-[#1b201a] overflow-hidden p-2">
 						{/* Balance chip */}
 						<div className="flex items-center bg-[#f6f3eb] border border-[#808080] overflow-hidden px-2 py-1">
 							<p className="font-breadBody font-bold text-[#1b201a] whitespace-nowrap leading-none">
@@ -46,14 +46,13 @@ const NavAccountMenu = () => {
 						{PRIVY_ENABLED && account.address ? (
 							<PrivyDepositButton address={account.address} />
 						) : (
-							<div className="drop-shadow-[2px_2px_0px_#595959]">
-								<button
-									disabled
-									className="flex items-center bg-[#f6f3eb] border border-[#ea5817] overflow-hidden px-4 py-1 font-breadBody font-bold text-base text-[#ea5817] whitespace-nowrap opacity-50 cursor-not-allowed"
-								>
-									Deposit
-								</button>
-							</div>
+							<button
+								disabled
+								aria-disabled="true"
+								className="flex shrink-0 items-center bg-[#f6f3eb] border border-[#ea5817] px-4 py-1 font-breadBody font-bold text-base leading-[1.5] text-[#ea5817] whitespace-nowrap opacity-40 cursor-not-allowed"
+							>
+								Deposit
+							</button>
 						)}
 
 						{/* Divider */}
