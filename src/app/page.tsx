@@ -1,52 +1,29 @@
 // "use client";
-import { Suspense } from "react";
 import { type Metadata } from "next";
 
 import { AppTitle } from "./bakery/components/AppTitle";
 import FAQWrapper from "./components/FAQWrapper";
-import SwapWrapper from "./components/SwapWrapper";
-import { Body, Heading1, Heading2, LiftedButton } from "@breadcoop/ui";
-import { Apy } from "./bakery/components/Apy";
-import { BreadCirculation } from "./bakery/components/BreadCirculation";
+import { Body, Heading2 } from "@breadcoop/ui";
 import clsx from "clsx";
 import { WRAPPER_CLASSES } from "./core/util/classes";
-import { Interest } from "./bakery/components/Interest";
 import { ProjectBackers } from "./bakery/components/Backers";
 import { MonthlyVoters } from "./bakery/components/MonthlyVoters";
 import { ViewAnalytics } from "./bakery/components/Analytics";
 import Actions from "./bakery/components/Actions";
 import { generateMetadata } from "@/lib/site-metadata";
 import { BalanceBanner } from "./bakery/components/Banners/BalanceBanner";
+import { SolidarityHero } from "./bakery/components/SolidarityHero";
 
 export default function Home() {
 	return (
 		<>
 			<BalanceBanner />
 			<div className={clsx(WRAPPER_CLASSES, "")}>
-				<div className="md:grid md:grid-cols-2 md:gap-x-6 lg:gap-x-[9.5rem]">
-					<div>
-						<Heading1 className="text-[2.5rem] text-primary-orange mb-4 md:max-w-[32rem] md:flex md:flex-col md:leading-[0.9] md:text-[3.5rem] lg:text-[4rem]">
-							<span>THE</span> <span>SOLIDARITY</span>{" "}
-							<span>FUND</span>
-						</Heading1>
-						<Body className="font-breadDisplay text-surface-grey-2 mb-4 md:mb-6">
-							give without giving.
-						</Body>
-					</div>
-					<div className="row-span-2 md:w-full md:max-w-[451px]">
-						<Suspense>
-							<SwapWrapper />
-						</Suspense>
-					</div>
-					<div className="md:max-w-[32rem]">
-						<Interest />
-						<div className="md:flex md:items-center md:justify-start md:gap-4 md:flex-wrap lg:flex-nowrap">
-							<BreadCirculation />
-							<Apy />
-						</div>
-					</div>
-				</div>
-				<div className="mt-12 md:flex md:items-start md:justify-between md:gap-8">
+				<SolidarityHero />
+				<div
+					id="how-it-works"
+					className="scroll-mt-24 mt-12 md:flex md:items-start md:justify-between md:gap-8"
+				>
 					<figure className="w-[23.82rem] h-[16rem] ml-auto bg-orange-0 overflow-hidden relative right-[-1rem] mb-8 md:w-[33.125rem] md:h-[22.25rem] md:order-2 md:right-[-1.5rem] md:static md:mt-8 md:grow-0">
 						<img
 							src="/bake_hand_mobile.png"
