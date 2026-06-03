@@ -73,12 +73,6 @@ export function SolidarityHero() {
 		});
 	};
 
-	const handleHowItWorks = () => {
-		document
-			.getElementById("how-it-works")
-			?.scrollIntoView({ behavior: "smooth", block: "start" });
-	};
-
 	return (
 		<section className="grid items-center gap-10 py-8 md:grid-cols-2 md:gap-x-6 lg:gap-x-[6rem] md:py-14">
 			{/* ── Left: slogan + CTAs ── */}
@@ -96,11 +90,16 @@ export function SolidarityHero() {
 							Support fund
 						</LiftedButton>
 					</div>
-					<div className="lifted-button-container">
-						<LiftedButton preset="secondary" onClick={handleHowItWorks}>
+					<a
+						href="https://docs.bread.coop/about/bread-token/"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="lifted-button-container"
+					>
+						<LiftedButton preset="secondary">
 							How it works →
 						</LiftedButton>
-					</div>
+					</a>
 				</div>
 			</div>
 
