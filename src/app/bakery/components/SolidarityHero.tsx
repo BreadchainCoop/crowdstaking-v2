@@ -10,7 +10,14 @@ import AnimatedNumber from "@/app/components/animated-number";
 import { useModal } from "@/app/core/context/ModalContext";
 import { FALLBACK_APY_VALUE, useVaultAPY } from "@/app/core/hooks/useVaultAPY";
 import { formatSupply } from "@/app/core/util/formatter";
-import { memberProjects } from "@/app/governance/projectData";
+import { projectsMeta } from "@/app/projectsMeta";
+
+// Same project metadata + logos the governance page uses, active first.
+const ACTIVE_PROJECTS = Object.values(projectsMeta)
+	.filter((p) => p.active)
+	.sort((a, b) => a.order - b.order);
+const HERO_PROJECTS = ACTIVE_PROJECTS.slice(0, 5);
+const MORE_PROJECTS = ACTIVE_PROJECTS.length - HERO_PROJECTS.length;
 
 // Decorative, deterministic identicons standing in for the community of
 // backers. The real headcount is the number; these just make it a picture.
@@ -22,14 +29,6 @@ const AVATAR_SEEDS = [
 	"0xf0e1d2c3b4a5968778695a4b3c2d1e0f0a1b2c3d",
 	"0x5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b",
 ] as const;
-
-const TILE_COLORS = [
-	"bg-primary-orange",
-	"bg-[#60A29A]", // jade
-	"bg-primary-blue",
-	"bg-[#EA5817]",
-	"bg-[#1B201A]",
-];
 
 const FALLBACK_BREAD_BACKERS = 209;
 const FALLBACK_TOTAL_FUNDING = 46548;
@@ -62,7 +61,7 @@ export function SolidarityHero() {
 		},
 	});
 
-	const projectCount = memberProjects.length;
+	const projectCount = ACTIVE_PROJECTS.length;
 
 	const handleSupport = () => {
 		setModal({
@@ -132,26 +131,31 @@ export function SolidarityHero() {
 					</Body>
 				</div>
 
-				{/* Projects — colored tiles */}
+				{/* Projects — real logos from the governance page */}
 				<div>
 					<div className="flex gap-2">
-						{memberProjects.map((project, i) => (
+						{HERO_PROJECTS.map((project) => (
 							<div
-								key={project.id}
+								key={project.name}
 								title={project.name}
-								className={`flex size-12 items-center justify-center font-breadDisplay font-black text-xl text-white ${
-									TILE_COLORS[i % TILE_COLORS.length]
-								}`}
+								className="flex size-12 items-center justify-center overflow-hidden border border-[#eae2d6] bg-white"
 							>
-								{project.name.charAt(0)}
+								{/* eslint-disable-next-line @next/next/no-img-element */}
+								<img
+									src={`/${project.logoSrc}`}
+									alt={`${project.name} logo`}
+									className="size-full object-contain p-1.5"
+								/>
 							</div>
 						))}
-						<div className="flex size-12 items-center justify-center border border-dashed border-surface-grey text-surface-grey font-breadDisplay font-bold">
-							+
-						</div>
+						{MORE_PROJECTS > 0 && (
+							<div className="flex size-12 items-center justify-center border border-dashed border-surface-grey text-surface-grey font-breadDisplay font-bold">
+								+{MORE_PROJECTS}
+							</div>
+						)}
 					</div>
 					<Body className="mt-2 text-surface-grey">
-						{projectCount}+ projects funded, chosen by the community
+						{projectCount} projects, chosen by the community
 					</Body>
 				</div>
 
