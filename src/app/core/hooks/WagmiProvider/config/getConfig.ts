@@ -1,9 +1,10 @@
-export function getConfig() {
-  if (process.env.NODE_ENV !== "production") {
-    const { devConfig, devChains } = require("./devConfig");
-    return { chains: devChains, config: devConfig };
-  }
+import { privyWagmiConfig } from "./privyConfig";
 
-  const { prodConfig, prodChains } = require("./prodConfig");
-  return { chains: prodChains, config: prodConfig };
+/**
+ * Single source of truth for the app's wagmi config. Now Privy-managed
+ * (embedded wallet as the active account); the old RainbowKit dev/prod configs
+ * are no longer used.
+ */
+export function getConfig() {
+	return { config: privyWagmiConfig, chains: privyWagmiConfig.chains };
 }

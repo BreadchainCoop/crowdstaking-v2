@@ -3,7 +3,6 @@ import { CheckIcon } from "@/app/core/components/Icons/CheckIcon";
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
 import { useModal } from "@/app/core/context/ModalContext";
 import { useActiveChain } from "@/app/core/hooks/useActiveChain";
-import { useChainModal } from "@rainbow-me/rainbowkit";
 import { useWriteContract, useSimulateContract } from "wagmi";
 import SafeAppsSDK from "@safe-global/safe-apps-sdk/dist/src/sdk";
 import { TransactionStatus } from "@safe-global/safe-apps-sdk/dist/src/types";
@@ -34,7 +33,6 @@ export function CastVotePanel({
 	setIsRecasting: (val: boolean) => void;
 	resetFormState: () => void;
 }) {
-	const { openChainModal } = useChainModal();
 
 	return (
 		<div className="mt-3 mb-6 lg:mb-0">
@@ -161,11 +159,6 @@ export function CastVote({
 						type: "SET_SAFE_SUBMITTED",
 						payload: { hash },
 					});
-					// Safe votes need multi-sig approval inside the Safe app —
-					// route to the dedicated Safe transaction modal.
-					setModal({ type: "SAFE_TRANSACTION", hash });
-					setIsRecasting(false);
-					return;
 				}
 
 				setModal({ type: "VOTE_TRANSACTION", hash });
