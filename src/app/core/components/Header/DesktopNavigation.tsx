@@ -2,9 +2,10 @@ import { useConnectedUser } from "../../hooks/useConnectedUser";
 import { LoginButton } from "@/app/components/login-button";
 import NavAccountMenu from "@/app/components/nav/account-menu";
 import PageMenuLink from "./page-menu-link";
+import { SafeIndicatorBadge } from "./SafeIndicatorBadge";
 
 function DesktopNavigation({ currentPath }: { currentPath: string }) {
-	const { user } = useConnectedUser();
+	const { user, isSafe } = useConnectedUser();
 	return (
 		<div className="hidden md:flex md:flex-grow md:items-center md:gap-8 md:ml-auto md:max-w-max">
 			<nav
@@ -34,6 +35,7 @@ function DesktopNavigation({ currentPath }: { currentPath: string }) {
         Docs <span className="ml-2"></span><LinkIcon />
       </DesktopNavigationLink> */}
 			</nav>
+			{isSafe && user.status === "CONNECTED" && <SafeIndicatorBadge />}
 			{user.status === "CONNECTED" ? (
 				<NavAccountMenu />
 			) : (
