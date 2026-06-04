@@ -161,6 +161,11 @@ export function CastVote({
 						type: "SET_SAFE_SUBMITTED",
 						payload: { hash },
 					});
+					// Safe votes need multi-sig approval inside the Safe app —
+					// route to the dedicated Safe transaction modal.
+					setModal({ type: "SAFE_TRANSACTION", hash });
+					setIsRecasting(false);
+					return;
 				}
 
 				setModal({ type: "VOTE_TRANSACTION", hash });
