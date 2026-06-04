@@ -44,7 +44,7 @@ const NavAccountMenu = () => {
 
 						{/* Deposit — only rendered when NEXT_PUBLIC_PRIVY_APP_ID is set */}
 						{PRIVY_ENABLED && account.address ? (
-							<PrivyDepositButton address={account.address} />
+							<PrivyDepositButton />
 						) : (
 							<button
 								disabled
