@@ -16,8 +16,7 @@ import { useCycleLength } from "../../useCycleLength";
 import { useVaultTokenBalance } from "../context/VaultTokenBalanceContext";
 import Tooltip from "@/app/core/components/Tooltip";
 import { useDistributions } from "../../useDistributions";
-import { useSwitchChain } from "wagmi";
-import { gnosis } from "wagmi/chains";
+import { useChainModal } from "@rainbow-me/rainbowkit";
 import Button from "@/app/core/components/Button";
 import { Caption, Body, Heading2, Heading4 } from "@breadcoop/ui";
 import { HowDoesThisWorkButton } from "@/app/core/components/HowDoesThisWorkButton";
@@ -58,7 +57,7 @@ const renderFormattedDecimalNumber = (
 
 export function VotingPowerPanel() {
   const { user } = useConnectedUser();
-  const { switchChain } = useSwitchChain();
+  const { openChainModal } = useChainModal();
 
   const votingPower = useVotingPower();
   const vaultTokenBalance = useVaultTokenBalance();
@@ -214,7 +213,7 @@ export function VotingPowerPanel() {
 									fullWidth={true}
 									size="large"
 									variant="danger"
-									onClick={() => switchChain({ chainId: gnosis.id })}
+									onClick={() => openChainModal?.()}
 								>
 									Change network
 								</Button>

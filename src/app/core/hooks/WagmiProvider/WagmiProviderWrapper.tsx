@@ -1,46 +1,64 @@
 import type { ReactNode } from "react";
-import { WagmiProvider } from "@privy-io/wagmi";
+import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { RainbowKitProvider, Theme, darkTheme } from "@rainbow-me/rainbowkit";
 import { hashFn } from "@wagmi/core/query";
-import type { ConnectedWallet, User } from "@privy-io/react-auth";
+import { getConfig } from "./config/getConfig";
 
-import { privyWagmiConfig } from "./config/privyConfig";
+const WALLET_CONNECT_PROJECT_ID =
+  process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID;
+if (!WALLET_CONNECT_PROJECT_ID)
+  throw new Error("WALLET_CONNECT_PROJECT_ID not set!");
 
-const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			queryKeyHashFn: hashFn,
-		},
-	},
+const baseTheme = darkTheme({
+  accentColor: "#EA5817",
+  accentColorForeground: "yellow",
+  borderRadius: "none",
+  fontStack: "system",
+  overlayBlur: "small",
 });
 
-/**
- * Make the Privy *embedded* wallet the active wagmi account whenever it exists,
- * so `useAccount()` — and therefore the whole app (nav, balances, governance) —
- * reflects it. Linked external wallets are only used as funding sources inside
- * the fund module, never as the primary account.
- */
-function preferEmbeddedWallet({
-	wallets,
-}: {
-	wallets: ConnectedWallet[];
-	user: User | null;
-}): ConnectedWallet | undefined {
-	return (
-		wallets.find((wallet) => wallet.walletClientType === "privy") ??
-		wallets[0]
-	);
+const customTheme: Theme = {
+  // @ts-expect-error Correct
+  colors: {
+    closeButton: "#EA5817",
+    accentColor: "#EA5817",
+    connectButtonText: "#EA5817",
+    modalTextSecondary: "#EA5817",
+    modalBackground: "#FDFAF3",
+    modalBorder: "#eae2d6",
+    modalText: "#171717",
+    accentColorForeground: "#171717",
+  },
+  fonts: {
+    body: "var(--font-breadBody)",
+  },
 }
 
+const theme: Theme = {
+  ...baseTheme,
+  ...customTheme,
+};
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      queryKeyHashFn: hashFn,
+    },
+  },
+});
+
 export function WagmiProviderWrapper({ children }: { children: ReactNode }) {
-	return (
-		<WagmiProvider
-			config={privyWagmiConfig}
-			setActiveWalletForWagmi={preferEmbeddedWallet}
-		>
-			<QueryClientProvider client={queryClient}>
-				{children}
-			</QueryClientProvider>
-		</WagmiProvider>
-	);
+  const { config } = getConfig();
+
+  return (
+    <WagmiProvider reconnectOnMount={true} config={config}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider modalSize="compact" theme={theme}>
+        {/* <RainbowKitProvider modalSize="compact" theme={customTheme}> */}
+          {children}
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
 }

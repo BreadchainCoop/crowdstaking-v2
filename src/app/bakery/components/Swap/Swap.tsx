@@ -1,8 +1,7 @@
 "use client";
 import type { ChangeEvent } from "react";
 import { useCallback, useState } from "react";
-import { useSwitchChain } from "wagmi";
-import { gnosis } from "wagmi/chains";
+import { useChainModal } from "@rainbow-me/rainbowkit";
 import { FromPanel } from "./FromPanel";
 import SwapReverse from "../SwapReverse";
 import ToPanel from "./ToPanel";
@@ -46,7 +45,7 @@ export function Swap() {
     setSwapState((state) => ({ ...state, value: "" }));
   }, [setSwapState]);
 
-  const { switchChain } = useSwitchChain();
+  const { openChainModal } = useChainModal();
 
   const { xDAI, BREAD } = useTokenBalances();
 
@@ -167,7 +166,7 @@ export function Swap() {
                           fullWidth={true}
                           size="large"
                           variant="danger"
-                          onClick={() => switchChain({ chainId: gnosis.id })}
+                          onClick={() => openChainModal?.()}
                         >
                           Change network
                         </Button>
