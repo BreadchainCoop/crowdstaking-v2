@@ -1,4 +1,4 @@
-import { projectsMeta } from "@/app/projectsMeta";
+import { getProjectMeta } from "@/app/projectsMeta";
 import { formatBalance, formatProjectPayment } from "@/app/core/util/formatter";
 import { formatUnits, Hex } from "viem";
 import { BreadIcon } from "@/app/core/components/Icons/TokenIcons";
@@ -263,7 +263,7 @@ function VotingHistoryDetailMobile({ sortedProjects }: Details) {
           collapsible
         >
           {sortedProjects.map(({ formatted, project }) => {
-            const meta = projectsMeta[project.projectAddress];
+            const meta = getProjectMeta(project.projectAddress);
 
             return (
               <Accordion.Item
@@ -274,13 +274,15 @@ function VotingHistoryDetailMobile({ sortedProjects }: Details) {
                 <Accordion.Trigger className="flex items-center justify-between w-full group">
                   <div className="inline-flex items-center justify-start w-4/6">
                     <div className="w-6 h-6 flex items-center justify-center bg-paper-0 border-[0.015rem] border-paper-2 mr-2">
-											<img
-												src={meta.logoSrc}
-												className="w-[1.2rem] h-[1.2rem]"
-												alt={`${meta.name}'s logo`}
-                        width={19.2}
-                        height={19.2}
-											/>
+											{meta.logoSrc ? (
+												<img
+													src={meta.logoSrc}
+													className="w-[1.2rem] h-[1.2rem]"
+													alt={`${meta.name}'s logo`}
+                          width={19.2}
+                          height={19.2}
+												/>
+											) : null}
 										</div>
                     <Body bold className="text-surface-grey mt-1">
                       {meta.name}
@@ -393,7 +395,7 @@ function VotingHistoryDetailDesktop({ sortedProjects }: Details) {
           </thead>
           <tbody>
             {sortedProjects.map(({ formatted, project }) => {
-              const meta = projectsMeta[project.projectAddress];
+              const meta = getProjectMeta(project.projectAddress);
               const vote = Number(formatted.percentVotes);
 
               return (
@@ -404,13 +406,15 @@ function VotingHistoryDetailDesktop({ sortedProjects }: Details) {
                   <td className="py-4 px-2">
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 bg-paper-0 border-[0.015rem] border-paper-2 flex items-center justify-center">
-                        <img
-                          src={meta.logoSrc}
-                          className="w-[1.1625rem] h-[1.1625rem]"
-                          alt={`${meta.name}'s logo`}
-                          width={18.6}
-                          height={18.6}
-                        />
+                        {meta.logoSrc ? (
+                          <img
+                            src={meta.logoSrc}
+                            className="w-[1.1625rem] h-[1.1625rem]"
+                            alt={`${meta.name}'s logo`}
+                            width={18.6}
+                            height={18.6}
+                          />
+                        ) : null}
                       </div>
                       <Body bold className="text-surface-grey">
                         {meta.name}

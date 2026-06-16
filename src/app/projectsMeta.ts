@@ -98,3 +98,28 @@ export const projectsMeta: {
     link: "https://www.karmahq.xyz/project/traditional-dream-factory-1/about",
   },
 };
+
+/**
+ * Returns metadata for a project address, falling back to a safe placeholder
+ * when the address has no entry in `projectsMeta`.
+ *
+ * Historical voting cycles can include former member projects that are no
+ * longer in `projectsMeta` (e.g. a project that was added and later removed
+ * from the YieldDistributor). Consumers that render distribution history
+ * (e.g. VotingHistory) must not assume every address is mapped — reading
+ * `.name`/`.logoSrc` off an undefined lookup crashes the view. Use this helper
+ * instead of indexing `projectsMeta` directly when the address may be historical.
+ */
+export function getProjectMeta(address: Hex): ProjectMeta {
+  const meta = projectsMeta[address];
+  if (meta) return meta;
+
+  return {
+    name: `${address.slice(0, 6)}…${address.slice(-4)}`,
+    order: Number.MAX_SAFE_INTEGER,
+    description: "Former member project.",
+    logoSrc: "",
+    active: false,
+    link: `https://gnosisscan.io/address/${address}`,
+  };
+}
