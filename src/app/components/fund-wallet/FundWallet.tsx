@@ -9,13 +9,16 @@ import {
 	ArrowLeftIcon,
 	ArrowsLeftRightIcon,
 	CreditCardIcon,
+	WalletIcon,
 } from "@phosphor-icons/react";
 
 import { useWatchFundedXdai } from "@/app/core/hooks/useWatchFundedXdai";
+import { useModal } from "@/app/core/context/ModalContext";
 import { Bridge } from "@/app/bakery/components/Swap/Bridge";
 import { FundButton } from "./FundButton";
+import { FundFromWallet } from "./FundFromWallet";
 
-type View = "options" | "bridge";
+type View = "options" | "wallet" | "bridge";
 
 /**
  * Fund-your-account module. Funds the Privy embedded wallet with xDAI — which
@@ -27,6 +30,7 @@ export function FundWallet() {
 	const [view, setView] = useState<View>("options");
 	const { fundWallet } = useFundWallet();
 	const { wallets } = useWallets();
+	const { setModal } = useModal();
 
 	const embedded = wallets.find((w) => w.walletClientType === "privy");
 	const embeddedAddress = embedded?.address as Address | undefined;
@@ -53,6 +57,16 @@ export function FundWallet() {
 			},
 		});
 	};
+
+	if (view === "wallet") {
+		return (
+			<FundFromWallet
+				receiver={embeddedAddress}
+				onBack={() => setView("options")}
+				onDone={() => setModal(null)}
+			/>
+		);
+	}
 
 	if (view === "bridge") {
 		return (
@@ -88,9 +102,15 @@ export function FundWallet() {
 
 			<div className="flex flex-col gap-3">
 				<FundButton
+					icon={<WalletIcon size={28} />}
+					title="Fund from your wallet"
+					subtitle="Send xDAI or BREAD from a browser wallet"
+					onClick={() => setView("wallet")}
+				/>
+				<FundButton
 					icon={<CreditCardIcon size={28} />}
 					title="Buy or transfer"
-					subtitle="Card, exchange, or send from a wallet"
+					subtitle="Card, exchange, or bank transfer"
 					onClick={handleOnRamp}
 					disabled={!embeddedAddress}
 				/>
