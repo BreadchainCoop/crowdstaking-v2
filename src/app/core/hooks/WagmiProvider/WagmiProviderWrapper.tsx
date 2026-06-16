@@ -33,14 +33,17 @@ function preferEmbeddedWallet({
 }
 
 export function WagmiProviderWrapper({ children }: { children: ReactNode }) {
+	// QueryClientProvider must wrap @privy-io/wagmi's WagmiProvider — the latter
+	// uses react-query internally, so it needs a QueryClient ancestor (otherwise
+	// prerendering throws "No QueryClient set").
 	return (
-		<WagmiProvider
-			config={privyWagmiConfig}
-			setActiveWalletForWagmi={preferEmbeddedWallet}
-		>
-			<QueryClientProvider client={queryClient}>
+		<QueryClientProvider client={queryClient}>
+			<WagmiProvider
+				config={privyWagmiConfig}
+				setActiveWalletForWagmi={preferEmbeddedWallet}
+			>
 				{children}
-			</QueryClientProvider>
-		</WagmiProvider>
+			</WagmiProvider>
+		</QueryClientProvider>
 	);
 }
