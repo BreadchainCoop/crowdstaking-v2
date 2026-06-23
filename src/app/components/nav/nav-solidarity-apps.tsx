@@ -1,3 +1,4 @@
+import { LINKS } from "@/lib/links";
 import { Body, Caption } from "@breadcoop/ui";
 
 interface NavSolidarityAppsProps {
@@ -8,7 +9,16 @@ interface NavSolidarityAppsProps {
 	rearranged?: boolean;
 }
 
-const _apps = [
+interface SolidarityApp {
+	id: "fund" | "stacks" | "net";
+	label: string;
+	desc: string;
+	color: string;
+	comingSoon: boolean;
+	link?: string;
+}
+
+const _apps: SolidarityApp[] = [
 	{
 		id: "fund",
 		label: "Solidarity Fund",
@@ -21,7 +31,8 @@ const _apps = [
 		label: "Stacks",
 		desc: "Stack money together.",
 		color: "text-[#1C5BB9]",
-		comingSoon: true,
+		comingSoon: false,
+		link: LINKS.stacks,
 	},
 	{
 		id: "net",
@@ -44,7 +55,7 @@ const NavSolidarityApps = ({
 				if (a.id === current) return -1;
 				if (b.id === current) return 1;
 				return 0;
-		  })
+			})
 		: [..._apps];
 
 	return (
@@ -53,38 +64,60 @@ const NavSolidarityApps = ({
 				<Body className="text-surface-grey mb-4">Solidarity apps</Body>
 			)}
 			<ul className="flex flex-col gap-2">
-				{[...apps].map((app) => (
-					<li
-						key={app.id}
-						className={`flex items-center justify-start p-2.5 border ${
-							current === app.id
-								? "border-[#EA5817]"
-								: "border-transparent"
-						}`}
-					>
-						<span className={`mr-2 ${app.color}`}>
-							<AppSvg />
-						</span>
-						<div className="mr-auto">
-							<div className="flex items-center justify-start font-bold">
-								<Body>{app.label}</Body>
-								{app.comingSoon && (
-									<Caption className="text-xs ml-2 text-[#EA5817]">
-										Coming soon
-									</Caption>
-								)}
+				{[...apps].map((app) => {
+					const content = (
+						<>
+							<span className={`mr-2 ${app.color}`}>
+								<AppSvg />
+							</span>
+							<div className="mr-auto">
+								<div className="flex items-center justify-start font-bold">
+									<Body>{app.label}</Body>
+									{app.comingSoon && (
+										<Caption className="text-xs ml-2 text-[#EA5817]">
+											Coming soon
+										</Caption>
+									)}
+								</div>
+								<Body className="font-light text-surface-grey-2">
+									{app.desc}
+								</Body>
 							</div>
-							<Body className="font-light text-surface-grey-2">
-								{app.desc}
-							</Body>
-						</div>
-						{showSelected && current === app.id && (
-							<Caption className="font-bold text-system-green">
-								Selected
-							</Caption>
-						)}
-					</li>
-				))}
+							{showSelected && current === app.id && (
+								<Caption className="font-bold text-system-green">
+									Selected
+								</Caption>
+							)}
+						</>
+					);
+
+					const innerClassName =
+						"flex items-center justify-start p-2.5";
+
+					return (
+						<li
+							key={app.id}
+							className={`border ${
+								current === app.id
+									? "border-[#EA5817]"
+									: "border-transparent"
+							}`}
+						>
+							{app.link ? (
+								<a
+									href={app.link}
+									target="_blank"
+									rel="noopener noreferrer"
+									className={innerClassName}
+								>
+									{content}
+								</a>
+							) : (
+								<div className={innerClassName}>{content}</div>
+							)}
+						</li>
+					);
+				})}
 			</ul>
 		</section>
 	);
