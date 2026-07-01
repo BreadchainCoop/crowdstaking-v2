@@ -5,7 +5,10 @@ import NavAccountDetails from "./account-details";
 import { CaretDownIcon } from "@phosphor-icons/react";
 import { usePathname } from "next/navigation";
 import { useAccount, useEnsName } from "wagmi";
-import { truncateAddress } from "@/app/core/util/formatter";
+import { formatBalance, truncateAddress } from "@/app/core/util/formatter";
+import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
+import { blo } from "blo";
+import { Body } from "@breadcoop/ui";
 
 const NavMobileAccountMenu = () => {
 	const account = useAccount();
@@ -13,6 +16,18 @@ const NavMobileAccountMenu = () => {
 		address: account.address,
 		query: { enabled: Boolean(account.address) },
 	});
+
+	const { BREAD } = useTokenBalances();
+
+	const rawBalance =
+		BREAD?.status === "SUCCESS" && BREAD.value
+			? formatBalance(parseFloat(BREAD.value), 2)
+			: "0.00";
+	const [balInt, balDec] = rawBalance.split(".");
+
+	const avatarSrc = account.address
+		? blo(account.address as `0x${string}`)
+		: null;
 
 	const pathname = usePathname();
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -37,18 +52,36 @@ const NavMobileAccountMenu = () => {
 
 	return (
 		<div ref={containerRef} className="mt-6">
-			<button
-				onClick={() => toggle()}
-				className="w-full flex items-center justify-center gap-4 truncate text-ellipsis py-3 px-6 bg-paper-2 border border-surface-ink font-bold"
-			>
-				{ensNameResult.data || truncateAddress(account.address || "")}
-				<span
-					ref={iconRef}
-					className="text-[#EA5817] transition-transform"
+			<div className="flex items-center gap-2.5 bg-paper-2 border border-surface-ink overflow-hidden p-2">
+				{/* Balance chip */}
+				<div className="flex items-center justify-center bg-paper-main border border-surface-grey overflow-hidden px-2 py-1">
+					<Body
+						bold
+						className="text-surface-ink whitespace-nowrap leading-none"
+					>
+						<span className="text-base">${balInt}</span>
+						<span className="text-[12px]">.{balDec}</span>
+					</Body>
+				</div>
+
+				{/* Divider */}
+				<div className="h-7 w-px bg-[#d9d9d9] shrink-0" />
+
+				<button
+					onClick={() => toggle()}
+					className="flex items-center justify-center gap-4 truncate text-ellipsis py-3 font-bold"
 				>
-					<CaretDownIcon />
-				</span>
-			</button>
+					{ensNameResult.data ||
+						truncateAddress(account.address || "")}
+					<span
+						ref={iconRef}
+						className="text-[#EA5817] transition-transform"
+					>
+						<CaretDownIcon />
+					</span>
+				</button>
+			</div>
+
 			<div ref={accountDivRef} className="h-0 overflow-hidden">
 				<NavAccountDetails
 					className="max-w-none border border-surface-ink mt-2"
