@@ -1,9 +1,11 @@
 "use client";
-import { truncateAddress } from "@/app/core/util/formatter";
+import { formatBalance, truncateAddress } from "@/app/core/util/formatter";
 import { Body } from "@breadcoop/ui";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { useAccount, useEnsName } from "wagmi";
 import NavAccountDetails from "./account-details";
+import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
+import { blo } from "blo";
 
 const Caret = () => (
 	<svg
@@ -30,28 +32,60 @@ const NavAccountMenu = () => {
 		query: { enabled: Boolean(account.address) },
 	});
 
+	const { BREAD } = useTokenBalances();
+
+	const rawBalance =
+		BREAD?.status === "SUCCESS" && BREAD.value
+			? formatBalance(parseFloat(BREAD.value), 2)
+			: "0.00";
+	const [balInt, balDec] = rawBalance.split(".");
+
+	const avatarSrc = account.address
+		? blo(account.address as `0x${string}`)
+		: null;
+
 	return (
 		<NavigationMenu.Root className="relative">
 			<NavigationMenu.List>
 				<NavigationMenu.Item>
-					<NavigationMenu.Trigger className="group">
-						<Body
-							bold
-							className={
-								"w-full flex items-center justify-center gap-2.5 truncate text-ellipsis py-3 px-6 bg-paper-2 border border-surface-ink font-bold"
-							}
-						>
-							{ensNameResult.data ||
-								truncateAddress(account.address || "")}
-							{/* <span className="text-[#EA5817] transition-transform duration-200 group-data-[state=open]:rotate-180"> */}
-							<span className="text-[#EA5817]">
-								<Caret />
+					{/* Outer chip — Surface/Main bg, Ink border, 8px padding */}
+					<div className="flex items-center gap-2.5 bg-paper-main border border-surface-ink overflow-hidden p-2">
+						{/* Balance chip */}
+						<div className="flex items-center bg-paper-main border border-surface-grey overflow-hidden px-2 py-1 shrink-0">
+							<Body
+								bold
+								className="text-surface-ink whitespace-nowrap leading-none"
+							>
+								<span className="text-base">${balInt}</span>
+								<span className="text-[12px]">.{balDec}</span>
+							</Body>
+						</div>
+
+						{/* Divider */}
+						<div className="h-7 w-px bg-[#d9d9d9] shrink-0" />
+
+						{/* Account trigger — opens dropdown */}
+						<NavigationMenu.Trigger className="group flex items-center gap-2.5">
+							{avatarSrc && (
+								// eslint-disable-next-line @next/next/no-img-element
+								<img
+									src={avatarSrc}
+									alt=""
+									className="shrink-0 size-6 rounded-full"
+								/>
+							)}
+							<span className="font-breadBody font-bold text-base text-surface-ink whitespace-nowrap leading-none">
+								{ensNameResult.data ||
+									truncateAddress(account.address || "")}
 							</span>
-						</Body>
-					</NavigationMenu.Trigger>
+							{/* CaretDown */}
+							<Caret />
+						</NavigationMenu.Trigger>
+					</div>
+
 					<NavigationMenu.Content className="w-max">
 						<NavAccountDetails
-							className="w-screen max-w-[27.6875rem] bg-paper-main border border-paper-2"
+							className="w-screen max-w-110.75 bg-paper-main border border-paper-2"
 							account={account}
 							ensNameResult={ensNameResult}
 						/>
