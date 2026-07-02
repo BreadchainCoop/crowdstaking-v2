@@ -1,5 +1,8 @@
 export const mtPelerinConfig = {
   baseUrl: "https://widget.mtpelerin.com/",
+  // Mt Pelerin's public consumer page — works without a partner key,
+  // but can't pre-fill wallet address or amount.
+  consumerBuyUrl: "https://www.mtpelerin.com/buy-xdai",
   activationKey: process.env.NEXT_PUBLIC_MTPELERIN_ACTIVATION_KEY,
   // xDAI on Gnosis Chain
   network: "xdai_mainnet",
@@ -7,8 +10,18 @@ export const mtPelerinConfig = {
   defaultFiat: "USD",
 };
 
+// The parameterized widget deep-link (amount/address pre-fill) is only
+// used once a partner activation key is configured (requested via
+// hello@mtpelerin.com). Until then we send users to the consumer page.
+export const hasMtPelerinKey = Boolean(mtPelerinConfig.activationKey);
+
 export function buildMtPelerinUrl(options?: { inputAmount?: string; recipientAddress?: string }): string {
+  if (!hasMtPelerinKey) {
+    return mtPelerinConfig.consumerBuyUrl;
+  }
+
   const params = new URLSearchParams({
+    _ctkn: mtPelerinConfig.activationKey ?? "",
     type: "direct-link",
     tab: "buy",
     tabs: "buy",
@@ -16,18 +29,7 @@ export function buildMtPelerinUrl(options?: { inputAmount?: string; recipientAdd
     nets: mtPelerinConfig.network,
     bdc: mtPelerinConfig.defaultCrypto,
     bsc: mtPelerinConfig.defaultFiat,
-    // Pre-select card / Google Pay / Apple Pay — the practical rail for
-    // non-European users, for whom bank transfer means a SWIFT wire.
-    // Users can still switch payment method inside the widget.
-    pm: "card",
   });
-
-  // Partner activation key (requested via hello@mtpelerin.com). The widget
-  // currently works without one, but only a keyed integration is documented
-  // and gets referral attribution.
-  if (mtPelerinConfig.activationKey) {
-    params.set("_ctkn", mtPelerinConfig.activationKey);
-  }
 
   if (options?.inputAmount) {
     params.set("bsa", options.inputAmount);
