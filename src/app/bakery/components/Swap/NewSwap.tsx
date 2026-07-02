@@ -22,14 +22,13 @@ import { InsufficentBalance } from "./InsufficentBalance";
 import { Bridge } from "./Bridge";
 import { Buy } from "./Buy";
 import { useToast } from "@/app/core/context/ToastContext/ToastContext";
-import { useStrictMobile } from "@/hooks/use-is-device";
 import { TSwapMode } from "./interfaces";
 
 const notes: Record<TSwapState["mode"], string> = {
 	"BAKE": 'Baking adds new BREAD into circulation. You can redeem your BREAD through the "Burn" tab at any time',
 	"BURN": "When you Burn BREAD, you are no longer contributing to the Solidarity Fund, and all voting power will be removed.",
 	"BRIDGE": "This bridge is powered by LI.FI",
-	"BUY": "Clicking the button will open the Peer website where you can complete your purchase of xDAI to bake into BREAD.",
+	"BUY": "Clicking a buy button will open the selected provider's website where you can complete your purchase of xDAI to bake into BREAD.",
 };
 
 const validModes: TSwapMode[] = ["BAKE", "BRIDGE", "BURN", "BUY"];
@@ -45,7 +44,6 @@ const NewSwap = () => {
 		value: "",
 	});
 	const { toastDispatch } = useToast();
-	const { isMobile } = useStrictMobile();
 
 	useEffect(() => {
 		const params = searchParams.get("tab") as unknown as TSwapMode;
@@ -252,12 +250,10 @@ const NewSwap = () => {
 					)}
 				</div>
 			)}
-			{!(swapState.mode === "BUY" && isMobile) && (
-				<Body className="text-surface-grey text-sm mt-1">
-					<span className="font-bold">Note</span>:{" "}
-					{notes[swapState.mode]}
-				</Body>
-			)}
+			<Body className="text-surface-grey text-sm mt-1">
+				<span className="font-bold">Note</span>:{" "}
+				{notes[swapState.mode]}
+			</Body>
 		</div>
 	);
 };
