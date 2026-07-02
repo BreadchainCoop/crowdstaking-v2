@@ -22,9 +22,9 @@ export function PeerBuy() {
           <div className="mb-3">
             <Body className="text-sm mb-2 font-bold text-surface-ink">How it works:</Body>
             <ol className="text-sm list-decimal list-inside space-y-1">
-              <li>Click the button below to open Peer, then connect a wallet or log in</li>
-              <li>On the Buy tab, choose your amount and payment app &mdash; you&apos;ll receive USDC (pick Base as the network)</li>
-              <li>Pay through your payment app and wait a moment for verification</li>
+              <li>Click the button below to open Peer&apos;s trade page, then log in with a wallet or social account</li>
+              <li>Buy USDC &mdash; choose your amount, currency, and payment app (pick Base as the network)</li>
+              <li>Complete the payment in your payment app and wait for verification</li>
               <li>Come back and use our Bridge tab to swap the USDC into xDAI on Gnosis, ready to bake into BREAD</li>
             </ol>
           </div>
