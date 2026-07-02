@@ -31,7 +31,7 @@ export function MtPelerinBuy({
       <div className="bg-paper-1 p-5">
         <div className="text-surface-grey-2 text-sm mb-4">
           <div className="flex items-center gap-3 mb-4">
-            <img src="https://www.mtpelerin.com/favicon.ico" alt="Mt Pelerin" className="h-10 w-10" />
+            <img src="https://www.mtpelerin.com/icons/android-chrome-192x192.png" alt="Mt Pelerin" className="h-10 w-10" />
             <Body className="text-base font-bold text-surface-ink">Buy with Mt Pelerin</Body>
           </div>
           <Body className="text-sm mb-3">

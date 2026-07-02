@@ -20,7 +20,7 @@ export function ProviderPicker({
       />
       <ProviderOption
         name="Mt Pelerin"
-        logoSrc="https://www.mtpelerin.com/favicon.ico"
+        logoSrc="https://www.mtpelerin.com/icons/android-chrome-192x192.png"
         isSelected={provider === "MT_PELERIN"}
         onSelect={() => setProvider("MT_PELERIN")}
       />
