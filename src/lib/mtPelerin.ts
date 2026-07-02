@@ -16,6 +16,10 @@ export function buildMtPelerinUrl(options?: { inputAmount?: string; recipientAdd
     nets: mtPelerinConfig.network,
     bdc: mtPelerinConfig.defaultCrypto,
     bsc: mtPelerinConfig.defaultFiat,
+    // Pre-select card / Google Pay / Apple Pay — the practical rail for
+    // non-European users, for whom bank transfer means a SWIFT wire.
+    // Users can still switch payment method inside the widget.
+    pm: "card",
   });
 
   // Partner activation key (requested via hello@mtpelerin.com). The widget
