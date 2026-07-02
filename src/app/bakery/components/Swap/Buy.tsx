@@ -20,7 +20,7 @@ export function Buy() {
     <div>
       <ProviderPicker provider={provider} setProvider={setProvider} />
       {provider === "PEER" ? (
-        <PeerBuy amount={amount} onAmountChange={setAmount} recipientAddress={recipientAddress} />
+        <PeerBuy />
       ) : (
         <MtPelerinBuy amount={amount} onAmountChange={setAmount} recipientAddress={recipientAddress} />
       )}
