@@ -41,6 +41,18 @@ export default function App({ children }: { children: React.ReactNode }) {
 					data-domain="app.breadchain.xyz"
 					src="https://analytics.breadchain.xyz/js/script.tagged-events.outbound-links.js"
 				/>
+        <style
+					dangerouslySetInnerHTML={{
+						__html: `
+  .animated-details::details-content {
+    opacity: 0; block-size: 0; overflow: hidden;
+    transition: block-size .3s ease, opacity .3s ease,
+                content-visibility .3s ease allow-discrete;
+  }
+  .animated-details[open]::details-content { opacity: 1; block-size: auto; }
+`,
+					}}
+				/>
 			</head>
 
       <body

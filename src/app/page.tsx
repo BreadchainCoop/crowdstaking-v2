@@ -23,7 +23,7 @@ export default function Home() {
 		<>
 			<BalanceBanner />
 			<div className={clsx(WRAPPER_CLASSES, "")}>
-				<div className="md:grid md:grid-cols-2 md:gap-x-6 lg:gap-x-[9.5rem]">
+				<div className="md:grid md:grid-cols-2 md:grid-rows-[auto_1fr] md:gap-x-6 md:gap-y-16 lg:gap-x-[9.5rem]">
 					<div>
 						<Heading1 className="text-[2.5rem] text-primary-orange mb-4 md:max-w-[32rem] md:flex md:flex-col md:leading-[0.9] md:text-[3.5rem] lg:text-[4rem]">
 							<span>THE</span> <span>SOLIDARITY</span>{" "}
