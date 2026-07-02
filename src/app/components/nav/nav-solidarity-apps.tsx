@@ -22,7 +22,7 @@ const _apps: SolidarityApp[] = [
 	{
 		id: "fund",
 		label: "Solidarity Fund",
-		desc: "give without giving.",
+		desc: "Give without giving.",
 		color: "text-[#EA5817]",
 		comingSoon: false,
 	},
