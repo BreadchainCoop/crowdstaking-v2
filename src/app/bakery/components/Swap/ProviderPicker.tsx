@@ -13,16 +13,16 @@ export function ProviderPicker({
     <fieldset className="grid gap-4 grid-cols-2 mb-4">
       <legend className="sr-only">Choose a payment provider</legend>
       <ProviderOption
-        name="Peer"
-        logoSrc="https://www.peer.xyz/logo192.png"
-        isSelected={provider === "PEER"}
-        onSelect={() => setProvider("PEER")}
-      />
-      <ProviderOption
         name="Mt Pelerin"
         logoSrc="https://www.mtpelerin.com/icons/android-chrome-192x192.png"
         isSelected={provider === "MT_PELERIN"}
         onSelect={() => setProvider("MT_PELERIN")}
+      />
+      <ProviderOption
+        name="Peer"
+        logoSrc="https://www.peer.xyz/logo192.png"
+        isSelected={provider === "PEER"}
+        onSelect={() => setProvider("PEER")}
       />
     </fieldset>
   );

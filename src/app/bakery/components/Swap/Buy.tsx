@@ -9,7 +9,7 @@ import { MtPelerinBuy } from "./MtPelerinBuy";
 import { TBuyProvider } from "./interfaces";
 
 export function Buy() {
-  const [provider, setProvider] = useState<TBuyProvider>("PEER");
+  const [provider, setProvider] = useState<TBuyProvider>("MT_PELERIN");
   const [amount, setAmount] = useState("");
   const { user } = useConnectedUser();
 
