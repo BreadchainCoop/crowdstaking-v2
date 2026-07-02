@@ -1,8 +1,5 @@
 export const mtPelerinConfig = {
   baseUrl: "https://widget.mtpelerin.com/",
-  // Mt Pelerin's public consumer page — works without a partner key,
-  // but can't pre-fill wallet address or amount.
-  consumerBuyUrl: "https://www.mtpelerin.com/buy-xdai",
   activationKey: process.env.NEXT_PUBLIC_MTPELERIN_ACTIVATION_KEY,
   // xDAI on Gnosis Chain
   network: "xdai_mainnet",
@@ -10,18 +7,8 @@ export const mtPelerinConfig = {
   defaultFiat: "USD",
 };
 
-// The parameterized widget deep-link requires a partner activation key
-// (_ctkn, requested via hello@mtpelerin.com). Without one we fall back
-// to the consumer buy page.
-export const hasMtPelerinKey = Boolean(mtPelerinConfig.activationKey);
-
 export function buildMtPelerinUrl(options?: { inputAmount?: string; recipientAddress?: string }): string {
-  if (!hasMtPelerinKey) {
-    return mtPelerinConfig.consumerBuyUrl;
-  }
-
   const params = new URLSearchParams({
-    _ctkn: mtPelerinConfig.activationKey ?? "",
     type: "direct-link",
     tab: "buy",
     tabs: "buy",
@@ -30,6 +17,13 @@ export function buildMtPelerinUrl(options?: { inputAmount?: string; recipientAdd
     bdc: mtPelerinConfig.defaultCrypto,
     bsc: mtPelerinConfig.defaultFiat,
   });
+
+  // Partner activation key (requested via hello@mtpelerin.com). The widget
+  // currently works without one, but only a keyed integration is documented
+  // and gets referral attribution.
+  if (mtPelerinConfig.activationKey) {
+    params.set("_ctkn", mtPelerinConfig.activationKey);
+  }
 
   if (options?.inputAmount) {
     params.set("bsa", options.inputAmount);
