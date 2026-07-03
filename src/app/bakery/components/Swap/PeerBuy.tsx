@@ -18,7 +18,7 @@ export function PeerBuy({ recipientAddress }: { recipientAddress?: string }) {
             <Body className="text-base font-bold text-surface-ink">Buy with Peer</Body>
           </div>
           <Body className="text-sm mb-3">
-            Peer is a peer-to-peer marketplace where you buy crypto without KYC directly from other people, paying through apps like Venmo, Revolut, Wise, Cash App, Zelle, and N26.
+            Peer is a peer-to-peer marketplace where you buy crypto without KYC directly from other people, paying through apps like Venmo, Revolut, Wise, Cash App, and Zelle.
           </Body>
           <div className="mb-3">
             <Body className="text-sm mb-2 font-bold text-surface-ink">How it works:</Body>
@@ -30,9 +30,6 @@ export function PeerBuy({ recipientAddress }: { recipientAddress?: string }) {
               <li>Come back and use our Bridge tab to move the USDC from Base into xDAI on Gnosis, ready to bake into BREAD</li>
             </ol>
           </div>
-          <Body className="text-sm mb-4">
-            <LearnMoreLink />
-          </Body>
           {recipientAddress && (
             <WalletAddressHint address={recipientAddress} label="Your wallet address:" />
           )}
@@ -46,17 +43,4 @@ export function PeerBuy({ recipientAddress }: { recipientAddress?: string }) {
       </div>
     </div>
   );
-}
-
-function LearnMoreLink() {
-	return (
-		<a
-			href="https://docs.peer.xyz/guides/for-buyers/complete-guide-to-onboarding"
-			className="text-primary-orange hover:underline"
-			target="_blank"
-			rel="noopener noreferrer"
-		>
-			Learn more about the process →
-		</a>
-	);
 }
