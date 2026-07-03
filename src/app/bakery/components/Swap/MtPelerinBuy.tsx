@@ -1,9 +1,10 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
 import { Body, LiftedButton } from "@breadcoop/ui";
 import { buildMtPelerinUrl, hasMtPelerinKey } from "@/lib/mtPelerin";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
+import { WalletAddressHint } from "./WalletAddressHint";
 
 export function MtPelerinBuy({
   amount,
@@ -56,7 +57,7 @@ export function MtPelerinBuy({
             </div>
           )}
           {!hasMtPelerinKey && recipientAddress && (
-            <WalletAddressHint address={recipientAddress} />
+            <WalletAddressHint address={recipientAddress} label="Your wallet address (for step 3):" />
           )}
         </div>
 
@@ -85,38 +86,6 @@ export function MtPelerinBuy({
         <LiftedButton onClick={handleBuy} className="" form={hasMtPelerinKey ? "mtpelerin-form" : undefined}>
           Buy with Mt Pelerin
         </LiftedButton>
-      </div>
-    </div>
-  );
-}
-
-function WalletAddressHint({ address }: { address: string }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(address);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Clipboard unavailable (e.g. insecure context) — user can select the text manually
-    }
-  };
-
-  return (
-    <div className="bg-paper-main p-3 mt-3">
-      <Body className="text-xs font-semibold text-surface-grey mb-1">
-        Your wallet address (for step 3):
-      </Body>
-      <div className="flex items-center gap-2">
-        <code className="text-xs text-surface-ink break-all">{address}</code>
-        <button
-          type="button"
-          onClick={handleCopy}
-          className="text-xs font-bold text-primary-orange hover:underline shrink-0"
-        >
-          {copied ? "Copied!" : "Copy"}
-        </button>
       </div>
     </div>
   );

@@ -2,8 +2,9 @@
 
 import { Body, LiftedButton } from "@breadcoop/ui";
 import { buildPeerUrl } from "@/lib/peer";
+import { WalletAddressHint } from "./WalletAddressHint";
 
-export function PeerBuy() {
+export function PeerBuy({ recipientAddress }: { recipientAddress?: string }) {
   const handleBuy = () => {
     window.open(buildPeerUrl(), "_blank");
   };
@@ -17,20 +18,24 @@ export function PeerBuy() {
             <Body className="text-base font-bold text-surface-ink">Buy with Peer</Body>
           </div>
           <Body className="text-sm mb-3">
-            Peer is a peer-to-peer service where you can buy crypto without KYC using payment apps like Venmo, Revolut, Wise, Cash App, Zelle, and N26.
+            Peer is a peer-to-peer marketplace where you buy crypto without KYC directly from other people, paying through apps like Venmo, Revolut, Wise, Cash App, Zelle, and N26.
           </Body>
           <div className="mb-3">
             <Body className="text-sm mb-2 font-bold text-surface-ink">How it works:</Body>
             <ol className="text-sm list-decimal list-inside space-y-1">
-              <li>Click the button below to open Peer&apos;s trade page, then log in with a wallet or social account</li>
-              <li>Buy USDC &mdash; choose your amount, currency, and payment app (pick Base as the network)</li>
-              <li>Complete the payment in your payment app and wait for verification</li>
+              <li>Click the button below to open Peer&apos;s trade page and log in with a wallet or social account</li>
+              <li>Select the currency you&apos;re paying with and your payment app to see the available offers</li>
+              <li>Pick an offer from the list to buy USDC (choose Base as the network)</li>
+              <li>Pay through your payment app &mdash; Peer verifies the payment automatically and releases the USDC to your wallet</li>
               <li>Come back and use our Bridge tab to swap the USDC into xDAI on Gnosis, ready to bake into BREAD</li>
             </ol>
           </div>
           <Body className="text-sm mb-4">
             <LearnMoreLink />
           </Body>
+          {recipientAddress && (
+            <WalletAddressHint address={recipientAddress} label="Your wallet address:" />
+          )}
         </div>
       </div>
 
