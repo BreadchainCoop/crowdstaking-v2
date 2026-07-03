@@ -25,9 +25,9 @@ export function PeerBuy({ recipientAddress }: { recipientAddress?: string }) {
             <ol className="text-sm list-decimal list-inside space-y-1">
               <li>Click the button below to open Peer&apos;s trade page and log in with a wallet or social account</li>
               <li>Select the currency you&apos;re paying with and your payment app to see the available offers</li>
-              <li>Pick an offer from the list to buy USDC (choose Base as the network)</li>
+              <li>Pick an offer from the list to buy USDC (delivered on Base)</li>
               <li>Pay through your payment app &mdash; Peer verifies the payment automatically and releases the USDC to your wallet</li>
-              <li>Come back and use our Bridge tab to swap the USDC into xDAI on Gnosis, ready to bake into BREAD</li>
+              <li>Come back and use our Bridge tab to move the USDC from Base into xDAI on Gnosis, ready to bake into BREAD</li>
             </ol>
           </div>
           <Body className="text-sm mb-4">
