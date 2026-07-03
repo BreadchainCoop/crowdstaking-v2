@@ -52,7 +52,7 @@ export function MtPelerinBuy({
                 <li>Click the button below to open Mt Pelerin&apos;s xDAI page</li>
                 <li>Choose the amount you want to buy</li>
                 <li>Enter your wallet address as the receiving address</li>
-                <li>Pay by bank transfer &mdash; your xDAI arrives in your wallet, ready to bake into BREAD</li>
+                <li>Pay by bank transfer, or by card if you verify your identity &mdash; your xDAI arrives in your wallet, ready to bake into BREAD</li>
               </ol>
             </div>
           )}
