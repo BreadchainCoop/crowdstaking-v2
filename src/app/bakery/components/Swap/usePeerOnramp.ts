@@ -14,8 +14,9 @@
  * isolated and commented below.
  */
 
-import { useCallback, useMemo, useRef, useState } from "react";
-import { useAccount, usePublicClient, useSwitchChain, useWalletClient } from "wagmi";
+import { useCallback, useRef, useState } from "react";
+import { useAccount, useConfig, usePublicClient, useSwitchChain, useWalletClient } from "wagmi";
+import { getWalletClient } from "@wagmi/core";
 import { parseEventLogs, type Abi } from "viem";
 import type {
   BuyerTeePaymentProofInput,
@@ -104,10 +105,13 @@ function buildProof(
 }
 
 export function usePeerOnramp() {
-  const { address } = useAccount();
-  const { data: walletClient } = useWalletClient({ chainId: PEER_CHAIN_ID });
+  const { address, isConnected: accountConnected } = useAccount();
+  // Current-chain wallet client (present whenever connected — the wallet is
+  // usually on Gnosis). A Base-bound client is acquired lazily at purchase time.
+  const { data: walletClient } = useWalletClient();
   const publicClient = usePublicClient({ chainId: PEER_CHAIN_ID });
   const { switchChainAsync } = useSwitchChain();
+  const config = useConfig();
 
   const [status, setStatus] = useState<PeerOnrampStatus>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -177,12 +181,13 @@ export function usePeerOnramp() {
       }
 
       try {
-        // Ensure the wallet is on Base for the on-chain steps.
+        // Ensure the wallet is on Base, then get a Base-bound wallet client for
+        // the on-chain steps (the connected wallet is usually on Gnosis).
         if (walletClient.chain?.id !== PEER_CHAIN_ID) {
           await switchChainAsync({ chainId: PEER_CHAIN_ID });
         }
-
-        const client = createPeerClient(walletClient);
+        const baseWalletClient = await getWalletClient(config, { chainId: PEER_CHAIN_ID });
+        const client = createPeerClient(baseWalletClient);
 
         // --- Step 2: signal intent (on-chain) ---
         setStatus("signalling");
@@ -259,10 +264,10 @@ export function usePeerOnramp() {
         fail(e instanceof Error ? e.message : "Purchase failed");
       }
     },
-    [walletClient, address, publicClient, quote, switchChainAsync, fail],
+    [walletClient, address, publicClient, quote, switchChainAsync, config, fail],
   );
 
-  const isConnected = useMemo(() => Boolean(address && walletClient), [address, walletClient]);
+  const isConnected = Boolean(address && accountConnected);
 
   return { status, error, quote, isConnected, fetchQuote, purchase, reset };
 }
