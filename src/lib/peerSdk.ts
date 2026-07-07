@@ -61,12 +61,14 @@ export type PeerPlatform = {
   actionPlatform: string;
   actionType: string;
   includeMetadataIndex: boolean;
+  /** Fiat currencies this platform can pay in. Venmo is USD-only; Wise/Revolut are multi-currency. */
+  currencies: PeerFiat[];
 };
 
 export const PEER_PLATFORMS: PeerPlatform[] = [
-  { key: "wise", label: "Wise", actionPlatform: "wise", actionType: "transfer_wise", includeMetadataIndex: false },
-  { key: "revolut", label: "Revolut", actionPlatform: "revolut", actionType: "transfer_revolut", includeMetadataIndex: true },
-  { key: "venmo", label: "Venmo", actionPlatform: "venmo", actionType: "transfer_venmo", includeMetadataIndex: true },
+  { key: "wise", label: "Wise", actionPlatform: "wise", actionType: "transfer_wise", includeMetadataIndex: false, currencies: ["USD", "EUR", "GBP"] },
+  { key: "revolut", label: "Revolut", actionPlatform: "revolut", actionType: "transfer_revolut", includeMetadataIndex: true, currencies: ["USD", "EUR", "GBP"] },
+  { key: "venmo", label: "Venmo", actionPlatform: "venmo", actionType: "transfer_venmo", includeMetadataIndex: true, currencies: ["USD"] },
 ];
 
 export function getPeerPlatform(key: string): PeerPlatform | undefined {

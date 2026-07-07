@@ -49,8 +49,28 @@ function PeerInApp({ onramp }: { onramp: ReturnType<typeof usePeerOnramp> }) {
   const platform = PEER_PLATFORMS.find((p) => p.key === platformKey)!;
   const { status, error, quote } = onramp;
 
-  const handleAmount = (e: ChangeEvent<HTMLInputElement>) =>
+  // Clear any stale quote/error when the inputs change.
+  const clearQuoteState = () => {
+    if (status === "quote_ready" || status === "error") onramp.reset();
+  };
+
+  const handlePlatform = (key: string) => {
+    setPlatformKey(key);
+    const next = PEER_PLATFORMS.find((p) => p.key === key)!;
+    // Venmo is USD-only etc. — clamp the currency to what this platform supports.
+    if (!next.currencies.includes(fiat)) setFiat(next.currencies[0]);
+    clearQuoteState();
+  };
+
+  const handleCurrency = (v: string) => {
+    setFiat(v as PeerFiat);
+    clearQuoteState();
+  };
+
+  const handleAmount = (e: ChangeEvent<HTMLInputElement>) => {
     setAmount(sanitizeInputValue(e.target.value));
+    clearQuoteState();
+  };
 
   const onContinue = () => onramp.fetchQuote({ platform, fiat, amount });
   const onConfirm = () => onramp.purchase({ platform, fiat });
@@ -113,13 +133,16 @@ function PeerInApp({ onramp }: { onramp: ReturnType<typeof usePeerOnramp> }) {
         label="Pay with"
         options={PEER_PLATFORMS.map((p) => ({ key: p.key, label: p.label }))}
         value={platformKey}
-        onChange={setPlatformKey}
+        onChange={handlePlatform}
       />
       <Selector
         label="Currency"
-        options={PEER_FIATS.map((f) => ({ key: f.code, label: f.code }))}
+        options={PEER_FIATS.filter((f) => platform.currencies.includes(f.code)).map((f) => ({
+          key: f.code,
+          label: f.code,
+        }))}
         value={fiat}
-        onChange={(v) => setFiat(v as PeerFiat)}
+        onChange={handleCurrency}
       />
 
       <div className="space-y-2">

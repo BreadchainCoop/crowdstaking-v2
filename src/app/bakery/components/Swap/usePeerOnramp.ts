@@ -53,6 +53,9 @@ export type PeerOnrampParams = {
   amount: string;
 };
 
+const NO_OFFERS_MESSAGE =
+  "No offers available right now for this amount and payment method. Try a different amount, currency, or payment app.";
+
 function isBuyerTeeParams(value: unknown): value is Record<string, string | number | boolean> {
   return (
     typeof value === "object" &&
@@ -158,14 +161,16 @@ export function usePeerOnramp() {
         });
         const best = res.responseObject?.quotes?.[0] ?? null;
         if (!best) {
-          fail("No offers available for that amount and payment method");
+          fail(NO_OFFERS_MESSAGE);
           return null;
         }
         setQuote(best);
         setStatus("quote_ready");
         return best;
       } catch (e) {
-        fail(e instanceof Error ? e.message : "Failed to get a quote");
+        const msg = e instanceof Error ? e.message : "Failed to get a quote";
+        // The SDK throws "No quotes found" when no seller liquidity matches.
+        fail(/quote/i.test(msg) ? NO_OFFERS_MESSAGE : msg);
         return null;
       }
     },
