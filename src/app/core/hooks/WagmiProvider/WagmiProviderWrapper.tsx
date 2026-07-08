@@ -1,4 +1,5 @@
-import type { ReactNode } from "react";
+"use client";
+import { useEffect, useState, type ReactNode } from "react";
 import { WagmiProvider } from "wagmi";
 import { WagmiProvider as PrivyWagmiProvider } from "@privy-io/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -8,7 +9,6 @@ import type { ConnectedWallet, User } from "@privy-io/react-auth";
 import { privyWagmiConfig } from "./config/privyConfig";
 import { publicConfig } from "./config/publicConfig";
 
-// Build-time constant: stable across SSR/CSR, no hydration mismatch.
 const PRIVY_ENABLED = Boolean(process.env.NEXT_PUBLIC_PRIVY_APP_ID);
 
 const queryClient = new QueryClient({
@@ -38,10 +38,17 @@ function preferEmbeddedWallet({
 }
 
 export function WagmiProviderWrapper({ children }: { children: ReactNode }) {
-	// With Privy configured, the embedded wallet is the active account via
-	// @privy-io/wagmi. Its WagmiProvider needs a PrivyProvider ancestor (added
-	// by AppProvider under the same flag) and a QueryClient ancestor.
-	if (PRIVY_ENABLED) {
+	const [mounted, setMounted] = useState(false);
+	useEffect(() => setMounted(true), []);
+
+	// @privy-io/wagmi's WagmiProvider is not safe during static prerender (it
+	// reads Privy refs that don't exist server-side). So use it only on the
+	// client, after mount. During SSR/prerender — and when Privy isn't
+	// configured (e.g. CI without the env var) — fall back to plain, read-only
+	// wagmi so every page prerenders cleanly. First client render also uses the
+	// fallback (mounted === false), matching the server output, then swaps to
+	// the embedded-wallet provider once mounted (no hydration mismatch).
+	if (PRIVY_ENABLED && mounted) {
 		return (
 			<QueryClientProvider client={queryClient}>
 				<PrivyWagmiProvider
@@ -54,10 +61,6 @@ export function WagmiProviderWrapper({ children }: { children: ReactNode }) {
 		);
 	}
 
-	// Fallback for environments without the Privy app id (e.g. CI "Next Build"
-	// which lacks the Netlify env var): plain, read-only wagmi so prerendering
-	// succeeds without a Privy context. Real deploys set the env and use the
-	// embedded-wallet path above.
 	return (
 		<WagmiProvider config={publicConfig}>
 			<QueryClientProvider client={queryClient}>
