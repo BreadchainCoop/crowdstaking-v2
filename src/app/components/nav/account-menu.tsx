@@ -4,11 +4,7 @@ import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { useAccount, useEnsName } from "wagmi";
 import NavAccountDetails from "./account-details";
 import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
-import { PrivyDepositButton } from "./privy-deposit-button";
 import { blo } from "blo";
-
-// Baked in at build time — stable, no hydration mismatch
-const PRIVY_ENABLED = Boolean(process.env.NEXT_PUBLIC_PRIVY_APP_ID);
 
 const NavAccountMenu = () => {
 	const account = useAccount();
@@ -41,19 +37,6 @@ const NavAccountMenu = () => {
 								<span className="text-[12px]">.{balDec}</span>
 							</p>
 						</div>
-
-						{/* Deposit — only rendered when NEXT_PUBLIC_PRIVY_APP_ID is set */}
-						{PRIVY_ENABLED && account.address ? (
-							<PrivyDepositButton />
-						) : (
-							<button
-								disabled
-								aria-disabled="true"
-								className="flex shrink-0 items-center bg-[#f6f3eb] border border-[#ea5817] px-4 py-1 font-breadBody font-bold text-base leading-[1.5] text-[#ea5817] whitespace-nowrap opacity-40 cursor-not-allowed"
-							>
-								Deposit
-							</button>
-						)}
 
 						{/* Divider */}
 						<div className="h-7 w-px bg-[#d9d9d9] shrink-0" />
