@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 import { WagmiProviderWrapper } from "@/app/core/hooks/WagmiProvider/WagmiProviderWrapper";
 import { TokenBalancesProvider } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
@@ -28,6 +28,12 @@ export function AppProvider({
 }) {
   useSentry();
 
+  // Privy's provider is not safe during static prerender. Mount it client-side
+  // only; during SSR/prerender the app renders without Privy (and
+  // WagmiProviderWrapper falls back to plain wagmi), so every page prerenders.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   const inner = (
     <WagmiProviderWrapper>
       <ConnectedUserProvider features={features}>
@@ -43,7 +49,7 @@ export function AppProvider({
     </WagmiProviderWrapper>
   );
 
-  if (!PRIVY_APP_ID) return inner;
+  if (!PRIVY_APP_ID || !mounted) return inner;
 
   return (
     <PrivyProvider
