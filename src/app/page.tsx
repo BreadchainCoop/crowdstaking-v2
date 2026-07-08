@@ -5,7 +5,7 @@ import { type Metadata } from "next";
 import { AppTitle } from "./bakery/components/AppTitle";
 import FAQWrapper from "./components/FAQWrapper";
 import SwapWrapper from "./components/SwapWrapper";
-import { Body, Heading1, Heading2, LiftedButton } from "@breadcoop/ui";
+import { Body, Heading1, Heading2, Heading3, Heading4, LiftedButton } from "@breadcoop/ui";
 import { Apy } from "./bakery/components/Apy";
 import { BreadCirculation } from "./bakery/components/BreadCirculation";
 import clsx from "clsx";
@@ -29,9 +29,9 @@ export default function Home() {
 							<span>THE</span> <span>SOLIDARITY</span>{" "}
 							<span>FUND</span>
 						</Heading1>
-						<Body className="font-breadDisplay text-surface-grey-2 mb-4 md:mb-6">
-							give without giving.
-						</Body>
+						<Heading3 className="text-surface-grey-2 mb-4 md:mb-6">
+							Give without giving.
+						</Heading3>
 					</div>
 					<div className="row-span-2 md:w-full md:max-w-[451px]">
 						<Suspense>

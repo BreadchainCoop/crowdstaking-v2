@@ -4,6 +4,16 @@ export const lifiConfig: Partial<WidgetConfig> = {
   variant: "compact",
   subvariant: "default",
   appearance: "light",
+  tokens: {
+    from: {
+      deny: [
+        {
+          address: "0x0000000000000000000000000000000000000000",
+          chainId: 100,
+        }
+      ]
+    }
+  },
   chains: {
     allow: [1, 100, 42161, 8453, 56],
   },
