@@ -26,6 +26,11 @@ export type BakeryTransactionModalState = {
   hash: string | null;
 };
 
+export type SafeTransactionModalState = {
+  type: "SAFE_TRANSACTION";
+  hash: string | null;
+};
+
 export type LPVaultTransactionModalState = {
   type: "LP_VAULT_TRANSACTION";
   transactionType: TransactionType;
@@ -47,6 +52,7 @@ export type GenericModalState = {
 
 export type ModalState =
   | BakeryTransactionModalState
+  | SafeTransactionModalState
   | VoteModalState
   | RecastModalState
   | ConfirmBurnModalState
