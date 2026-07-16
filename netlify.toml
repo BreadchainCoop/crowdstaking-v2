@@ -1,3 +1,10 @@
+[build.environment]
+  # The Privy + @privy-io/wagmi + LiFi dependency graph (including the duplicate
+  # viem copies pnpm auto-installs for @privy-io/wagmi's exact viem peer) pushes
+  # the Next build past Netlify's default Node heap, so the deploy dies while
+  # GitHub CI (roomier runner) passes. Raise the heap so the build completes.
+  NODE_OPTIONS = "--max-old-space-size=6144"
+
 [[headers]]
 # Define which paths this specific [[headers]] block will cover.
 for = "/manifest.json"

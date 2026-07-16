@@ -7,6 +7,16 @@ const nextConfig = {
 	images: {
 		unoptimized: true,
 	},
+	webpack: (config) => {
+		// Privy's SDK references optional Solana/Farcaster integrations we don't
+		// use; mark them ignorable so the bundle doesn't fail with "Module not
+		// found". (webpack 5: alias -> false renders an empty module.)
+		config.resolve.alias = {
+			...config.resolve.alias,
+			"@farcaster/mini-app-solana": false,
+		};
+		return config;
+	},
 };
 
 module.exports = nextConfig;
