@@ -59,6 +59,9 @@ export function MtPelerinBuy({
           {!hasMtPelerinKey && recipientAddress && (
             <WalletAddressHint address={recipientAddress} label="Your wallet address (for step 3):" />
           )}
+          <Body className="text-xs text-surface-grey mt-3">
+            Note: receiving your crypto can take a few minutes to a few hours, depending on the payment method.
+          </Body>
         </div>
 
         {hasMtPelerinKey && (
