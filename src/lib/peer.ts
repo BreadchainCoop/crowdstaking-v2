@@ -1,26 +1,13 @@
 export const peerConfig = {
-  baseUrl: "https://peer.xyz/swap",
-  referrer: "Bread Solidarity Fund",
-  referrerLogo: "https://fund.bread.coop/logo.svg",
-  // xDAI on Gnosis Chain (chainId: 100, native token)
-  toToken: "100:0x0000000000000000000000000000000000000000",
+  // Peer (formerly ZKP2P) deprecated their deeplink/redirect onramp as of
+  // extension 0.6.0 — URL params like toToken, inputAmount, recipientAddress
+  // and callbackUrl are ignored, and Gnosis Chain is no longer a supported
+  // destination (buyers receive USDC on Base/Arbitrum/etc.). We link to the
+  // trade page (their "TRADE" nav target) and guide the user from our side;
+  // bridging back to Gnosis is covered by the Bridge tab.
+  marketplaceUrl: "https://www.peer.xyz/liquidity",
 };
 
-export function buildPeerUrl(options?: { inputAmount?: string; recipientAddress?: string }): string {
-  const params = new URLSearchParams({
-    referrer: peerConfig.referrer,
-    referrerLogo: peerConfig.referrerLogo,
-    toToken: peerConfig.toToken,
-    callbackUrl: `${window.location.origin}/?peer=success`,
-  });
-
-  if (options?.inputAmount) {
-    params.set("inputAmount", options.inputAmount);
-  }
-
-  if (options?.recipientAddress) {
-    params.set("recipientAddress", options.recipientAddress);
-  }
-
-  return `${peerConfig.baseUrl}?${params.toString()}`;
+export function buildPeerUrl(): string {
+  return peerConfig.marketplaceUrl;
 }
