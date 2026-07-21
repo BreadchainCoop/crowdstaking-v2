@@ -36,7 +36,7 @@ export function MtPelerinBuy({
             <Body className="text-base font-bold text-surface-ink">Buy with Mt Pelerin</Body>
           </div>
           <Body className="text-sm mb-3">
-            Mt Pelerin is a Swiss service for buying xDAI directly on Gnosis Chain. Bank transfers (SEPA, Swiss) need no ID verification up to roughly 1,000 CHF/EUR per month &mdash; just an email and phone number. Card purchases and larger amounts require identity verification.
+            Mt Pelerin is a Swiss service for buying xDAI directly on Gnosis Chain. Bank transfers (SEPA, Swiss) <span className="font-bold text-surface-ink">need no ID verification up to roughly 1,000 CHF/EUR per month</span> &mdash; just an email and phone number. Card purchases and larger amounts require identity verification.
           </Body>
           <Body className="text-sm mb-3">
             Not available to US residents &mdash; use Peer instead.
