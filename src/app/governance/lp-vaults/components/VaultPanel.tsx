@@ -8,37 +8,29 @@ import {
 } from "@radix-ui/react-accordion";
 
 import useDebounce from "@/app/bakery/hooks/useDebounce";
-// import Button from "@/app/core/components/Button";
 import { useModal } from "@/app/core/context/ModalContext";
 import { Logo, Body, LiftedButton, Caption } from "@breadcoop/ui";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { SelectTransaction } from "./SelectTransaction";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
-// import { WXDAIIcon } from "@/app/core/components/Icons/TokenIcons";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
-// import { LinkIcon } from "@/app/core/components/Icons/LinkIcon";
 import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
 import { lpTokenMeta } from "@/app/lpTokenMeta";
 import { MaxButton } from "@/app/core/components/MaxButton";
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
 import { formatBalance } from "@/app/core/util/formatter";
 import { useVaultTokenBalance } from "../context/VaultTokenBalanceContext";
-// import { AccountMenu } from "@/app/core/components/Header/AccountMenu";
-// import { useChainModal } from "@rainbow-me/rainbowkit";
 import { ArrowUpRightIcon, CaretDownIcon } from "@phosphor-icons/react/ssr";
 import { LoginButton } from "@/app/components/login-button";
-import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 
 export type TransactionType = "LOCK" | "UNLOCK";
 
 export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
-  // const { openChainModal } = useChainModal();
   const [inputValue, setInputValue] = useState("");
   const [transactionType, setTransactionType] =
     useState<TransactionType>("LOCK");
   const { user } = useConnectedUser();
   const { transactionsState } = useTransactions();
-  const activeChain = useActiveChain();
 
   const { BUTTER: lpTokenBalance } = useTokenBalances();
   const vaultTokenBalance = useVaultTokenBalance();
@@ -59,17 +51,15 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
   const { setModal } = useModal();
 
   const disableBtn =
-		(transactionType === "LOCK" && !(Number(inputValue) > 0)) ||
-		(transactionType === "LOCK" &&
-			lpTokenBalance?.status === "SUCCESS" &&
-			!(Number(inputValue) <= Number(lpTokenBalance.value))) ||
-		(transactionType === "UNLOCK" &&
-			vaultTokenBalance?.butter.status === "success" &&
-			!(Number(vaultTokenBalance?.butter.value) > 0));
+    (transactionType === "LOCK" && !(Number(inputValue) > 0)) ||
+    (transactionType === "LOCK" &&
+      lpTokenBalance?.status === "SUCCESS" &&
+      !(Number(inputValue) <= Number(lpTokenBalance.value))) ||
+    (transactionType === "UNLOCK" &&
+      vaultTokenBalance?.butter.status === "success" &&
+      !(Number(vaultTokenBalance?.butter.value) > 0));
 
   function submitTransaction() {
-    console.log({ disableBtn });
-
     if (disableBtn) return;
 
     if (transactionType === "LOCK") {
@@ -91,9 +81,6 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
       parsedValue: vaultTokenBalance.butter.value,
     });
   }
-
-  console.log("__ VALUT TOKEN BALANCE __", vaultTokenBalance);
-  console.log("--- ACTIVE CHAIN ---", activeChain);
 
   return (
     <AccordionItem

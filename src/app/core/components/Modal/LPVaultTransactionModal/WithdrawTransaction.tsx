@@ -38,6 +38,7 @@ export function WithdrawTransaction({
 	const { setModal } = useModal();
 	const [isWalletOpen, setIsWalletOpen] = useState(false);
 	const [txHash, setTxHash] = useState<TTransactionHash | null>(null);
+	const [submitError, setSubmitError] = useState<string | null>(null);
 	const chainConfig = getChain(user.chain.id);
 	const { writeContractAsync } = useWriteContract();
 
@@ -75,8 +76,17 @@ export function WithdrawTransaction({
 		chainId: chainConfig.ID,
 	});
 
+	// The vault's voting-power accounting can round such that a full
+	// unlock tries to burn more voting-power tokens than the account
+	// actually holds, which reverts the simulation. Surface that instead
+	// of silently doing nothing when the user clicks "Unlock".
+	const simulateFailed =
+		lockedBalanceStatus === "success" && prepareWrite.status === "error";
+
 	const handleSubmit = async () => {
 		if (!prepareWrite.data) return;
+
+		setSubmitError(null);
 
 		transactionsDispatch({
 			type: "NEW",
@@ -109,8 +119,9 @@ export function WithdrawTransaction({
 				payload: { hash },
 			});
 			setTxHash(hash);
-		} catch(e) {
-			console.log("__ ERROR UNLOCKING LP TOKEN __", e);
+		} catch (e) {
+			console.error("Failed to submit LP unlock transaction", e);
+			setSubmitError("Transaction was not submitted. Please try again.");
 		} finally {
 			setIsWalletOpen(false);
 		}
@@ -118,6 +129,7 @@ export function WithdrawTransaction({
 
 	const handleRetry = () => {
 		setTxHash(null);
+		setSubmitError(null);
 		handleSubmit();
 	};
 
@@ -147,7 +159,17 @@ export function WithdrawTransaction({
 						</div>
 					</>
 				)}
-				{status === "idle" && (
+				{status === "idle" && simulateFailed && (
+					<Body className="text-status-error">
+						Unable to unlock right now — the vault&apos;s records
+						for your account are out of sync. Please contact
+						support.
+					</Body>
+				)}
+				{status === "idle" && !simulateFailed && submitError && (
+					<Body className="text-status-error">{submitError}</Body>
+				)}
+				{status === "idle" && !simulateFailed && !submitError && (
 					<Body className="text-surface-grey">
 						Press `Unlock LP tokens` to execute the transaction
 					</Body>
@@ -196,7 +218,7 @@ export function WithdrawTransaction({
 					{status === "idle" && (
 						<LiftedButton
 							onClick={handleSubmit}
-							disabled={isWalletOpen}
+							disabled={isWalletOpen || simulateFailed}
 							width="full"
 						>
 							Unlock LP tokens
