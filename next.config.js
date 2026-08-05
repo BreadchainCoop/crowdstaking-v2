@@ -7,6 +7,14 @@ const nextConfig = {
 	images: {
 		unoptimized: true,
 	},
+	experimental: {
+		// @breadcoop/ui's barrel file (`export * from "./navbar"`, "./auth",
+		// "./connected-user", etc) doesn't declare `sideEffects: false`, so
+		// bundlers can't safely tree-shake its Privy/wagmi/RainbowKit-heavy
+		// submodules even though we only import Logo/Body/LiftedButton/Footer.
+		// This rewrites our imports to those packages' specific files instead.
+		optimizePackageImports: ["@breadcoop/ui"],
+	},
 };
 
 module.exports = nextConfig;
