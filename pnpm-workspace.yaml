@@ -1,18 +1,43 @@
 packages:
-    - "."
+  - "."
 
 # pnpm v11: explicit per-package build script approval
 allowBuilds:
-    "@reown/appkit": true
-    "@sentry/cli": true
-    bufferutil: true
-    esbuild: true
-    keccak: true
-    sharp: true
-    unrs-resolver: true
-    utf-8-validate: true
+  '@parcel/watcher': true
+  "@reown/appkit": true
+  "@sentry/cli": true
+  bufferutil: true
+  esbuild: true
+  keccak: true
+  sharp: true
+  unrs-resolver: true
+  utf-8-validate: true
 
 blockExoticSubdeps: true
 minimumReleaseAge: 864000 # 10 days
+
+minimumReleaseAgeExclude:
+  - "@breadcoop/ui"
+
+overrides:
+  "@noble/curves": ">=1.9.0 <2"
+  "@noble/hashes": ">=1.8.0 <2"
+  "semver": ">=6.3.2"
+  # @privy-io/react-auth -> x402 -> @base-org/account resolves an old
+  # @coinbase/cdp-sdk@1.38.6 pinned to viem@^2.21.26, which duplicates our
+  # top-level viem and breaks Turbopack's static resolution (missing chain
+  # exports like `peaq`). 1.51.0+ wants viem@^2.47.0 and dedupes cleanly.
+  "@coinbase/cdp-sdk": ">=1.51.0 <2"
+  # x402 (pulled in by @privy-io/react-auth) declares its own viem@^2.21.26,
+  # which pnpm resolves as an isolated peer group with an old viem duplicate
+  # (breaks Turbopack, see above). Force that edge to our pinned viem so it
+  # dedupes. Scoped to x402 only -- @safe-global/safe-apps-sdk genuinely
+  # needs viem@^1, so this must not be a blanket override.
+  "x402>viem": "2.55.5"
 strictDepBuilds: true
 trustPolicy: no-downgrade
+trustPolicyExclude:
+  # @privy-io/react-auth pins jose@4.15.9, an unsigned backport published
+  # after signed 5.x releases (a "downgrade" by publish date). Our own
+  # top-level jose (5.x) is provenance-signed.
+  - "jose@4.15.9"
