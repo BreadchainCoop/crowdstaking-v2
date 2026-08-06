@@ -8,11 +8,10 @@ const nextConfig = {
 		unoptimized: true,
 	},
 	experimental: {
-		// @breadcoop/ui's barrel file (`export * from "./navbar"`, "./auth",
-		// "./connected-user", etc) doesn't declare `sideEffects: false`, so
-		// bundlers can't safely tree-shake its Privy/wagmi/RainbowKit-heavy
-		// submodules even though we only import Logo/Body/LiftedButton/Footer.
-		// This rewrites our imports to those packages' specific files instead.
+		// @breadcoop/ui@2.0.4 added sideEffects:false, but the Home route's
+		// specific mix of imports still doesn't tree-shake cleanly without
+		// this (verified: removing it regresses `/` from ~306kB to ~526kB
+		// First Load JS while other routes stay fine). Keep it.
 		optimizePackageImports: ["@breadcoop/ui"],
 	},
 };

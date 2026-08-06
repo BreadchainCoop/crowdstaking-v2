@@ -16,8 +16,8 @@ importers:
   .:
     dependencies:
       '@breadcoop/ui':
-        specifier: ^2.0.2
-        version: 2.0.2(504f5deefe256ffd3b6da4d9bd2fca32)
+        specifier: ^2.0.4
+        version: 2.0.4(504f5deefe256ffd3b6da4d9bd2fca32)
       '@duneanalytics/client-sdk':
         specifier: ^0.2.5
         version: 0.2.5
@@ -920,8 +920,8 @@ packages:
   '@bitcoinerlab/secp256k1@1.2.0':
     resolution: {integrity: sha512-jeujZSzb3JOZfmJYI0ph1PVpCRV5oaexCgy+RvCXV8XlY+XFB/2n3WOcvBsKLsOw78KYgnQrQWb2HrKE4be88Q==}
 
-  '@breadcoop/ui@2.0.2':
-    resolution: {integrity: sha512-5HDWww1REKLV2YN2qSmk/rzxohtll2MgK5bxufy3s7ycCUONxcJU1m+9I0ALfdrmaTWA+6KiSz2NwhyuJ3TfBw==}
+  '@breadcoop/ui@2.0.4':
+    resolution: {integrity: sha512-L18re3tVyWL0HP2PvwPSZDcUGI8HqcSMwLlSuOwmFJXZWf/Z9sNkZxWusVvwRUvvLrYsJthf/rP+rOGu8c5qog==}
     peerDependencies:
       '@phosphor-icons/react': ^2.1.1
       '@privy-io/react-auth': ^3.13.1
@@ -9205,8 +9205,8 @@ packages:
     resolution: {integrity: sha512-biM9brNqxSc04Ee71hzFbryD11nX7VPhQQY32AdDmjFvodsRFz/3ufeoTZ6uYkRFfGo188tENcASNs3vTdsM0w==}
     engines: {node: '>=10'}
 
-  terser-webpack-plugin@5.3.14:
-    resolution: {integrity: sha512-vkZjpUjb6OMS7dhV+tILUW6BhpDR7P2L/aQSAv+Uwk+m8KATX9EccViHTJR2qDtACKPIYndLGCyl3FMo+r2LMw==}
+  terser-webpack-plugin@5.3.11:
+    resolution: {integrity: sha512-RVCsMfuD0+cTt3EwX8hSl2Ks56EbFHWmhluwcqoPKtBnfjiT6olaq7PRIRfhyU8nnC2MrnDrBLfrD/RGE+cVXQ==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
       '@swc/core': '*'
@@ -11126,7 +11126,7 @@ snapshots:
     dependencies:
       '@noble/curves': 1.9.1
 
-  '@breadcoop/ui@2.0.2(504f5deefe256ffd3b6da4d9bd2fca32)':
+  '@breadcoop/ui@2.0.4(504f5deefe256ffd3b6da4d9bd2fca32)':
     dependencies:
       '@phosphor-icons/react': 2.1.10(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@privy-io/react-auth': 3.13.1(4c5559d1126932a438b7042f2966619a)
@@ -18511,7 +18511,7 @@ snapshots:
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(eslint@8.57.1))(eslint@8.57.1)
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@8.57.1)
       eslint-plugin-react: 7.37.5(eslint@8.57.1)
       eslint-plugin-react-hooks: 5.0.0-canary-7118f5dd7-20230705(eslint@8.57.1)
@@ -18541,7 +18541,7 @@ snapshots:
       tinyglobby: 0.2.15
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -18556,7 +18556,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@8.57.1))(eslint@8.57.1))(eslint@8.57.1):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@8.57.1):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -22426,7 +22426,7 @@ snapshots:
       type-fest: 0.16.0
       unique-string: 2.0.0
 
-  terser-webpack-plugin@5.3.14(esbuild@0.18.20)(webpack@5.103.0(esbuild@0.18.20)):
+  terser-webpack-plugin@5.3.11(esbuild@0.18.20)(webpack@5.103.0(esbuild@0.18.20)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       jest-worker: 27.5.1
@@ -23097,7 +23097,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.3
       tapable: 2.3.3
-      terser-webpack-plugin: 5.3.14(esbuild@0.18.20)(webpack@5.103.0(esbuild@0.18.20))
+      terser-webpack-plugin: 5.3.11(esbuild@0.18.20)(webpack@5.103.0(esbuild@0.18.20))
       watchpack: 2.4.4
       webpack-sources: 3.3.3
     transitivePeerDependencies:
