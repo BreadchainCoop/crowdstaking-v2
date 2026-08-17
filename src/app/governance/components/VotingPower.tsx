@@ -81,7 +81,10 @@ export function VotingPower({
 					{user.status === "CONNECTED" && (
 						<div className="flex flex-col sm:flex-row gap-3 mt-6 justify-center">
 							{canStartPairwise && onStartPairwise && (
-								<div className="lifted-button-container">
+								<div className="lifted-button-container relative">
+									<span className="absolute -top-2 -right-2 z-10 bg-primary-orange text-white text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full pointer-events-none">
+										New
+									</span>
 									<LiftedButton
 										preset="secondary"
 										onClick={onStartPairwise}
