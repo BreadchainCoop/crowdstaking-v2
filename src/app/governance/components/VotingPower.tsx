@@ -57,7 +57,7 @@ export function VotingPower({
 			  userVotingPower < minRequiredVotingPower ? (
 				<NotEnoughPower />
 			) : (
-				<div>
+				<div className="lg:w-[22.125rem]">
 					<div className="bg-paper-0 border border-[#EA5817] text-center py-2.5 px-6">
 						<Heading3 className="text-surface-grey-2 mb-2.5 text-2xl">
 							Your voting power:
@@ -79,25 +79,27 @@ export function VotingPower({
 						</div>
 					</div>
 					{user.status === "CONNECTED" && (
-						<div className="flex flex-col sm:flex-row gap-3 mt-6 justify-center">
+						<div className="flex flex-col sm:flex-row gap-3 mt-6">
 							{canStartPairwise && onStartPairwise && (
-								<div className="lifted-button-container">
-									<LiftedButton
-										preset="secondary"
-										onClick={onStartPairwise}
-									>
-										<span className="inline-flex items-center gap-1.5">
-											<span className="bg-primary-orange text-white text-[9px] leading-none font-bold uppercase tracking-wide px-1.5 py-1 rounded-full">
-												New
-											</span>
+								<div className="flex-1 min-w-0 relative">
+									<span className="absolute -top-2 -right-2 z-30 bg-primary-orange text-white text-[10px] leading-none font-bold uppercase tracking-wide px-1.5 py-1 rounded-full pointer-events-none">
+										New
+									</span>
+									<div className="lifted-button-container">
+										<LiftedButton
+											preset="secondary"
+											onClick={onStartPairwise}
+										>
 											Take a quick test
-										</span>
-									</LiftedButton>
+										</LiftedButton>
+									</div>
 								</div>
 							)}
-							<DistributeEqually
-								distributeEqually={distributeEqually}
-							/>
+							<div className="flex-1 min-w-0">
+								<DistributeEqually
+									distributeEqually={distributeEqually}
+								/>
+							</div>
 						</div>
 					)}
 				</div>
