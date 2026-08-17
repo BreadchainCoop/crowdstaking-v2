@@ -288,6 +288,16 @@ export function GovernancePage() {
 			</div>
 		);
 
+	// Current aggregate standing, so the pairwise cards can show each project's
+	// share of the vote so far.
+	const currentPointsByAddr: { [key: Hex]: number } = {};
+	let currentTotalPoints = 0;
+	currentVotingDistribution.data[0].forEach((addr, i) => {
+		const pts = Number(currentVotingDistribution.data[1][i] ?? 0);
+		currentPointsByAddr[addr] = pts;
+		currentTotalPoints += pts;
+	});
+
 	const pairwiseProjects = Object.keys(voteFormState.projects)
 		.map((addr) => ({ address: addr as Hex, meta: projectsMeta[addr as Hex] }))
 		.filter((p) => p.meta?.active)
@@ -297,6 +307,10 @@ export function GovernancePage() {
 			name: meta.name,
 			description: meta.description,
 			logoSrc: meta.logoSrc,
+			currentShare:
+				currentTotalPoints > 0
+					? ((currentPointsByAddr[address] ?? 0) / currentTotalPoints) * 100
+					: 0,
 		}));
 
 	const canUsePairwise =

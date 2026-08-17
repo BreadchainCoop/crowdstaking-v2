@@ -11,6 +11,8 @@ export type PairwiseProject = {
   name: string;
   description: string;
   logoSrc: string;
+  /** Current share of the aggregate vote (0-100), for context while comparing. */
+  currentShare?: number;
 };
 
 /**
@@ -28,8 +30,13 @@ export function PairwiseVoteHelper({
   onComplete: (points: { [key: Hex]: number }) => void;
   onClose: () => void;
 }) {
-  // Build a short, evenly-covering set of matchups (~each project 2-3 times).
-  const matchups = useMemo(() => buildMatchups(projects.map((p) => p.address)), [projects]);
+  // Build the matchup schedule ONCE on mount. (Using useState's lazy initializer
+  // rather than useMemo, because the `projects` prop is a fresh array on every
+  // parent re-render — a memo keyed on it would regenerate the schedule mid-test
+  // and make the visible pair jump.)
+  const [matchups] = useState<[Hex, Hex][]>(() =>
+    buildMatchups(projects.map((p) => p.address)),
+  );
 
   const [index, setIndex] = useState(0);
   const [wins, setWins] = useState<{ [key: Hex]: number }>({});
@@ -129,6 +136,11 @@ function ProjectChoice({ project, onClick }: { project: PairwiseProject; onClick
         <Image className="w-10 h-10 object-contain" src={project.logoSrc} alt={`${project.name} logo`} width="40" height="40" />
       </div>
       <Heading4 className="text-base">{project.name}</Heading4>
+      {typeof project.currentShare === "number" && (
+        <span className="text-xs font-bold text-primary-orange">
+          {project.currentShare.toFixed(0)}% of the vote so far
+        </span>
+      )}
       <Body className="text-xs text-surface-grey-2">{project.description}</Body>
     </button>
   );
