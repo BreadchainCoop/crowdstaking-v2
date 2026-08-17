@@ -1,8 +1,9 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Hex } from "viem";
-import { Heading2, Body, Caption } from "@breadcoop/ui";
+import { Heading2, Body, Caption, LiftedButton } from "@breadcoop/ui";
 import { ProjectRow, VoteForm } from "./components/ProjectRow";
+import { PairwiseVoteHelper } from "./components/PairwiseVoteHelper";
 import { CastVotePanel } from "./components/CastVote";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { ResultsPanel } from "./components/ResultsPanel";
@@ -48,6 +49,7 @@ export function GovernancePage() {
 		totalPoints: number;
 	}>(null);
 	const [isRecasting, setIsRecasting] = useState<boolean>(false);
+	const [showPairwise, setShowPairwise] = useState<boolean>(false);
 
 	const { modalState, setModal } = useModal();
 
@@ -190,6 +192,25 @@ export function GovernancePage() {
 		});
 	}
 
+	// Seed the vote form from the pairwise test's suggested point distribution.
+	function applyPairwisePoints(points: { [key: Hex]: number }) {
+		setVoteFormState((state) => {
+			if (!state) return state;
+			const projects = Object.keys(state.projects).reduce<{
+				[key: Hex]: number;
+			}>((acc, cur) => {
+				acc[cur as Hex] = points[cur as Hex] ?? 0;
+				return acc;
+			}, {});
+			const totalPoints = Object.keys(projects).reduce(
+				(acc, cur) => acc + projects[cur as Hex],
+				0
+			);
+			return { projects, totalPoints };
+		});
+		setShowPairwise(false);
+	}
+
 	const castTotalPoints =
 		castVote.status === "SUCCESS" && castVote.data
 			? Object.keys(castVote.data).reduce(
@@ -267,6 +288,22 @@ export function GovernancePage() {
 			</div>
 		);
 
+	const pairwiseProjects = Object.keys(voteFormState.projects)
+		.map((addr) => ({ address: addr as Hex, meta: projectsMeta[addr as Hex] }))
+		.filter((p) => p.meta?.active)
+		.sort((a, b) => a.meta.order - b.meta.order)
+		.map(({ address, meta }) => ({
+			address,
+			name: meta.name,
+			description: meta.description,
+			logoSrc: meta.logoSrc,
+		}));
+
+	const canUsePairwise =
+		userCanVote &&
+		(!castVote.data || isRecasting) &&
+		pairwiseProjects.length >= 2;
+
 	return (
 		<section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
 			<div className="lg:grid lg:grid-cols-[2fr_1fr] lg:min-h-0 lg:gap-x-[1.0625rem] lg:gap-y-4 lg:content-between lg:mb-[1.625rem]">
@@ -306,6 +343,16 @@ export function GovernancePage() {
 						isRecasting={isRecasting}
 					/>
 					<div className="col-span-12 row-start-5 lg:col-start-1 lg:col-span-8 lg:row-start-3 grid grid-cols-1 gap-3">
+						{canUsePairwise && (
+							<div className="lifted-button-container">
+								<LiftedButton
+									preset="stroke"
+									onClick={() => setShowPairwise(true)}
+								>
+									Not sure how to split? Take a quick test
+								</LiftedButton>
+							</div>
+						)}
 						{currentVotingDistribution.data[0]
 							.map((account, i) => ({
 								account,
@@ -369,6 +416,14 @@ export function GovernancePage() {
 			</div>
 
 			<VotingHistory />
+
+			{showPairwise && (
+				<PairwiseVoteHelper
+					projects={pairwiseProjects}
+					onComplete={applyPairwisePoints}
+					onClose={() => setShowPairwise(false)}
+				/>
+			)}
 		</section>
 	);
 }
