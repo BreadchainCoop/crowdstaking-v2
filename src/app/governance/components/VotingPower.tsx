@@ -21,6 +21,8 @@ export function VotingPower({
 	user,
 	distributeEqually,
 	isRecasting,
+	onStartPairwise,
+	canStartPairwise,
 }: {
 	minRequiredVotingPower: number | null;
 	userVotingPower: bigint | null;
@@ -31,6 +33,8 @@ export function VotingPower({
 	user: TConnectedUserState;
 	distributeEqually: () => void;
 	isRecasting: boolean;
+	onStartPairwise?: () => void;
+	canStartPairwise?: boolean;
 }) {
 	const days = (cycleLength.data * 5) / 60 / 60 / 24;
 	return (
@@ -75,9 +79,21 @@ export function VotingPower({
 						</div>
 					</div>
 					{user.status === "CONNECTED" && (
-						<DistributeEqually
-							distributeEqually={distributeEqually}
-						/>
+						<div className="flex flex-col sm:flex-row gap-3 mt-6 justify-center">
+							{canStartPairwise && onStartPairwise && (
+								<div className="lifted-button-container">
+									<LiftedButton
+										preset="secondary"
+										onClick={onStartPairwise}
+									>
+										Take a quick test
+									</LiftedButton>
+								</div>
+							)}
+							<DistributeEqually
+								distributeEqually={distributeEqually}
+							/>
+						</div>
 					)}
 				</div>
 			)}
@@ -229,7 +245,7 @@ function DistributeEqually({
 	distributeEqually: () => void;
 }) {
 	return (
-		<div className="lifted-button-container mt-6">
+		<div className="lifted-button-container">
 			<LiftedButton onClick={distributeEqually} leftIcon={<HeartIcon />}>
 				Distribute Equally
 			</LiftedButton>

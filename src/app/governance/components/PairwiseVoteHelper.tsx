@@ -96,7 +96,7 @@ export function PairwiseVoteHelper({
           Matchup {index + 1} of {matchups.length} — we&apos;ll suggest a point split from your picks.
         </Caption>
 
-        <div className="grid grid-cols-2 gap-3 mt-4">
+        <div key={index} className="grid grid-cols-2 gap-3 mt-4">
           <ProjectChoice project={a} onClick={() => pick(aAddr)} />
           <ProjectChoice project={b} onClick={() => pick(bAddr)} />
         </div>
@@ -134,51 +134,45 @@ function ProjectChoice({ project, onClick }: { project: PairwiseProject; onClick
   );
 }
 
+const APPEARANCES_PER_PROJECT = 3;
+
 /**
- * Produce a short list of matchups covering the field evenly — aiming for each
- * project to appear ~3 times, capped so the test stays quick (~n*3/2 pairs).
+ * Produce a short, *fair* list of matchups: every project appears the same
+ * number of times (APPEARANCES_PER_PROJECT), so no project gets more exposure
+ * than another. Built by filling a bag with each address repeated N times,
+ * shuffling, and pairing consecutive entries (swapping to avoid a project
+ * facing itself). For n projects this yields ~n*N/2 matchups (e.g. 8 → 12).
  */
 function buildMatchups(addresses: Hex[]): [Hex, Hex][] {
   const n = addresses.length;
   if (n < 2) return [];
 
-  const allPairs: [Hex, Hex][] = [];
-  for (let i = 0; i < n; i++) {
-    for (let j = i + 1; j < n; j++) {
-      allPairs.push([addresses[i], addresses[j]]);
-    }
-  }
+  const bag: Hex[] = [];
+  for (let k = 0; k < APPEARANCES_PER_PROJECT; k++) bag.push(...addresses);
 
-  // Shuffle so coverage isn't biased by list order.
-  for (let i = allPairs.length - 1; i > 0; i--) {
+  // Need an even number of slots to pair up; drop one if odd.
+  if (bag.length % 2 === 1) bag.pop();
+
+  // Fisher-Yates shuffle.
+  for (let i = bag.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [allPairs[i], allPairs[j]] = [allPairs[j], allPairs[i]];
+    [bag[i], bag[j]] = [bag[j], bag[i]];
   }
 
-  const targetAppearances = 3;
-  const maxPairs = Math.min(allPairs.length, Math.ceil((n * targetAppearances) / 2));
-  const counts: { [key: Hex]: number } = {};
-  addresses.forEach((a) => (counts[a] = 0));
-
-  const chosen: [Hex, Hex][] = [];
-  // Greedily pick pairs that keep appearance counts under the target.
-  for (const [a, b] of allPairs) {
-    if (chosen.length >= maxPairs) break;
-    if (counts[a] < targetAppearances && counts[b] < targetAppearances) {
-      chosen.push([a, b]);
-      counts[a]++;
-      counts[b]++;
+  const pairs: [Hex, Hex][] = [];
+  for (let i = 0; i < bag.length; i += 2) {
+    // Avoid a project being matched against itself: swap the second slot with
+    // a later slot holding a different project.
+    if (bag[i] === bag[i + 1]) {
+      for (let j = i + 2; j < bag.length; j++) {
+        if (bag[j] !== bag[i]) {
+          [bag[i + 1], bag[j]] = [bag[j], bag[i + 1]];
+          break;
+        }
+      }
     }
-  }
-  // Backfill any project that never got included (small/odd fields).
-  for (const [a, b] of allPairs) {
-    if (chosen.length >= maxPairs) break;
-    if (counts[a] === 0 || counts[b] === 0) {
-      chosen.push([a, b]);
-      counts[a]++;
-      counts[b]++;
-    }
+    if (bag[i] !== bag[i + 1]) pairs.push([bag[i], bag[i + 1]]);
   }
 
-  return chosen;
+  return pairs;
 }

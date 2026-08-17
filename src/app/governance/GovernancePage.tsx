@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Hex } from "viem";
-import { Heading2, Body, Caption, LiftedButton } from "@breadcoop/ui";
+import { Heading2, Body, Caption } from "@breadcoop/ui";
 import { ProjectRow, VoteForm } from "./components/ProjectRow";
 import { PairwiseVoteHelper } from "./components/PairwiseVoteHelper";
 import { CastVotePanel } from "./components/CastVote";
@@ -341,18 +341,10 @@ export function GovernancePage() {
 						user={user}
 						distributeEqually={distributeEqually}
 						isRecasting={isRecasting}
+						onStartPairwise={() => setShowPairwise(true)}
+						canStartPairwise={canUsePairwise}
 					/>
 					<div className="col-span-12 row-start-5 lg:col-start-1 lg:col-span-8 lg:row-start-3 grid grid-cols-1 gap-3">
-						{canUsePairwise && (
-							<div className="lifted-button-container">
-								<LiftedButton
-									preset="stroke"
-									onClick={() => setShowPairwise(true)}
-								>
-									Not sure how to split? Take a quick test
-								</LiftedButton>
-							</div>
-						)}
 						{currentVotingDistribution.data[0]
 							.map((account, i) => ({
 								account,
