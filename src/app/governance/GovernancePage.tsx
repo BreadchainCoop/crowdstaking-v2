@@ -313,10 +313,13 @@ export function GovernancePage() {
 					: 0,
 		}));
 
+	// Note: intentionally NOT gated on `userCanVote` — that resolves from an async
+	// voting-power call, which would make the button pop in after the rest of the
+	// form. It renders inside VotingPower's connected branch (which already swaps
+	// to the "not enough power" state when the user can't vote), so this shows in
+	// sync with "Distribute Equally".
 	const canUsePairwise =
-		userCanVote &&
-		(!castVote.data || isRecasting) &&
-		pairwiseProjects.length >= 2;
+		(!castVote.data || isRecasting) && pairwiseProjects.length >= 2;
 
 	return (
 		<section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
