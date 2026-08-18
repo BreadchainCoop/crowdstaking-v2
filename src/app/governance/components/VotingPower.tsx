@@ -57,7 +57,7 @@ export function VotingPower({
 			  userVotingPower < minRequiredVotingPower ? (
 				<NotEnoughPower />
 			) : (
-				<div className="lg:w-[22.125rem]">
+				<div className="lg:w-[24rem]">
 					<div className="bg-paper-0 border border-[#EA5817] text-center py-2.5 px-6">
 						<Heading3 className="text-surface-grey-2 mb-2.5 text-2xl">
 							Your voting power:
@@ -95,7 +95,7 @@ export function VotingPower({
 									</div>
 								</div>
 							)}
-							<div className="flex-1 min-w-0">
+							<div className="flex-[1.3] min-w-0">
 								<DistributeEqually
 									distributeEqually={distributeEqually}
 								/>
