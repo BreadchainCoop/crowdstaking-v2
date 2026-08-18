@@ -12,15 +12,20 @@ import {
   CopyIcon,
 } from "@phosphor-icons/react";
 import { blo } from "blo";
-import { useEnsName } from "wagmi";
+import { useEnsName, useReadContract } from "wagmi";
 import { Body, Heading1, Heading2, LiftedButton } from "@breadcoop/ui";
 
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
 import { useVaultAPY } from "@/app/core/hooks/useVaultAPY";
-import { useVaultTokenBalance } from "@/app/governance/lp-vaults/context/VaultTokenBalanceContext";
 import { useModal } from "@/app/core/context/ModalContext";
-import { formatBalance, truncateAddress } from "@/app/core/util/formatter";
+import {
+  formatBalance,
+  formatDate,
+  truncateAddress,
+} from "@/app/core/util/formatter";
+import { DISTRIBUTOR_ABI } from "@/abi";
+import { useCycleLength } from "@/app/governance/useCycleLength";
 import { WRAPPER_CLASSES } from "@/app/core/util/classes";
 import { LoginButton } from "@/app/components/login-button";
 import { FistIcon } from "@/app/core/components/Icons/FistIcon";
@@ -37,7 +42,8 @@ export function ProfilePage() {
   const { user } = useConnectedUser();
   const { BREAD } = useTokenBalances();
   const { data: apyData } = useVaultAPY();
-  const vaultBalance = useVaultTokenBalance();
+  const chainConfig = useActiveChain();
+  const { cycleLength } = useCycleLength();
   const { setModal } = useModal();
 
   const userAddress = "address" in user ? user.address : undefined;
@@ -51,9 +57,23 @@ export function ProfilePage() {
   const apyPercent = apyData ? Number(formatUnits(apyData, 16)) : 0;
   const annualDonation = breadBalance * apyRate;
 
+  // Actual voting power is the distributor's getCurrentVotingPower normalised by
+  // the cycle length (the same value the governance UI shows), NOT the raw
+  // ButteredBread balance.
+  const { data: currentVotingPowerData } = useReadContract({
+    address: chainConfig.DISBURSER.address,
+    abi: DISTRIBUTOR_ABI,
+    functionName: "getCurrentVotingPower",
+    args: userAddress ? [userAddress] : undefined,
+    chainId: chainConfig.ID,
+    query: { enabled: Boolean(userAddress) },
+  });
   const votingPower =
-    vaultBalance?.butter?.status === "success"
-      ? parseFloat(formatUnits(vaultBalance.butter.value, 18))
+    currentVotingPowerData !== undefined &&
+    cycleLength.status === "SUCCESS" &&
+    cycleLength.data > 0
+      ? Number(formatUnits(currentVotingPowerData as bigint, 18)) /
+        cycleLength.data
       : null;
 
   const handleBake = () => {
@@ -327,6 +347,9 @@ function AccountHistoryCard({ address }: { address?: `0x${string}` }) {
                     )}
                   </div>
                 </div>
+                <Body className="text-surface-grey text-sm shrink-0 ml-auto whitespace-nowrap">
+                  {formatDate(new Date(entry.timestamp))}
+                </Body>
               </li>
             );
           })}
