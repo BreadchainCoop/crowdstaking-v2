@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Hex } from "viem";
 import { Heading2, Body, Caption } from "@breadcoop/ui";
 import { ProjectRow, VoteForm } from "./components/ProjectRow";
+import { ValueTestHelper } from "./components/ValueTestHelper";
 import { CastVotePanel } from "./components/CastVote";
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { ResultsPanel } from "./components/ResultsPanel";
@@ -48,6 +49,7 @@ export function GovernancePage() {
 		totalPoints: number;
 	}>(null);
 	const [isRecasting, setIsRecasting] = useState<boolean>(false);
+	const [showValueTest, setShowValueTest] = useState<boolean>(false);
 
 	const { modalState, setModal } = useModal();
 
@@ -190,6 +192,25 @@ export function GovernancePage() {
 		});
 	}
 
+	// Seed the vote form from the value test's suggested point distribution.
+	function applyValuePoints(points: { [key: Hex]: number }) {
+		setVoteFormState((state) => {
+			if (!state) return state;
+			const projects = Object.keys(state.projects).reduce<{
+				[key: Hex]: number;
+			}>((acc, cur) => {
+				acc[cur as Hex] = points[cur as Hex] ?? 0;
+				return acc;
+			}, {});
+			const totalPoints = Object.keys(projects).reduce(
+				(acc, cur) => acc + projects[cur as Hex],
+				0
+			);
+			return { projects, totalPoints };
+		});
+		setShowValueTest(false);
+	}
+
 	const castTotalPoints =
 		castVote.status === "SUCCESS" && castVote.data
 			? Object.keys(castVote.data).reduce(
@@ -267,6 +288,15 @@ export function GovernancePage() {
 			</div>
 		);
 
+	// Active project addresses currently in the vote form.
+	const activeAddresses = Object.keys(voteFormState.projects) as Hex[];
+
+	// Not gated on `userCanVote` (that resolves async and would make the button
+	// pop in). Renders inside VotingPower's connected branch, which already
+	// swaps to "not enough power" when the user can't vote.
+	const canUseValueTest =
+		(!castVote.data || isRecasting) && activeAddresses.length >= 2;
+
 	return (
 		<section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
 			<div className="lg:grid lg:grid-cols-[2fr_1fr] lg:min-h-0 lg:gap-x-[1.0625rem] lg:gap-y-4 lg:content-between lg:mb-[1.625rem]">
@@ -304,6 +334,8 @@ export function GovernancePage() {
 						user={user}
 						distributeEqually={distributeEqually}
 						isRecasting={isRecasting}
+						onStartTest={() => setShowValueTest(true)}
+						canStartTest={canUseValueTest}
 					/>
 					<div className="col-span-12 row-start-5 lg:col-start-1 lg:col-span-8 lg:row-start-3 grid grid-cols-1 gap-3">
 						{currentVotingDistribution.data[0]
@@ -369,6 +401,14 @@ export function GovernancePage() {
 			</div>
 
 			<VotingHistory />
+
+			{showValueTest && (
+				<ValueTestHelper
+					activeAddresses={activeAddresses}
+					onComplete={applyValuePoints}
+					onClose={() => setShowValueTest(false)}
+				/>
+			)}
 		</section>
 	);
 }
