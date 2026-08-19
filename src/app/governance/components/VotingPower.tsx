@@ -21,6 +21,8 @@ export function VotingPower({
 	user,
 	distributeEqually,
 	isRecasting,
+	onStartTest,
+	canStartTest,
 }: {
 	minRequiredVotingPower: number | null;
 	userVotingPower: bigint | null;
@@ -31,6 +33,8 @@ export function VotingPower({
 	user: TConnectedUserState;
 	distributeEqually: () => void;
 	isRecasting: boolean;
+	onStartTest?: () => void;
+	canStartTest?: boolean;
 }) {
 	const days = (cycleLength.data * 5) / 60 / 60 / 24;
 	return (
@@ -53,7 +57,7 @@ export function VotingPower({
 			  userVotingPower < minRequiredVotingPower ? (
 				<NotEnoughPower />
 			) : (
-				<div>
+				<div className="lg:w-[24rem]">
 					<div className="bg-paper-0 border border-[#EA5817] text-center py-2.5 px-6">
 						<Heading3 className="text-surface-grey-2 mb-2.5 text-2xl">
 							Your voting power:
@@ -75,9 +79,28 @@ export function VotingPower({
 						</div>
 					</div>
 					{user.status === "CONNECTED" && (
-						<DistributeEqually
-							distributeEqually={distributeEqually}
-						/>
+						<div className="flex flex-col sm:flex-row gap-3 mt-6">
+							{canStartTest && onStartTest && (
+								<div className="flex-1 min-w-0 relative">
+									<span className="absolute -top-2 -right-2 z-30 bg-primary-orange text-white text-[10px] leading-none font-bold uppercase tracking-wide px-1.5 py-1 rounded-full pointer-events-none">
+										New
+									</span>
+									<div className="lifted-button-container">
+										<LiftedButton
+											preset="secondary"
+											onClick={onStartTest}
+										>
+											Help Me Choose
+										</LiftedButton>
+									</div>
+								</div>
+							)}
+							<div className="flex-[1.3] min-w-0">
+								<DistributeEqually
+									distributeEqually={distributeEqually}
+								/>
+							</div>
+						</div>
 					)}
 				</div>
 			)}
@@ -229,7 +252,7 @@ function DistributeEqually({
 	distributeEqually: () => void;
 }) {
 	return (
-		<div className="lifted-button-container mt-6">
+		<div className="lifted-button-container">
 			<LiftedButton onClick={distributeEqually} leftIcon={<HeartIcon />}>
 				Distribute Equally
 			</LiftedButton>
