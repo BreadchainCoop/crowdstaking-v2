@@ -46,9 +46,9 @@ export function ConfirmBurnModal({
 						type: "SET_SAFE_SUBMITTED",
 						payload: { hash },
 					});
-					setModal({ type: "BAKERY_TRANSACTION", hash });
-					console.log("__ TD 2 __", { hash });
-					console.log("__ SM 2", hash);
+					// Safe transactions require multi-sig approval inside the
+					// Safe app — route to the dedicated Safe transaction modal.
+					setModal({ type: "SAFE_TRANSACTION", hash });
 					modalState.clearInputValue?.();
 					return;
 				}

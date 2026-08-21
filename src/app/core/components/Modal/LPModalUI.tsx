@@ -151,5 +151,6 @@ export const transactionIcons: {
   SUBMITTED: <TransactionStatusSpinner />,
   CONFIRMED: <TransactionStatusCheck />,
   SAFE_SUBMITTED: <TransactionStatusCheck />,
+  SAFE_EXPIRED: <TransactionStatusCross />,
   REVERTED: <TransactionStatusCross />,
 };
