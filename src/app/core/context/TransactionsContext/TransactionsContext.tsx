@@ -11,6 +11,7 @@ import {
   TransactionsReducer,
 } from "./TransactionsReducer";
 import { TransactionWatcher } from "./TransactionsWatcher";
+import { SafeTransactionWatcher } from "./SafeTransactionWatcher";
 
 const TransactionsContext = createContext<
   | {
@@ -33,15 +34,27 @@ function TransactionsProvider({ children }: { children: ReactNode }) {
 
   return (
     <TransactionsContext.Provider value={value}>
-      {value.transactionsState.submitted.map((transaction) =>
-        transaction.status === "SUBMITTED" ? (
-          <TransactionWatcher
-            key={`watching_transaction_${transaction.hash}`}
-            transaction={transaction}
-            transactionsDispatch={value.transactionsDispatch}
-          />
-        ) : null
-      )}
+      {value.transactionsState.submitted.map((transaction) => {
+        if (transaction.status === "SUBMITTED") {
+          return (
+            <TransactionWatcher
+              key={`watching_transaction_${transaction.hash}`}
+              transaction={transaction}
+              transactionsDispatch={value.transactionsDispatch}
+            />
+          );
+        }
+        if (transaction.status === "SAFE_SUBMITTED") {
+          return (
+            <SafeTransactionWatcher
+              key={`watching_safe_transaction_${transaction.hash}`}
+              transaction={transaction}
+              transactionsDispatch={value.transactionsDispatch}
+            />
+          );
+        }
+        return null;
+      })}
       {children}
     </TransactionsContext.Provider>
   );

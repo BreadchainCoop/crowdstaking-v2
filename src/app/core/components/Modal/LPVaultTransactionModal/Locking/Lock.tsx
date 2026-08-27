@@ -155,9 +155,9 @@ export function Lock({
     <div className="w-full">
       <LiftedButton
         onClick={() => {
-          if (!contractWriteWrite) return;
+          if (!contractWriteWrite || !prepareWriteConfig) return;
           setIsWalletOpen(true);
-          contractWriteWrite(prepareWriteConfig!.request);
+          contractWriteWrite(prepareWriteConfig.request);
         }}
         disabled={isWalletOpen}
         width="full"

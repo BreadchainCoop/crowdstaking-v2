@@ -21,7 +21,7 @@ export function LPVaultTransactionModal({
 }: {
   modalState: LPVaultTransactionModalState;
 }) {
-  const { user } = useConnectedUser();
+  const { user, isSafe } = useConnectedUser();
 
   const { setModal } = useModal();
 
@@ -37,7 +37,7 @@ export function LPVaultTransactionModal({
         (modalState.transactionType === "LOCK" ? (
           <LockingTransaction user={user} modalState={modalState} />
         ) : (
-          <WithdrawTransaction user={user} modalState={modalState} />
+          <WithdrawTransaction user={user} modalState={modalState} isSafe={isSafe} />
         ))}
     </ModalContainer>
   );
