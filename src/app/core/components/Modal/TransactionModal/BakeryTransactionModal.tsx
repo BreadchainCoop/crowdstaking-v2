@@ -63,7 +63,7 @@ function modalAdviceText(
 ) {
 	const text = {
 		PREPARED: "Please confirm transaction in your wallet",
-		SUBMITTED: "Waiting for on-chain confimation",
+		SUBMITTED: "Waiting for on-chain confirmation",
 		SAFE_SUBMITTED: "Safe Transaction Submitted",
 		// CONFIRMED:
 		// 	modalType === "BAKE"
