@@ -7,9 +7,10 @@ import {
   foundry,
   gnosis,
 } from "wagmi/chains";
-import { fallback, http } from "wagmi";
+import { fallback, http, createConfig } from "wagmi";
 import { defineChain } from "viem";
-import { getDefaultConfig } from "@rainbow-me/rainbowkit";
+import { connectorsForWallets } from "@rainbow-me/rainbowkit";
+import { createConfig as createPrivyConfig } from "@privy-io/wagmi";
 import { getWallets } from "./wallets";
 
 const NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID =
@@ -64,24 +65,57 @@ const transportsRpcUrl = [
 	});
 });
 
-const config = getDefaultConfig({
-  appName: "Bread Coop Solidarity Fund",
-  projectId: projectId,
-  chains: [gnosisChain, ...sepoliaChain, mainnet, arbitrum, base, bsc],
-  wallets: [
+const chains = [
+  gnosisChain,
+  ...sepoliaChain,
+  mainnet,
+  arbitrum,
+  base,
+  bsc,
+] as const;
+
+const transports = {
+  [gnosis.id]: fallback(transportsRpcUrl),
+  [sepolia.id]: httpProvider,
+  [mainnet.id]: http(),
+  [arbitrum.id]: http(),
+  [base.id]: http(),
+  [bsc.id]: http(),
+};
+
+// Outside an iframe: Privy owns wallet-connector management dynamically
+// (its own login modal, embedded wallets, WalletConnect, etc -- see
+// privy.tsx's walletList). @privy-io/wagmi's createConfig silently drops
+// any custom `connectors` we'd pass here, so don't bother passing any.
+const config = createPrivyConfig({
+  chains,
+  transports,
+  ssr: true,
+});
+
+// Inside an iframe (eg. a Safe{Wallet} app): Privy's wagmi bridge
+// unconditionally clears the connector registry whenever Privy has no
+// active wallet, which breaks the "safe" connector's auto-connect -- a Safe
+// session never goes through Privy's login flow. Keep a plain wagmi config
+// with our own RainbowKit connector list for that case.
+const connectors = connectorsForWallets(
+  [
     {
       groupName: "Recommended",
       wallets: getWallets(),
     },
   ],
-  transports: {
-    [gnosis.id]: fallback(transportsRpcUrl),
-    [sepolia.id]: httpProvider,
-    [mainnet.id]: http(),
-    [arbitrum.id]: http(),
-    [base.id]: http(),
-    [bsc.id]: http(),
-  },
+  {
+    appName: "Bread Coop Solidarity Fund",
+    projectId: projectId,
+  }
+);
+
+const iframeConfig = createConfig({
+  connectors,
+  chains,
+  transports,
+  ssr: true,
 });
 
-export { config as prodConfig };
+export { config as prodConfig, iframeConfig as prodIframeConfig };

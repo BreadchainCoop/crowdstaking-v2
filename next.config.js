@@ -7,6 +7,13 @@ const nextConfig = {
 	images: {
 		unoptimized: true,
 	},
+	experimental: {
+		// @breadcoop/ui@2.0.4 added sideEffects:false, but the Home route's
+		// specific mix of imports still doesn't tree-shake cleanly without
+		// this (verified: removing it regresses `/` from ~306kB to ~526kB
+		// First Load JS while other routes stay fine). Keep it.
+		optimizePackageImports: ["@breadcoop/ui"],
+	},
 };
 
 module.exports = nextConfig;
