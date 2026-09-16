@@ -83,6 +83,15 @@ module.exports = withSentryConfig(module.exports, {
 	// Only actually uploads when shouldUploadSourceMaps is true
 	dryRun: !shouldUploadSourceMaps,
 
+	// Fully disable source-map GENERATION on non-production builds. `dryRun`
+	// only skips the upload — the plugin still generates maps, which is
+	// memory-heavy and OOMs Netlify's builder on the Privy/wagmi/LiFi graph.
+	// Production (CONTEXT=production) still generates + uploads for readable
+	// stack traces.
+	sourcemaps: {
+		disable: !shouldUploadSourceMaps,
+	},
+
 	// Custom error handler for Sentry CLI failures
 	// Logs warnings instead of failing the entire build
 	// Ensures deployment succeeds even if Sentry upload has network issues
