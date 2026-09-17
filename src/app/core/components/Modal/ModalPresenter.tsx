@@ -7,6 +7,7 @@ import { ConfirmBurnModal } from "./ConfirmBurnModal";
 import { ModalOverlay } from "./ModalUI";
 import { VoteTransactionModal } from "./TransactionModal/VoteTransactionModal";
 import { BakeryTransactionModal } from "./TransactionModal/BakeryTransactionModal";
+import { SafeTransactionModal } from "./TransactionModal/SafeTransactionModal";
 import { LPVaultTransactionModal } from "./LPVaultTransactionModal/LPVaultTransactionModal";
 import { GenericModal } from "./GenericModal";
 import { LiFiBridgeModal } from "./Bridge/LiFiModal";
@@ -28,6 +29,8 @@ export function ModalPresenter() {
                   switch (modalState.type) {
                     case "BAKERY_TRANSACTION":
                       return <BakeryTransactionModal modalState={modalState} />;
+                    case "SAFE_TRANSACTION":
+                      return <SafeTransactionModal modalState={modalState} />;
                     case "VOTE_TRANSACTION":
                       return <VoteTransactionModal modalState={modalState} />;
                     case "CONFIRM_BURN":

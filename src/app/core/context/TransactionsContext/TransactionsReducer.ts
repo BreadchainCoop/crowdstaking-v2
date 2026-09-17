@@ -49,6 +49,15 @@ export type TSafeTransactionSubmitted = {
   status: "SAFE_SUBMITTED";
   data: TTransactionData;
   hash: TTransactionHash;
+  /** Number of owner signatures collected so far. */
+  confirmationsSubmitted?: number;
+  /** Threshold of owner signatures required to execute. */
+  confirmationsRequired?: number;
+};
+export type TSafeTransactionExpired = {
+  status: "SAFE_EXPIRED";
+  data: TTransactionData;
+  hash: TTransactionHash;
 };
 
 export type TTransaction =
@@ -56,7 +65,8 @@ export type TTransaction =
   | TTransactionSuccess
   | TTransactionPrepared
   | TTransactionReverted
-  | TSafeTransactionSubmitted;
+  | TSafeTransactionSubmitted
+  | TSafeTransactionExpired;
 
 export type TTransactionStatus = TTransaction["status"];
 
@@ -95,6 +105,18 @@ export type TTransactionsAction =
   | {
       type: "SET_SAFE_SUBMITTED";
       payload: { hash: TTransactionHash };
+    }
+  | {
+      type: "SET_SAFE_PROGRESS";
+      payload: {
+        hash: string;
+        confirmationsSubmitted: number;
+        confirmationsRequired: number;
+      };
+    }
+  | {
+      type: "SET_SAFE_EXPIRED";
+      payload: { hash: string };
     };
 
 export type TTransactionsDispatch = (action: TTransactionsAction) => void;
@@ -165,6 +187,33 @@ export function TransactionsReducer(
             hash: action.payload.hash,
           },
         ],
+      };
+    case "SET_SAFE_PROGRESS":
+      return {
+        ...state,
+        submitted: state.submitted.map((tx) => {
+          if (tx.hash === action.payload.hash && tx.status === "SAFE_SUBMITTED") {
+            return {
+              ...tx,
+              confirmationsSubmitted: action.payload.confirmationsSubmitted,
+              confirmationsRequired: action.payload.confirmationsRequired,
+            };
+          }
+          return tx;
+        }),
+      };
+    case "SET_SAFE_EXPIRED":
+      return {
+        ...state,
+        submitted: state.submitted.map((tx) => {
+          if (tx.hash === action.payload.hash) {
+            return {
+              ...tx,
+              status: "SAFE_EXPIRED",
+            };
+          }
+          return tx;
+        }),
       };
     case "CLEAR":
       return {
