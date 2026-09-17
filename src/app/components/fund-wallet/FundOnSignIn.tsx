@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import { Address } from "viem";
 import { gnosis } from "viem/chains";
 import { useBalance } from "wagmi";
@@ -8,7 +9,13 @@ import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { useModal } from "@/app/core/context/ModalContext";
 import { BREAD_ADDRESS } from "@/constants";
 import { useWatchFundedXdai } from "@/app/core/hooks/useWatchFundedXdai";
-import { FundWallet } from "./FundWallet";
+
+// Deferred: only needed the moment we actually prompt to fund, not on every
+// page load for every signed-in user.
+const FundWallet = dynamic(
+	() => import("./FundWallet").then((mod) => mod.FundWallet),
+	{ ssr: false }
+);
 
 /**
  * On first sign-in, if the embedded wallet holds neither xDAI nor BREAD, prompt

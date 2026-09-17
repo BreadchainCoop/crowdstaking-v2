@@ -3,18 +3,30 @@
  * Deposit button — opens the Fund module (fund xDAI -> auto-bake BREAD).
  *
  * If the user isn't authenticated yet, it triggers Privy login (which
- * provisions the embedded wallet via `createOnLogin: "all-users"`); otherwise
- * it opens the Fund modal where they pick a funding option. The xDAI that lands
- * in the embedded wallet is auto-baked into BREAD by `useWatchFundedXdai`
- * (mounted inside the modal).
+ * provisions an embedded wallet for users who sign in without a browser
+ * wallet); otherwise it opens the Fund modal where they pick a funding
+ * option. The xDAI that lands in the embedded wallet is auto-baked into
+ * BREAD by `useWatchFundedXdai` (runs for the whole session via
+ * `FundOnSignIn`, not just while this modal is open).
  *
  * Styling mirrors the Figma "Small button" (Design System V1.1, node
  * 1401:2461) with the primary LiftedButton lift/press micro-interaction.
  */
+import dynamic from "next/dynamic";
 import { usePrivy } from "@privy-io/react-auth";
 
 import { useModal } from "@/app/core/context/ModalContext";
-import { FundWallet } from "@/app/components/fund-wallet/FundWallet";
+
+// Deferred: FundWallet (and Privy's on-ramp SDK behind it) is only needed
+// once a signed-in user actually clicks Deposit, not on every page that
+// renders the nav.
+const FundWallet = dynamic(
+	() =>
+		import("@/app/components/fund-wallet/FundWallet").then(
+			(mod) => mod.FundWallet
+		),
+	{ ssr: false }
+);
 
 export function PrivyDepositButton() {
 	const { ready, authenticated, login } = usePrivy();
