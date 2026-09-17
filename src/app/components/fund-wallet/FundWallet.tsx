@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { Address, formatEther } from "viem";
 import { gnosis } from "viem/chains";
 import { useBalance } from "wagmi";
@@ -13,9 +14,18 @@ import {
 } from "@phosphor-icons/react";
 
 import { useModal } from "@/app/core/context/ModalContext";
-import { Bridge } from "@/app/bakery/components/Swap/Bridge";
 import { FundButton } from "./FundButton";
 import { FundFromWallet } from "./FundFromWallet";
+
+// The LiFi widget behind Bridge is large; load it only when the user
+// actually opens the "Bridge crypto" view, not eagerly with FundWallet
+// itself (which is reachable from the homepage hero's CTA, unauthenticated
+// or not, so eagerly bundling it would bloat every visitor's initial load).
+const Bridge = dynamic(
+	() =>
+		import("@/app/bakery/components/Swap/Bridge").then((mod) => mod.Bridge),
+	{ ssr: false }
+);
 
 type View = "options" | "wallet" | "bridge";
 
