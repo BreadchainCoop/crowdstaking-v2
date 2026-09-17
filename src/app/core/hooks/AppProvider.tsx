@@ -13,6 +13,7 @@ import { useSentry } from "./useSentry";
 import { ModalProvider } from "../context/ModalContext";
 
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import PrivyProvider from "@/app/components/providers/privy";
 
 export function AppProvider({
   children,
@@ -24,17 +25,19 @@ export function AppProvider({
   useSentry();
 
   return (
-    <WagmiProviderWrapper>
-      <ConnectedUserProvider features={features}>
-        <TokenBalancesProvider>
-          <ToastProvider>
-            <TransactionsProvider>
-              <ModalProvider>{children}</ModalProvider>
-            </TransactionsProvider>
-          </ToastProvider>
-        </TokenBalancesProvider>
-        <ReactQueryDevtools initialIsOpen={true} />
-      </ConnectedUserProvider>
-    </WagmiProviderWrapper>
+    <PrivyProvider>
+      <WagmiProviderWrapper>
+        <ConnectedUserProvider features={features}>
+          <TokenBalancesProvider>
+            <ToastProvider>
+              <TransactionsProvider>
+                <ModalProvider>{children}</ModalProvider>
+              </TransactionsProvider>
+            </ToastProvider>
+          </TokenBalancesProvider>
+          <ReactQueryDevtools initialIsOpen={true} />
+        </ConnectedUserProvider>
+      </WagmiProviderWrapper>
+    </PrivyProvider>
   );
 }

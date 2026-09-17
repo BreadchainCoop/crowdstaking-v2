@@ -702,4 +702,13 @@ export const butteredBreadAbi = [
     name: "VotesExpiredSignature",
     inputs: [{ name: "expiry", type: "uint256", internalType: "uint256" }],
   },
+  {
+    type: "error",
+    name: "ERC20InsufficientBalance",
+    inputs: [
+      { name: "sender", type: "address", internalType: "address" },
+      { name: "balance", type: "uint256", internalType: "uint256" },
+      { name: "needed", type: "uint256", internalType: "uint256" },
+    ],
+  },
 ] as const;
