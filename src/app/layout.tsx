@@ -10,6 +10,7 @@ import Script from "next/script";
 import { ReactNode } from "react";
 import Header from "./core/components/Header/Header";
 import { ModalPresenter } from "./core/components/Modal/ModalPresenter";
+import { FundOnSignIn } from "./components/fund-wallet/FundOnSignIn";
 import { Toaster } from "./core/components/Toaster/Toaster";
 import { Footer } from "./core/components/Footer";
 import { parseFeatureVar } from "./core/util/parseFeatureVar";
@@ -76,6 +77,7 @@ function Layout({ children }: { children: ReactNode }) {
 			<Header />
 			<main className="grow relative">
 				<ModalPresenter />
+				<FundOnSignIn />
 				<Toaster />
 				{children}
 			</main>
