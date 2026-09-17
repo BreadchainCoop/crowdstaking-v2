@@ -88,7 +88,9 @@ export function SolidarityHero() {
 
 			{/* Content — a card overlapping the image on mobile, plain column on desktop. */}
 			<div className="relative z-10 -mt-10 mx-4 flex flex-col gap-4 bg-paper-0 p-6 shadow-[0px_4px_12px_0px_#1B201A26] md:order-2 md:mx-0 md:mt-0 md:bg-transparent md:p-0 md:shadow-none">
-				<p className="text-5xl font-bold leading-none text-surface-ink md:text-6xl lg:text-7xl">
+				{/* Same font + weight as the "We decide, together." heading
+				    (text-h2 = font-breadDisplay font-[900]). */}
+				<p className="font-breadDisplay font-[900] tracking-tighter text-5xl leading-none text-surface-ink md:text-6xl lg:text-7xl">
 					{usd(circulated)}
 					<span className="text-2xl text-surface-grey-2 md:text-3xl">
 						.00
