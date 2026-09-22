@@ -94,15 +94,15 @@ export function SolidarityHero() {
 	return (
 		// Fill the viewport on desktop, vertically centered, with breathing room.
 		<section className="md:flex md:min-h-[calc(100vh-6rem)] md:items-center md:py-8">
-			<div className="w-full flex flex-col md:grid md:grid-cols-[2fr_3fr] md:items-stretch md:gap-x-12 lg:gap-x-16">
-				{/* Mobile: full-bleed 4:3. Desktop: narrower column; height follows
-				    the content column and runs ~10% taller (extends 1rem above/below). */}
-				<HeroImageCarousel className="aspect-[4/3] w-full md:order-1 md:aspect-auto md:-my-4 md:h-[calc(100%+2rem)]" />
+			<div className="relative flex min-h-[100dvh] w-full items-center justify-center overflow-hidden md:min-h-0 md:grid md:grid-cols-[2fr_3fr] md:items-stretch md:justify-normal md:gap-x-12 md:overflow-visible lg:gap-x-16">
+				{/* Mobile: image covers the full viewport (absolute background).
+				    Desktop: narrower grid column, ~10% taller than the content. */}
+				<HeroImageCarousel className="absolute inset-0 h-full w-full md:relative md:inset-auto md:order-1 md:-my-4 md:h-[calc(100%+2rem)] md:w-auto md:aspect-auto" />
 
-				{/* Content — a card overlapping the image on mobile (z-10 lifts it
-				    over the image); on desktop drop the z so the header dropdown
-				    can overlay it. */}
-				<div className="relative z-10 -mt-10 mx-4 flex flex-col gap-4 bg-paper-0 p-6 shadow-[0px_4px_12px_0px_#1B201A26] md:order-2 md:z-auto md:mx-0 md:mt-0 md:bg-transparent md:p-0 md:shadow-none">
+				{/* Content — a card centered (x + y) on top of the image on mobile
+				    (z-10 lifts it above); on desktop it's a plain column and drops
+				    the z so the header dropdown can overlay it. */}
+				<div className="relative z-10 mx-4 flex max-w-md flex-col gap-4 bg-paper-0 p-6 shadow-[0px_4px_12px_0px_#1B201A26] md:order-2 md:z-auto md:mx-0 md:max-w-none md:bg-transparent md:p-0 md:shadow-none">
 				{/* Same font + weight as the "We decide, together." heading
 				    (text-h2 = font-breadDisplay font-[900]). */}
 				<p className="font-breadDisplay font-[900] tracking-tighter text-5xl leading-none text-surface-ink md:text-6xl lg:text-7xl">
