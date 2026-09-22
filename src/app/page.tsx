@@ -12,13 +12,11 @@ import { ViewAnalytics } from "./bakery/components/Analytics";
 import { HowItWorks } from "./bakery/components/HowItWorks";
 import Actions from "./bakery/components/Actions";
 import { generateMetadata } from "@/lib/site-metadata";
-import { BalanceBanner } from "./bakery/components/Banners/BalanceBanner";
 import { SolidarityHero } from "./bakery/components/hero/SolidarityHero";
 
 export default function Home() {
 	return (
 		<>
-			<BalanceBanner />
 			<div className={clsx(WRAPPER_CLASSES, "")}>
 				<SolidarityHero />
 				<div className="mt-12 md:flex md:items-start md:justify-between md:gap-8">
