@@ -14,8 +14,13 @@ import { ERC20_ABI } from "@/abi";
 import { BREAD_ADDRESS } from "@/constants";
 import { useRefetchOnBlockChange } from "@/app/core/hooks/useRefetchOnBlockChange";
 import { FALLBACK_APY_VALUE, useVaultAPY } from "@/app/core/hooks/useVaultAPY";
+import { ExternalLink } from "@/app/core/components/ExternalLink";
 import { HeroImageCarousel } from "./HeroImageCarousel";
 import { SupportFundButton } from "./SupportFundButton";
+
+// Where each stat links out to (on-chain / Dune), matching the existing widgets.
+const DUNE_URL = "https://dune.com/bread_cooperative/solidarity";
+const SPARK_URL = "https://app.spark.fi/savings/gnosis/sdai";
 
 // Last-known values, so the hero renders before/without the live sources —
 // mirrors the fallbacks the existing hero widgets each keep.
@@ -31,19 +36,23 @@ function HeroStatChip({
 	icon,
 	value,
 	label,
+	href,
 }: {
 	icon: ReactNode;
 	value: string;
 	label: string;
+	href: string;
 }) {
 	return (
-		<div className="flex items-center justify-center gap-2 border border-[#eae2d6] bg-paper-0 px-3 py-2.5">
-			<span className="shrink-0 text-primary-orange">{icon}</span>
-			<Body bold className="text-surface-ink">
-				{value}
-			</Body>
-			<Body className="text-surface-grey text-sm">{label}</Body>
-		</div>
+		<ExternalLink href={href} className="block !text-current">
+			<div className="flex items-center justify-center gap-2 border border-[#eae2d6] bg-paper-0 px-3 py-2.5 transition-colors hover:border-primary-orange hover:bg-[#EA581714]">
+				<span className="shrink-0 text-primary-orange">{icon}</span>
+				<Body bold className="text-surface-ink">
+					{value}
+				</Body>
+				<Body className="text-surface-grey text-sm">{label}</Body>
+			</div>
+		</ExternalLink>
 	);
 }
 
@@ -83,8 +92,10 @@ export function SolidarityHero() {
 	});
 
 	return (
-		<div className="flex flex-col md:grid md:grid-cols-2 md:items-center md:gap-x-12 lg:gap-x-16">
-			<HeroImageCarousel className="w-full md:order-1" />
+		<div className="flex flex-col md:grid md:grid-cols-2 md:items-stretch md:gap-x-12 lg:gap-x-16">
+			{/* Mobile: full-bleed 4:3. Desktop: height follows the content
+			    column and runs ~10% taller (extends 1rem above and below). */}
+			<HeroImageCarousel className="aspect-[4/3] w-full md:order-1 md:aspect-auto md:-my-4 md:h-[calc(100%+2rem)]" />
 
 			{/* Content — a card overlapping the image on mobile, plain column on desktop. */}
 			<div className="relative z-10 -mt-10 mx-4 flex flex-col gap-4 bg-paper-0 p-6 shadow-[0px_4px_12px_0px_#1B201A26] md:order-2 md:mx-0 md:mt-0 md:bg-transparent md:p-0 md:shadow-none">
@@ -104,19 +115,22 @@ export function SolidarityHero() {
 
 				<div className="grid gap-2 sm:grid-cols-3">
 					<HeroStatChip
-						icon={<CoinVerticalIcon size={20} weight="fill" />}
+						icon={<CoinVerticalIcon size={20} />}
 						value={usd(distributed)}
 						label="Distributed"
+						href={DUNE_URL}
 					/>
 					<HeroStatChip
-						icon={<UsersThreeIcon size={20} weight="fill" />}
+						icon={<UsersThreeIcon size={20} />}
 						value={backers.toLocaleString("en-US")}
 						label="Supporters"
+						href={DUNE_URL}
 					/>
 					<HeroStatChip
-						icon={<ChartLineUpIcon size={20} weight="fill" />}
+						icon={<ChartLineUpIcon size={20} />}
 						value={`${apy.toFixed(1)}%`}
 						label="APY"
+						href={SPARK_URL}
 					/>
 				</div>
 			</div>

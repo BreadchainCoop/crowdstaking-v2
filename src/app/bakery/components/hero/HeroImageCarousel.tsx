@@ -39,7 +39,7 @@ export function HeroImageCarousel({ className }: { className?: string }) {
 	return (
 		<div
 			className={clsx(
-				"relative overflow-hidden bg-orange-0 aspect-[4/3]",
+				"relative overflow-hidden bg-orange-0",
 				className
 			)}
 		>
