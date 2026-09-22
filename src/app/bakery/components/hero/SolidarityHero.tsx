@@ -94,7 +94,7 @@ export function SolidarityHero() {
 	return (
 		// Fill the viewport on desktop, vertically centered, with breathing room.
 		<section className="md:flex md:min-h-[calc(100vh-6rem)] md:items-center md:py-8">
-			<div className="relative flex min-h-[100dvh] w-full items-center justify-center overflow-hidden md:min-h-0 md:grid md:grid-cols-[2fr_3fr] md:items-stretch md:justify-normal md:gap-x-12 md:overflow-visible lg:gap-x-16">
+			<div className="relative -mx-4 w-[calc(100%+2rem)] flex min-h-[100dvh] items-center justify-center overflow-hidden md:mx-0 md:w-full md:min-h-0 md:grid md:grid-cols-[2fr_3fr] md:items-stretch md:justify-normal md:gap-x-12 md:overflow-visible lg:gap-x-16">
 				{/* Mobile: image covers the full viewport (absolute background).
 				    Desktop: narrower grid column, ~10% taller than the content. */}
 				<HeroImageCarousel className="absolute inset-0 h-full w-full md:relative md:inset-auto md:order-1 md:-my-4 md:h-[calc(100%+2rem)] md:w-auto md:aspect-auto" />
