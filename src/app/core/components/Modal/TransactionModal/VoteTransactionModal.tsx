@@ -21,6 +21,7 @@ const modalHeaderText: {
 	PREPARED: "Casting Vote",
 	SUBMITTED: "Casting Vote",
 	SAFE_SUBMITTED: "Casting Vote",
+	SAFE_EXPIRED: "Vote Expired",
 	CONFIRMED: "Vote casted",
 	REVERTED: "Something went wrong",
 };
@@ -31,6 +32,7 @@ const modalAdviceText: {
 	PREPARED: "Please confirm transaction in your wallet",
 	SUBMITTED: "Waiting for on-chain confimation",
 	SAFE_SUBMITTED: "Safe Transaction Submitted",
+	SAFE_EXPIRED: "Safe Transaction Expired",
 	CONFIRMED: "You have succesfully voted",
 	REVERTED: "Your vote did not go through, please try again",
 };
