@@ -3,7 +3,7 @@
 import { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { formatUnits } from "viem";
-import { Body, Heading3 } from "@breadcoop/ui";
+import { Body, Heading4 } from "@breadcoop/ui";
 import {
 	ChartLineUpIcon,
 	CoinVerticalIcon,
@@ -107,9 +107,9 @@ export function SolidarityHero() {
 						.00
 					</span>
 				</p>
-				<Heading3 className="text-surface-ink">
+				<Heading4 className="text-surface-ink">
 					Dedicated to funding human resilience.
-				</Heading3>
+				</Heading4>
 
 				<SupportFundButton className="w-full" />
 
