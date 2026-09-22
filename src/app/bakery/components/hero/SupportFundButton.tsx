@@ -49,7 +49,7 @@ export function SupportFundButton({ className }: { className?: string }) {
 		<LiftedButton
 			onClick={handleClick}
 			className={className}
-			leftIcon={<HandHeartIcon size={20} weight="fill" />}
+			leftIcon={<HandHeartIcon size={20} />}
 		>
 			Support fund
 		</LiftedButton>
