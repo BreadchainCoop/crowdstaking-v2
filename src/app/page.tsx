@@ -11,15 +11,13 @@ import { MonthlyVoters } from "./bakery/components/MonthlyVoters";
 import { ViewAnalytics } from "./bakery/components/Analytics";
 import Actions from "./bakery/components/Actions";
 import { generateMetadata } from "@/lib/site-metadata";
-import { BalanceBanner } from "./bakery/components/Banners/BalanceBanner";
 import { SolidarityHero } from "./bakery/components/hero/SolidarityHero";
 
 export default function Home() {
 	return (
 		<>
-			<BalanceBanner />
+			<SolidarityHero />
 			<div className={clsx(WRAPPER_CLASSES, "")}>
-				<SolidarityHero />
 				<div className="mt-12 md:flex md:items-start md:justify-between md:gap-8">
 					<figure className="w-[23.82rem] h-[16rem] ml-auto bg-orange-0 overflow-hidden relative right-[-1rem] mb-8 md:w-[33.125rem] md:h-[22.25rem] md:order-2 md:right-[-1.5rem] md:static md:mt-8 md:grow-0">
 						<img
