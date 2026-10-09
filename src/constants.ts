@@ -8,3 +8,6 @@ export const BUTTERED_BREAD_ADDRESS =
 export const CURVE_SWAP_URL = "https://www.curve.finance/dex/xdai/pools/factory-stable-ng-15/swap/";
 
 export const GNOSIS_LINK = "https://gnosisscan.io/address/";
+
+/** Monerium EURe (euro e-money) on Gnosis Chain. */
+export const EURE_ADDRESS = "0xcb444e90d8198415266c6a2724b7900fb12fc56e";

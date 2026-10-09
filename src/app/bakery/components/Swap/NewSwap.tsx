@@ -32,14 +32,18 @@ const notes: Record<TSwapState["mode"], string> = {
 
 const validModes: TSwapMode[] = ["BAKE", "BRIDGE", "BURN", "BUY"];
 
-const NewSwap = () => {
+const NewSwap = ({ fromToken }: { fromToken?: Address }) => {
 	const searchParams = useSearchParams();
 	const { user, isSafe } = useConnectedUser();
 	const [connectedAccountAddress, setConnectedAccountAddress] =
 		useState<null | Address>(null);
 	const tabParams = (searchParams.get("tab") || "BAKE") as TSwapMode;
 	const [swapState, setSwapState] = useState<TSwapState>({
-		mode: validModes.includes(tabParams) ? tabParams : "BAKE",
+		mode: fromToken
+			? "BRIDGE"
+			: validModes.includes(tabParams)
+				? tabParams
+				: "BAKE",
 		value: "",
 	});
 	useEffect(() => {
@@ -182,7 +186,7 @@ const NewSwap = () => {
 						/> */}
 					</>
 				) : swapState.mode === "BRIDGE" ? (
-					<Bridge />
+					<Bridge fromToken={fromToken} />
 				) : (
 					<Buy />
 				)}

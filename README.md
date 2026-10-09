@@ -72,6 +72,7 @@ $ cp .env.example .env.local
 
 1. [Alchemy](https://www.alchemy.com) is used to resolve ENS domains. Copy the API key into `NEXT_PUBLIC_ALCHEMY_MAINNET_API_KEY` variable in `.env.local`.
 2. [Reown](https://cloud.reown.com) is used for WalletConnect functionality. Create an "Appkit" and copy the project id into `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID` variable in `.env.local`.
+3. [Monerium](https://docs.monerium.com) (optional) powers the "Monerium euro account" card on My Account — members connect their Monerium account via OAuth, see their personal IBAN, link the wallet they use on this app as a Monerium owned address, and follow the bank → EURe → xDAI → BREAD flow. Create an **OAuth** application in the [Monerium developer portal](https://sandbox.monerium.dev) (Developers → Create application → OAuth), set its redirect URI to `http://localhost:3000/api/monerium/callback` (or your deployment origin), and copy the *Authorization Code* client id into `NEXT_PUBLIC_MONERIUM_CLIENT_ID`. `NEXT_PUBLIC_MONERIUM_ENV` selects `sandbox` (default) or `production`. Leave the client id empty to hide the feature entirely.
 
 #### Start local node
 
