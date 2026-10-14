@@ -17,6 +17,7 @@ import { ArrowUpRightIcon } from "@phosphor-icons/react";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
 import { Chip } from "@/app/bakery/components/Chip";
 import { GapInfoIcon } from "./gap/GapInfoIcon";
+import { Pending } from "@/app/core/components/Pending";
 
 const RenderGapIcon = ({
 	link,
@@ -69,6 +70,21 @@ export function ProjectRow({
 		);
 	};
 
+	const breadChipValue =
+		projectBread?.status === "SUCCESS" ? (
+			renderBreadHolding(projectBread.value)
+		) : (
+			<Pending sample="0,000.00" />
+		);
+	const powerChipValue =
+		projectPower?.status === "SUCCESS" ? (
+			projectPower.value
+		) : (
+			<Pending sample="0,000" />
+		);
+	const showBreadChip = projectBread?.status !== "ERROR";
+	const showPowerChip = projectPower?.status !== "ERROR";
+
 	const explorerLink = () => {
 		if (address) {
 			return "https://gnosisscan.io/address/" + address;
@@ -104,7 +120,7 @@ export function ProjectRow({
 						</div>
 					</div>
 					<Body className="text-xs mb-4">{description}</Body>
-					{projectBread?.status === "SUCCESS" && (
+					{showBreadChip && (
 						<ExternalLink
 							href={explorerLink()}
 							className="!text-[#EA5817] flex items-center justify-start w-full"
@@ -112,17 +128,17 @@ export function ProjectRow({
 							<Chip className="px-4! py-1! border-surface-ink! bg-paper-main flex items-center justify-center w-full">
 								<Logo size={20} />
 								<Body bold className="mt-1 mr-auto text-surface-ink">
-									{renderBreadHolding(projectBread.value)}
+									{breadChipValue}
 								</Body>
 								<ArrowUpRightIcon size={20} />
 							</Chip>
 						</ExternalLink>
 					)}
-					{projectPower?.status === "SUCCESS" && (
+					{showPowerChip && (
 						<Chip className="px-4! py-1! border-surface-ink! bg-paper-main flex items-center justify-start">
 							<FistIcon />
 							<Body bold className="mt-1">
-								{projectPower.value}
+								{powerChipValue}
 							</Body>
 						</Chip>
 					)}
@@ -158,7 +174,7 @@ export function ProjectRow({
 								<RenderGapIcon link={link} address={address} />
 							</div>
 							<div className="flex items-stretch justify-start gap-2">
-								{projectBread?.status === "SUCCESS" && (
+								{showBreadChip && (
 									<ExternalLink
 										href={explorerLink()}
 										className="!text-current flex items-center justify-center"
@@ -166,18 +182,16 @@ export function ProjectRow({
 										<Chip className="px-4! py-1! border-surface-ink! bg-paper-main flex items-center justify-center">
 											<Logo size={20} />
 											<Body bold className="mt-1">
-												{renderBreadHolding(
-													projectBread.value
-												)}
+												{breadChipValue}
 											</Body>
 										</Chip>
 									</ExternalLink>
 								)}
-								{projectPower?.status === "SUCCESS" && (
+								{showPowerChip && (
 									<Chip className="px-4! py-1! border-surface-ink! bg-paper-main flex items-center justify-center">
 										<FistIcon />
 										<Body bold className="mt-1">
-											{projectPower.value}
+											{powerChipValue}
 										</Body>
 									</Chip>
 								)}
@@ -283,7 +297,7 @@ export function VoteForm({
 			</div>
 			<Body bold className="text-orange-2 text-center">
 				{value === null
-					? "--"
+					? <Pending sample="00" />
 					: formatVotePercentage(
 							value && totalPoints > 0
 								? (value / totalPoints) * 100

@@ -9,6 +9,7 @@ import { formatUnits } from "viem";
 import { differenceInDays } from "date-fns";
 import { Body, Heading2, Heading3, LiftedButton } from "@breadcoop/ui";
 import { ArrowUpRightIcon, HeartIcon } from "@phosphor-icons/react";
+import { Pending } from "@/app/core/components/Pending";
 
 export function VotingPower({
 	minRequiredVotingPower,
@@ -63,14 +64,16 @@ export function VotingPower({
 								<FistIcon />
 							</span>
 							<Body className="text-2xl font-bold">
-								{userVotingPower
-									? formatBalance(
-											Number(
-												formatUnits(userVotingPower, 18)
-											),
-											2
-									  )
-									: "-"}
+								{userVotingPower ? (
+									formatBalance(
+										Number(formatUnits(userVotingPower, 18)),
+										2
+									)
+								) : user.status === "CONNECTED" ? (
+									<Pending sample="0,000.00" />
+								) : (
+									"-"
+								)}
 							</Body>
 						</div>
 					</div>

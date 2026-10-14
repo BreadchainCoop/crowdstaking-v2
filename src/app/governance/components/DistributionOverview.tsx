@@ -17,6 +17,7 @@ import clsx from "clsx";
 import { useDistributions } from "../useDistributions";
 import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 import { HowDoesThisWorkButton } from "@/app/core/components/HowDoesThisWorkButton";
+import { Pending } from "@/app/core/components/Pending";
 
 export function DistributionOverview({
   cycleDates,
@@ -134,7 +135,23 @@ export function DistributionOverview({
 									</Heading2>
 								</div>
 							) : (
-								<div className="text-3xl opacity-0">.</div>
+								<div className="w-full flex justify-center items-baseline">
+									<div className="flex gap-2 justify-end items-baseline">
+										<Logo size={32} />
+										<Heading2 className="text-[48px]">
+											<Pending sample="00,000" />
+										</Heading2>
+									</div>
+									<Body
+										bold
+										className="text-[48px] text-surface-grey-2"
+									>
+										.
+									</Body>
+									<Heading2 className="text-[24px] w-[56px] text-surface-grey-2">
+										<Pending sample="0000" />
+									</Heading2>
+								</div>
 							)}
 
 							<div className="flex justify-center pt-1">
@@ -157,9 +174,11 @@ export function DistributionOverview({
 								<div className="flex gap-2 items-center md:justify-center">
 									<Logo size={16} />
 									<Body bold>
-										{estimateTotal
-											? formatBalance(estimateTotal, 2)
-											: "--.--"}
+										{estimateTotal ? (
+											formatBalance(estimateTotal, 2)
+										) : (
+											<Pending sample="00,000.00" />
+										)}
 									</Body>
 								</div>
 							</div>
@@ -168,18 +187,28 @@ export function DistributionOverview({
 									Annual interest rate (APY)
 								</Body>
 								<div className="flex gap-2 items-center md:justify-center">
-									<Body bold>{dsrAPY + "%"}</Body>
+									<Body bold>
+										{dsrAPY ? (
+											dsrAPY + "%"
+										) : (
+											<Pending sample="0.00%" />
+										)}
+									</Body>
 								</div>
 							</div>
 							<div className="flex w-full gap-2">
 								<Body className="grow text-surface-grey">
 									Voting cycle #
-									{distributions == undefined
-										? "--"
-										: distributions + 1}
+									{distributions == undefined ? (
+										<Pending sample="00" />
+									) : (
+										distributions + 1
+									)}
 								</Body>
 								{cycleDates.status === "LOADING" ? (
-									<span>--</span>
+									<Body bold>
+										<Pending sample="Mmm 00th - Mmm 00th" />
+									</Body>
 								) : cycleDates.status === "ERROR" ? (
 									<span>err</span>
 								) : (
@@ -194,7 +223,15 @@ export function DistributionOverview({
 						</div>
 						<div className="w-full">
 							{cycleDates.status === "LOADING" ? (
-								<span>--/--/--</span>
+								<div className="pt-3 flex flex-col gap-2">
+									<Body bold>
+										<span className="text-surface-grey">
+											Distributing in{" "}
+										</span>
+										<Pending sample="00" /> days
+									</Body>
+									<div className="p-1 border border-black h-[1.0625rem]" />
+								</div>
 							) : cycleDates.status === "ERROR" ? (
 								<span>err </span>
 							) : (
