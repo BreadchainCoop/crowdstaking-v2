@@ -1,7 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Hex } from "viem";
-import { Heading2, Body, Caption } from "@breadcoop/ui";
 import { ProjectRow, VoteForm } from "./components/ProjectRow";
 import { ValueTestHelper } from "./components/ValueTestHelper";
 import { CastVotePanel } from "./components/CastVote";
@@ -22,6 +21,10 @@ import { PageGrid } from "./components/PageGrid";
 import { ProjectsProvider } from "@/app/core/context/ProjectContext/ProjectContext";
 import { useVotingPower } from "./context/VotingPowerContext";
 import { VotingHistory } from "./components/VotingHistory";
+import {
+	GovernanceHeader,
+	GovernanceSkeleton,
+} from "./components/GovernanceSkeleton";
 import { useTransactions } from "../core/context/TransactionsContext/TransactionsContext";
 import { useModal } from "../core/context/ModalContext";
 import { sleep } from "@/utils/sleep";
@@ -280,13 +283,7 @@ export function GovernancePage() {
 		cycleDates.status === "LOADING" ||
 		cycleLength.status === "LOADING"
 	)
-		return (
-			<div className="w-full flex justify-center pt-32">
-				<div className="size-10 text-breadgray-grey">
-					<Spinner />
-				</div>
-			</div>
-		);
+		return <GovernanceSkeleton />;
 
 	// Active project addresses currently in the vote form.
 	const activeAddresses = Object.keys(voteFormState.projects) as Hex[];
@@ -300,23 +297,7 @@ export function GovernancePage() {
 	return (
 		<section className="grow w-full max-w-[44rem] lg:max-w-[67rem] m-auto pb-16 px-4 lg:px-8">
 			<div className="lg:grid lg:grid-cols-[2fr_1fr] lg:min-h-0 lg:gap-x-[1.0625rem] lg:gap-y-4 lg:content-between lg:mb-[1.625rem]">
-				<div className="mb-8 lg:mb-0 lg:col-start-1 lg:row-start-1 lg:flex lg:flex-col lg:h-full">
-					<Heading2 className="text-2xl lg:text-[2.5rem]">
-						<span className="uppercase">
-							Bread Solidarity Fund &mdash;
-						</span>{" "}
-						Vote
-					</Heading2>
-					<Body className="py-4 max-w-xl">
-						Distribute your voting power across the various projects
-						in the Solidarity Fund to influence how much
-						yield is given to each.
-					</Body>
-					<Caption>
-						* Distributions will be made at the end of the month
-						based on all votes received.
-					</Caption>
-				</div>
+				<GovernanceHeader />
 
 				<div className="flex flex-col gap-6 mb-8 lg:mb-0 lg:max-w-[22.0625rem] lg:col-start-2 lg:row-start-1 lg:row-end-3 lg:ml-auto">
 					<DistributionOverview cycleDates={cycleDates} />
