@@ -15,6 +15,30 @@ body {
   @apply bg-paper-main;
 }
 
+/* Loading placeholder: a soft brand-tinted sweep, calm and slow */
+@keyframes pending-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+.pending-shimmer {
+  border-radius: 2px;
+  background-image: linear-gradient(
+    90deg,
+    rgb(234 88 23 / 0.08) 25%,
+    rgb(234 88 23 / 0.18) 50%,
+    rgb(234 88 23 / 0.08) 75%
+  );
+  background-size: 200% 100%;
+  animation: pending-shimmer 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pending-shimmer {
+    animation: none;
+  }
+}
+
 /* Additional custom styles can go here */
 @theme {
   --color-bread-paper: #fdfaf3;

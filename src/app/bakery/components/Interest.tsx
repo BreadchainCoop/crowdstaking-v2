@@ -129,7 +129,28 @@ export const Interest = () => {
 			FALLBACK_TOTAL_BREAD_DISTRIBUTED + FALLBACK_CLAIMABLE_YIELD,
 		persistKey: "total-funding",
 	});
-	const formattedValue = formatBalance(animatedValue, 4).split(".");
+	// Reserve room for the final number (an invisible copy of the widest value),
+	// so the layout doesn't shift as the digits count up.
+	const widestValue = Math.max(
+		FALLBACK_TOTAL_BREAD_DISTRIBUTED + FALLBACK_CLAIMABLE_YIELD,
+		displayValue,
+		animatedValue
+	);
+	const renderTotal = (val: number) => {
+		const [whole, decimals] = formatBalance(val, 4).split(".");
+		return (
+			<>
+				<span className="text-h1 md:text-[4rem] lg:text-[5rem]">
+					{whole}
+				</span>
+				<span className="text-h2 !text-2xl text-surface-grey-2 relative top-1.5 left-[-0.1rem] md:top-[-0.6rem] lg:top[0rem] xl:top-[-0.1rem]">
+					.{decimals}
+				</span>
+			</>
+		);
+	};
+	const totalClasses =
+		"flex items-end justify-start flex-nowrap xl:block [grid-area:1/1]";
 
 	return (
 		<>
@@ -139,14 +160,12 @@ export const Interest = () => {
 					className="mr-2 shrink-0 w-[clamp(2rem,calc(1.1rem+4.5vw),4.0625rem)] md:mr-1 md:self-center md:mb-8 lg:w-[4.0625rem] lg:h-[4.0625rem] lg:mr-3"
 				/>
 				<div>
-					<p className="flex items-end justify-start flex-nowrap xl:block">
-						<span className="text-h1 md:text-[4rem] lg:text-[5rem]">
-							{formattedValue[0]}
-						</span>
-						<span className="text-h2 !text-2xl text-surface-grey-2 relative top-1.5 left-[-0.1rem] md:top-[-0.6rem] lg:top[0rem] xl:top-[-0.1rem]">
-							.{formattedValue[1]}
-						</span>
-					</p>
+					<div className="grid tabular-nums">
+						<p className={`${totalClasses} invisible`} aria-hidden="true">
+							{renderTotal(widestValue)}
+						</p>
+						<p className={totalClasses}>{renderTotal(animatedValue)}</p>
+					</div>
 					<Body className="text-surface-grey ml-auto max-w-max md:mt-[-0.6rem] lg:mt-[-0.8rem]">
 						($ {animatedValue.toFixed(2)} USD)
 					</Body>

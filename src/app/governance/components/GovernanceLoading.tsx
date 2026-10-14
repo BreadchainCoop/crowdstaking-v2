@@ -9,6 +9,7 @@ import { DistributionOverview } from "./DistributionOverview";
 import { ResultsPanel } from "./ResultsPanel";
 import { VotingPower } from "./VotingPower";
 import { ProjectRow, VoteForm } from "./ProjectRow";
+import { CastVotePanel } from "./CastVote";
 
 // Static intro: doesn't depend on chain data, so it renders immediately.
 export function GovernanceHeader() {
@@ -93,6 +94,16 @@ export function GovernanceLoading({
 								</StaticProjectProvider>
 							</div>
 						))}
+						<CastVotePanel
+							user={user}
+							userVote={[]}
+							userHasVoted={false}
+							userCanVote={false}
+							isSafe={false}
+							isRecasting={false}
+							setIsRecasting={noop}
+							resetFormState={noop}
+						/>
 					</div>
 				</div>
 			</div>

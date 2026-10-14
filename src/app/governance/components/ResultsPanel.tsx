@@ -6,6 +6,7 @@ import { CurrentVotingDistributionState } from "../useCurrentVotingDistribution"
 import { CardBox } from "@/app/core/components/CardBox";
 import { useMemo } from "react";
 import { Body, Heading3 } from "@breadcoop/ui";
+import { Pending } from "@/app/core/components/Pending";
 
 export function ResultsPanel({
 	distribution,
@@ -114,9 +115,11 @@ function ResultsProject({
 			<Body className="flex gap-2">
 				<span className="grow font-bold">{projectsMeta[address].name}</span>
 				<span className="text-surface-ink">
-					{projectPoints === null
-						? "--%"
-						: `${formatVotePercentage(percentage)}%`}
+					{projectPoints === null ? (
+						<Pending sample="00.0%" />
+					) : (
+						`${formatVotePercentage(percentage)}%`
+					)}
 				</span>
 			</Body>
 			<div className="border border-black p-1">

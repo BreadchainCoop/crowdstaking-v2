@@ -100,7 +100,21 @@ const AnimatedNumber = ({
 }: AnimatedNumberProps) => {
 	const displayValue = useAnimatedNumber(value, options);
 
-	return <span className={className}>{formatter(displayValue)}</span>;
+	// Reserve room for the final number (an invisible copy of the widest value),
+	// so the surrounding layout doesn't shift as the digits count up.
+	if (options.placeholder === undefined) {
+		return <span className={className}>{formatter(displayValue)}</span>;
+	}
+	const widest = Math.max(options.placeholder, value, displayValue);
+
+	return (
+		<span className={`inline-grid tabular-nums ${className}`}>
+			<span className="invisible [grid-area:1/1]" aria-hidden="true">
+				{formatter(widest)}
+			</span>
+			<span className="[grid-area:1/1]">{formatter(displayValue)}</span>
+		</span>
+	);
 };
 
 export default AnimatedNumber;
