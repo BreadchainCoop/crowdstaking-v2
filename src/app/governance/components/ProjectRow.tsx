@@ -202,7 +202,7 @@ export function VoteForm({
 	disabled,
 }: {
 	address: Hex;
-	value: number;
+	value: number | null;
 	updateValue: (value: number, address: Hex) => void;
 	totalPoints: number;
 	user: TConnectedUserState;
@@ -210,10 +210,12 @@ export function VoteForm({
 	disabled?: boolean;
 }) {
 	function increment() {
+		if (value === null) return;
 		updateValue(value + 1 <= 99 ? (value || 0) + 1 : value, address);
 	}
 
 	function decrement() {
+		if (value === null) return;
 		updateValue(value - 1 >= 0 ? (value || 0) - 1 : value, address);
 	}
 
@@ -247,7 +249,7 @@ export function VoteForm({
 						!userCanVote && "opacity-50 "
 					)}
 					type="text"
-					placeholder="00"
+					placeholder="--"
 					inputMode="decimal"
 					autoComplete="off"
 					autoCorrect="off"
@@ -265,7 +267,7 @@ export function VoteForm({
 							address
 						);
 					}}
-					value={value === null ? "00" : value}
+					value={value === null ? "" : value}
 					// disabled={isDisabled}
 				/>
 				<InputButton onClick={increment} isDisabled={isDisabled}>
@@ -280,9 +282,13 @@ export function VoteForm({
 				</InputButton>
 			</div>
 			<Body bold className="text-orange-2 text-center">
-				{formatVotePercentage(
-					value && totalPoints > 0 ? (value / totalPoints) * 100 : 0
-				)}
+				{value === null
+					? "--"
+					: formatVotePercentage(
+							value && totalPoints > 0
+								? (value / totalPoints) * 100
+								: 0
+					  )}
 				%
 			</Body>
 		</fieldset>

@@ -23,8 +23,8 @@ import { useVotingPower } from "./context/VotingPowerContext";
 import { VotingHistory } from "./components/VotingHistory";
 import {
 	GovernanceHeader,
-	GovernanceSkeleton,
-} from "./components/GovernanceSkeleton";
+	GovernanceLoading,
+} from "./components/GovernanceLoading";
 import { useTransactions } from "../core/context/TransactionsContext/TransactionsContext";
 import { useModal } from "../core/context/ModalContext";
 import { sleep } from "@/utils/sleep";
@@ -283,7 +283,15 @@ export function GovernancePage() {
 		cycleDates.status === "LOADING" ||
 		cycleLength.status === "LOADING"
 	)
-		return <GovernanceSkeleton />;
+		return (
+			<GovernanceLoading
+				user={user}
+				cycleDates={cycleDates}
+				distribution={currentVotingDistribution}
+				minRequiredVotingPower={minRequiredVotingPower}
+				userVotingPower={totalUserVotingPower}
+			/>
+		);
 
 	// Active project addresses currently in the vote form.
 	const activeAddresses = Object.keys(voteFormState.projects) as Hex[];
@@ -310,7 +318,6 @@ export function GovernancePage() {
 						userVotingPower={totalUserVotingPower}
 						userHasVoted={userHasVoted}
 						cycleDates={cycleDates}
-						cycleLength={cycleLength}
 						userCanVote={userCanVote}
 						user={user}
 						distributeEqually={distributeEqually}

@@ -15,7 +15,7 @@ import AnimatedNumber from "@/app/components/animated-number";
 const FALLBACK_CIRCULATION_VALUE = 458485.260468292593460802;
 
 export const BreadCirculation = () => {
-	const { data } = useRefetchOnBlockChange(
+	const { data, status } = useRefetchOnBlockChange(
 		BREAD_ADDRESS,
 		ERC20_ABI,
 		"totalSupply",
@@ -34,7 +34,12 @@ export const BreadCirculation = () => {
 			<Chip className="max-w-max mb-4 !gap-x-2.5 bg-paper-main hover:bg-[#EA581733] transition-colors md:mb-0">
 				<Logo className="md:size-6" size={24} />
 				<Body bold className="flex items-center justify-center gap-1">
-					<AnimatedNumber value={supply} formatter={formatSupply} />{" "}
+					<AnimatedNumber
+						value={supply}
+						formatter={formatSupply}
+						loading={status === "pending"}
+						placeholder={FALLBACK_CIRCULATION_VALUE}
+					/>{" "}
 					BREAD <span className="font-normal">in circulation</span>
 				</Body>
 			</Chip>

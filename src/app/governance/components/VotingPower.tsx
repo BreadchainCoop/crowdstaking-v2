@@ -3,8 +3,7 @@ import clsx from "clsx";
 import { CheckIcon } from "@/app/core/components/Icons/CheckIcon";
 import { formatBalance } from "@/app/core/util/formatter";
 import { TConnectedUserState } from "@/app/core/hooks/useConnectedUser";
-import { CycleDatesSuccess } from "../useCycleDates";
-import { CycleLengthSuccess } from "../useCycleLength";
+import { CycleDatesState, CycleDatesSuccess } from "../useCycleDates";
 import { FistIcon } from "@/app/core/components/Icons/FistIcon";
 import { formatUnits } from "viem";
 import { differenceInDays } from "date-fns";
@@ -17,7 +16,6 @@ export function VotingPower({
 	userHasVoted,
 	userCanVote,
 	cycleDates,
-	cycleLength,
 	user,
 	distributeEqually,
 	isRecasting,
@@ -28,15 +26,13 @@ export function VotingPower({
 	userVotingPower: bigint | null;
 	userHasVoted: boolean;
 	userCanVote: boolean;
-	cycleDates: CycleDatesSuccess;
-	cycleLength: CycleLengthSuccess;
+	cycleDates: CycleDatesState;
 	user: TConnectedUserState;
 	distributeEqually: () => void;
 	isRecasting: boolean;
 	onStartTest?: () => void;
 	canStartTest?: boolean;
 }) {
-	const days = (cycleLength.data * 5) / 60 / 60 / 24;
 	return (
 		<section className="lg:flex lg:items-start lg:justify-between lg:gap-2">
 			<div className="lg:max-w-[22.4375rem] lg:gap-6">
@@ -49,7 +45,7 @@ export function VotingPower({
 					voting opened.
 				</Body>
 			</div>
-			{userHasVoted && !isRecasting ? (
+			{userHasVoted && !isRecasting && cycleDates.status === "SUCCESS" ? (
 				<UserHasVoted cycleDates={cycleDates} />
 			) : !userCanVote &&
 			  minRequiredVotingPower !== null &&

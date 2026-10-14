@@ -114,6 +114,18 @@ const ProjectsProvider = ({
   );
 };
 
+// Renders project rows before on-chain data is available: balance and power
+// chips stay hidden (status LOADING) while the static text shows immediately.
+const StaticProjectProvider = ({ children }: { children: ReactNode }) => (
+  <ProjectContext.Provider
+    value={{
+      project: { BREAD: { status: "LOADING" }, POWER: { status: "LOADING" } },
+    }}
+  >
+    {children}
+  </ProjectContext.Provider>
+);
+
 const useProject = () => {
   const context = useContext(ProjectContext);
   if (context === undefined) {
@@ -122,4 +134,4 @@ const useProject = () => {
   return context;
 };
 
-export { ProjectsProvider, useProject };
+export { ProjectsProvider, StaticProjectProvider, useProject };

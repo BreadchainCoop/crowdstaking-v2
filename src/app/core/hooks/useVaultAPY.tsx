@@ -3,8 +3,8 @@ import { SDAI_ADAPTOR_ABI } from "@/abi";
 import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 import { parseEther } from "viem";
 
-// Value as at when I ran the query
-export const FALLBACK_APY_VALUE = parseEther("5.9");
+// Placeholder shown (and counted up toward) while the real APY loads
+export const FALLBACK_APY_VALUE = parseEther("0.04");
 
 export function useVaultAPY() {
 	const chainConfig = useActiveChain();

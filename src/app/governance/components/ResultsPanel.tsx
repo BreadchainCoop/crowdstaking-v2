@@ -37,6 +37,18 @@ export function ResultsPanel({
 		return { distributions, totalPoints };
 	}, [distribution]);
 
+	// Before the distribution loads, show every active project with "--%" so the
+	// labels are in place and only the numbers fill in.
+	const placeholderProjects = useMemo(
+		() =>
+			(Object.keys(projectsMeta) as Hex[])
+				.filter((address) => projectsMeta[address].active)
+				.toSorted(
+					(a, b) => projectsMeta[a].order - projectsMeta[b].order
+				),
+		[]
+	);
+
 	return (
 		<section className="grid grid-cols-1 gap-4">
 			<CardBox className="lg:border-transparent">
@@ -46,6 +58,15 @@ export function ResultsPanel({
 							RESULTS
 						</Heading3>
 						<div className="grid grid-cols-1 gap-4">
+							{!distributionsSorted &&
+								placeholderProjects.map((address) => (
+									<ResultsProject
+										key={`project_result_${address}`}
+										address={address}
+										projectPoints={null}
+										totalPoints={0}
+									/>
+								))}
 							{distributionsSorted &&
 								distributionsSorted.distributions.map(
 									(project) => (
@@ -80,19 +101,23 @@ function ResultsProject({
 	totalPoints,
 	address,
 }: {
-	projectPoints: number;
+	projectPoints: number | null;
 	totalPoints: number;
 	address: Hex;
 }) {
 	const percentage =
-		totalPoints > 0 ? (projectPoints / totalPoints) * 100 : 0;
+		projectPoints !== null && totalPoints > 0
+			? (projectPoints / totalPoints) * 100
+			: 0;
 	return (
 		<div className="grid grid-cols-1 gap-2">
 			<Body className="flex gap-2">
 				<span className="grow font-bold">{projectsMeta[address].name}</span>
-				<span className="text-surface-ink">{`${formatVotePercentage(
-					percentage
-				)}%`}</span>
+				<span className="text-surface-ink">
+					{projectPoints === null
+						? "--%"
+						: `${formatVotePercentage(percentage)}%`}
+				</span>
 			</Body>
 			<div className="border border-black p-1">
 				<div

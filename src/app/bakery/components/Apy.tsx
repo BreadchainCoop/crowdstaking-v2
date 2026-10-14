@@ -10,9 +10,10 @@ import AnimatedNumber from "@/app/components/animated-number";
 const formatter = (val: number) => val.toFixed(1);
 
 export const Apy = () => {
-	const { data = FALLBACK_APY_VALUE } = useVaultAPY();
+	const { data = FALLBACK_APY_VALUE, isPending } = useVaultAPY();
 
 	const apy = Number(formatUnits(data, 18)) * 100;
+	const placeholderApy = Number(formatUnits(FALLBACK_APY_VALUE, 18)) * 100;
 
 	return (
 		<ExternalLink
@@ -22,7 +23,13 @@ export const Apy = () => {
 			<Chip className="max-w-max gap-x-2.5 bg-paper-main hover:bg-[#EA581733] transition-colors">
 				<ChartLine />
 				<Body bold>
-					<AnimatedNumber value={apy} formatter={formatter} />% APY
+					<AnimatedNumber
+						value={apy}
+						formatter={formatter}
+						loading={isPending}
+						placeholder={placeholderApy}
+					/>
+					% APY
 				</Body>
 			</Chip>
 		</ExternalLink>

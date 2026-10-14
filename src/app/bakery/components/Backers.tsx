@@ -31,7 +31,12 @@ export const ProjectBackers = () => {
 			<Chip className="chip-transition w-full">
 				<UsersThreeicon />
 				<Body bold>
-					<AnimatedNumber value={data} formatter={formatter} />{" "}
+					<AnimatedNumber
+						value={data}
+						formatter={formatter}
+						loading={isLoading}
+						placeholder={FALLBACK_BREAD_BACKERS}
+					/>{" "}
 					Backers
 				</Body>
 			</Chip>

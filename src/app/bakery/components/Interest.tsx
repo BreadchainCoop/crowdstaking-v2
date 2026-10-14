@@ -13,7 +13,7 @@ import { ERC20_ABI, SDAI_ADAPTOR_ABI } from "@/abi";
 import { formatUnits } from "viem";
 import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 import { FALLBACK_APY_VALUE, useVaultAPY } from "@/app/core/hooks/useVaultAPY";
-import AnimatedNumber from "@/app/components/animated-number";
+import { useAnimatedNumber } from "@/app/components/animated-number";
 
 interface Response {
 	_col0: number;
@@ -22,7 +22,6 @@ interface Response {
 // Value as at when I ran the query
 const FALLBACK_TOTAL_BREAD_DISTRIBUTED = 46548.833508149735;
 
-const formatWholeNumber = (val: number) => formatBalance(val, 4).split(".")[0];
 
 export const Interest = () => {
 	const { claimableYield } = useClaimableYield();
@@ -31,6 +30,7 @@ export const Interest = () => {
 
 	const {
 		data: totalBreadDistributed = FALLBACK_TOTAL_BREAD_DISTRIBUTED,
+		isPending: totalBreadDistributedPending,
 		error: totalBreadDistributedError,
 	} = useQuery({
 		queryKey: ["total-bread-distributed"],
@@ -120,7 +120,15 @@ export const Interest = () => {
 		[totalInterest, yieldIncrement]
 	);
 
-	// const formattedValue = formatBalance(displayValue || 0, 4).split(".");
+	// One animated value drives the whole number, the decimals and the USD line,
+	// so they count up together from 0 instead of the decimals and USD jumping
+	// straight to the fallback figure.
+	const animatedValue = useAnimatedNumber(displayValue, {
+		loading: totalBreadDistributedPending || claimableYield === null,
+		placeholder:
+			FALLBACK_TOTAL_BREAD_DISTRIBUTED + FALLBACK_CLAIMABLE_YIELD,
+	});
+	const formattedValue = formatBalance(animatedValue, 4).split(".");
 
 	return (
 		<>
@@ -132,18 +140,14 @@ export const Interest = () => {
 				<div>
 					<p className="flex items-end justify-start flex-nowrap xl:block">
 						<span className="text-h1 md:text-[4rem] lg:text-[5rem]">
-							{/* {formattedValue[0]} */}
-							<AnimatedNumber
-								value={displayValue}
-								formatter={formatWholeNumber}
-							/>
+							{formattedValue[0]}
 						</span>
 						<span className="text-h2 !text-2xl text-surface-grey-2 relative top-1.5 left-[-0.1rem] md:top-[-0.6rem] lg:top[0rem] xl:top-[-0.1rem]">
-							.{formatBalance(displayValue || 0, 4).split(".")[1]}
+							.{formattedValue[1]}
 						</span>
 					</p>
 					<Body className="text-surface-grey ml-auto max-w-max md:mt-[-0.6rem] lg:mt-[-0.8rem]">
-						($ {displayValue?.toFixed(2) || "0"} USD)
+						($ {animatedValue.toFixed(2)} USD)
 					</Body>
 				</div>
 			</div>
