@@ -9,9 +9,9 @@ import { useState, useEffect, useRef } from "react";
 // same pace until it gets there. It only pauses if loading outlasts
 // LOADING_DURATION, and then just short of the real number.
 const LOADING_TARGET_SHARE = 1;
-const LOADING_DURATION = 6700; // ms
+const LOADING_DURATION = 8400; // ms
 // Give up waiting after this long and head for `value` (e.g. a failed request).
-const LOADING_TIMEOUT = 10000; // ms
+const LOADING_TIMEOUT = 12000; // ms
 // Ignore long gaps between frames (e.g. a background tab) so it can't jump.
 const MAX_FRAME_MS = 100;
 
