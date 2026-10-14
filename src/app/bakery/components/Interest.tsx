@@ -19,8 +19,8 @@ interface Response {
 	_col0: number;
 }
 
-// Value as at when I ran the query
-const FALLBACK_TOTAL_BREAD_DISTRIBUTED = 46548.833508149735;
+// More than 60k has been distributed, so this stays just under the real total.
+const FALLBACK_TOTAL_BREAD_DISTRIBUTED = 60000;
 
 
 export const Interest = () => {
