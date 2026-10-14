@@ -28,12 +28,24 @@ export function useCastVote(
   const userAddress = (user.status === "CONNECTED" || user.status === "UNSUPPORTED_CHAIN") ? user.address : "";
   const { transactionsState } = useTransactions();
 
-  const { data: votesData } = useCurrentVotes(lastClaimedBlockNumber);
+  const { data: votesData, refetch: refetchVotes } = useCurrentVotes(
+    lastClaimedBlockNumber,
+    userAddress as Hex | ""
+  );
 
   const hasPendingVoteTransaction = transactionsState.submitted.some(
     (tx) => tx.data.type === "VOTE" && 
     (tx.status === "SUBMITTED" || tx.status === "SAFE_SUBMITTED")
   );
+
+  // Polling is slow (5s), so refetch as soon as a vote transaction confirms.
+  const confirmedVoteCount = transactionsState.submitted.filter(
+    (tx) => tx.data.type === "VOTE" && tx.status === "CONFIRMED"
+  ).length;
+
+  useEffect(() => {
+    if (confirmedVoteCount > 0) refetchVotes();
+  }, [confirmedVoteCount, refetchVotes]);
 
   useEffect(() => {
     if (votesData) {

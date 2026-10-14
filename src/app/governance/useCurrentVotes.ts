@@ -14,7 +14,10 @@ type VoteLogData = {
   };
 };
 
-export function useCurrentVotes(lastClaimedBlockNumber: bigint | null) {
+export function useCurrentVotes(
+  lastClaimedBlockNumber: bigint | null,
+  userAddress: Hex | ""
+) {
   const chainConfig = useActiveChain();
   const distributorAddress = chainConfig.DISBURSER.address;
 
@@ -24,14 +27,18 @@ export function useCurrentVotes(lastClaimedBlockNumber: bigint | null) {
   });
 
   return useQuery({
-    queryKey: ["getVotesForCurrentRound"],
-    refetchInterval: 500,
+    queryKey: ["getVotesForCurrentRound", userAddress],
+    // Gnosis blocks land every ~5s, so polling faster only repeats the same scan.
+    refetchInterval: 5_000,
     enabled: !!lastClaimedBlockNumber,
     queryFn: async () => {
+      // Only the connected user's own vote is used, so there is nothing to fetch without one.
+      if (!userAddress) return [];
       const logs = await publicClient.getContractEvents({
         address: distributorAddress,
         abi: DISTRIBUTOR_ABI,
         eventName: "BreadHolderVoted",
+        args: { account: userAddress },
         fromBlock: lastClaimedBlockNumber || BigInt(0),
         toBlock: "latest",
       });
