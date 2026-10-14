@@ -2,14 +2,16 @@
 
 import { useState, useEffect, useRef } from "react";
 
-// While data is loading the number climbs from 0 toward this share of the
-// placeholder (a rough estimate) in LOADING_DURATION. Once the real value
-// arrives it keeps moving at that same speed until it gets there, so it never
-// restarts or changes pace.
-const LOADING_TARGET_SHARE = 0.9;
-const LOADING_DURATION = 3000; // ms, a typical load time
+// While data is loading the number climbs from 0 at one fixed speed: the
+// placeholder (a deliberately conservative estimate, a little under the real
+// value) divided by LOADING_DURATION. That is slower than a typical load, so the
+// real value normally arrives while it is still climbing, and it then keeps the
+// same pace until it gets there. It only pauses if loading outlasts
+// LOADING_DURATION, and then just short of the real number.
+const LOADING_TARGET_SHARE = 1;
+const LOADING_DURATION = 10500; // ms
 // Give up waiting after this long and head for `value` (e.g. a failed request).
-const LOADING_TIMEOUT = 6000; // ms
+const LOADING_TIMEOUT = 15000; // ms
 // Ignore long gaps between frames (e.g. a background tab) so it can't jump.
 const MAX_FRAME_MS = 100;
 
