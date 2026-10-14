@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { Hex } from "viem";
 import { ProjectRow, VoteForm } from "./components/ProjectRow";
 import { ValueTestHelper } from "./components/ValueTestHelper";
@@ -31,7 +31,7 @@ import { sleep } from "@/utils/sleep";
 import SafeAppsSDK from "@safe-global/safe-apps-sdk/dist/src/sdk";
 import { TransactionStatus } from "@safe-global/safe-apps-sdk";
 
-export function GovernancePage() {
+export function GovernancePage({ markee }: { markee?: ReactNode }) {
 	const { transactionsState, transactionsDispatch } = useTransactions();
 	const { user, isSafe } = useConnectedUser();
 	const { currentVotingDistribution } = useCurrentVotingDistribution();
@@ -326,6 +326,7 @@ export function GovernancePage() {
 						canStartTest={canUseValueTest}
 					/>
 					<div className="col-span-12 row-start-5 lg:col-start-1 lg:col-span-8 lg:row-start-3 grid grid-cols-1 gap-3">
+						{markee}
 						{currentVotingDistribution.data[0]
 							.map((account, i) => ({
 								account,
