@@ -2,33 +2,38 @@
 
 import { useState, useEffect, useRef } from "react";
 
-// While data is loading we count up toward this share of the placeholder
-// (a rough estimate), then finish on the real value once it arrives.
+// While data is loading the number climbs from 0 toward this share of the
+// placeholder (a rough estimate) in LOADING_DURATION. Once the real value
+// arrives it keeps moving at that same speed until it gets there, so it never
+// restarts or changes pace.
 const LOADING_TARGET_SHARE = 0.9;
 const LOADING_DURATION = 3000; // ms, a typical load time
-// Give up waiting after this long and settle on `value` (e.g. a failed request).
+// Give up waiting after this long and head for `value` (e.g. a failed request).
 const LOADING_TIMEOUT = 6000; // ms
+// Ignore long gaps between frames (e.g. a background tab) so it can't jump.
+const MAX_FRAME_MS = 100;
 
-const easeOutExpo = (t: number) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
-const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+// Last shown value per `persistKey`, so a remount resumes instead of starting
+// over from 0.
+const lastShown = new Map<string, number>();
 
 interface AnimatedNumberOptions {
-	duration?: number; // ms, for animating to the real value
-	// While true the number climbs from 0 at a steady pace toward `placeholder`
-	// instead of jumping to a stale or fallback value.
+	// While true the number climbs toward `placeholder` instead of jumping to a
+	// stale or fallback value.
 	loading?: boolean;
 	placeholder?: number;
+	persistKey?: string;
 }
 
 export function useAnimatedNumber(
 	value: number,
-	{ duration = 1500, loading = false, placeholder }: AnimatedNumberOptions = {}
+	{ loading = false, placeholder, persistKey }: AnimatedNumberOptions = {}
 ) {
-	const [displayValue, setDisplayValue] = useState(0);
+	const [displayValue, setDisplayValue] = useState(
+		() => (persistKey && lastShown.get(persistKey)) || 0
+	);
 	const [timedOut, setTimedOut] = useState(false);
-	const startTimeRef = useRef<number | null>(null);
-	const startValueRef = useRef<number>(0);
-	const targetRef = useRef<number>(value);
+	const displayRef = useRef(displayValue);
 	const frameRef = useRef<number | null>(null);
 
 	useEffect(() => {
@@ -39,43 +44,44 @@ export function useAnimatedNumber(
 
 	const isLoading = loading && !timedOut && placeholder !== undefined;
 	const target = isLoading ? placeholder * LOADING_TARGET_SHARE : value;
-	const animationDuration = isLoading ? LOADING_DURATION : duration;
-	const easing = isLoading ? easeOutCubic : easeOutExpo;
+	// One fixed speed (units per ms), set by the placeholder when there is one.
+	const speed = ((placeholder ?? value) * LOADING_TARGET_SHARE) / LOADING_DURATION;
+
+	const targetRef = useRef(target);
+	const speedRef = useRef(speed);
+	targetRef.current = target;
+	speedRef.current = speed;
 
 	useEffect(() => {
-		// Update refs when the target changes
-		startValueRef.current = displayValue;
-		targetRef.current = target;
-		startTimeRef.current = null; // Reset animation start
+		let last: number | null = null;
 
-		const animate = (timestamp: number) => {
-			if (!startTimeRef.current) startTimeRef.current = timestamp;
+		const tick = (timestamp: number) => {
+			const dt = last === null ? 0 : Math.min(timestamp - last, MAX_FRAME_MS);
+			last = timestamp;
 
-			const elapsed = timestamp - startTimeRef.current!;
-			const progress = Math.min(elapsed / animationDuration, 1);
+			const current = displayRef.current;
+			const goal = targetRef.current;
+			const step = speedRef.current * dt;
+			const next =
+				speedRef.current > 0 && Math.abs(goal - current) > step
+					? current + Math.sign(goal - current) * step
+					: goal;
 
-			const currentValue =
-				startValueRef.current +
-				(targetRef.current - startValueRef.current) * easing(progress);
-
-			setDisplayValue(currentValue);
-
-			if (progress < 1) {
-				frameRef.current = requestAnimationFrame(animate);
-			} else {
-				setDisplayValue(targetRef.current); // Snap to exact final value
+			if (next !== current) {
+				displayRef.current = next;
+				setDisplayValue(next);
+				if (persistKey) lastShown.set(persistKey, next);
+			}
+			if (next !== goal) {
+				frameRef.current = requestAnimationFrame(tick);
 			}
 		};
 
-		frameRef.current = requestAnimationFrame(animate);
-
+		frameRef.current = requestAnimationFrame(tick);
 		return () => {
-			if (frameRef.current) {
-				cancelAnimationFrame(frameRef.current);
-			}
+			if (frameRef.current) cancelAnimationFrame(frameRef.current);
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [target, animationDuration]);
+	}, [target, persistKey]);
 
 	return displayValue;
 }

@@ -127,6 +127,7 @@ export const Interest = () => {
 		loading: totalBreadDistributedPending || claimableYield === null,
 		placeholder:
 			FALLBACK_TOTAL_BREAD_DISTRIBUTED + FALLBACK_CLAIMABLE_YIELD,
+		persistKey: "total-funding",
 	});
 	const formattedValue = formatBalance(animatedValue, 4).split(".");
 

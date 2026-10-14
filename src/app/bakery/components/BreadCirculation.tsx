@@ -39,6 +39,7 @@ export const BreadCirculation = () => {
 						formatter={formatSupply}
 						loading={status === "pending"}
 						placeholder={FALLBACK_CIRCULATION_VALUE}
+						persistKey="bread-circulation"
 					/>{" "}
 					BREAD <span className="font-normal">in circulation</span>
 				</Body>

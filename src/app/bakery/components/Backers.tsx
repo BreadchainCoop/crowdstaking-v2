@@ -36,6 +36,7 @@ export const ProjectBackers = () => {
 						formatter={formatter}
 						loading={isLoading}
 						placeholder={FALLBACK_BREAD_BACKERS}
+						persistKey="bread-backers"
 					/>{" "}
 					Backers
 				</Body>

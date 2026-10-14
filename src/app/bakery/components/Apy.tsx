@@ -28,6 +28,7 @@ export const Apy = () => {
 						formatter={formatter}
 						loading={isPending}
 						placeholder={placeholderApy}
+						persistKey="apy"
 					/>
 					% APY
 				</Body>
