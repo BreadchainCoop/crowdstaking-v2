@@ -1,7 +1,11 @@
 import { Body, Caption } from "@breadcoop/ui";
-import { ExternalLink } from "@/app/core/components/ExternalLink";
+// dist/ssr: context-free icons usable in server components
+import {
+	ArrowUpRightIcon,
+	MegaphoneSimpleIcon,
+} from "@phosphor-icons/react/dist/ssr";
 
-const MARKEE_ADDRESS = "0xa52eb22029677029d4e609ad5e54ca6552c0b31f";
+export const MARKEE_ADDRESS = "0xa52eb22029677029d4e609ad5e54ca6552c0b31f";
 const MARKEE_URL = `https://www.markee.xyz/markee/${MARKEE_ADDRESS}`;
 const FALLBACK_MESSAGE = "Be the first to set a message on the Solidarity Fund.";
 
@@ -20,21 +24,39 @@ async function getMarkee(): Promise<MarkeeData | null> {
 	}
 }
 
-// Rendered on the server so `data-markee-address` is present in the HTML,
-// which is what markee.xyz checks when verifying this site.
 export const Markee = async () => {
 	const data = await getMarkee();
 
 	return (
-		<div
-			data-markee-address={MARKEE_ADDRESS}
-			className="border border-[#EA5817] py-3 px-6 mb-4 md:mb-6 md:max-w-[32rem]"
+		<a
+			href={MARKEE_URL}
+			target="_blank"
+			rel="noopener noreferrer"
+			className="group flex items-center gap-4 border-l-4 border-primary-orange bg-orange-0 px-5 py-4 shadow-[0px_4px_8px_0px_#1B201A0F] transition-colors hover:bg-paper-0"
 		>
-			<Body bold>{data?.message || FALLBACK_MESSAGE}</Body>
-			<Caption className="mt-1 text-surface-grey-2">
-				{data?.name ? `by ${data.name} · ` : ""}
-				<ExternalLink href={MARKEE_URL}>Change this message</ExternalLink>
-			</Caption>
-		</div>
+			<span className="flex h-10 w-10 shrink-0 items-center justify-center bg-white text-primary-orange">
+				<MegaphoneSimpleIcon size={24} weight="fill" />
+			</span>
+			<span className="flex min-w-0 grow flex-col gap-0.5">
+				<Caption className="font-bold uppercase tracking-wider text-primary-orange">
+					Message from the community
+				</Caption>
+				<Body bold className="text-surface-ink">
+					{data?.message || FALLBACK_MESSAGE}
+				</Body>
+				{data?.name && (
+					<Caption className="text-surface-grey-2">
+						by {data.name}
+					</Caption>
+				)}
+			</span>
+			<span className="hidden shrink-0 items-center gap-1 text-primary-orange sm:flex">
+				<Caption className="font-bold">Change message</Caption>
+				<ArrowUpRightIcon
+					size={16}
+					className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+				/>
+			</span>
+		</a>
 	);
 };
