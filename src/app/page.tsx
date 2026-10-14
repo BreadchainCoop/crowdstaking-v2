@@ -17,6 +17,7 @@ import { ViewAnalytics } from "./bakery/components/Analytics";
 import Actions from "./bakery/components/Actions";
 import { generateMetadata } from "@/lib/site-metadata";
 import { BalanceBanner } from "./bakery/components/Banners/BalanceBanner";
+import { Markee } from "./bakery/components/Markee";
 
 export default function Home() {
 	return (
@@ -32,6 +33,7 @@ export default function Home() {
 						<Heading3 className="text-surface-grey-2 mb-4 md:mb-6">
 							Give without giving.
 						</Heading3>
+						<Markee />
 					</div>
 					<div className="row-span-2 md:w-full md:max-w-[451px]">
 						<Suspense>
