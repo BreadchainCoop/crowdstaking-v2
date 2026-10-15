@@ -142,15 +142,6 @@ export function DistributionOverview({
 											<Pending sample="00,000" />
 										</Heading2>
 									</div>
-									<Body
-										bold
-										className="text-[48px] text-surface-grey-2"
-									>
-										.
-									</Body>
-									<Heading2 className="text-[24px] w-[56px] text-surface-grey-2">
-										<Pending sample="0000" />
-									</Heading2>
 								</div>
 							)}
 
