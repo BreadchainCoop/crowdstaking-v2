@@ -26,7 +26,7 @@ import { BakeryTransactionModalState } from "@/app/core/context/ModalContext";
 import { BREAD_ADDRESS } from "@/constants";
 import { ERC20_ABI } from "@/abi";
 import { useEffect, useRef } from "react";
-import { formatBalance, formatSupply } from "@/app/core/util/formatter";
+import { formatBalance } from "@/app/core/util/formatter";
 import { formatUnits } from "viem";
 import { useRefetchOnBlockChange } from "@/app/core/hooks/useRefetchOnBlockChange";
 import { useBlockNumber } from "wagmi";
@@ -35,7 +35,7 @@ import { useVaultAPY } from "@/app/core/hooks/useVaultAPY";
 import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
 import { renderFormattedDecimalNumber } from "@/app/core/util/formatter";
 import { useActiveChain } from "@/app/core/hooks/useActiveChain";
-import { Body, LiftedButton, Logo } from "@breadcoop/ui";
+import { Body, LiftedButton } from "@breadcoop/ui";
 import clsx from "clsx";
 import { ArrowUpRightIcon } from "@phosphor-icons/react";
 import Image from "next/image";
@@ -47,14 +47,14 @@ function makeHeaderText(
 	status: TTransactionStatus
 ) {
 	if (modalType === "BAKE") {
-		if (status === "CONFIRMED") return "Buns are out!";
+		if (status === "CONFIRMED") return "Deposit complete";
 
-		return "Baking Bread";
+		return "Processing deposit";
 	}
 
-	if (status === "CONFIRMED") return "Burn complete";
+	if (status === "CONFIRMED") return "Withdrawal complete";
 
-	return "Burning Bread";
+	return "Processing withdrawal";
 }
 
 function modalAdviceText(
@@ -72,8 +72,8 @@ function modalAdviceText(
 		// 		: "Transaction Confirmed",
 		CONFIRMED:
 			modalType === "BAKE"
-				? "You successfully baked"
-				: "You successfully received",
+				? "You successfully deposited"
+				: "You successfully withdrew",
 		REVERTED: "Transaction Reverted",
 	};
 
@@ -82,13 +82,9 @@ function modalAdviceText(
 
 function ShareButtons({ newSupply }: { newSupply: number | null }) {
 	function makeText(platform: "X" | "Warpcast") {
-		return `I just baked some BREAD to help fund on-chain post-capitalism thanks to ${
+		return `I just deposited into the Bread Solidarity Fund to help fund on-chain post-capitalism thanks to ${
 			platform === "X" ? "@breadcoop" : "bread.coop"
-		}!
-
-I grew the bakery to ${
-			newSupply ? formatSupply(newSupply) : ""
-		} BREAD! \u{1F35E} \u{1F35E} \u{1F35E}
+		}! \u{1F35E} \u{1F35E} \u{1F35E}
 
 https://fund.bread.coop`;
 	}
@@ -282,8 +278,8 @@ export function BakeryTransactionModal({
 					)}
 				>
 					{transaction.data.type === "BAKE" && (
-						<span>
-							<Logo variant="square" size={24} />
+						<span className="text-2xl font-bold text-surface-ink">
+							$
 						</span>
 					)}
 					{transaction.data.type === "BURN" && <XDAIIcon />}
@@ -293,10 +289,7 @@ export function BakeryTransactionModal({
 								? transaction.data.value
 								: "0"
 						}
-					>
-						{" "}
-						{transaction.data.type === "BAKE" && <span>BREAD</span>}
-					</TransactionValue>
+					/>
 					{/*  */}
 					{/* {transaction.data.type !== "BAKE" && (
 						<TokenLabelContainer>
@@ -349,17 +342,17 @@ const BakedBreadCoopInfo = ({
 	return (
 		<div className="w-full border border-surface-grey py-4 px-4">
 			<BakedBreadCoopInfoItem
-				label="Past annual Bread funding"
+				label="Past annual funding"
 				amount={pastBreadCoop}
 				type="past"
 			/>
 			<BakedBreadCoopInfoItem
-				label="Additional Bread funding"
+				label="Additional annual funding"
 				amount={additionalBreadCoop}
 				type="additional"
 			/>
 			<BakedBreadCoopInfoItem
-				label="Total annual Bread funding"
+				label="Total annual funding"
 				amount={totalBreadCoop}
 				type="total"
 			/>
@@ -397,7 +390,6 @@ const BakedBreadCoopInfoItem = ({
 				{label}
 			</Body>
 			<div className="flex items-center justify-start flex-1 gap-2">
-				<Logo size={24} variant="square" />
 				<Body
 					className={clsx(
 						"inline-flex items-center justify-start",
@@ -405,6 +397,7 @@ const BakedBreadCoopInfoItem = ({
 					)}
 				>
 					{type === "additional" && <span>+</span>}
+					<span>$</span>
 					{renderFormattedDecimalNumber(amount)}
 				</Body>
 			</div>
@@ -469,7 +462,7 @@ const BottomContent = ({ txStatus, data, hash, newSupply }: IBottomContent) => {
 						}}
 					>
 						<span className="flex items-center justify-center">
-							Earn with $BREAD on{" "}
+							Earn yield on{" "}
 							<Image
 								src="/curve-logo.png"
 								alt="curve logo"
