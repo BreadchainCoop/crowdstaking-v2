@@ -17,9 +17,10 @@ import NavSolidarityApps from "@/app/components/nav/nav-solidarity-apps";
 
 function Container({ children }: { children: ReactNode }) {
 	return (
-		// Own stacking context above page content so the account dropdown (z-50)
-		// overlays the hero instead of rendering behind it.
-		<header className="relative z-50">
+		// Own stacking context above the hero (z-10) so the account dropdown
+		// overlays it — but below the modal overlay (z-40) so a modal (e.g. the
+		// deposit sheet) covers the header too.
+		<header className="relative z-30">
 			<div
 				className={clsx(
 					WRAPPER_CLASSES,
