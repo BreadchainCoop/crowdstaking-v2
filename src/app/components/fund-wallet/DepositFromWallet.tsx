@@ -2,24 +2,47 @@
 
 import { useState } from "react";
 import { Body, Heading2 } from "@breadcoop/ui";
-import { InfoIcon, WarningIcon } from "@phosphor-icons/react";
+import {
+	ArrowLeftIcon,
+	CoinsIcon,
+	CreditCardIcon,
+	InfoIcon,
+	WarningIcon,
+} from "@phosphor-icons/react";
 
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
 import Bake from "@/app/bakery/components/Swap/Bake";
+import { FundButton } from "./FundButton";
 
 /**
  * Deposit view for an EOA (external wallet). EOAs already hold funds and have
  * no embedded wallet to top up, so instead of the "fund your account" flow they
- * deposit an amount directly — a BREAD mint from their own wallet. Amounts are
- * abstracted to USD (BREAD/xDAI are 1:1 with $), and the action reads
- * "Support fund". When the balance can't cover the amount, we hand off to the
- * funding options (Bridge/Buy) via `onGetFunds`.
+ * deposit an amount directly — a mint from their own wallet. Everything is
+ * abstracted to USD (the deposit is really xDAI, 1:1 with $), and the action
+ * reads "Support fund".
+ *
+ * Flow:
+ *  1. Choose a method — crypto or cash.
+ *     - Crypto: if the wallet already holds xDAI, go straight to the deposit
+ *       view; otherwise hand off to the bridge (`onBridge`) to get xDAI first.
+ *     - Cash: hand off to the on-ramp (`onBuyCash`) to buy xDAI with a card or
+ *       bank transfer, then come back to deposit.
+ *  2. Deposit view — enter a dollar amount and support the fund. When the
+ *     balance can't cover it, we fall back to the funding options via
+ *     `onBridge`.
  */
-export function DepositFromWallet({ onGetFunds }: { onGetFunds: () => void }) {
+export function DepositFromWallet({
+	onBridge,
+	onBuyCash,
+}: {
+	onBridge: () => void;
+	onBuyCash: () => void;
+}) {
 	const { user, isSafe } = useConnectedUser();
 	const { xDAI } = useTokenBalances();
+	const [step, setStep] = useState<"choose" | "deposit">("choose");
 	const [value, setValue] = useState("");
 
 	if (user.status !== "CONNECTED") return null;
@@ -28,9 +51,69 @@ export function DepositFromWallet({ onGetFunds }: { onGetFunds: () => void }) {
 	const balance = parseFloat(balanceStr) || 0;
 	const amount = parseFloat(value) || 0;
 	const insufficient = amount > balance;
+	const hasXdai = balance > 0;
 
+	// Step 1 — how would you like to deposit?
+	if (step === "choose") {
+		return (
+			<div className="flex flex-col gap-5">
+				<div>
+					<Heading2 className="text-2xl">Support the fund</Heading2>
+					<Body className="text-surface-grey mt-1">
+						Choose how you&apos;d like to deposit into the Solidarity
+						Fund.
+					</Body>
+				</div>
+
+				<div className="flex flex-col gap-3">
+					<FundButton
+						icon={<CoinsIcon size={28} />}
+						title="Deposit with crypto"
+						subtitle={
+							hasXdai
+								? "Use the crypto already in your wallet"
+								: "Bridge crypto from another chain to get started"
+						}
+						onClick={() =>
+							hasXdai ? setStep("deposit") : onBridge()
+						}
+					/>
+					<FundButton
+						icon={<CreditCardIcon size={28} />}
+						title="Deposit with cash"
+						subtitle="Buy with a card or bank transfer"
+						onClick={onBuyCash}
+					/>
+				</div>
+
+				<div className="flex items-start gap-2 bg-paper-1 p-3">
+					<InfoIcon
+						size={20}
+						weight="fill"
+						className="mt-0.5 shrink-0 text-primary-orange"
+					/>
+					<Body className="text-surface-grey-2 text-xs">
+						Deposits are held in <strong>xDAI</strong> on Gnosis —
+						worth $1 each (1:1 with USD). Your balance and deposit are
+						shown in dollars.
+					</Body>
+				</div>
+			</div>
+		);
+	}
+
+	// Step 2 — deposit the xDAI already in the wallet, shown in dollars.
 	return (
 		<div className="flex flex-col gap-5">
+			<button
+				type="button"
+				onClick={() => setStep("choose")}
+				className="flex items-center gap-2 self-start text-[#ea5817]"
+			>
+				<ArrowLeftIcon size={20} />
+				<Body bold>Back</Body>
+			</button>
+
 			<div>
 				<Heading2 className="text-2xl">Support the fund</Heading2>
 				<Body className="text-surface-grey mt-1">
@@ -45,8 +128,9 @@ export function DepositFromWallet({ onGetFunds }: { onGetFunds: () => void }) {
 					className="mt-0.5 shrink-0 text-primary-orange"
 				/>
 				<Body className="text-surface-grey-2 text-xs">
-					Your deposit backs the fund and is held 1:1 with USD. You can
-					withdraw it at any time from your account.
+					You&apos;re depositing <strong>xDAI</strong> from your wallet
+					— worth $1 each (1:1 with USD). It backs the fund and you can
+					withdraw it any time from your account.
 				</Body>
 			</div>
 
@@ -94,7 +178,7 @@ export function DepositFromWallet({ onGetFunds }: { onGetFunds: () => void }) {
 					<div className="lifted-button-container">
 						<button
 							type="button"
-							onClick={onGetFunds}
+							onClick={onBridge}
 							className="w-full"
 						>
 							<span className="flex w-full items-center justify-center bg-primary-orange px-4 py-2.5 font-bold text-white">
