@@ -71,10 +71,10 @@ export function FundWallet() {
 
 	const xdai = balance ? Number(formatEther(balance.value)).toFixed(2) : "0.00";
 
-	const handleOnRamp = () => {
-		if (!embeddedAddress) return;
+	const handleOnRamp = (address?: Address) => {
+		if (!address) return;
 		fundWallet({
-			address: embeddedAddress,
+			address,
 			options: {
 				chain: gnosis,
 				uiConfig: { receiveFundsTitle: "Receive xDAI" },
@@ -100,9 +100,19 @@ export function FundWallet() {
 	}
 
 	// External wallet (EOA): deposit directly instead of funding an embedded
-	// wallet. Falls back to the bridge when the balance is too low.
+	// wallet. Crypto-without-balance hands off to the bridge; cash routes to the
+	// on-ramp targeting the EOA's own address.
 	if (!isEmbeddedActive) {
-		return <DepositFromWallet onGetFunds={() => setView("bridge")} />;
+		const connectedAddress =
+			user.status === "CONNECTED"
+				? (user.address as Address)
+				: undefined;
+		return (
+			<DepositFromWallet
+				onBridge={() => setView("bridge")}
+				onBuyCash={() => handleOnRamp(connectedAddress)}
+			/>
+		);
 	}
 
 	if (view === "wallet") {
@@ -155,7 +165,7 @@ export function FundWallet() {
 					icon={<CreditCardIcon size={28} />}
 					title="Buy or transfer"
 					subtitle="Card, exchange, or bank transfer"
-					onClick={handleOnRamp}
+					onClick={() => handleOnRamp(embeddedAddress)}
 					disabled={!embeddedAddress}
 				/>
 				<FundButton
