@@ -10,7 +10,9 @@ import {
 	ArrowLeftIcon,
 	ArrowsLeftRightIcon,
 	CreditCardIcon,
+	InfoIcon,
 	WalletIcon,
+	WarningIcon,
 } from "@phosphor-icons/react";
 
 import { useModal } from "@/app/core/context/ModalContext";
@@ -102,7 +104,20 @@ export function FundWallet() {
 				</Body>
 			</div>
 
-			<div className="flex items-center justify-between border border-[#eae2d6] bg-paper-0 px-5 py-3">
+			<div className="flex items-start gap-2 bg-paper-1 p-3">
+				<InfoIcon
+					size={20}
+					weight="fill"
+					className="mt-0.5 shrink-0 text-primary-orange"
+				/>
+				<Body className="text-surface-grey-2 text-xs">
+					You fund with <strong>xDAI</strong> on Gnosis, which is
+					automatically converted to <strong>$BREAD</strong> — worth
+					$1 each (1:1 with USD). Your balance is shown in USD.
+				</Body>
+			</div>
+
+			<div className="flex items-center justify-between border border-paper-2 bg-paper-0 px-5 py-3">
 				<Body className="text-surface-grey">Wallet balance</Body>
 				<Body bold className="text-surface-ink">
 					${xdai} xDAI
@@ -131,10 +146,22 @@ export function FundWallet() {
 				/>
 			</div>
 
-			<Body className="text-surface-grey text-xs">
-				The token your wallet needs is xDAI on Gnosis — it’s baked into
-				$BREAD automatically once it arrives.
-			</Body>
+			<div className="flex items-start gap-3 border-l-2 border-system-warning bg-[#FFEDD0] px-4 py-3">
+				<WarningIcon
+					size={24}
+					weight="fill"
+					className="shrink-0 text-system-warning"
+				/>
+				<div>
+					<Body bold className="text-system-warning">
+						IMPORTANT: Always get xDAI
+					</Body>
+					<Body className="text-surface-ink text-sm">
+						The token you need to send to your wallet is xDAI on the
+						Gnosis chain.
+					</Body>
+				</div>
+			</div>
 		</div>
 	);
 }
