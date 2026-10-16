@@ -17,11 +17,13 @@ export default function Bake({
 	inputValue,
 	clearInputValue,
 	isSafe,
+	label = "Bake",
 }: {
 	user: TUserConnected;
 	inputValue: string;
 	clearInputValue: () => void;
 	isSafe: boolean;
+	label?: string;
 }) {
 	const { transactionsState, transactionsDispatch } = useTransactions();
 
@@ -141,7 +143,7 @@ export default function Bake({
 				onClick={onBake}
 				className=""
 			>
-				Bake
+				{label}
 			</LiftedButton>
 		</div>
 	);
