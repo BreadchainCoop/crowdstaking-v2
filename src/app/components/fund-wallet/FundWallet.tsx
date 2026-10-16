@@ -16,8 +16,10 @@ import {
 } from "@phosphor-icons/react";
 
 import { useModal } from "@/app/core/context/ModalContext";
+import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { FundButton } from "./FundButton";
 import { FundFromWallet } from "./FundFromWallet";
+import { DepositFromWallet } from "./DepositFromWallet";
 
 // The LiFi widget behind Bridge is large; load it only when the user
 // actually opens the "Bridge crypto" view, not eagerly with FundWallet
@@ -43,8 +45,19 @@ export function FundWallet() {
 	const { wallets } = useWallets();
 	const { setModal } = useModal();
 
+	const { user } = useConnectedUser();
+	const activeAddress =
+		user.status === "CONNECTED" ? user.address.toLowerCase() : undefined;
+
 	const embedded = wallets.find((w) => w.walletClientType === "privy");
 	const embeddedAddress = embedded?.address as Address | undefined;
+
+	// The "fund your account" flow only fits the app-managed embedded wallet.
+	// An external wallet (EOA) already holds funds and has no embedded wallet to
+	// top up, so it deposits directly instead.
+	const isEmbeddedActive = Boolean(
+		embeddedAddress && embeddedAddress.toLowerCase() === activeAddress
+	);
 
 	const { data: balance } = useBalance({
 		address: embeddedAddress,
@@ -69,16 +82,7 @@ export function FundWallet() {
 		});
 	};
 
-	if (view === "wallet") {
-		return (
-			<FundFromWallet
-				receiver={embeddedAddress}
-				onBack={() => setView("options")}
-				onDone={() => setModal(null)}
-			/>
-		);
-	}
-
+	// Shared across both wallet types (embedded fund options + EOA "Get funds").
 	if (view === "bridge") {
 		return (
 			<div className="flex flex-col gap-4">
@@ -92,6 +96,22 @@ export function FundWallet() {
 				</button>
 				<Bridge />
 			</div>
+		);
+	}
+
+	// External wallet (EOA): deposit directly instead of funding an embedded
+	// wallet. Falls back to the bridge when the balance is too low.
+	if (!isEmbeddedActive) {
+		return <DepositFromWallet onGetFunds={() => setView("bridge")} />;
+	}
+
+	if (view === "wallet") {
+		return (
+			<FundFromWallet
+				receiver={embeddedAddress}
+				onBack={() => setView("options")}
+				onDone={() => setModal(null)}
+			/>
 		);
 	}
 
