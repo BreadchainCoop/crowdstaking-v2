@@ -82,8 +82,9 @@ export function DepositFromWallet({
 					<FundButton
 						icon={<CreditCardIcon size={28} />}
 						title="Deposit with cash"
-						subtitle="Buy with a card or bank transfer"
+						subtitle="Buy with a card or bank transfer — coming soon"
 						onClick={onBuyCash}
+						disabled
 					/>
 				</div>
 
@@ -203,10 +204,20 @@ export function DepositFromWallet({
 			<button
 				type="button"
 				onClick={onBridge}
-				className="flex items-center justify-center gap-2 self-center text-primary-orange text-sm font-bold transition-colors hover:text-[#c44f1c]"
+				className="flex items-center justify-between gap-3 border border-primary-orange bg-[#EA60231a] px-5 py-3 text-left transition-colors hover:bg-[#EA60232a]"
 			>
-				<ArrowsLeftRightIcon size={18} />
-				Bridge crypto from another chain
+				<span>
+					<Body bold className="text-surface-ink">
+						Don&apos;t have xDAI?
+					</Body>
+					<Body className="text-surface-grey text-sm">
+						Deposit from another network or chain
+					</Body>
+				</span>
+				<ArrowsLeftRightIcon
+					size={24}
+					className="shrink-0 text-primary-orange"
+				/>
 			</button>
 		</div>
 	);
