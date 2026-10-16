@@ -10,12 +10,16 @@ import {
 	ArrowLeftIcon,
 	ArrowsLeftRightIcon,
 	CreditCardIcon,
+	InfoIcon,
 	WalletIcon,
+	WarningIcon,
 } from "@phosphor-icons/react";
 
 import { useModal } from "@/app/core/context/ModalContext";
+import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { FundButton } from "./FundButton";
 import { FundFromWallet } from "./FundFromWallet";
+import { DepositFromWallet } from "./DepositFromWallet";
 
 // The LiFi widget behind Bridge is large; load it only when the user
 // actually opens the "Bridge crypto" view, not eagerly with FundWallet
@@ -41,8 +45,19 @@ export function FundWallet() {
 	const { wallets } = useWallets();
 	const { setModal } = useModal();
 
+	const { user } = useConnectedUser();
+	const activeAddress =
+		user.status === "CONNECTED" ? user.address.toLowerCase() : undefined;
+
 	const embedded = wallets.find((w) => w.walletClientType === "privy");
 	const embeddedAddress = embedded?.address as Address | undefined;
+
+	// The "fund your account" flow only fits the app-managed embedded wallet.
+	// An external wallet (EOA) already holds funds and has no embedded wallet to
+	// top up, so it deposits directly instead.
+	const isEmbeddedActive = Boolean(
+		embeddedAddress && embeddedAddress.toLowerCase() === activeAddress
+	);
 
 	const { data: balance } = useBalance({
 		address: embeddedAddress,
@@ -56,10 +71,10 @@ export function FundWallet() {
 
 	const xdai = balance ? Number(formatEther(balance.value)).toFixed(2) : "0.00";
 
-	const handleOnRamp = () => {
-		if (!embeddedAddress) return;
+	const handleOnRamp = (address?: Address) => {
+		if (!address) return;
 		fundWallet({
-			address: embeddedAddress,
+			address,
 			options: {
 				chain: gnosis,
 				uiConfig: { receiveFundsTitle: "Receive xDAI" },
@@ -67,16 +82,7 @@ export function FundWallet() {
 		});
 	};
 
-	if (view === "wallet") {
-		return (
-			<FundFromWallet
-				receiver={embeddedAddress}
-				onBack={() => setView("options")}
-				onDone={() => setModal(null)}
-			/>
-		);
-	}
-
+	// Shared across both wallet types (embedded fund options + EOA "Get funds").
 	if (view === "bridge") {
 		return (
 			<div className="flex flex-col gap-4">
@@ -93,6 +99,32 @@ export function FundWallet() {
 		);
 	}
 
+	// External wallet (EOA): deposit directly instead of funding an embedded
+	// wallet. Crypto-without-balance hands off to the bridge; cash routes to the
+	// on-ramp targeting the EOA's own address.
+	if (!isEmbeddedActive) {
+		const connectedAddress =
+			user.status === "CONNECTED"
+				? (user.address as Address)
+				: undefined;
+		return (
+			<DepositFromWallet
+				onBridge={() => setView("bridge")}
+				onBuyCash={() => handleOnRamp(connectedAddress)}
+			/>
+		);
+	}
+
+	if (view === "wallet") {
+		return (
+			<FundFromWallet
+				receiver={embeddedAddress}
+				onBack={() => setView("options")}
+				onDone={() => setModal(null)}
+			/>
+		);
+	}
+
 	return (
 		<div className="flex flex-col gap-5">
 			<div>
@@ -102,7 +134,20 @@ export function FundWallet() {
 				</Body>
 			</div>
 
-			<div className="flex items-center justify-between border border-[#eae2d6] bg-paper-0 px-5 py-3">
+			<div className="flex items-start gap-2 bg-paper-1 p-3">
+				<InfoIcon
+					size={20}
+					weight="fill"
+					className="mt-0.5 shrink-0 text-primary-orange"
+				/>
+				<Body className="text-surface-grey-2 text-xs">
+					You fund with <strong>xDAI</strong> on Gnosis, which is
+					automatically converted to <strong>$BREAD</strong> — worth
+					$1 each (1:1 with USD). Your balance is shown in USD.
+				</Body>
+			</div>
+
+			<div className="flex items-center justify-between border border-paper-2 bg-paper-0 px-5 py-3">
 				<Body className="text-surface-grey">Wallet balance</Body>
 				<Body bold className="text-surface-ink">
 					${xdai} xDAI
@@ -120,7 +165,7 @@ export function FundWallet() {
 					icon={<CreditCardIcon size={28} />}
 					title="Buy or transfer"
 					subtitle="Card, exchange, or bank transfer"
-					onClick={handleOnRamp}
+					onClick={() => handleOnRamp(embeddedAddress)}
 					disabled={!embeddedAddress}
 				/>
 				<FundButton
@@ -131,10 +176,22 @@ export function FundWallet() {
 				/>
 			</div>
 
-			<Body className="text-surface-grey text-xs">
-				The token your wallet needs is xDAI on Gnosis — it’s baked into
-				$BREAD automatically once it arrives.
-			</Body>
+			<div className="flex items-start gap-3 border-l-2 border-system-warning bg-[#FFEDD0] px-4 py-3">
+				<WarningIcon
+					size={24}
+					weight="fill"
+					className="shrink-0 text-system-warning"
+				/>
+				<div>
+					<Body bold className="text-system-warning">
+						IMPORTANT: Always get xDAI
+					</Body>
+					<Body className="text-surface-ink text-sm">
+						The token you need to send to your wallet is xDAI on the
+						Gnosis chain.
+					</Body>
+				</div>
+			</div>
 		</div>
 	);
 }

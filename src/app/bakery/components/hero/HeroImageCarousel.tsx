@@ -4,16 +4,14 @@ import { useEffect, useState } from "react";
 import clsx from "clsx";
 
 /**
- * The hero cross-fades automatically between these images. The container keeps
- * the aspect ratio of the LAST image (the group photo), per the design.
- *
- * TODO: these are temporary placeholders — replace `/hero/hero-{1,2,3}.png`
- * with the three real photos (workshop, outdoor gathering, group photo).
+ * The hero cross-fades automatically between these Bread Cooperative community
+ * photos. The 4:3 container matches the group photo's aspect ratio, per the
+ * design.
  */
 const IMAGES = [
-	{ src: "/hero/hero-1.png", alt: "" },
-	{ src: "/hero/hero-2.png", alt: "" },
-	{ src: "/hero/hero-3.png", alt: "" },
+	{ src: "/hero/hero-1.png", alt: "Bread Cooperative members together" },
+	{ src: "/hero/hero-2.webp", alt: "Members gathered outside the space" },
+	{ src: "/hero/hero-3.webp", alt: "A Bread Cooperative workshop session" },
 ];
 
 const FADE_INTERVAL_MS = 5000;
@@ -41,7 +39,7 @@ export function HeroImageCarousel({ className }: { className?: string }) {
 	return (
 		<div
 			className={clsx(
-				"relative overflow-hidden bg-orange-0 aspect-[4/3]",
+				"relative overflow-hidden bg-orange-0",
 				className
 			)}
 		>

@@ -26,16 +26,18 @@ export function FundButton({
 			type="button"
 			onClick={onClick}
 			disabled={disabled}
-			className="flex w-full items-center justify-start gap-4 border border-[#eae2d6] bg-paper-0 px-5 py-3 text-left transition-colors hover:border-[#ea5817] disabled:cursor-not-allowed disabled:opacity-50"
+			className="flex w-full items-center justify-start gap-4 border border-paper-2 bg-paper-0 px-5 py-2.5 text-left transition-colors hover:border-primary-orange hover:bg-[#EA60231a] disabled:cursor-not-allowed disabled:opacity-50"
 		>
-			<span className="flex size-8 shrink-0 items-center justify-center text-[#ea5817]">
+			<span className="flex size-8 shrink-0 items-center justify-center text-primary-orange">
 				{icon}
 			</span>
 			<span className="mr-auto">
 				<Body bold className="text-surface-ink">
 					{title}
 				</Body>
-				<Body className="text-surface-grey text-sm">{subtitle}</Body>
+				<Body className="mt-0.5 text-surface-grey text-sm">
+					{subtitle}
+				</Body>
 			</span>
 		</button>
 	);
