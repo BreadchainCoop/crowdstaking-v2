@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Body, Heading2 } from "@breadcoop/ui";
 import {
 	ArrowLeftIcon,
+	ArrowsLeftRightIcon,
 	CoinsIcon,
 	CreditCardIcon,
 	InfoIcon,
@@ -196,6 +197,17 @@ export function DepositFromWallet({
 					label="Support fund"
 				/>
 			)}
+
+			{/* Bridging stays available even with a balance, for pulling tokens
+			    in from another chain. */}
+			<button
+				type="button"
+				onClick={onBridge}
+				className="flex items-center justify-center gap-2 self-center text-primary-orange text-sm font-bold transition-colors hover:text-[#c44f1c]"
+			>
+				<ArrowsLeftRightIcon size={18} />
+				Bridge crypto from another chain
+			</button>
 		</div>
 	);
 }
