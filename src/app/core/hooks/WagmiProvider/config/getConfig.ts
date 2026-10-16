@@ -1,9 +1,9 @@
 export function getConfig() {
   if (process.env.NODE_ENV !== "production") {
-    const { devConfig, devChains } = require("./devConfig");
-    return { chains: devChains, config: devConfig };
+    const { devConfig, devIframeConfig } = require("./devConfig");
+    return { config: devConfig, iframeConfig: devIframeConfig };
   }
 
-  const { prodConfig, prodChains } = require("./prodConfig");
-  return { chains: prodChains, config: prodConfig };
+  const { prodConfig, prodIframeConfig } = require("./prodConfig");
+  return { config: prodConfig, iframeConfig: prodIframeConfig };
 }

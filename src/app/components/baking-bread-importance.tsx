@@ -13,7 +13,7 @@ const BakingBreadImportance = ({ className }: { className?: string }) => {
 				<InfoSvg />
 			</div>
 			<Body className="text-surface-grey">
-				Baking $BREAD increases crucial funding for our post-capitalist
+				Your deposit increases crucial funding for our post-capitalist
 				cooperatives.{" "}
 				<a
 					href="https://docs.bread.coop/"

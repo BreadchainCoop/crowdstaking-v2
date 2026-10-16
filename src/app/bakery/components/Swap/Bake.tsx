@@ -17,11 +17,13 @@ export default function Bake({
 	inputValue,
 	clearInputValue,
 	isSafe,
+	label = "Bake",
 }: {
 	user: TUserConnected;
 	inputValue: string;
 	clearInputValue: () => void;
 	isSafe: boolean;
+	label?: string;
 }) {
 	const { transactionsState, transactionsDispatch } = useTransactions();
 
@@ -83,7 +85,10 @@ export default function Bake({
 						type: "SET_SAFE_SUBMITTED",
 						payload: { hash },
 					});
-					setModal({ type: "BAKERY_TRANSACTION", hash });
+					// Safe transactions need multi-sig approval inside the
+					// Safe app, so route to the dedicated Safe-aware modal
+					// that guides the user through the confirmation flow.
+					setModal({ type: "SAFE_TRANSACTION", hash });
 					clearInputValue();
 
 					return;
@@ -138,7 +143,7 @@ export default function Bake({
 				onClick={onBake}
 				className=""
 			>
-				Bake
+				{label}
 			</LiftedButton>
 		</div>
 	);
