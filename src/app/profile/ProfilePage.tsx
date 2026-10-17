@@ -33,13 +33,14 @@ import SwapWrapper from "@/app/components/SwapWrapper";
 import { useUserVoteCount } from "@/app/governance/useUserVoteCount";
 import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 import { copyToClipboard } from "@/utils/copy-to-clipboard";
-import { CURVE_SWAP_URL, GNOSIS_LINK } from "@/constants";
+import { CURVE_SWAP_URL, EURE_ADDRESS, GNOSIS_LINK } from "@/constants";
 import { useAccountHistory, AccountHistoryEntry } from "./useAccountHistory";
+import { MoneriumCard } from "./monerium/MoneriumCard";
 
 const CARD_CLASSES = "bg-paper-0 border border-paper-2 p-5";
 
 export function ProfilePage() {
-  const { user } = useConnectedUser();
+  const { user, isSafe } = useConnectedUser();
   const { BREAD } = useTokenBalances();
   const { data: apyData } = useVaultAPY();
   const chainConfig = useActiveChain();
@@ -86,6 +87,17 @@ export function ProfilePage() {
     });
   };
 
+  // Monerium: open the swapper pre-seeded with EURe → xDAI on Gnosis.
+  const handleSwapEure = () => {
+    setModal({
+      type: "GENERIC_MODAL",
+      showCloseButton: false,
+      includeContainerStyling: false,
+      children: <SwapWrapper fromToken={EURE_ADDRESS} />,
+      className: "max-w-[30rem]",
+    });
+  };
+
   if (user.status === "NOT_CONNECTED" || user.status === "UNSUPPORTED_CHAIN") {
     return (
       <div
@@ -123,6 +135,14 @@ export function ProfilePage() {
       <div className="flex flex-col gap-3">
         {/* ── Profile ── */}
         <ProfileCard address={userAddress} />
+
+        {/* ── Monerium euro account (only when configured) ── */}
+        <MoneriumCard
+          address={userAddress}
+          isSafe={isSafe}
+          onSwapEure={handleSwapEure}
+          onBake={handleBake}
+        />
 
         {/* ── Balance + Solidarity Fund stats ── */}
         <div className={clsx(CARD_CLASSES, "md:p-8 flex flex-col gap-6")}>
