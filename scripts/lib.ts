@@ -18,6 +18,8 @@ import {
 import { foundry } from "viem/chains";
 import { BREAD_ADDRESS, BUTTER_ADDRESS } from "../src/constants";
 
+const RPC_TIMEOUT = 90_000;
+
 // Wrapped into a function so we do not initialize on import, before all contracts are deployed
 export function getAnvilConfig() {
   return getChain(31337);
@@ -31,14 +33,14 @@ const BREAD_OWNER = "0x918dEf5d593F46735f74F9E2B280Fe51AF3A99ad" as Hex;
 // with any wallet without having the private key
 // https://viem.sh/docs/clients/test.html
 export const testClient = createTestClient({
-  chain: foundry,
-  mode: "anvil",
-  transport: http(),
+	chain: foundry,
+	mode: "anvil",
+	transport: http(undefined, { timeout: RPC_TIMEOUT }),
 }).extend(walletActions);
 
 export const publicClient = createPublicClient({
-  chain: foundry,
-  transport: http(),
+	chain: foundry,
+	transport: http(undefined, { timeout: RPC_TIMEOUT }),
 });
 
 // bake bread with provided account
