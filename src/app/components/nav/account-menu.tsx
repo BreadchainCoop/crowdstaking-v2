@@ -5,6 +5,7 @@ import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { useAccount, useEnsName } from "wagmi";
 import NavAccountDetails from "./account-details";
 import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
+import { PrivyDepositButton } from "./privy-deposit-button";
 import { blo } from "blo";
 
 const Caret = () => (
@@ -60,6 +61,8 @@ const NavAccountMenu = () => {
 								<span className="text-[12px]">.{balDec}</span>
 							</Body>
 						</div>
+
+						{account.address && <PrivyDepositButton />}
 
 						{/* Divider */}
 						<div className="h-7 w-px bg-[#d9d9d9] shrink-0" />
