@@ -11,6 +11,7 @@ import { ReactNode } from "react";
 import Header from "./core/components/Header/Header";
 import { ModalPresenter } from "./core/components/Modal/ModalPresenter";
 import { FundOnSignIn } from "./components/fund-wallet/FundOnSignIn";
+import { OnboardingOnFirstVisit } from "./components/onboarding/OnboardingOnFirstVisit";
 import { Toaster } from "./core/components/Toaster/Toaster";
 import { Footer } from "./core/components/Footer";
 import { parseFeatureVar } from "./core/util/parseFeatureVar";
@@ -78,6 +79,7 @@ function Layout({ children }: { children: ReactNode }) {
 			<main className="grow relative">
 				<ModalPresenter />
 				<FundOnSignIn />
+				<OnboardingOnFirstVisit />
 				<Toaster />
 				{children}
 			</main>
