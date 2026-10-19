@@ -40,10 +40,6 @@ export default function Home() {
 						<Suspense>
 							<SwapWrapper />
 						</Suspense>
-						<span hidden data-markee-address={MARKEE_ADDRESS} />
-						<div className="mt-6">
-							<Markee />
-						</div>
 					</div>
 					<div className="md:max-w-[32rem]">
 						<Interest />
@@ -52,6 +48,10 @@ export default function Home() {
 							<Apy />
 						</div>
 					</div>
+				</div>
+				<span hidden data-markee-address={MARKEE_ADDRESS} />
+				<div className="mt-8 md:mt-12">
+					<Markee />
 				</div>
 				<div className="mt-12 md:flex md:items-start md:justify-between md:gap-8">
 					<figure className="w-[23.82rem] h-[16rem] ml-auto bg-orange-0 overflow-hidden relative right-[-1rem] mb-8 md:w-[33.125rem] md:h-[22.25rem] md:order-2 md:right-[-1.5rem] md:static md:mt-8 md:grow-0">
