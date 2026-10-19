@@ -29,19 +29,27 @@ export const ModalContainer = forwardRef(
 		return (
 			<div
 				ref={ref}
-				className="h-screen max-h-[100vh] fixed w-screen top-0 p-2 grid place-items-center z-40 pointer-events-none"
+				// Mobile: anchor to the bottom so the sheet slides up from the
+				// bottom edge (like the Privy login sheet). Desktop: centered.
+				className="fixed inset-0 z-40 flex items-end justify-center pointer-events-none md:items-center md:p-2"
 				{...props}
 			>
 				<motion.section
-					initial={{ y: 8, opacity: 0 }}
+					// Slide up from below on mobile; on desktop the centered card
+					// still gets a pleasant short rise. framer accepts the "100%"
+					// transform so the sheet starts fully off the bottom edge.
+					initial={{ y: "100%", opacity: 0 }}
 					animate={{ y: 0, opacity: 1 }}
-					exit={{ y: 8, opacity: 0 }}
-					transition={{ duration: 0.2 }}
+					exit={{ y: "100%", opacity: 0 }}
+					transition={{ type: "spring", damping: 30, stiffness: 300 }}
 					className={clsx(
-						"pointer-events-auto max-h-[96%] overflow-y-auto",
+						"pointer-events-auto overflow-y-auto",
 						"shadow-[0_0.25rem_0.75rem_0_#1B201A26]",
 						includeContainerStyling
-							? "w-full max-w-[30rem] flex flex-col items-center bg-[#FDFAF3] relative p-5"
+							? // Mobile: bottom sheet filling 4/5 of the viewport
+							  // (square top — brand kit has no rounded corners).
+							  // Desktop: the original centered card.
+							  "w-full h-[80vh] max-h-[80vh] flex flex-col items-center bg-[#FDFAF3] relative p-5 md:h-auto md:max-h-[96%] md:max-w-[30rem]"
 							: "",
 						className
 					)}
