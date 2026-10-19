@@ -44,8 +44,11 @@ function HeroStatChip({
 	href: string;
 }) {
 	return (
-		<ExternalLink href={href} className="!text-current">
-			<div className="inline-flex items-center gap-2 whitespace-nowrap border border-[#eae2d6] bg-paper-0 px-3 py-2.5 transition-colors hover:border-primary-orange hover:bg-[#EA581714]">
+		<ExternalLink
+			href={href}
+			className="!text-current block w-full md:inline-block md:w-auto"
+		>
+			<div className="flex w-full items-center justify-center gap-2 whitespace-nowrap border border-[#eae2d6] bg-paper-0 px-3 py-2.5 transition-colors hover:border-primary-orange hover:bg-[#EA581714] md:inline-flex md:w-auto md:justify-start">
 				<span className="shrink-0 text-primary-orange">{icon}</span>
 				<Body bold className="text-surface-ink">
 					{value}
@@ -117,7 +120,7 @@ export function SolidarityHero() {
 
 					<SupportFundButton className="w-full" />
 
-					<div className="flex flex-wrap gap-2">
+					<div className="flex flex-col gap-2 md:flex-row md:flex-wrap">
 						<HeroStatChip
 							icon={<CoinVerticalIcon size={20} />}
 							value={usd(distributed)}
