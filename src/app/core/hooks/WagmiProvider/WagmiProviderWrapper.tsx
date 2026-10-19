@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useSyncExternalStore } from "react";
 import { WagmiProvider as PrivyWagmiProvider } from "@privy-io/wagmi";
 import { WagmiProvider as PlainWagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -64,9 +64,21 @@ function isRunningInIframe() {
   }
 }
 
+// Iframe-ness never changes for the life of the page, so there's nothing to
+// subscribe to.
+const subscribeNoop = () => () => {};
+
 export function WagmiProviderWrapper({ children }: { children: ReactNode }) {
   const { config, iframeConfig } = getConfig();
-  const inIframe = isRunningInIframe();
+  // The server can't see `window`, so it always renders the Privy branch. The
+  // server snapshot (`false`) keeps hydration on that same branch; React then
+  // re-renders with the real value, switching Safe iframes to the plain
+  // provider right after hydration instead of mismatching the server HTML.
+  const inIframe = useSyncExternalStore(
+    subscribeNoop,
+    isRunningInIframe,
+    () => false
+  );
 
   const inner = (
     <RainbowKitProvider modalSize="compact" theme={theme}>

@@ -242,7 +242,7 @@ function SignerProgress({
 			</Body>
 			<div className="w-full h-2 rounded-full bg-paper-main overflow-hidden">
 				<div
-					className="h-full rounded-full bg-primary-orange transition-all"
+					className="h-full rounded-full bg-primary-orange transition-[width]"
 					style={{ width: `${pct}%` }}
 				/>
 			</div>
