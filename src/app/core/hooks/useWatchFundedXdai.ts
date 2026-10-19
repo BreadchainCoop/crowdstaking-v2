@@ -9,6 +9,7 @@ import { publicConfig } from "./WagmiProvider/config/publicConfig";
 import { useSponsoredTx } from "./useSponsoredTx";
 
 const GNOSIS_CHAIN_ID = 100;
+const ZERO = BigInt(0);
 
 /**
  * Watches an embedded wallet for incoming xDAI and immediately bakes it into
@@ -31,7 +32,7 @@ export function useWatchFundedXdai(
 		config: publicConfig,
 		chainId: GNOSIS_CHAIN_ID,
 	});
-	const prevBalance = useRef<bigint>(BigInt(0));
+	const prevBalance = useRef<bigint>(ZERO);
 	const isMinting = useRef(false);
 	const { sendSponsoredTransaction } = useSponsoredTx();
 

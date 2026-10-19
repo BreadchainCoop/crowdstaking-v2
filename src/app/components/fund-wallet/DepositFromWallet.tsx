@@ -155,6 +155,7 @@ export function DepositFromWallet({
 							setValue(sanitizeInputValue(e.target.value))
 						}
 						inputMode="decimal"
+						aria-label="Amount in USD"
 						placeholder="0.00"
 						className="w-full bg-transparent text-2xl font-bold text-surface-ink outline-none placeholder:text-surface-grey"
 					/>
