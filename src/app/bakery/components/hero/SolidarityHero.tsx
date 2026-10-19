@@ -28,6 +28,14 @@ const FALLBACK_CIRCULATION = 458485;
 const FALLBACK_BACKERS = 209;
 const FALLBACK_DISTRIBUTED = 46548;
 
+// Throws on a non-2xx so React Query records an error (and retries) instead
+// of caching an undefined value from the route's error body.
+async function fetchDuneValue(url: string): Promise<number> {
+	const res = await fetch(url);
+	if (!res.ok) throw new Error(`${url} responded ${res.status}`);
+	return ((await res.json()) as { _col0: number })._col0;
+}
+
 // BREAD is 1:1 with USD, so the token amount is shown directly as USD.
 const usd = (n: number) =>
 	n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
@@ -77,21 +85,11 @@ export function SolidarityHero() {
 	// Same query keys as the existing widgets, so TanStack dedupes the fetches.
 	const { data: backers = FALLBACK_BACKERS } = useQuery({
 		queryKey: ["bread-backers"],
-		queryFn: async () =>
-			(
-				(await (await fetch("/api/bread-backers")).json()) as {
-					_col0: number;
-				}
-			)._col0,
+		queryFn: () => fetchDuneValue("/api/bread-backers"),
 	});
 	const { data: distributed = FALLBACK_DISTRIBUTED } = useQuery({
 		queryKey: ["total-bread-distributed"],
-		queryFn: async () =>
-			(
-				(await (await fetch("/api/total-bread-distributed")).json()) as {
-					_col0: number;
-				}
-			)._col0,
+		queryFn: () => fetchDuneValue("/api/total-bread-distributed"),
 	});
 
 	return (

@@ -36,7 +36,9 @@ export function SafeTransactionWatcher({
 	const { hash } = transaction;
 	const typedHash = hash as `0x${string}`;
 	const { toastDispatch } = useToast();
-	const sdkRef = useRef(new SafeAppsSDK());
+	// Created lazily inside the effect: the SDK constructor registers a window
+	// "message" listener, so building it on every render would leak listeners.
+	const sdkRef = useRef<SafeAppsSDK | null>(null);
 
 	useEffect(() => {
 		toastDispatch({
@@ -46,7 +48,7 @@ export function SafeTransactionWatcher({
 	}, [typedHash, toastDispatch]);
 
 	useEffect(() => {
-		const sdk = sdkRef.current;
+		const sdk = (sdkRef.current ??= new SafeAppsSDK());
 		let intervalId: ReturnType<typeof setInterval>;
 		let expiryId: ReturnType<typeof setTimeout>;
 		let settled = false;
