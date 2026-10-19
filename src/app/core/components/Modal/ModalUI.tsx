@@ -49,7 +49,7 @@ export const ModalContainer = forwardRef(
 							? // Mobile: bottom sheet filling 4/5 of the viewport
 							  // (square top — brand kit has no rounded corners).
 							  // Desktop: the original centered card.
-							  "w-full h-[80vh] max-h-[80vh] flex flex-col items-center bg-[#FDFAF3] relative p-5 md:h-auto md:max-h-[96%] md:max-w-[30rem]"
+							  "w-full max-h-[80vh] flex flex-col items-center bg-[#FDFAF3] relative p-5 md:max-h-[96%] md:max-w-[30rem]"
 							: "",
 						className
 					)}
