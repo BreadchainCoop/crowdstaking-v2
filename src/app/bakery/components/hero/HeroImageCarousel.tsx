@@ -39,7 +39,12 @@ export function HeroImageCarousel({ className }: { className?: string }) {
 	return (
 		<div
 			className={clsx(
-				"relative overflow-hidden bg-orange-0",
+				// Positioning (relative/absolute) is supplied by `className` so
+				// the caller controls it per breakpoint — mobile fills the hero
+				// absolutely, desktop is a relative grid cell. A hardcoded
+				// `relative` here would override the mobile `absolute` and
+				// collapse this (its images are all absolute) to zero height.
+				"overflow-hidden bg-orange-0",
 				className
 			)}
 		>
