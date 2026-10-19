@@ -1,6 +1,6 @@
 import { formatUnits } from "viem";
 import { ModalContent, ModalHeading } from "../LPModalUI";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { useRefetchOnBlockChangeForUser } from "@/app/core/hooks/useRefetchOnBlockChange";
 import { useWriteContract,  useSimulateContract } from "wagmi";
 import { BUTTERED_BREAD_ABI } from "@/abi";
@@ -125,16 +125,7 @@ export function WithdrawTransaction({
 		<>
 			<ModalHeading>Unlocking LP Tokens</ModalHeading>
 			<ModalContent className="!gap-2">
-				<StatusBadge
-					variant="unlock"
-					status={
-						status === "confirmed"
-							? "complete"
-							: status === "reverted"
-							? "reverted"
-							: "in-progress"
-					}
-				/>
+				<StatusBadge variant="unlock" status={BADGE_STATUS[status]} />
 				{status !== "confirmed" && (
 					<>
 						<UnlockVPRate value={modalState.parsedValue} />
@@ -147,65 +138,119 @@ export function WithdrawTransaction({
 						</div>
 					</>
 				)}
-				{status === "idle" && (
-					<Body className="text-surface-grey">
-						Press `Unlock LP tokens` to execute the transaction
-					</Body>
-				)}
-				{status === "submitted" && (
-					<Body>Awaiting on-chain confirmation...</Body>
-				)}
-				{status === "reverted" && (
-					<Body className="text-status-error">
-						Transaction failed. Please try again.
-					</Body>
-				)}
+				<WithdrawStatusMessage status={status} />
 
 				<div className="w-full">
-					{status === "confirmed" && txHash && (
-						<>
+					<WithdrawActions
+						status={status}
+						isWalletOpen={isWalletOpen}
+						onSubmit={handleSubmit}
+						onRetry={handleRetry}
+						onClose={() => setModal(null)}
+					>
+						{txHash && (
 							<UnlockingSuccess
 								value={modalState.parsedValue}
 								explorerLink={`${chainConfig.EXPLORER}/tx/${txHash}`}
 							/>
-							<LiftedButton
-								preset="secondary"
-								onClick={() => setModal(null)}
-								disabled={isWalletOpen}
-								width="full"
-							>
-								Return to vault page
-							</LiftedButton>
-						</>
-					)}
-					{status === "submitted" && (
-						<LiftedButton disabled width="full">
-							Unlocking...
-						</LiftedButton>
-					)}
-					{status === "reverted" && (
-						<LiftedButton
-							onClick={handleRetry}
-							disabled={isWalletOpen}
-							width="full"
-							leftIcon={<ArrowCounterClockwiseIcon size={24} />}
-						>
-							Try again
-						</LiftedButton>
-					)}
-					{status === "idle" && (
-						<LiftedButton
-							onClick={handleSubmit}
-							disabled={isWalletOpen}
-							width="full"
-						>
-							Unlock LP tokens
-						</LiftedButton>
-					)}
+						)}
+					</WithdrawActions>
 				</div>
 			</ModalContent>
 		</>
 	);
+}
+
+const BADGE_STATUS = {
+	idle: "in-progress",
+	submitted: "in-progress",
+	confirmed: "complete",
+	reverted: "reverted",
+} as const satisfies Record<WithdrawStatus, string>;
+
+function WithdrawStatusMessage({ status }: { status: WithdrawStatus }) {
+	switch (status) {
+		case "idle":
+			return (
+				<Body className="text-surface-grey">
+					Press `Unlock LP tokens` to execute the transaction
+				</Body>
+			);
+		case "submitted":
+			return <Body>Awaiting on-chain confirmation...</Body>;
+		case "reverted":
+			return (
+				<Body className="text-status-error">
+					Transaction failed. Please try again.
+				</Body>
+			);
+		default:
+			return null;
+	}
+}
+
+function WithdrawActions({
+	status,
+	isWalletOpen,
+	onSubmit,
+	onRetry,
+	onClose,
+	children,
+}: {
+	status: WithdrawStatus;
+	isWalletOpen: boolean;
+	onSubmit: () => void;
+	onRetry: () => void;
+	onClose: () => void;
+	// Success summary, shown above the close button once confirmed.
+	children?: ReactNode;
+}) {
+	switch (status) {
+		case "confirmed":
+			// `children` is only set once a tx hash exists, matching the old
+			// `status === "confirmed" && txHash` guard.
+			if (!children) return null;
+			return (
+				<>
+					{children}
+					<LiftedButton
+						preset="secondary"
+						onClick={onClose}
+						disabled={isWalletOpen}
+						width="full"
+					>
+						Return to vault page
+					</LiftedButton>
+				</>
+			);
+		case "submitted":
+			return (
+				<LiftedButton disabled width="full">
+					Unlocking...
+				</LiftedButton>
+			);
+		case "reverted":
+			return (
+				<LiftedButton
+					onClick={onRetry}
+					disabled={isWalletOpen}
+					width="full"
+					leftIcon={<ArrowCounterClockwiseIcon size={24} />}
+				>
+					Try again
+				</LiftedButton>
+			);
+		case "idle":
+			return (
+				<LiftedButton
+					onClick={onSubmit}
+					disabled={isWalletOpen}
+					width="full"
+				>
+					Unlock LP tokens
+				</LiftedButton>
+			);
+	}
 }
 
 function UnlockingSuccess({

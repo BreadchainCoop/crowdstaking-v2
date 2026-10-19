@@ -100,6 +100,7 @@ export function FundFromWallet({
 							setAmount(e.target.value.replace(/[^0-9.]/g, ""))
 						}
 						inputMode="decimal"
+						aria-label="Amount"
 						placeholder="0"
 						className="w-full bg-transparent font-breadDisplay text-xl outline-none"
 					/>
