@@ -18,6 +18,7 @@ import { HowItWorks } from "./bakery/components/HowItWorks";
 import Actions from "./bakery/components/Actions";
 import { generateMetadata } from "@/lib/site-metadata";
 import { BalanceBanner } from "./bakery/components/Banners/BalanceBanner";
+import { Markee, MARKEE_ADDRESS } from "./bakery/components/Markee";
 
 export default function Home() {
 	return (
@@ -39,6 +40,10 @@ export default function Home() {
 						<Suspense>
 							<SwapWrapper />
 						</Suspense>
+						<span hidden data-markee-address={MARKEE_ADDRESS} />
+						<div className="mt-6">
+							<Markee />
+						</div>
 					</div>
 					<div className="md:max-w-[32rem]">
 						<Interest />
