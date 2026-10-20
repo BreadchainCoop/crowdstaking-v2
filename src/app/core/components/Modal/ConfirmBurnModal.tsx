@@ -1,6 +1,5 @@
 import { ModalContainer, ModalContent, ModalHeading } from "./ModalUI";
 import { ConfirmBurnModalState, ModalState } from "../../context/ModalContext";
-import { BreadIcon, XDAIIcon } from "@/app/core/components/Icons/TokenIcons";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
 import SwapBreadButton from "@/app/bakery/components/Swap/SwapBreadButton";
 import { useTransactions } from "@/app/core/context/TransactionsContext/TransactionsContext";
@@ -8,7 +7,7 @@ import { useModal } from "@/app/core/context/ModalContext";
 import SafeAppsSDK from "@safe-global/safe-apps-sdk/dist/src/sdk";
 import { TransactionStatus } from "@safe-global/safe-apps-sdk";
 import Button from "../Button";
-import { Body, LiftedButton, Logo } from "@breadcoop/ui";
+import { Body, LiftedButton } from "@breadcoop/ui";
 export function ConfirmBurnModal({
 	modalState,
 }: {
@@ -74,20 +73,17 @@ export function ConfirmBurnModal({
 			<ModalContent>
 				<div className="w-full p-4 border border-surface-grey mb-2.5">
 					<div className="flex mb-6 justify-between items-center">
-						<Body className="text-left">You are about to burn</Body>
+						<Body className="text-left">
+							You are about to withdraw
+						</Body>
 						<Body bold className="flex gap-2">
-							<Logo
-								variant="square"
-								text={modalState.breadValue}
-								size={24}
-							/>
+							${modalState.breadValue}
 						</Body>
 					</div>
 					<div className="w-full flex justify-between items-center">
 						<Body className="text-left">You will receive</Body>
 						<Body bold className="flex gap-2">
-							<XDAIIcon />
-							{modalState.xdaiValue}
+							${modalState.xdaiValue} in xDAI
 						</Body>
 					</div>
 				</div>
@@ -96,11 +92,11 @@ export function ConfirmBurnModal({
 						<WarningDiamondSvg />
 					</div>
 					<Body>
-						Burning $BREAD will reduce crucial funding for our
-						member projects.{" "}
+						Withdrawing in xDAI removes your deposit from the fund and
+						reduces crucial funding for our member projects.{" "}
 						<b>
-							To continue supporting the Bread Cooperative
-							network, consider swapping your $BREAD instead.
+							To keep supporting the Bread Cooperative network,
+							consider exchanging for WXDAI instead.
 						</b>
 					</Body>
 				</div>
@@ -113,13 +109,14 @@ export function ConfirmBurnModal({
 						preset="secondary"
 						className="text-system-red font-bold"
 					>
-						Proceed to Burn
+						Proceed to withdraw
 					</LiftedButton>
 				</div>
 				<Body className="text-surface-grey text-sm mt-1">
-					<span className="font-bold">Note</span>: When you burn BREAD
-					you change your BREAD back into xDAI. Your solidarity
-					contribution and voting power will be removed.
+					<span className="font-bold">Note</span>: Withdrawing in xDAI
+					returns your deposit as xDAI and removes it from the fund.
+					Your solidarity contribution and voting power will be
+					removed.
 				</Body>
 			</ModalContent>
 		</ModalContainer>

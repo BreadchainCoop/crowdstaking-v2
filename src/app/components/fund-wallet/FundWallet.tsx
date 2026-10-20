@@ -130,7 +130,7 @@ export function FundWallet() {
 			<div>
 				<Heading2 className="text-2xl">Fund your account</Heading2>
 				<Body className="text-surface-grey mt-1">
-					Send xDAI to your wallet and automatically get $BREAD.
+					Add funds to your wallet to support the Solidarity Fund.
 				</Body>
 			</div>
 
@@ -141,9 +141,8 @@ export function FundWallet() {
 					className="mt-0.5 shrink-0 text-primary-orange"
 				/>
 				<Body className="text-surface-grey-2 text-xs">
-					You fund with <strong>xDAI</strong> on Gnosis, which is
-					automatically converted to <strong>$BREAD</strong> — worth
-					$1 each (1:1 with USD). Your balance is shown in USD.
+					You fund with <strong>xDAI</strong> on Gnosis — worth $1 each
+					(1:1 with USD). Your balance and deposit are shown in dollars.
 				</Body>
 			</div>
 
@@ -158,7 +157,7 @@ export function FundWallet() {
 				<FundButton
 					icon={<WalletIcon size={28} />}
 					title="Fund from your wallet"
-					subtitle="Send xDAI or BREAD from a browser wallet"
+					subtitle="Send xDAI from a browser wallet"
 					onClick={() => setView("wallet")}
 				/>
 				<FundButton
