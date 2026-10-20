@@ -15,6 +15,7 @@ import Link from "next/link";
 import { ReactNode } from "react";
 import { formatUnits } from "viem";
 import LogoutButton from "../logout-button";
+import { WithdrawButton } from "./withdraw-button";
 import { Config, UseAccountReturnType, UseEnsNameReturnType } from "wagmi";
 import { GetEnsNameReturnType } from "@wagmi/core";
 import { copyToClipboard } from "@/utils/copy-to-clipboard";
@@ -136,7 +137,8 @@ const NavAccountDetails = ({
 					<Body className="font-bold">Gnosis chain</Body>
 				</div>
 			</Item>
-			<LogoutButton className="mt-1" />
+			<WithdrawButton className="mt-1" />
+			<LogoutButton />
 		</section>
 	);
 };
