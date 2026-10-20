@@ -8,11 +8,13 @@ export interface FundButtonProps {
 	subtitle: string;
 	onClick: () => void;
 	disabled?: boolean;
+	badge?: ReactNode;
 }
 
 /**
  * A single funding-option row in the Fund modal (mirrors the app-stacks
- * "fund" option rows). Paper card with an orange hover border.
+ * "fund" option rows). Paper card with an orange hover border. An optional
+ * `badge` renders next to the title (e.g. a "Recommended" pill).
  */
 export function FundButton({
 	icon,
@@ -20,6 +22,7 @@ export function FundButton({
 	subtitle,
 	onClick,
 	disabled = false,
+	badge,
 }: FundButtonProps) {
 	return (
 		<button
@@ -32,9 +35,12 @@ export function FundButton({
 				{icon}
 			</span>
 			<span className="mr-auto">
-				<Body bold className="text-surface-ink">
-					{title}
-				</Body>
+				<span className="flex items-center gap-2">
+					<Body bold className="text-surface-ink">
+						{title}
+					</Body>
+					{badge}
+				</span>
 				<Body className="mt-0.5 text-surface-grey text-sm">
 					{subtitle}
 				</Body>
