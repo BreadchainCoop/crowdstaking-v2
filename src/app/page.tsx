@@ -14,6 +14,7 @@ import { Interest } from "./bakery/components/Interest";
 import { ProjectBackers } from "./bakery/components/Backers";
 import { MonthlyVoters } from "./bakery/components/MonthlyVoters";
 import { ViewAnalytics } from "./bakery/components/Analytics";
+import { HowItWorks } from "./bakery/components/HowItWorks";
 import Actions from "./bakery/components/Actions";
 import { generateMetadata } from "@/lib/site-metadata";
 import { BalanceBanner } from "./bakery/components/Banners/BalanceBanner";
@@ -32,6 +33,7 @@ export default function Home() {
 						<Heading3 className="text-surface-grey-2 mb-4 md:mb-6">
 							Give without giving.
 						</Heading3>
+						<HowItWorks />
 					</div>
 					<div className="row-span-2 md:w-full md:max-w-[451px]">
 						<Suspense>
