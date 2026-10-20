@@ -16,11 +16,17 @@ export default function Burn({
 	inputValue,
 	clearInputValue,
 	isSafe,
+	showSwap = true,
+	label = "Burn",
 }: {
 	user: TUserConnected;
 	inputValue: string;
 	clearInputValue: () => void;
 	isSafe: boolean;
+	// The Curve swap CTA is bundled in here by default; hide it where the
+	// swap is offered as a separate choice (e.g. the Withdraw module).
+	showSwap?: boolean;
+	label?: string;
 }) {
 	const { transactionsState, transactionsDispatch } = useTransactions();
 	const { BREAD, ID: chainId } = useActiveChain();
@@ -91,10 +97,14 @@ export default function Burn({
 
 	return (
 		<div className="relative">
-			<div className="group">
-				<SwapBreadButton withRecommended />
-			</div>
-			<div className="m-3"></div>
+			{showSwap && (
+				<>
+					<div className="group">
+						<SwapBreadButton withRecommended />
+					</div>
+					<div className="m-3"></div>
+				</>
+			)}
 			<div className="relative lifted-button-container">
 				<LiftedButton
 					disabled={!buttonIsEnabled || isBurning}
@@ -112,7 +122,7 @@ export default function Burn({
 					}}
 					className=""
 				>
-					Burn
+					{label}
 				</LiftedButton>
 			</div>
 		</div>
