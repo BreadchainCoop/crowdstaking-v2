@@ -6,7 +6,6 @@ import { useWallets } from "@privy-io/react-auth";
 import { Body, Heading2 } from "@breadcoop/ui";
 import {
 	ArrowLeftIcon,
-	ArrowsLeftRightIcon,
 	CoinsIcon,
 	InfoIcon,
 	PaperPlaneTiltIcon,
@@ -16,9 +15,9 @@ import {
 import { useConnectedUser } from "@/app/core/hooks/useConnectedUser";
 import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
-import { CURVE_SWAP_URL } from "@/constants";
 import Burn from "@/app/bakery/components/Swap/Burn";
 import { FundButton } from "@/app/components/fund-wallet/FundButton";
+import { WithdrawEOA } from "./WithdrawEOA";
 import { WithdrawToExternalWallet } from "./WithdrawToExternalWallet";
 
 const RecommendedBadge = () => (
@@ -28,12 +27,12 @@ const RecommendedBadge = () => (
 );
 
 /**
- * Withdraw module for an EOA. Two routes out of the fund, both abstracted to
- * dollars:
- *  - Exchange for WXDAI (recommended): swap on Curve, which keeps the deposit
- *    liquid at the best rate. Opens the Curve pool in a new tab.
- *  - Withdraw in xDAI: burn the deposit back to xDAI 1:1 (removes funds from
- *    the fund). Opens the burn confirmation flow.
+ * Withdraw module, adapting to the wallet type (both abstracted to dollars):
+ *  - EOA: pick WXDAI (swap on Curve, recommended) or xDAI (burn), with an
+ *    amount — see WithdrawEOA.
+ *  - Embedded (Privy): send the deposit out to an external wallet
+ *    (recommended, no external wallet to connect to Curve) or withdraw in xDAI
+ *    (burn).
  * Rendered as the children of a GENERIC_MODAL, so it inherits the shared
  * sheet/card chrome.
  */
@@ -55,12 +54,17 @@ export function WithdrawModule() {
 		embeddedAddress && embeddedAddress.toLowerCase() === activeAddress
 	);
 
+	// EOA: a single screen with the xDAI/WXDAI choice and an amount.
+	if (!isEmbedded) {
+		return <WithdrawEOA user={user} isSafe={isSafe} />;
+	}
+
 	const balanceStr = BREAD?.status === "SUCCESS" ? BREAD.value : "0";
 	const balance = parseFloat(balanceStr) || 0;
 	const amount = parseFloat(value) || 0;
 	const insufficient = amount > balance;
 
-	// Step 1 — pick a withdrawal method (differs by wallet type).
+	// Embedded, step 1 — pick a withdrawal method.
 	if (step === "choose") {
 		return (
 			<div className="flex flex-col gap-5">
@@ -72,29 +76,13 @@ export function WithdrawModule() {
 				</div>
 
 				<div className="flex flex-col gap-3">
-					{isEmbedded ? (
-						<FundButton
-							icon={<PaperPlaneTiltIcon size={28} />}
-							title="Send to an external wallet"
-							subtitle="Move your deposit out to a wallet you control"
-							badge={<RecommendedBadge />}
-							onClick={() => setStep("send")}
-						/>
-					) : (
-						<FundButton
-							icon={<ArrowsLeftRightIcon size={28} />}
-							title="Exchange for WXDAI"
-							subtitle="Swap on Curve at the best rate"
-							badge={<RecommendedBadge />}
-							onClick={() =>
-								window.open(
-									CURVE_SWAP_URL,
-									"_blank",
-									"noopener,noreferrer"
-								)
-							}
-						/>
-					)}
+					<FundButton
+						icon={<PaperPlaneTiltIcon size={28} />}
+						title="Send to an external wallet"
+						subtitle="Move your deposit out to a wallet you control"
+						badge={<RecommendedBadge />}
+						onClick={() => setStep("send")}
+					/>
 					<FundButton
 						icon={<CoinsIcon size={28} />}
 						title="Withdraw in xDAI"
@@ -110,16 +98,16 @@ export function WithdrawModule() {
 						className="mt-0.5 shrink-0 text-primary-orange"
 					/>
 					<Body className="text-surface-grey-2 text-xs">
-						{isEmbedded
-							? "Sending to your own external wallet keeps your full balance. Withdrawing in xDAI removes your deposit from the fund and returns it 1:1 with USD."
-							: "Exchanging on Curve usually gives the best rate and keeps the pool liquid. Withdrawing in xDAI removes your deposit from the fund and returns it 1:1 with USD."}
+						Sending to your own external wallet keeps your full
+						balance. Withdrawing in xDAI removes your deposit from the
+						fund and returns it 1:1 with USD.
 					</Body>
 				</div>
 			</div>
 		);
 	}
 
-	// Step 2a — embedded: send the deposit out to an external wallet.
+	// Embedded, step 2a — send the deposit out to an external wallet.
 	if (step === "send") {
 		return (
 			<WithdrawToExternalWallet
@@ -129,7 +117,7 @@ export function WithdrawModule() {
 		);
 	}
 
-	// Step 2 — withdraw in xDAI (burn), shown in dollars.
+	// Embedded, step 2b — withdraw in xDAI (burn), shown in dollars.
 	return (
 		<div className="flex flex-col gap-5">
 			<button
@@ -173,7 +161,7 @@ export function WithdrawModule() {
 					/>
 				</div>
 				<Body className="text-surface-grey text-sm">
-					Deposited: ${balance.toFixed(2)}
+					Balance: ${balance.toFixed(2)}
 				</Body>
 			</div>
 
@@ -185,7 +173,7 @@ export function WithdrawModule() {
 						className="shrink-0 text-system-warning"
 					/>
 					<Body className="text-surface-ink text-sm">
-						You can&apos;t withdraw more than your deposit.
+						You can&apos;t withdraw more than your balance.
 					</Body>
 				</div>
 			) : (
