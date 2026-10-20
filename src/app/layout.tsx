@@ -74,7 +74,7 @@ export default function App({ children }: { children: React.ReactNode }) {
 
 function Layout({ children }: { children: ReactNode }) {
 	return (
-		<div className="flex min-h-screen flex-col overflow-x-hidden md:overflow-x-visible">
+		<div className="flex min-h-screen flex-col overflow-x-clip md:overflow-x-visible">
 			<Header />
 			<main className="grow relative">
 				<ModalPresenter />
