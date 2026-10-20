@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { Address } from "viem";
+import { useWallets } from "@privy-io/react-auth";
 import { Body, Heading2 } from "@breadcoop/ui";
 import {
 	ArrowLeftIcon,
 	ArrowsLeftRightIcon,
 	CoinsIcon,
 	InfoIcon,
+	PaperPlaneTiltIcon,
 	WarningIcon,
 } from "@phosphor-icons/react";
 
@@ -16,6 +19,13 @@ import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
 import { CURVE_SWAP_URL } from "@/constants";
 import Burn from "@/app/bakery/components/Swap/Burn";
 import { FundButton } from "@/app/components/fund-wallet/FundButton";
+import { WithdrawToExternalWallet } from "./WithdrawToExternalWallet";
+
+const RecommendedBadge = () => (
+	<Body bold className="bg-[#32A80014] px-2 py-0.5 text-xs text-system-green">
+		Recommended
+	</Body>
+);
 
 /**
  * Withdraw module for an EOA. Two routes out of the fund, both abstracted to
@@ -30,17 +40,27 @@ import { FundButton } from "@/app/components/fund-wallet/FundButton";
 export function WithdrawModule() {
 	const { user, isSafe } = useConnectedUser();
 	const { BREAD } = useTokenBalances();
-	const [step, setStep] = useState<"choose" | "burn">("choose");
+	const { wallets } = useWallets();
+	const [step, setStep] = useState<"choose" | "burn" | "send">("choose");
 	const [value, setValue] = useState("");
 
 	if (user.status !== "CONNECTED") return null;
+
+	// Embedded (Privy) wallets have no external wallet to connect to Curve, so
+	// their primary route out is sending the deposit to a wallet they control.
+	const activeAddress = user.address.toLowerCase();
+	const embedded = wallets.find((w) => w.walletClientType === "privy");
+	const embeddedAddress = embedded?.address as Address | undefined;
+	const isEmbedded = Boolean(
+		embeddedAddress && embeddedAddress.toLowerCase() === activeAddress
+	);
 
 	const balanceStr = BREAD?.status === "SUCCESS" ? BREAD.value : "0";
 	const balance = parseFloat(balanceStr) || 0;
 	const amount = parseFloat(value) || 0;
 	const insufficient = amount > balance;
 
-	// Step 1 — pick a withdrawal method.
+	// Step 1 — pick a withdrawal method (differs by wallet type).
 	if (step === "choose") {
 		return (
 			<div className="flex flex-col gap-5">
@@ -52,26 +72,29 @@ export function WithdrawModule() {
 				</div>
 
 				<div className="flex flex-col gap-3">
-					<FundButton
-						icon={<ArrowsLeftRightIcon size={28} />}
-						title="Exchange for WXDAI"
-						subtitle="Swap on Curve at the best rate"
-						badge={
-							<Body
-								bold
-								className="bg-[#32A80014] px-2 py-0.5 text-xs text-system-green"
-							>
-								Recommended
-							</Body>
-						}
-						onClick={() =>
-							window.open(
-								CURVE_SWAP_URL,
-								"_blank",
-								"noopener,noreferrer"
-							)
-						}
-					/>
+					{isEmbedded ? (
+						<FundButton
+							icon={<PaperPlaneTiltIcon size={28} />}
+							title="Send to an external wallet"
+							subtitle="Move your deposit out to a wallet you control"
+							badge={<RecommendedBadge />}
+							onClick={() => setStep("send")}
+						/>
+					) : (
+						<FundButton
+							icon={<ArrowsLeftRightIcon size={28} />}
+							title="Exchange for WXDAI"
+							subtitle="Swap on Curve at the best rate"
+							badge={<RecommendedBadge />}
+							onClick={() =>
+								window.open(
+									CURVE_SWAP_URL,
+									"_blank",
+									"noopener,noreferrer"
+								)
+							}
+						/>
+					)}
 					<FundButton
 						icon={<CoinsIcon size={28} />}
 						title="Withdraw in xDAI"
@@ -87,12 +110,22 @@ export function WithdrawModule() {
 						className="mt-0.5 shrink-0 text-primary-orange"
 					/>
 					<Body className="text-surface-grey-2 text-xs">
-						Exchanging on Curve usually gives the best rate and keeps
-						the pool liquid. Withdrawing in xDAI removes your deposit
-						from the fund and returns it 1:1 with USD.
+						{isEmbedded
+							? "Sending to your own external wallet keeps your full balance. Withdrawing in xDAI removes your deposit from the fund and returns it 1:1 with USD."
+							: "Exchanging on Curve usually gives the best rate and keeps the pool liquid. Withdrawing in xDAI removes your deposit from the fund and returns it 1:1 with USD."}
 					</Body>
 				</div>
 			</div>
+		);
+	}
+
+	// Step 2a — embedded: send the deposit out to an external wallet.
+	if (step === "send") {
+		return (
+			<WithdrawToExternalWallet
+				user={user}
+				onBack={() => setStep("choose")}
+			/>
 		);
 	}
 
