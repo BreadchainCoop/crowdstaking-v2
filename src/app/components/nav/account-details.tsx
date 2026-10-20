@@ -7,7 +7,7 @@ import {
 	renderFormattedDecimalNumber,
 	truncateAddress,
 } from "@/app/core/util/formatter";
-import { Body, Caption, LiftedButton, Logo } from "@breadcoop/ui";
+import { Body, Caption } from "@breadcoop/ui";
 import { ArrowUpRightIcon, CopyIcon, SignOutIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
 import Image from "next/image";
@@ -86,28 +86,28 @@ const NavAccountDetails = ({
 					<ArrowUpRightIcon size={24} />
 				</Link>
 			</Item>
-			<Item Icon={WalletSvg} label="Bread Balance">
+			<Item Icon={WalletSvg} label="Balance">
 				<>
-					<Logo size={24} />
 					<Body>
 						{BREAD &&
-							BREAD.status === "SUCCESS" &&
-							BREAD.value &&
-							renderFormattedDecimalNumber(
-								formatBalance(parseFloat(BREAD.value), 2),
-							)}
+						BREAD.status === "SUCCESS" &&
+						BREAD.value
+							? `$${renderFormattedDecimalNumber(
+									formatBalance(parseFloat(BREAD.value), 2),
+								)}`
+							: "$0.00"}
 					</Body>
 				</>
 			</Item>
 			<Item Icon={HandHeartSvg} label="Donation">
 				<>
-					<Logo size={24} />
 					{BREAD &&
 						BREAD.status === "SUCCESS" &&
 						BREAD.value &&
 						apyData !== undefined && (
 							<>
 								<Caption className="text-[#EA5817]">
+									$
 									{renderFormattedDecimalNumber(
 										formatBalance(
 											parseFloat(BREAD.value) *

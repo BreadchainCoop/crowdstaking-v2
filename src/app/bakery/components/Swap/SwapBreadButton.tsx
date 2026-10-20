@@ -17,7 +17,7 @@ export default function SwapBreadButton({
 			)}
 			<div className="lifted-button-container">
 				<LiftedButton rightIcon={<ArrowUpRightIcon />}>
-					Swap BREAD for WXDAI
+					Exchange for WXDAI
 				</LiftedButton>
 			</div>
 		</ExternalLink>
