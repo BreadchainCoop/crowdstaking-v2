@@ -17,6 +17,7 @@ import { FALLBACK_APY_VALUE, useVaultAPY } from "@/app/core/hooks/useVaultAPY";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
 import { HeroImageCarousel } from "./HeroImageCarousel";
 import { SupportFundButton } from "./SupportFundButton";
+import { HowItWorks } from "../HowItWorks";
 
 // Where each stat links out to (on-chain / Dune), matching the existing widgets.
 const DUNE_URL = "https://dune.com/bread_cooperative/solidarity";
@@ -115,6 +116,8 @@ export function SolidarityHero() {
 					<Heading4 className="text-surface-brown">
 						Dedicated to funding human resilience.
 					</Heading4>
+
+					<HowItWorks className="mb-0" />
 
 					<SupportFundButton className="w-full" />
 
