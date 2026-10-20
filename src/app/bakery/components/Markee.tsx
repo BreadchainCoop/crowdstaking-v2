@@ -24,8 +24,41 @@ async function getMarkee(): Promise<MarkeeData | null> {
 	}
 }
 
-export const Markee = async () => {
+export const Markee = async ({
+	variant = "card",
+}: {
+	// "banner": a slim bar, used as the sticky top-of-screen overlay.
+	variant?: "card" | "banner";
+}) => {
 	const data = await getMarkee();
+	const message = data?.message || FALLBACK_MESSAGE;
+
+	if (variant === "banner") {
+		return (
+			<a
+				href={MARKEE_URL}
+				target="_blank"
+				rel="noopener noreferrer"
+				className="group flex min-h-12 items-center gap-3 border-b-2 border-primary-orange bg-orange-0 px-4 py-2 shadow-[0px_4px_8px_0px_#1B201A1F]"
+			>
+				<MegaphoneSimpleIcon
+					size={20}
+					weight="fill"
+					className="shrink-0 text-primary-orange"
+				/>
+				<Body bold className="min-w-0 grow text-surface-ink">
+					{message}
+				</Body>
+				<span className="flex shrink-0 items-center gap-1 text-primary-orange">
+					<Caption className="font-bold">Change message</Caption>
+					<ArrowUpRightIcon
+						size={16}
+						className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+					/>
+				</span>
+			</a>
+		);
+	}
 
 	return (
 		<a
@@ -42,7 +75,7 @@ export const Markee = async () => {
 					Message from the community
 				</Caption>
 				<Body bold className="text-surface-ink">
-					{data?.message || FALLBACK_MESSAGE}
+					{message}
 				</Body>
 				{data?.name && (
 					<Caption className="text-surface-grey-2">
@@ -50,7 +83,7 @@ export const Markee = async () => {
 					</Caption>
 				)}
 			</span>
-			<span className="hidden shrink-0 items-center gap-1 text-primary-orange sm:flex">
+			<span className="flex shrink-0 items-center gap-1 text-primary-orange">
 				<Caption className="font-bold">Change message</Caption>
 				<ArrowUpRightIcon
 					size={16}

@@ -13,10 +13,16 @@ import { HowItWorks } from "./bakery/components/HowItWorks";
 import Actions from "./bakery/components/Actions";
 import { generateMetadata } from "@/lib/site-metadata";
 import { SolidarityHero } from "./bakery/components/hero/SolidarityHero";
+import { Markee, MARKEE_ADDRESS } from "./bakery/components/Markee";
 
 export default function Home() {
 	return (
 		<>
+			{/* Server-rendered marker for markee.xyz site verification. */}
+			<span hidden data-markee-address={MARKEE_ADDRESS} />
+			<div className="sticky top-0 z-20 -mb-12">
+				<Markee variant="banner" />
+			</div>
 			<SolidarityHero />
 			<div className={clsx(WRAPPER_CLASSES, "")}>
 				<div className="mt-12 md:flex md:items-start md:justify-between md:gap-8">

@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { LiftedButton } from "@breadcoop/ui";
 import { PlayIcon } from "@phosphor-icons/react";
 import { Close as DialogClose, Title as DialogTitle } from "@radix-ui/react-dialog";
@@ -38,11 +39,11 @@ function HowItWorksVideo() {
 	);
 }
 
-export const HowItWorks = () => {
+export const HowItWorks = ({ className }: { className?: string }) => {
 	const { setModal } = useModal();
 
 	return (
-		<div className="lifted-button-container max-w-[13rem] mb-6">
+		<div className={clsx("lifted-button-container max-w-[13rem]", className ?? "mb-6")}>
 			<LiftedButton
 				preset="stroke"
 				className="border border-black !py-1 px-4 !h-8"
