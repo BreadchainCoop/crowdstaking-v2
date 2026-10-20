@@ -1,15 +1,12 @@
 "use client";
 /**
- * Withdraw button for the account dropdown. Opens the Withdraw module, where an
- * EOA chooses to exchange their deposit for WXDAI on Curve (recommended) or
- * withdraw it in xDAI (burn). Only shown for external wallets (EOAs): an
- * embedded Privy wallet withdraws by moving funds out to an external wallet,
- * which is a separate flow (see [[crowdstaking-v2-profile]] withdrawal
- * decision), so this button hides for the embedded wallet.
+ * Withdraw button for the account dropdown. Opens the Withdraw module, which
+ * adapts to the wallet type: an EOA exchanges for WXDAI on Curve (recommended)
+ * or withdraws in xDAI (burn); an embedded Privy wallet sends its deposit out
+ * to an external wallet (recommended) or withdraws in xDAI. Shown for every
+ * connected wallet.
  */
 import dynamic from "next/dynamic";
-import { Address } from "viem";
-import { useWallets } from "@privy-io/react-auth";
 import { LiftedButton } from "@breadcoop/ui";
 import { ArrowLineDownIcon } from "@phosphor-icons/react";
 import clsx from "clsx";
@@ -28,19 +25,8 @@ const WithdrawModule = dynamic(
 export function WithdrawButton({ className }: { className?: string }) {
 	const { setModal } = useModal();
 	const { user } = useConnectedUser();
-	const { wallets } = useWallets();
 
-	const activeAddress =
-		user.status === "CONNECTED" ? user.address.toLowerCase() : undefined;
-	const embedded = wallets.find((w) => w.walletClientType === "privy");
-	const embeddedAddress = embedded?.address as Address | undefined;
-	const isEmbeddedActive = Boolean(
-		embeddedAddress && embeddedAddress.toLowerCase() === activeAddress
-	);
-
-	// Embedded wallets withdraw via a separate "send to an external wallet"
-	// flow, so the EOA swap/burn options don't apply to them.
-	if (user.status !== "CONNECTED" || isEmbeddedActive) return null;
+	if (user.status !== "CONNECTED") return null;
 
 	return (
 		<div className={clsx("lifted-button-container", className)}>
