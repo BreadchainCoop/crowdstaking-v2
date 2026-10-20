@@ -24,10 +24,10 @@ import { Buy } from "./buy";
 import { TSwapMode } from "./interfaces";
 
 const notes: Record<TSwapState["mode"], string> = {
-	"BAKE": 'Baking adds new BREAD into circulation. You can redeem your BREAD through the "Burn" tab at any time',
-	"BURN": "When you Burn BREAD, you are no longer contributing to the Solidarity Fund, and all voting power will be removed.",
+	"BAKE": 'Depositing adds your funds to the Solidarity Fund. You can withdraw them through the "Withdraw" tab at any time.',
+	"BURN": "When you withdraw, you are no longer contributing to the Solidarity Fund, and all voting power will be removed.",
 	"BRIDGE": "This bridge is powered by LI.FI",
-	"BUY": "Clicking a buy button will open the selected provider's website. Follow the steps shown for your provider to end up with xDAI on Gnosis, ready to bake into BREAD.",
+	"BUY": "Clicking a buy button will open the selected provider's website. Follow the steps shown for your provider to end up with xDAI on Gnosis, ready to deposit.",
 };
 
 const validModes: TSwapMode[] = ["BAKE", "BRIDGE", "BURN", "BUY"];
@@ -110,14 +110,14 @@ const NewSwap = () => {
 			<div>
 				<div className="bg-paper-main p-1 flex items-center justify-between max-w-[20rem]">
 					<ModeBtn
-						label="Bake"
+						label="Deposit"
 						selected={swapState.mode === "BAKE"}
 						onClick={() =>
 							setSwapState({ mode: "BAKE", value: "" })
 						}
 					/>
 					<ModeBtn
-						label="Burn"
+						label="Withdraw"
 						selected={swapState.mode === "BURN"}
 						onClick={() =>
 							setSwapState({ mode: "BURN", value: "" })
@@ -211,6 +211,7 @@ const NewSwap = () => {
 											clearInputValue={clearInputValue}
 											inputValue={swapState.value}
 											isSafe={isSafe}
+											label="Deposit"
 										/>
 									) : (
 										<Burn
@@ -218,6 +219,7 @@ const NewSwap = () => {
 											clearInputValue={clearInputValue}
 											inputValue={swapState.value}
 											isSafe={isSafe}
+											label="Withdraw"
 										/>
 									);
 
