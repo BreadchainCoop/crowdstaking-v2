@@ -7,7 +7,7 @@ import {
   TToastDispatch,
 } from "@/app/core/context/ToastContext/ToastContextReducer";
 import { Toast as ToastUI, ToastContainer } from "./Toast";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 
 export function Toaster() {
   const { toastState, toastDispatch } = useToast();
@@ -15,7 +15,7 @@ export function Toaster() {
     <ToastContainer>
       <AnimatePresence>
         {toastState.map((toast, i) => (
-          <motion.div
+          <m.div
             key={`toast_${toast.id}`}
             initial={{ x: 500, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -23,7 +23,7 @@ export function Toaster() {
             transition={{ duration: 0.3 }}
           >
             <Toast toast={toast} toastDispatch={toastDispatch} />
-          </motion.div>
+          </m.div>
         ))}
       </AnimatePresence>
     </ToastContainer>

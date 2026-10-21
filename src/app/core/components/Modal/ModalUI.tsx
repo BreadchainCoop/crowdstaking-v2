@@ -3,7 +3,7 @@ import { Close as DialogPrimitiveClose } from "@radix-ui/react-dialog";
 
 import CloseIcon from "../Icons/CloseIcon";
 import { formatBalance } from "../../util/formatter";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Spinner } from "../Icons/Spinner";
 import { TTransactionStatus } from "../../context/TransactionsContext/TransactionsReducer";
 import { Body, Caption, Heading2, Heading3 } from "@breadcoop/ui";
@@ -34,7 +34,7 @@ export const ModalContainer = forwardRef(
 				className="fixed inset-0 z-40 flex items-end justify-center pointer-events-none md:items-center md:p-2"
 				{...props}
 			>
-				<motion.section
+				<m.section
 					// Slide up from below on mobile; on desktop the centered card
 					// still gets a pleasant short rise. framer accepts the "100%"
 					// transform so the sheet starts fully off the bottom edge.
@@ -61,7 +61,7 @@ export const ModalContainer = forwardRef(
 						</DialogPrimitiveClose>
 					)} */}
 					{children}
-				</motion.section>
+				</m.section>
 			</div>
 		);
 	}
@@ -145,7 +145,7 @@ export function TransactionValue({
 export const ModalOverlay = forwardRef((props, ref: Ref<HTMLDivElement>) => {
 	return (
 		<div ref={ref} {...props}>
-			<motion.div
+			<m.div
 				initial={{ opacity: 0 }}
 				animate={{ opacity: 0.9 }}
 				exit={{ opacity: 0 }}
