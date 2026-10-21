@@ -1,7 +1,6 @@
-import { ReactNode } from "react";
 import { Body } from "@breadcoop/ui";
 
-export function HowItWorksDropdown({ steps }: { steps: ReactNode[] }) {
+export function HowItWorksDropdown({ steps }: { steps: string[] }) {
   return (
     <details className="animated-details group mb-3 border border-primary-orange p-2">
       <summary className="list-none flex items-center justify-between gap-2 cursor-pointer">
@@ -14,8 +13,8 @@ export function HowItWorksDropdown({ steps }: { steps: ReactNode[] }) {
         </svg>
       </summary>
       <ol className="text-sm list-decimal list-inside space-y-1 mt-2">
-        {steps.map((step, index) => (
-          <li key={index}>{step}</li>
+        {steps.map((step) => (
+          <li key={step}>{step}</li>
         ))}
       </ol>
     </details>

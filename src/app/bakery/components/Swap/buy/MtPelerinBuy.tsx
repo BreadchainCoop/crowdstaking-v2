@@ -41,10 +41,11 @@ export function MtPelerinBuy({
       extra={
         hasMtPelerinKey && (
           <form onSubmit={e => e.preventDefault()} id={MT_PELERIN_FORM_ID} className="space-y-2">
-            <label className="text-sm font-bold text-black">
+            <label htmlFor="mt-pelerin-amount" className="text-sm font-bold text-black">
               Amount (USD) - Optional
             </label>
             <input
+              id="mt-pelerin-amount"
               type="text"
               value={amount}
               onChange={handleInputChange}
