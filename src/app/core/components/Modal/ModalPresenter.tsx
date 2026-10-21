@@ -1,6 +1,6 @@
 "use client";
 import * as Dialog from "@radix-ui/react-dialog";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useModal } from "@/app/core/context/ModalContext";
 import { ConfirmRecastModal } from "./ConfirmRecastModal";
 import { ConfirmBurnModal } from "./ConfirmBurnModal";

@@ -1,5 +1,6 @@
 "use client";
 import { ReactNode } from "react";
+import { LazyMotion, domAnimation } from "framer-motion";
 
 import { WagmiProviderWrapper } from "@/app/core/hooks/WagmiProvider/WagmiProviderWrapper";
 import { TokenBalancesProvider } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
@@ -31,7 +32,10 @@ export function AppProvider({
           <TokenBalancesProvider>
             <ToastProvider>
               <TransactionsProvider>
-                <ModalProvider>{children}</ModalProvider>
+                <ModalProvider>
+                  {/* Loads framer-motion's animation features once for every `m.*` component. */}
+                  <LazyMotion features={domAnimation}>{children}</LazyMotion>
+                </ModalProvider>
               </TransactionsProvider>
             </ToastProvider>
           </TokenBalancesProvider>

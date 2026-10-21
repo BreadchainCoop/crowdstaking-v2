@@ -1,7 +1,7 @@
 import { forwardRef, Ref, type ReactNode } from "react";
 import { Close as DialogPrimitiveClose } from "@radix-ui/react-dialog";
 import { formatBalance } from "../../util/formatter";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Spinner } from "../Icons/Spinner";
 import { TTransactionStatus } from "../../context/TransactionsContext/TransactionsReducer";
 import { Heading3 } from "@breadcoop/ui";
@@ -17,7 +17,7 @@ export const ModalContainer = forwardRef(
         className="h-screen fixed w-screen top-0 p-2 flex justify-center items-center z-50 pointer-events-none"
         {...props}
       >
-        <motion.section
+        <m.section
           initial={{ y: 8, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 8, opacity: 0 }}
@@ -28,7 +28,7 @@ export const ModalContainer = forwardRef(
             <X size={24} className="hover:cursor-pointer text-primary-orange" />
           </DialogPrimitiveClose>
           {children}
-        </motion.section>
+        </m.section>
       </div>
     );
   }
@@ -73,7 +73,7 @@ export function TransactionValue({ value }: { value: string }) {
 export const ModalOverlay = forwardRef((props, ref: Ref<HTMLDivElement>) => {
   return (
     <div ref={ref} {...props}>
-      <motion.div
+      <m.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.9 }}
         exit={{ opacity: 0 }}
