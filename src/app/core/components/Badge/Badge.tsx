@@ -41,7 +41,7 @@ export function LinkBadge({
 				className={clsx(
 					sharedClasses,
 					className
-					// "hover:text-breadpink-500 hover:border-breadpink-500 dark:hover:text-breadpink-shaded dark:hover:border-breadpink-shaded cursor-pointer transition-all"
+					// "hover:text-breadpink-500 hover:border-breadpink-500 dark:hover:text-breadpink-shaded dark:hover:border-breadpink-shaded cursor-pointer transition-colors"
 				)}
 			>
 				{icon}
@@ -65,7 +65,7 @@ export function GradientLinkBadge({
 }) {
   return (
     <GradientBorder borderWidth={2}>
-      <div className="hover:text-breadviolet-shaded dark:hover:text-breadpink-shaded cursor-pointer transition-all flex items-center gap-2 rounded-full py-[6px] px-3 bg-breadgray-ultra-white dark:bg-breadgray-charcoal">
+      <div className="hover:text-breadviolet-shaded dark:hover:text-breadpink-shaded cursor-pointer transition-colors flex items-center gap-2 rounded-full py-[6px] px-3 bg-breadgray-ultra-white dark:bg-breadgray-charcoal">
         <ExternalLink href={href}>
           <div className="flex items-center gap-2">
             {icon}
