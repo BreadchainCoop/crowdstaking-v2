@@ -49,8 +49,14 @@ export function Bridge() {
     );
     widgetEvents.on(WidgetEvent.RouteExecutionFailed, onRouteExecutionFailed);
 
-    return () => widgetEvents.all.clear();
-  }, [widgetEvents]);
+    return () => {
+      widgetEvents.off(
+        WidgetEvent.RouteExecutionCompleted,
+        onRouteExecutionCompleted
+      );
+      widgetEvents.off(WidgetEvent.RouteExecutionFailed, onRouteExecutionFailed);
+    };
+  }, [widgetEvents, setModal, toastDispatch]);
 
   return <LiFiMainWrapper />;
 }

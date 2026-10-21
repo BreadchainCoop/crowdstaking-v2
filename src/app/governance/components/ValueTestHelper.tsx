@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Hex } from "viem";
 import { Heading3, Body, Caption } from "@breadcoop/ui";
 import clsx from "clsx";
@@ -43,12 +43,15 @@ export function ValueTestHelper({
   });
 
   const [index, setIndex] = useState(0);
-  const [wins, setWins] = useState<{ [key: Hex]: number }>({});
+  // Only read in handlers, never rendered, so a ref avoids an extra re-render.
+  const winsRef = useRef<{ [key: Hex]: number }>({});
 
-  if (matchups.length === 0) {
-    onClose();
-    return null;
-  }
+  const noMatchups = matchups.length === 0;
+  useEffect(() => {
+    if (noMatchups) onClose();
+  }, [noMatchups, onClose]);
+
+  if (noMatchups) return null;
 
   const [aIdx, bIdx] = matchups[index];
   const a = cards[aIdx];
@@ -63,12 +66,12 @@ export function ValueTestHelper({
       onComplete(points);
       return;
     }
-    setWins(nextWins);
+    winsRef.current = nextWins;
     setIndex(index + 1);
   };
 
   const award = (addresses: Hex[]) => {
-    const nextWins: { [key: Hex]: number } = { ...wins };
+    const nextWins: { [key: Hex]: number } = { ...winsRef.current };
     addresses.forEach((addr) => {
       nextWins[addr] = (nextWins[addr] ?? 0) + 1;
     });
@@ -171,8 +174,9 @@ function buildCardMatchups(cards: ResolvedCard[]): [number, number][] {
     [bag[i], bag[j]] = [bag[j], bag[i]];
   }
 
+  const addressSets = cards.map((c) => new Set(c.addresses));
   const sharesProject = (x: number, y: number) =>
-    cards[x].addresses.some((addr) => cards[y].addresses.includes(addr));
+    cards[x].addresses.some((addr) => addressSets[y].has(addr));
 
   const pairs: [number, number][] = [];
   for (let i = 0; i < bag.length; i += 2) {

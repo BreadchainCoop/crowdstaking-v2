@@ -169,19 +169,18 @@ export function GovernancePage({ markee }: { markee?: ReactNode }) {
 	function updateValue(value: number, account: Hex) {
 		setVoteFormState((state) => {
 			if (!state) return state;
-			const newState = { ...state };
-			newState.projects[account] = value;
-			newState.totalPoints = Object.keys(newState.projects).reduce(
-				(acc, cur) => acc + newState.projects[cur as Hex],
+			// Copy `projects` too: mutating it in place would change the previous state.
+			const projects: { [key: Hex]: number } = { ...state.projects, [account]: value };
+			const totalPoints = Object.keys(projects).reduce(
+				(acc, cur) => acc + projects[cur as Hex],
 				0
 			);
-			return newState;
+			return { ...state, projects, totalPoints };
 		});
 	}
 
 	function distributeEqually() {
 		setVoteFormState((state) => {
-			console.log({ state });
 			if (!state) return state;
 			const newState = { ...state };
 			newState.projects = Object.keys(newState.projects).reduce<{

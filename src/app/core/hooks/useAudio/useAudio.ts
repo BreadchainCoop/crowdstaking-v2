@@ -5,20 +5,21 @@ export function useAudio({ src }: { src: string }) {
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null);
 
   useEffect(() => {
+    const controller = new AbortController();
     async function fetchAudio() {
       const audioContext = getAudioContext();
       if (!audioContext) return;
-      const arrayBuffer = await fetch(src).then((res) => res.arrayBuffer());
-      audioContext
-        .decodeAudioData(arrayBuffer)
-        .then((audioBuffer) => {
-          setAudioBuffer(audioBuffer);
-        })
-        .catch((err): void => {
-          console.log({ err });
-        });
+      const res = await fetch(src, { signal: controller.signal });
+      if (!res.ok) throw new Error(`Failed to load audio: ${res.status}`);
+      const audioBuffer = await audioContext.decodeAudioData(
+        await res.arrayBuffer()
+      );
+      if (!controller.signal.aborted) setAudioBuffer(audioBuffer);
     }
-    fetchAudio();
+    fetchAudio().catch((err): void => {
+      if (!controller.signal.aborted) console.log({ err });
+    });
+    return () => controller.abort();
   }, [src]);
 
   async function playSound() {
