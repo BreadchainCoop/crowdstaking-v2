@@ -15,7 +15,8 @@ export const ViewAnalytics = () => {
 				onClick={() => {
 					window.open(
 						"https://dune.com/bread_cooperative/solidarity",
-						"_blank"
+						"_blank",
+						"noopener,noreferrer"
 					);
 				}}
 				rightIcon={

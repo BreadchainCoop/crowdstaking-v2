@@ -15,7 +15,9 @@ export const ProjectBackers = () => {
 	const { data = FALLBACK_BREAD_BACKERS, isLoading } = useQuery({
 		queryKey: ["bread-backers"],
 		queryFn: async () => {
-			const res = (await (await fetch("/api/bread-backers")).json()) as {
+			const response = await fetch("/api/bread-backers");
+			if (!response.ok) throw new Error(`Failed to fetch backers: ${response.status}`);
+			const res = (await response.json()) as {
 				_col0: number;
 			};
 
