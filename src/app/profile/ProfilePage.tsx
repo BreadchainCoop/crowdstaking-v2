@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import clsx from "clsx";
+import dynamic from "next/dynamic";
 import { formatUnits } from "viem";
 import {
   ArrowLineDownIcon,
@@ -29,7 +30,15 @@ import { useCycleLength } from "@/app/governance/useCycleLength";
 import { WRAPPER_CLASSES } from "@/app/core/util/classes";
 import { LoginButton } from "@/app/components/login-button";
 import { FistIcon } from "@/app/core/components/Icons/FistIcon";
-import SwapWrapper from "@/app/components/SwapWrapper";
+// Adaptive deposit modal: embedded wallet -> fund-in (auto-bake), EOA ->
+// direct deposit. Deferred (LiFi/on-ramp behind it) so it loads only on click.
+const FundWallet = dynamic(
+	() =>
+		import("@/app/components/fund-wallet/FundWallet").then(
+			(mod) => mod.FundWallet
+		),
+	{ ssr: false }
+);
 import { useUserVoteCount } from "@/app/governance/useUserVoteCount";
 import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 import { copyToClipboard } from "@/utils/copy-to-clipboard";
@@ -79,10 +88,9 @@ export function ProfilePage() {
   const handleBake = () => {
     setModal({
       type: "GENERIC_MODAL",
-      showCloseButton: false,
-      includeContainerStyling: false,
-      children: <SwapWrapper />,
-      className: "max-w-[30rem]",
+      showCloseButton: true,
+      includeContainerStyling: true,
+      children: <FundWallet />,
     });
   };
 
