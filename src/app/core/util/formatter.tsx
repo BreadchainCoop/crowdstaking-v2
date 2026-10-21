@@ -13,42 +13,52 @@ interface ProjectDistribution {
 export const truncateAddress = (address: string): string =>
   `${address.slice(0, 5)}...${address.slice(address.length - 4)}`;
 
+// Intl.NumberFormat construction is expensive, so formatters are built once.
+const balanceFormatters = new Map<number, Intl.NumberFormat>();
+
 export function formatBalance(value: number, decimals: number) {
-  const balanceFormatter = new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-    minimumIntegerDigits: 1,
-    useGrouping: true,
-  });
+  let balanceFormatter = balanceFormatters.get(decimals);
+  if (!balanceFormatter) {
+    balanceFormatter = new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+      minimumIntegerDigits: 1,
+      useGrouping: true,
+    });
+    balanceFormatters.set(decimals, balanceFormatter);
+  }
   return balanceFormatter.format(value);
 }
 
+const supplyFormatter = new Intl.NumberFormat("en-US", {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+  minimumIntegerDigits: 1,
+  useGrouping: true,
+});
+
 export function formatSupply(value: number) {
-  const supplyFormatter = new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-    minimumIntegerDigits: 1,
-    useGrouping: true,
-  });
   return supplyFormatter.format(value);
 }
 
+const percentageFormatter = new Intl.NumberFormat("en-US", {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+  minimumIntegerDigits: 1,
+  useGrouping: true,
+});
+
 export function formatVotePercentage(value: number) {
-  const percentageFormatter = new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-    minimumIntegerDigits: 1,
-    useGrouping: true,
-  });
   return percentageFormatter.format(value);
 }
 
+const pointsInputFormatter = new Intl.NumberFormat("en-US", {
+  maximumFractionDigits: 0,
+  minimumIntegerDigits: 2,
+  useGrouping: true,
+});
+
 export function formatPointsInput(value: number) {
-  const pointsInputFormatter = new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: 0,
-    minimumIntegerDigits: 2,
-    useGrouping: true,
-  });
   return pointsInputFormatter.format(value);
 }
 

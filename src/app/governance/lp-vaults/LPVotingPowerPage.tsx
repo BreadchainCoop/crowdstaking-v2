@@ -15,7 +15,7 @@ export function LPVotingPowerPage() {
   const chainConfig = useActiveChain();
   const [setLocalStorage, getLocalStorage] = useLocalStorage();
 
-  const [accordionState, setAccordionState] = useState(
+  const [accordionState, setAccordionState] = useState(() =>
     getLocalStorage("lpAccordionValue")
   );
 
