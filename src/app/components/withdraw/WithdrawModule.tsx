@@ -157,6 +157,7 @@ export function WithdrawModule() {
 						}
 						inputMode="decimal"
 						placeholder="0.00"
+						aria-label="Amount in USD"
 						className="w-full bg-transparent text-2xl font-bold text-surface-ink outline-none placeholder:text-surface-grey"
 					/>
 				</div>

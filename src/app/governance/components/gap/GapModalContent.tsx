@@ -279,7 +279,12 @@ export function GapModalContent({ address }: GapModalContentProps) {
         {(gapUrl || projectHomepage) && (
           <div className="flex justify-center gap-3 flex-wrap">
             {gapUrl && (
-              <a href={gapUrl} target="_blank" rel="noopener noreferrer">
+              <a
+                href={gapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Learn more about ${projectMeta?.name || data.title || "this project"}`}
+              >
                 <LiftedButton>
                   <span className="flex items-center gap-2 whitespace-nowrap">
                     Learn More

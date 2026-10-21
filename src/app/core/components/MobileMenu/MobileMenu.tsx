@@ -35,6 +35,8 @@ export function MobileMenu({ isOpen, handleNavToggle }: IProps) {
 						<Logo text="Solidarity Fund" />
 					</Link>
 					<button
+						type="button"
+						aria-label="Close menu"
 						onClick={() => handleNavToggle()}
 						className="z-[60] h-8 w-8 text-[#EA5817] ml-auto block md:hidden"
 					>

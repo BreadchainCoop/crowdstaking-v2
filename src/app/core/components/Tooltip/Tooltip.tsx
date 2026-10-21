@@ -14,10 +14,10 @@ const Tooltip = forwardRef(
     return (
       <div>
         <ReactTooltip anchorSelect=".my-tooltip" place="top"></ReactTooltip>
-        <a data-tooltip-id={id}>
+        <button type="button" data-tooltip-id={id} aria-label="More info">
           {" "}
           <TooltipIcon />
-        </a>
+        </button>
         <ReactTooltip
           id={id}
           className="!bg-paper-main !rounded-[15px] !text-surface-grey-2 !p-5 !backdrop-blur-sm"
