@@ -254,7 +254,7 @@ export function BakeryTransactionModal({
 							ref={handImgRef}
 							src="/bake-hand.png"
 							alt=""
-							className="opacity-[0.4] transition-all duration-700 h-0"
+							className="opacity-[0.4] transition-[height] duration-700 h-0"
 						/>
 					</div>
 				) : (

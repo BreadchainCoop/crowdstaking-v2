@@ -31,7 +31,7 @@ export function BridgeBanner() {
             <BannerDescription>{BANNER_DESCRIPTION}</BannerDescription>
           </BannerLargeTextContainer>
           {/* Third Column: Arrow */}
-          <div className="flex justify-center items-center group-hover:text-breadviolet-shaded group-hover:dark:text-breadpink-300 text-breadgray-rye dark:text-breadgray-grey group-hover:translate-x-3 transition-all">
+          <div className="flex justify-center items-center group-hover:text-breadviolet-shaded group-hover:dark:text-breadpink-300 text-breadgray-rye dark:text-breadgray-grey group-hover:translate-x-3 transition-[color,translate]">
             <ArrowIcon />
           </div>
         </BannerCardLarge>
@@ -60,7 +60,7 @@ function GnosisLogoBackground() {
     <Image
       src="/gnosis-logo-bg.png"
       alt="Gnosis logo"
-      className="absolute top-0 left-0 w-auto h-auto duration-300 group-hover:opacity-100 opacity-0 transition-all z-0"
+      className="absolute top-0 left-0 w-auto h-auto duration-300 group-hover:opacity-100 opacity-0 transition-opacity z-0"
       width="222"
       height="191"
     />

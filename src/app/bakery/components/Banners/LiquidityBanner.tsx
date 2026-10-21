@@ -57,7 +57,7 @@ export function LiquidityBanner() {
               </span>
             </BannerDescription>
           </BannerLargeTextContainer>
-          <div className="w-[5%] flex justify-center items-center group-hover:text-breadviolet-shaded group-hover:dark:text-breadpink-300 text-breadgray-rye dark:text-breadgray-grey group-hover:translate-x-3 transition-all">
+          <div className="w-[5%] flex justify-center items-center group-hover:text-breadviolet-shaded group-hover:dark:text-breadpink-300 text-breadgray-rye dark:text-breadgray-grey group-hover:translate-x-3 transition-[color,translate]">
             <ArrowIcon />
           </div>
         </BannerCardLarge>

@@ -82,7 +82,7 @@ function Header() {
 						<Caret />
 					</span>
 				</Body>
-				<div className="absolute left-0 top-full mt-2 w-80 opacity-0 invisible -translate-y-4 pointer-events-none transition-all duration-300 ease-out z-50 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:pointer-events-auto lg:left-auto lg:right-0">
+				<div className="absolute left-0 top-full mt-2 w-80 opacity-0 invisible -translate-y-4 pointer-events-none transition-[opacity,visibility,translate] duration-300 ease-out z-50 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:pointer-events-auto lg:left-auto lg:right-0">
 					{/* Invisible hover bridge (eliminates gap) */}
 					<div className="h-4 -mt-4" aria-hidden="true" />
 
