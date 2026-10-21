@@ -4,7 +4,6 @@ import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBa
 import { useVaultAPY } from "@/app/core/hooks/useVaultAPY";
 import {
 	formatBalance,
-	renderFormattedDecimalNumber,
 	truncateAddress,
 } from "@/app/core/util/formatter";
 import { Body, Caption } from "@breadcoop/ui";
@@ -92,9 +91,7 @@ const NavAccountDetails = ({
 						{BREAD &&
 						BREAD.status === "SUCCESS" &&
 						BREAD.value
-							? `$${renderFormattedDecimalNumber(
-									formatBalance(parseFloat(BREAD.value), 2),
-								)}`
+							? `$${formatBalance(parseFloat(BREAD.value), 2)}`
 							: "$0.00"}
 					</Body>
 				</>
@@ -107,17 +104,14 @@ const NavAccountDetails = ({
 						apyData !== undefined && (
 							<>
 								<Caption className="text-[#EA5817]">
-									$
-									{renderFormattedDecimalNumber(
-										formatBalance(
+											{`$${formatBalance(
 											parseFloat(BREAD.value) *
 												Number(
 													formatUnits(apyData, 18),
 												),
 											2,
-										),
-									)}
-								</Caption>
+										)}`}
+										</Caption>
 								<Caption className="text-sm text-surface-ink">
 									/Yearly
 								</Caption>
