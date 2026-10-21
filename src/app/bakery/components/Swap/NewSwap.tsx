@@ -42,15 +42,17 @@ const NewSwap = () => {
 		mode: validModes.includes(tabParams) ? tabParams : "BAKE",
 		value: "",
 	});
+	const tabParam = searchParams.get("tab") as TSwapMode | null;
+	// `v` is bumped by links to re-select the current tab and clear the input.
+	const tabVersion = searchParams.get("v");
 	useEffect(() => {
-		const params = searchParams.get("tab") as unknown as TSwapMode;
-		if (validModes.includes(params)) {
+		if (tabParam && validModes.includes(tabParam)) {
 			setSwapState({
-				mode: params,
+				mode: tabParam,
 				value: "",
 			});
 		}
-	}, [searchParams.get("tab"), searchParams.get("v")]);
+	}, [tabParam, tabVersion]);
 
 	if (
 		user.status === "CONNECTED" &&
