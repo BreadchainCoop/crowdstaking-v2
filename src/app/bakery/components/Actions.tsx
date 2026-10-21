@@ -20,7 +20,7 @@ export const Actions = () => {
         rightIcon={<ArrowRightIcon />}
         preset="secondary"
         onClick={() => {
-          window.open("https://docs.bread.coop/about/bread-token/", "_blank");
+          window.open("https://docs.bread.coop/about/bread-token/", "_blank", "noopener,noreferrer");
         }}
       >
         How it works

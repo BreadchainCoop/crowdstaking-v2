@@ -11,7 +11,7 @@ const PEER_LOGO_SRC = "https://www.peer.xyz/logo192.png";
 
 export function PeerBuy({ recipientAddress }: { recipientAddress?: string }) {
   const handleBuy = () => {
-    window.open(buildPeerUrl(), "_blank");
+    window.open(buildPeerUrl(), "_blank", "noopener,noreferrer");
   };
 
   return (
