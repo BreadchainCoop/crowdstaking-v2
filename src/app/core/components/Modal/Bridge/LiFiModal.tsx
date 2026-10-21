@@ -43,7 +43,7 @@ export function LiFiBridgeModal({
 
 	useEffect(() => {
 		switchChain({ chainId: defaultChain.ID as number });
-	}, []);
+	}, [switchChain, defaultChain.ID]);
 
 	return (
 		<ModalContainer>

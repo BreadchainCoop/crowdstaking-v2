@@ -51,8 +51,11 @@ export function useAnimatedNumber(
 
 	const targetRef = useRef(target);
 	const speedRef = useRef(speed);
-	targetRef.current = target;
-	speedRef.current = speed;
+	// Declared before the animation effect so the refs are current when it runs.
+	useEffect(() => {
+		targetRef.current = target;
+		speedRef.current = speed;
+	});
 
 	useEffect(() => {
 		let last: number | null = null;
