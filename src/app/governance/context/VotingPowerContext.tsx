@@ -2,8 +2,7 @@ import {
   type ReactNode,
   createContext,
   useContext,
-  useEffect,
-  useState,
+  useMemo,
 } from "react";
 import { multicall } from "@wagmi/core";
 import { Hex } from "viem";
@@ -46,13 +45,9 @@ export function VotingPowerProvider({
 
   children: ReactNode;
 }) {
-  const [votingPowerState, setVotingPowerState] = useState<TVotingPowerState>({
-    bread: { status: "loading" },
-    butteredBread: { status: "loading" },
-  });
   const chainConfig = useActiveChain();
 
-  const { data, status, error } = useQuery({
+  const { data, status } = useQuery({
     queryKey: ["vpMulticall", chainConfig.ID, account],
     queryFn: async () => {
       return await multicall(getConfig().config, {
@@ -85,13 +80,12 @@ export function VotingPowerProvider({
     },
   });
 
-  useEffect(() => {
+  const votingPowerState = useMemo<TVotingPowerState>(() => {
     if (status === "error") {
-      setVotingPowerState(() => ({
+      return {
         bread: { status: "error" },
         butteredBread: { status: "error" },
-      }));
-      return;
+      };
     }
     if (
       status === "success" &&
@@ -100,15 +94,16 @@ export function VotingPowerProvider({
       data[1].result !== undefined
     ) {
       const cycleLength = lastClaimedBlocknumber - previousCycleStartingBlock;
-      const breadResult = data[0].result / cycleLength;
-      const butteredBreadResult = data[1].result / cycleLength;
-
-      setVotingPowerState(() => ({
-        bread: { status: "success", value: breadResult },
-        butteredBread: { status: "success", value: butteredBreadResult },
-      }));
+      return {
+        bread: { status: "success", value: data[0].result / cycleLength },
+        butteredBread: { status: "success", value: data[1].result / cycleLength },
+      };
     }
-  }, [data, status, error, lastClaimedBlocknumber, previousCycleStartingBlock]);
+    return {
+      bread: { status: "loading" },
+      butteredBread: { status: "loading" },
+    };
+  }, [data, status, lastClaimedBlocknumber, previousCycleStartingBlock]);
 
   return (
     <VotingPowerContext.Provider value={votingPowerState}>
