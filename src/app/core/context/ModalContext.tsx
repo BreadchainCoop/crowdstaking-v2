@@ -1,6 +1,6 @@
 import { TransactionType } from "@/app/governance/lp-vaults/components/VaultPanel";
 import { Route } from "@lifi/widget";
-import { ReactElement, type ReactNode, createContext, useContext, useState } from "react";
+import { ReactElement, type ReactNode, createContext, useContext, useMemo, useState } from "react";
 
 export type RecastModalState = {
   type: "CONFIRM_RECAST";
@@ -71,14 +71,11 @@ const ModalContext = createContext<ModalContext>({
 });
 
 function ModalProvider({ children }: { children: ReactNode }) {
-  const [modalState, setModalState] = useState<ModalState>(null);
-
-  function setModal(modalState: ModalState) {
-    setModalState(modalState);
-  }
+  const [modalState, setModal] = useState<ModalState>(null);
+  const value = useMemo(() => ({ modalState, setModal }), [modalState]);
 
   return (
-    <ModalContext.Provider value={{ modalState, setModal }}>
+    <ModalContext.Provider value={value}>
       {children}
     </ModalContext.Provider>
   );

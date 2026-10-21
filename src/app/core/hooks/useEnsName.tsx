@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Address, createPublicClient, http } from "viem";
 import { mainnet } from "viem/chains";
 
@@ -19,25 +19,13 @@ export type TEnsNameSuccess = { status: "SUCCESS"; ensName: string | null };
 
 export type TEnsNameState = TEnsNameLoading | TEnsNameError | TEnsNameSuccess;
 
-export function useEnsName(address: string) {
-  const [value, setValue] = useState<TEnsNameState>({ status: "LOADING" });
-  const [currentAddress, setcurrentAddress] = useState<string | null>(null);
-  // TODO need to refetch when address changes
-  useEffect(() => {
-    async function fetchEnsName() {
-      const result = await publicClient.getEnsName({
-        address: address as Address,
-      });
-      setValue({ status: "SUCCESS", ensName: result });
-    }
-    if (address !== currentAddress) {
-      setcurrentAddress(address);
-      setValue({ status: "LOADING" });
-      return;
-    }
-    if (value.status !== "LOADING" && address === currentAddress) return;
-    fetchEnsName();
-  }, [address, currentAddress, value, setValue, setcurrentAddress]);
+export function useEnsName(address: string): TEnsNameState {
+  const { data, status } = useQuery({
+    queryKey: ["ensName", address],
+    queryFn: () => publicClient.getEnsName({ address: address as Address }),
+  });
 
-  return value;
+  if (status === "error") return { status: "ERROR" };
+  if (status === "success") return { status: "SUCCESS", ensName: data };
+  return { status: "LOADING" };
 }

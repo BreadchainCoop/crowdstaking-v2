@@ -1,8 +1,6 @@
 import React, {
   createContext,
   useContext,
-  useEffect,
-  useState,
   useMemo,
   ReactNode,
 } from "react";
@@ -48,11 +46,6 @@ const ProjectsProvider = ({
 }: ProjectProviderProps) => {
   const chainConfig = useActiveChain();
   const distributorAddress = chainConfig.DISBURSER.address;
-  const [breadBalanceState, setBreadBalanceState] =
-    useState<TContractDataState>({ status: "LOADING" });
-  const [votingPowerState, setVotingPowerState] = useState<TContractDataState>({
-    status: "LOADING",
-  });
 
   // BREAD token balance
   const { data: breadBalanceData, status: breadBalanceStatus } =
@@ -77,31 +70,25 @@ const ProjectsProvider = ({
     chainId: chainConfig.ID
   });
 
-  useEffect(() => {
-    if (currentVotingPowerStatus === "error") {
-      setVotingPowerState({ status: "ERROR" });
-    } else if (
-      currentVotingPowerStatus === "success" &&
-      currentVotingPowerData
-    ) {
+  const votingPowerState = useMemo<TContractDataState>(() => {
+    if (currentVotingPowerStatus === "error") return { status: "ERROR" };
+    if (currentVotingPowerStatus === "success" && currentVotingPowerData) {
       const value = formatBalance(
         Number(formatUnits(currentVotingPowerData as bigint, 18)) / cycleLength,
         0
       );
-      setVotingPowerState({ status: "SUCCESS", dataKey: "POWER", value });
+      return { status: "SUCCESS", dataKey: "POWER", value };
     }
+    return { status: "LOADING" };
   }, [currentVotingPowerData, currentVotingPowerStatus, cycleLength]);
 
-  useEffect(() => {
-    if (breadBalanceStatus === "error") {
-      setBreadBalanceState({ status: "ERROR" });
-    } else if (breadBalanceStatus === "success" && breadBalanceData) {
-      const value = formatUnits(breadBalanceData, 18);
-      setBreadBalanceState({ status: "SUCCESS", dataKey: "BREAD", value });
-    } else if (breadBalanceStatus === "success") {
-      const value = "0.00";
-      setBreadBalanceState({ status: "SUCCESS", dataKey: "BREAD", value });
+  const breadBalanceState = useMemo<TContractDataState>(() => {
+    if (breadBalanceStatus === "error") return { status: "ERROR" };
+    if (breadBalanceStatus === "success") {
+      const value = breadBalanceData ? formatUnits(breadBalanceData, 18) : "0.00";
+      return { status: "SUCCESS", dataKey: "BREAD", value };
     }
+    return { status: "LOADING" };
   }, [breadBalanceData, breadBalanceStatus]);
 
   const value = useMemo(
@@ -116,12 +103,12 @@ const ProjectsProvider = ({
 
 // Renders project rows before on-chain data is available: balance and power
 // chips stay hidden (status LOADING) while the static text shows immediately.
+const STATIC_PROJECT_VALUE: ProjectContextType = {
+  project: { BREAD: { status: "LOADING" }, POWER: { status: "LOADING" } },
+};
+
 const StaticProjectProvider = ({ children }: { children: ReactNode }) => (
-  <ProjectContext.Provider
-    value={{
-      project: { BREAD: { status: "LOADING" }, POWER: { status: "LOADING" } },
-    }}
-  >
+  <ProjectContext.Provider value={STATIC_PROJECT_VALUE}>
     {children}
   </ProjectContext.Provider>
 );
