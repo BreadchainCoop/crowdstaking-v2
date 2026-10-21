@@ -106,6 +106,7 @@ export function WithdrawToExternalWallet({
 			<div className="flex flex-col gap-1 border border-paper-2 bg-paper-0 px-5 py-3">
 				<Body className="text-surface-grey">Destination address</Body>
 				<input
+					aria-label="Destination address"
 					value={to}
 					onChange={(e) => setTo(e.target.value.trim())}
 					placeholder="0x..."
@@ -134,6 +135,7 @@ export function WithdrawToExternalWallet({
 						}
 						inputMode="decimal"
 						placeholder="0.00"
+						aria-label="Amount in USD"
 						className="w-full bg-transparent text-2xl font-bold text-surface-ink outline-none placeholder:text-surface-grey"
 					/>
 				</div>

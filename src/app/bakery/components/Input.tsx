@@ -15,6 +15,7 @@ function Input({ name, value, handleInputChange }: TProps) {
       className="min-w-0 leading-3 truncate text-ellipsis text-[2.3rem] sm:text-[2.5rem] text-black focus-visible:outline-none"
       // focus:outline-0 focus:outline-none
       placeholder="00.00"
+      aria-label="Amount"
       inputMode="decimal"
       autoComplete="off"
       autoCorrect="off"

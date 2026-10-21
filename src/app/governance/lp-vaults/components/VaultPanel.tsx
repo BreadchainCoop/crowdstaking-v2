@@ -245,6 +245,7 @@ export function VaultPanel({ tokenAddress }: { tokenAddress: Hex }) {
                         setInputValue(sanitizeInputValue(event.target.value));
                       }}
                       placeholder="0"
+                      aria-label="Amount to lock"
                       inputMode="decimal"
                       autoComplete="off"
                       autoCorrect="off"

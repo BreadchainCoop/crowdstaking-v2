@@ -94,24 +94,30 @@ export function Swap() {
           <div className="w-full drop-shadow-swap">
             <div className="w-full ">
               <span>
-                <h3
+                <button
+                  type="button"
+                  aria-pressed={swapState.mode === "BAKE"}
                   onClick={() => setSwapState({ mode: "BAKE", value: "" })}
                   className={
                     swapState.mode === "BAKE" ? activeClasses : inactiveClasses
                   }
                 >
                   Bake
-                </h3>
-                <h3
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={swapState.mode === "BURN"}
                   onClick={() => setSwapState({ mode: "BURN", value: "" })}
                   className={
                     swapState.mode === "BURN" ? activeClasses : inactiveClasses
                   }
                 >
                   Burn
-                </h3>
+                </button>
                 {user.features.bridge && (
-                  <h3
+                  <button
+                    type="button"
+                    aria-pressed={swapState.mode === "BRIDGE"}
                     onClick={() => setSwapState({ mode: "BRIDGE", value: "" })}
                     className={
                       swapState.mode === "BRIDGE"
@@ -120,7 +126,7 @@ export function Swap() {
                     }
                   >
                     Bridge
-                  </h3>
+                  </button>
                 )}
               </span>
             </div>

@@ -13,6 +13,8 @@ function MobileNavigationToggle({
         handleClick();
       }}
       type="button"
+      aria-label={isOpen ? "Close menu" : "Open menu"}
+      aria-expanded={isOpen}
       className="z-30 h-8 w-8 text-[#EA5817] md:hidden"
     >
       {isOpen ? (

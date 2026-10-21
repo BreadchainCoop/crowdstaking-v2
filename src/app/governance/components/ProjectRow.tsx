@@ -264,6 +264,7 @@ export function VoteForm({
 					)}
 					type="text"
 					placeholder="--"
+					aria-label="Points"
 					inputMode="decimal"
 					autoComplete="off"
 					autoCorrect="off"
