@@ -124,7 +124,7 @@ function ResultsProject({
 			</Body>
 			<div className="border border-black p-1">
 				<div
-					className="h-[0.5625rem] bg-[#EA5817] transform transition-width duration-1000 ease-in-out"
+					className="h-[0.5625rem] bg-[#EA5817] transition-[width] duration-1000 ease-in-out"
 					style={{
 						width: `${percentage}%`,
 					}}

@@ -3,7 +3,7 @@ import Image from "next/image";
 export function InfoCallout() {
   return (
     <a
-      className="grow max-h-[200px] relative rounded-lg overflow-clip border border-breadgray-light-grey dark:border dark:border-breadgray-toast dark:hover:border-breadgray-light-grey transform transition-all"
+      className="grow max-h-[200px] relative rounded-lg overflow-clip border border-breadgray-light-grey dark:border dark:border-breadgray-toast dark:hover:border-breadgray-light-grey transition-colors"
       href="https://www.notion.so/breadchain/Understanding-BREAD-Voting-Power-0f2d350320b94e4ba9aeec2ef6fdcb84"
       target="_blank"
       rel="noopener noreferrer"
