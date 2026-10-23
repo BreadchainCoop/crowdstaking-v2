@@ -7,6 +7,7 @@ allowBuilds:
   "@reown/appkit": true
   "@sentry/cli": true
   bufferutil: true
+  core-js: false
   esbuild: true
   keccak: true
   sharp: true
@@ -20,14 +21,14 @@ minimumReleaseAgeExclude:
   - "@breadcoop/ui"
 
 overrides:
-  "@noble/curves": ">=1.9.0 <2"
-  "@noble/hashes": ">=1.8.0 <2"
-  "semver": ">=6.3.2"
   # @privy-io/react-auth -> x402 -> @base-org/account resolves an old
   # @coinbase/cdp-sdk@1.38.6 pinned to viem@^2.21.26, which duplicates our
   # top-level viem and breaks Turbopack's static resolution (missing chain
   # exports like `peaq`). 1.51.0+ wants viem@^2.47.0 and dedupes cleanly.
   "@coinbase/cdp-sdk": ">=1.51.0 <2"
+  "@noble/curves": ">=1.9.0 <2"
+  "@noble/hashes": ">=1.8.0 <2"
+  "semver": ">=6.3.2"
   # x402 (pulled in by @privy-io/react-auth) declares its own viem@^2.21.26,
   # which pnpm resolves as an isolated peer group with an old viem duplicate
   # (breaks Turbopack, see above). Force that edge to our pinned viem so it

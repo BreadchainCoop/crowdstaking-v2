@@ -1,6 +1,8 @@
 "use client";
 
-import { PrivyProvider as ExProvider, PrivyClientConfig, WalletListEntry } from "@privy-io/react-auth";
+import { PrivyProvider as ExProvider, PrivyClientConfig, WalletListEntry, usePrivy } from "@privy-io/react-auth";
+import { useEffect, useRef } from "react";
+import posthog from "posthog-js";
 import { gnosis } from "viem/chains";
 
 const walletList: WalletListEntry[] = [
@@ -37,7 +39,40 @@ export default function PrivyProvider({
 			clientId={process.env.NEXT_PUBLIC_PRIVY_CLIENT_ID as string}
 			config={privyConfig}
 		>
+			<PostHogIdentity />
 			{children}
 		</ExProvider>
 	);
+}
+
+function PostHogIdentity() {
+	const { ready, authenticated, user } = usePrivy();
+	const identifiedUserId = useRef<string | null>(null);
+
+	useEffect(() => {
+		if (!ready) return;
+
+		const projectToken = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
+		const host = process.env.NEXT_PUBLIC_POSTHOG_HOST;
+		if (!projectToken || !host) return;
+
+		if (authenticated && user?.id) {
+			if (identifiedUserId.current && identifiedUserId.current !== user.id) {
+				posthog.reset();
+			}
+
+			if (identifiedUserId.current !== user.id) {
+				posthog.identify(user.id);
+				identifiedUserId.current = user.id;
+			}
+			return;
+		}
+
+		if (identifiedUserId.current) {
+			posthog.reset();
+			identifiedUserId.current = null;
+		}
+	}, [authenticated, ready, user?.id]);
+
+	return null;
 }
