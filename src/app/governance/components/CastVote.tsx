@@ -13,6 +13,7 @@ import {
 import { DISTRIBUTOR_ABI } from "@/abi";
 import { Body, LiftedButton } from "@breadcoop/ui";
 import { LoginButton } from "@/app/components/login-button";
+import posthog from "posthog-js";
 
 export function CastVotePanel({
 	user,
@@ -146,6 +147,17 @@ export function CastVote({
 			setModal({ type: "VOTE_TRANSACTION", hash: null });
 
 			const hash = await writeContractAsync(prepareConfig.request);
+
+			if (
+				process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN &&
+				process.env.NEXT_PUBLIC_POSTHOG_HOST
+			) {
+				posthog.capture("governance_vote_submitted", {
+					allocation_count: vote.filter(Boolean).length,
+					is_recast: isRecasting,
+					wallet_type: isSafe ? "safe" : "wallet",
+				});
+			}
 
 			if (transactionsState.submitted.find((tx) => tx.hash === hash))
 				return;

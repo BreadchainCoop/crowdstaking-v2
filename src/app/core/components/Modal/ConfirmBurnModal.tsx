@@ -8,6 +8,7 @@ import SafeAppsSDK from "@safe-global/safe-apps-sdk/dist/src/sdk";
 import { TransactionStatus } from "@safe-global/safe-apps-sdk";
 import Button from "../Button";
 import { Body, LiftedButton } from "@breadcoop/ui";
+import posthog from "posthog-js";
 export function ConfirmBurnModal({
 	modalState,
 }: {
@@ -34,6 +35,14 @@ export function ConfirmBurnModal({
 				hash: null,
 			});
 			const hash = await modalState.write?.();
+			if (
+				process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN &&
+				process.env.NEXT_PUBLIC_POSTHOG_HOST
+			) {
+				posthog.capture("withdrawal_transaction_submitted", {
+					wallet_type: modalState.isSafe ? "safe" : "wallet",
+				});
+			}
 			if (transactionsState.submitted.find((tx) => tx.hash === hash))
 				return;
 			if (modalState.isSafe) {
