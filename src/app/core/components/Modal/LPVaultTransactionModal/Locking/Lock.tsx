@@ -12,6 +12,7 @@ import { Body, LiftedButton } from "@breadcoop/ui";
 import { LockVPRate } from "../VPRate";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
 import { ArrowUpRightIcon } from "@phosphor-icons/react/ssr";
+import posthog from "posthog-js";
 
 export function Lock({
   user,
@@ -157,6 +158,12 @@ export function Lock({
         onClick={() => {
           if (!contractWriteWrite) return;
           setIsWalletOpen(true);
+          if (
+            process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN &&
+            process.env.NEXT_PUBLIC_POSTHOG_HOST
+          ) {
+            posthog.capture("lp_tokens_lock_started");
+          }
           contractWriteWrite(prepareWriteConfig!.request);
         }}
         disabled={isWalletOpen}

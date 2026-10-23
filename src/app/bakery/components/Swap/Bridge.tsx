@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { useModal } from "@/app/core/context/ModalContext";
 import { useToast } from "@/app/core/context/ToastContext/ToastContext";
 import { lifiConfig } from "@/lib/lifi";
+import posthog from "posthog-js";
 
 export function Bridge() {
   /*
@@ -25,6 +26,12 @@ export function Bridge() {
   useEffect(() => {
     const onRouteExecutionCompleted = (route: Route) => {
       console.log("__ BRIDGE COMPLETED __", route);
+      if (
+        process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN &&
+        process.env.NEXT_PUBLIC_POSTHOG_HOST
+      ) {
+        posthog.capture("bridge_route_completed");
+      }
       setModal({ type: "LIFI_BRIDGE", route });
     };
     const onRouteExecutionFailed = (update: RouteExecutionUpdate) => {

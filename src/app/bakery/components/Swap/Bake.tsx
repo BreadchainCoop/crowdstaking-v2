@@ -11,6 +11,7 @@ import { TransactionStatus } from "@safe-global/safe-apps-sdk/dist/src/types";
 import { useModal } from "@/app/core/context/ModalContext";
 import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 import { LiftedButton } from "@breadcoop/ui";
+import posthog from "posthog-js";
 
 export default function Bake({
 	user,
@@ -71,6 +72,15 @@ export default function Bake({
 			});
 
 			const hash = await writeContractAsync(prepareConfig.request);
+
+			if (
+				process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN &&
+				process.env.NEXT_PUBLIC_POSTHOG_HOST
+			) {
+				posthog.capture("bake_transaction_submitted", {
+					wallet_type: isSafe ? "safe" : "wallet",
+				});
+			}
 
 			if (transactionsState.submitted.find((tx) => tx.hash === hash))
 				return;

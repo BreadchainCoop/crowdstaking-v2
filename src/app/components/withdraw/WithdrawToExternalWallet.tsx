@@ -13,6 +13,7 @@ import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBa
 import { useToast } from "@/app/core/context/ToastContext/ToastContext";
 import { useModal } from "@/app/core/context/ModalContext";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
+import posthog from "posthog-js";
 
 /**
  * Withdraw flow for an embedded (Privy) wallet: there's no external wallet to
@@ -62,6 +63,12 @@ export function WithdrawToExternalWallet({
 		if (!writeContractAsync || !prepareConfig || isPending) return;
 		try {
 			await writeContractAsync(prepareConfig.request);
+			if (
+				process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN &&
+				process.env.NEXT_PUBLIC_POSTHOG_HOST
+			) {
+				posthog.capture("external_wallet_withdrawal_submitted");
+			}
 			toastDispatch({
 				type: "CUSTOM",
 				payload: {
