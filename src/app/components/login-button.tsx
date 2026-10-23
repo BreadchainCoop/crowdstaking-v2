@@ -4,6 +4,7 @@ import { TConnectedUserState } from "../core/hooks/useConnectedUser";
 import { LiftedButton } from "@breadcoop/ui";
 import { SignIn } from "@phosphor-icons/react";
 import { ButtonShell } from "../bakery/components/Swap/button-shell";
+import posthog from "posthog-js";
 
 export const LoginButton = ({
 	user,
@@ -54,7 +55,15 @@ function CustomLoginButton({ label = "Sign In" }: { label?: string }) {
 			className="[&>*]:w-full"
 		>
 			<LiftedButton
-				onClick={() => login()}
+				onClick={() => {
+					if (
+						process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN &&
+						process.env.NEXT_PUBLIC_POSTHOG_HOST
+					) {
+						posthog.capture("sign_in_started");
+					}
+					login();
+				}}
 				rightIcon={<SignIn />}
 				className="w-full"
 			>

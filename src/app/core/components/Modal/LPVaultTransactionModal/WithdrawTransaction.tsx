@@ -22,6 +22,7 @@ import {
 import { TTransactionHash } from "@/app/core/context/TransactionsContext/TransactionsReducer";
 import SafeAppsSDK from "@safe-global/safe-apps-sdk/dist/src/sdk";
 import { TransactionStatus } from "@safe-global/safe-apps-sdk/dist/src/types";
+import posthog from "posthog-js";
 
 type WithdrawStatus = "idle" | "submitted" | "confirmed" | "reverted";
 
@@ -89,6 +90,15 @@ export function WithdrawTransaction({
 
 		try {
 			const hash = await writeContractAsync(prepareWrite.data.request);
+
+			if (
+				process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN &&
+				process.env.NEXT_PUBLIC_POSTHOG_HOST
+			) {
+				posthog.capture("lp_tokens_unlock_submitted", {
+					wallet_type: isSafe ? "safe" : "wallet",
+				});
+			}
 
 			if (isSafe) {
 				const safeSdk = new SafeAppsSDK();

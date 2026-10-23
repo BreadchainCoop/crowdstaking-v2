@@ -11,6 +11,7 @@ import {
 	FundAsset,
 	useFundFromConnectedWallet,
 } from "./useFundFromConnectedWallet";
+import posthog from "posthog-js";
 
 /**
  * "Fund from your wallet" — send xDAI or BREAD from a browser-injected wallet
@@ -54,6 +55,12 @@ export function FundFromWallet({
 		setBusy(true);
 		try {
 			await fund(asset, amount);
+			if (
+				process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN &&
+				process.env.NEXT_PUBLIC_POSTHOG_HOST
+			) {
+				posthog.capture("wallet_funding_submitted", { asset });
+			}
 			onDone();
 		} catch (e) {
 			setError(e instanceof Error ? e.message : "Funding failed");
