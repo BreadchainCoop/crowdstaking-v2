@@ -48,6 +48,7 @@ export default function PrivyProvider({
 function PostHogIdentity() {
 	const { ready, authenticated, user } = usePrivy();
 	const identifiedUserId = useRef<string | null>(null);
+	const wasAuthenticated = useRef(authenticated);
 
 	useEffect(() => {
 		if (!ready) return;
@@ -65,9 +66,15 @@ function PostHogIdentity() {
 				posthog.identify(user.id);
 				identifiedUserId.current = user.id;
 			}
+
+			if (!wasAuthenticated.current) {
+				posthog.capture("sign_in_completed");
+			}
+			wasAuthenticated.current = true;
 			return;
 		}
 
+		wasAuthenticated.current = false;
 		if (identifiedUserId.current) {
 			posthog.reset();
 			identifiedUserId.current = null;
