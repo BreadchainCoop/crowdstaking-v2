@@ -1,5 +1,6 @@
 .PHONY: help install env anvil chain-setup clean-contracts deploy-contracts dev build-contracts test-contracts start-local first-time-start-local
 
+ANVIL_HARDFORK 		:= prague
 ANVIL_RPC_URL     := https://rpc.gnosis.gateway.fm
 ANVIL_CHAIN_ID    := 31337
 ANVIL_BLOCK_TIME  := 5
@@ -47,7 +48,8 @@ anvil: ## Start a local Anvil fork of Gnosis chain (blocks every 5s)
 	anvil \
 		--fork-url $(ANVIL_RPC_URL) \
 		--chain-id $(ANVIL_CHAIN_ID) \
-		--block-time $(ANVIL_BLOCK_TIME)
+		--block-time $(ANVIL_BLOCK_TIME) \
+		--hardfork $(ANVIL_HARDFORK)
 
 # ─── Chain setup (fund dev wallet, mint BREAD, LP tokens) ────────────────────
 
