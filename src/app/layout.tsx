@@ -6,7 +6,6 @@ import { AppProvider } from "./core/hooks/AppProvider";
 import "./app.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import { Metadata } from "next";
-import Script from "next/script";
 import { ReactNode } from "react";
 import Header from "./core/components/Header/Header";
 import { ModalPresenter } from "./core/components/Modal/ModalPresenter";
@@ -38,11 +37,6 @@ export default function App({ children }: { children: React.ReactNode }) {
       <head>
 				<link rel="icon" type="image/svg+xml" href="/favicon.ico" />
 
-				<Script
-					defer
-					data-domain="app.breadchain.xyz"
-					src="https://analytics.breadchain.xyz/js/script.tagged-events.outbound-links.js"
-				/>
         <style
 					dangerouslySetInnerHTML={{
 						__html: `
