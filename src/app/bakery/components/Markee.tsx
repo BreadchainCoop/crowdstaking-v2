@@ -28,12 +28,7 @@ export const Markee = async () => {
 	const data = await getMarkee();
 
 	return (
-		<a
-			href={MARKEE_URL}
-			target="_blank"
-			rel="noopener noreferrer"
-			className="group flex items-center gap-4 border-l-4 border-primary-orange bg-orange-0 px-5 py-4 shadow-[0px_4px_8px_0px_#1B201A0F] transition-colors hover:bg-paper-0"
-		>
+		<div className="flex items-center gap-4 border-l-4 border-primary-orange bg-orange-0 px-5 py-4 shadow-[0px_4px_8px_0px_#1B201A0F]">
 			<span className="flex h-10 w-10 shrink-0 items-center justify-center bg-white text-primary-orange">
 				<MegaphoneSimpleIcon size={24} weight="fill" />
 			</span>
@@ -50,13 +45,18 @@ export const Markee = async () => {
 					</Caption>
 				)}
 			</span>
-			<span className="hidden shrink-0 items-center gap-1 text-primary-orange sm:flex">
+			<a
+				href={MARKEE_URL}
+				target="_blank"
+				rel="noopener noreferrer"
+				className="group flex shrink-0 items-center gap-1 text-primary-orange hover:underline"
+			>
 				<Caption className="font-bold">Change message</Caption>
 				<ArrowUpRightIcon
 					size={16}
 					className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
 				/>
-			</span>
-		</a>
+			</a>
+		</div>
 	);
 };
