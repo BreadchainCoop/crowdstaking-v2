@@ -25,16 +25,18 @@ const Item = ({
 	Icon,
 	label,
 	children,
+	childrenClassName
 }: {
 	Icon: () => JSX.Element;
 	label: string;
 	children: ReactNode;
+	childrenClassName?: string
 }) => {
 	return (
 		<li className={clsx("flex items-center justify-start gap-2")}>
 			<Icon />
 			<Body className="mr-auto ml-2">{label}</Body>
-			<div className="flex items-center justify-center gap-2">
+			<div className={clsx("flex items-center justify-center gap-2", childrenClassName)}>
 				{children}
 			</div>
 		</li>
@@ -87,26 +89,23 @@ const NavAccountDetails = ({
 				</Link>
 			</Item>
 			<Item Icon={WalletSvg} label="Balance">
-				<>
-					<Body>
-						{BREAD &&
-						BREAD.status === "SUCCESS" &&
-						BREAD.value
-							? `$${renderFormattedDecimalNumber(
-									formatBalance(parseFloat(BREAD.value), 2),
-								)}`
-							: "$0.00"}
-					</Body>
-				</>
+				<div className="inline-flex items-center justify-center gap-0.5">
+					<Caption>$</Caption>
+					{renderFormattedDecimalNumber(
+						BREAD && BREAD.status === "SUCCESS" && BREAD.value
+							? formatBalance(parseFloat(BREAD.value), 2)
+							: "0.00",
+					)}
+				</div>
 			</Item>
-			<Item Icon={HandHeartSvg} label="Donation">
+			<Item Icon={HandHeartSvg} label="Donation" childrenClassName="gap-0!">
 				<>
 					{BREAD &&
 						BREAD.status === "SUCCESS" &&
 						BREAD.value &&
 						apyData !== undefined && (
 							<>
-								<Caption className="text-[#EA5817]">
+								<Caption className="text-core-orange inline-flex items-center justify-center gap-0.5">
 									$
 									{renderFormattedDecimalNumber(
 										formatBalance(
