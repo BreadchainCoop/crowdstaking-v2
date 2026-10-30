@@ -24,6 +24,22 @@ async function getMarkee(): Promise<MarkeeData | null> {
 	}
 }
 
+// Only this link navigates, so the message text stays selectable and copyable.
+const ChangeMessageLink = () => (
+	<a
+		href={MARKEE_URL}
+		target="_blank"
+		rel="noopener noreferrer"
+		className="group flex shrink-0 items-center gap-1 text-primary-orange hover:underline"
+	>
+		<Caption className="font-bold">Change message</Caption>
+		<ArrowUpRightIcon
+			size={16}
+			className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+		/>
+	</a>
+);
+
 export const Markee = async ({
 	variant = "card",
 }: {
@@ -35,12 +51,7 @@ export const Markee = async ({
 
 	if (variant === "banner") {
 		return (
-			<a
-				href={MARKEE_URL}
-				target="_blank"
-				rel="noopener noreferrer"
-				className="group flex min-h-12 items-center gap-3 border-b-2 border-primary-orange bg-orange-0 px-4 py-2 shadow-[0px_4px_8px_0px_#1B201A1F]"
-			>
+			<div className="flex min-h-12 items-center gap-3 border-b-2 border-primary-orange bg-orange-0 px-4 py-2 shadow-[0px_4px_8px_0px_#1B201A1F]">
 				<MegaphoneSimpleIcon
 					size={20}
 					weight="fill"
@@ -49,24 +60,13 @@ export const Markee = async ({
 				<Body bold className="min-w-0 grow text-surface-ink">
 					{message}
 				</Body>
-				<span className="flex shrink-0 items-center gap-1 text-primary-orange">
-					<Caption className="font-bold">Change message</Caption>
-					<ArrowUpRightIcon
-						size={16}
-						className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-					/>
-				</span>
-			</a>
+				<ChangeMessageLink />
+			</div>
 		);
 	}
 
 	return (
-		<a
-			href={MARKEE_URL}
-			target="_blank"
-			rel="noopener noreferrer"
-			className="group flex items-center gap-4 border-l-4 border-primary-orange bg-orange-0 px-5 py-4 shadow-[0px_4px_8px_0px_#1B201A0F] transition-colors hover:bg-paper-0"
-		>
+		<div className="flex items-center gap-4 border-l-4 border-primary-orange bg-orange-0 px-5 py-4 shadow-[0px_4px_8px_0px_#1B201A0F]">
 			<span className="flex h-10 w-10 shrink-0 items-center justify-center bg-white text-primary-orange">
 				<MegaphoneSimpleIcon size={24} weight="fill" />
 			</span>
@@ -83,13 +83,7 @@ export const Markee = async ({
 					</Caption>
 				)}
 			</span>
-			<span className="flex shrink-0 items-center gap-1 text-primary-orange">
-				<Caption className="font-bold">Change message</Caption>
-				<ArrowUpRightIcon
-					size={16}
-					className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-				/>
-			</span>
-		</a>
+			<ChangeMessageLink />
+		</div>
 	);
 };
