@@ -42,7 +42,7 @@
     "framer-motion": "^10.18.0",
     "graphql-request": "^7.1.2",
     "nanoid": "^5.0.7",
-    "next": "15.5.18",
+    "next": "15.5.29",
     "pino-pretty": "^11.2.2",
     "posthog-js": "^1.438.12",
     "react": "^19.1.0",
