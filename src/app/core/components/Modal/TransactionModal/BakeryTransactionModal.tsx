@@ -458,7 +458,8 @@ const BottomContent = ({ txStatus, data, hash, newSupply }: IBottomContent) => {
 						onClick={() => {
 							window.open(
 								CURVE_POOL_URL,
-								"_blank"
+								"_blank",
+								"noopener,noreferrer"
 							);
 						}}
 					>
