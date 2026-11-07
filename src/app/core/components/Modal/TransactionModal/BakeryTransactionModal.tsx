@@ -136,12 +136,160 @@ https://fund.bread.coop`;
 	);
 }
 
+type TTransactionsState = ReturnType<typeof useTransactions>["transactionsState"];
+
+type TBakeryTransaction = {
+	status: TTransactionStatus;
+	data: { type: "BAKE" | "BURN"; value: string; isSafe?: boolean };
+	hash: `0x${string}` | null;
+};
+
+/** The pending (or submitted bake/burn) transaction this modal is showing. */
+function getBakeryTransaction(
+	transactionsState: TTransactionsState,
+	hash: BakeryTransactionModalState["hash"]
+): TBakeryTransaction {
+	const transaction = transactionsState.new
+		? {
+				status: "PREPARED",
+				data: transactionsState.new,
+				hash: null,
+		  }
+		: transactionsState.submitted.find(
+				(transaction) =>
+					transaction.hash === hash &&
+					["BAKE", "BURN"].includes(transaction.data.type)
+		  );
+
+	if (!transaction)
+		throw new Error("Transaction modal requires a transaction!");
+
+	const { type } = transaction.data;
+	if (type !== "BAKE" && type !== "BURN") {
+		throw new Error("Incorrect transaction type for modal!");
+	}
+
+	return transaction as TBakeryTransaction;
+}
+
+function calculateAnnualFundingValue(breadValue: string, APY: bigint) {
+	const calculatedValue =
+		parseFloat(breadValue) * Number(formatUnits(APY, 18));
+	return formatBalance(calculatedValue, 2);
+}
+
+/** Past / additional / total annual funding shown after a confirmed bake. */
+function getAnnualFunding(
+	transaction: TBakeryTransaction,
+	APY: bigint | undefined,
+	breadBalance: string | undefined
+) {
+	if (
+		transaction.status !== "CONFIRMED" ||
+		APY === undefined ||
+		breadBalance === undefined
+	) {
+		return { past: "0.00", additional: "0.00", total: "0.00" };
+	}
+
+	const total = calculateAnnualFundingValue(breadBalance, APY);
+	const additional = calculateAnnualFundingValue(
+		transaction.data.value,
+		APY
+	);
+	const past = formatBalance(parseFloat(total) - parseFloat(additional), 2);
+
+	return { past, additional, total };
+}
+
+/**
+ * BREAD total supply after this deposit. Once a new block has arrived the
+ * fetched supply already includes it; before that, add the amount manually.
+ */
+function computeNewSupply(
+	amount: string,
+	supply: unknown,
+	startingBlockNumber: bigint | undefined,
+	currentBlockNumber: bigint | undefined
+) {
+	if (
+		startingBlockNumber === undefined ||
+		currentBlockNumber === undefined ||
+		typeof supply !== "bigint"
+	) {
+		return null;
+	}
+
+	const fetchedSupply = parseInt(formatUnits(supply, 18));
+
+	if (startingBlockNumber < currentBlockNumber) return fetchedSupply;
+
+	return Number(Number(amount).toFixed()) + fetchedSupply;
+}
+
+function StatusIllustration({
+	transaction,
+}: {
+	transaction: TBakeryTransaction;
+}) {
+	const handImgRef = useRef<HTMLImageElement>(null);
+	const isConfirmedBake =
+		transaction.status === "CONFIRMED" && transaction.data.type === "BAKE";
+
+	useEffect(() => {
+		if (!isConfirmedBake) return;
+
+		handImgRef.current?.classList.add("h-[5.5rem]");
+		handImgRef.current?.classList.remove("h-0");
+	}, [isConfirmedBake]);
+
+	if (!isConfirmedBake) return <>{transactionIcons[transaction.status]}</>;
+
+	return (
+		<div className="overflow-hidden max-w-max">
+			<img
+				ref={handImgRef}
+				src="/bake-hand.png"
+				alt=""
+				className="opacity-[0.4] transition-[height] duration-700 h-0"
+			/>
+		</div>
+	);
+}
+
+function TransactionAmount({
+	transaction,
+}: {
+	transaction: TBakeryTransaction;
+}) {
+	const isConfirmed = transaction.status === "CONFIRMED";
+	const isBake = transaction.data.type === "BAKE";
+	const isBurn = transaction.data.type === "BURN";
+
+	return (
+		<div
+			className={clsx(
+				"flex gap-2 items-center justify-center",
+				isConfirmed && "mb-4",
+				(isBake || (isConfirmed && isBurn)) &&
+					"border border-system-green flex items-center justify-center gap-2.5 px-1",
+				isBurn && "mt-2"
+			)}
+		>
+			{isBake && (
+				<span className="text-2xl font-bold text-surface-ink">$</span>
+			)}
+			{isBurn && <XDAIIcon />}
+			<TransactionValue value={transaction.data.value || "0"} />
+		</div>
+	);
+}
+
 export function BakeryTransactionModal({
 	modalState,
 }: {
 	modalState: BakeryTransactionModalState;
 }) {
-	const handImgRef = useRef<HTMLImageElement>(null);
 	const { data: APY } = useVaultAPY();
 	const { BREAD } = useTokenBalances();
 	const { data: supply } = useRefetchOnBlockChange(
@@ -152,178 +300,62 @@ export function BakeryTransactionModal({
 	);
 
 	const { transactionsState } = useTransactions();
-	const { data: currentBlockNumberData } = useBlockNumber({
+	const chainId = useActiveChain().ID;
+	const { data: currentBlockNumber } = useBlockNumber({
 		watch: true,
-		chainId: useActiveChain().ID,
+		chainId,
 	});
-	const { data: startingBlockNumber } = useBlockNumber({
-		chainId: useActiveChain().ID,
-	});
-	const transaction = transactionsState.new
-		? {
-				status: "PREPARED",
-				data: transactionsState.new,
-				hash: null,
-		  }
-		: transactionsState.submitted.find(
-				(transaction) =>
-					transaction.hash === modalState.hash &&
-					["BAKE", "BURN"].includes(transaction.data.type)
-		  );
+	const { data: startingBlockNumber } = useBlockNumber({ chainId });
 
-	if (!transaction)
-		throw new Error("Transaction modal requires a transaction!");
+	const transaction = getBakeryTransaction(
+		transactionsState,
+		modalState.hash
+	);
+	const { status: txStatus, data } = transaction;
+	const isConfirmed = txStatus === "CONFIRMED";
 
-	if (
-		transaction.data.type === "VOTE" ||
-		transaction.data.type === "LP_VAULT_ALLOWANCE" ||
-		transaction.data.type === "LP_VAULT_DEPOSIT" ||
-		transaction.data.type === "LP_VAULT_WITHDRAW"
-	) {
-		throw new Error("Incorrect transaction type for modal!");
-	}
+	const funding = getAnnualFunding(
+		transaction,
+		APY,
+		BREAD?.status === "SUCCESS" ? BREAD.value : undefined
+	);
 
-	const txStatus = transaction.status as TTransactionStatus;
-
-	const calculateAnnualFundingValue = (breadValue: string, APY: bigint) => {
-		const calculatedValue =
-			parseFloat(breadValue) * Number(formatUnits(APY, 18));
-		return formatBalance(calculatedValue, 2);
-	};
-
-	function newSupply(amount: string) {
-		if (
-			supply === undefined ||
-			startingBlockNumber === undefined ||
-			currentBlockNumberData === undefined ||
-			typeof supply !== "bigint"
-		) {
-			return null;
-		}
-
-		if (startingBlockNumber < currentBlockNumberData) {
-			return parseInt(formatUnits(supply, 18));
-		}
-
-		return (
-			Number(Number(amount).toFixed()) + parseInt(formatUnits(supply, 18))
-		);
-	}
-
-	let pastBreadCoop = "0.00";
-	let additionalBreadCoop = "0.00";
-	let totalBreadCoop = "0.00";
-
-	if (
-		transaction.status === "CONFIRMED" &&
-		APY !== undefined &&
-		BREAD?.status === "SUCCESS"
-	) {
-		totalBreadCoop = calculateAnnualFundingValue(BREAD.value, APY);
-		additionalBreadCoop = calculateAnnualFundingValue(
-			transaction.data.value,
-			APY
-		);
-		pastBreadCoop = formatBalance(
-			parseFloat(totalBreadCoop) - parseFloat(additionalBreadCoop),
-			2
-		);
-	}
-
-	useEffect(() => {
-		const animateHandImg = async () => {
-			if (txStatus !== "CONFIRMED") return;
-
-			handImgRef.current?.classList.add("h-[5.5rem]");
-			handImgRef.current?.classList.remove("h-0");
-		};
-
-		animateHandImg();
-	}, [txStatus]);
+	const newSupply = (amount: string) =>
+		computeNewSupply(amount, supply, startingBlockNumber, currentBlockNumber);
 
 	return (
 		<ModalContainer>
-			<ModalHeading>
-				{makeHeaderText(transaction.data.type, txStatus)}
-			</ModalHeading>
+			<ModalHeading>{makeHeaderText(data.type, txStatus)}</ModalHeading>
 
 			<ModalContent>
-				{txStatus === "CONFIRMED" &&
-				transaction.data.type === "BAKE" ? (
-					<div className="overflow-hidden max-w-max">
-						<img
-							ref={handImgRef}
-							src="/bake-hand.png"
-							alt=""
-							className="opacity-[0.4] transition-[height] duration-700 h-0"
-						/>
-					</div>
-				) : (
-					<>{transactionIcons[txStatus]}</>
-				)}
-				{transaction.status === "CONFIRMED" && (
+				<StatusIllustration transaction={transaction} />
+				{isConfirmed && (
 					<ModalAdviceText>
-						{modalAdviceText(transaction.data.type, txStatus)}
+						{modalAdviceText(data.type, txStatus)}
 					</ModalAdviceText>
 				)}
-				<div
-					className={clsx(
-						"flex gap-2 items-center justify-center",
-						transaction.status === "CONFIRMED" ? "mb-4" : "",
-						transaction.data.type === "BAKE" ||
-							(transaction.status === "CONFIRMED" &&
-								transaction.data.type === "BURN")
-							? "border border-system-green flex items-center justify-center gap-2.5 px-1"
-							: "",
-						transaction.data.type === "BURN" ? "mt-2" : ""
-					)}
-				>
-					{transaction.data.type === "BAKE" && (
-						<span className="text-2xl font-bold text-surface-ink">
-							$
-						</span>
-					)}
-					{transaction.data.type === "BURN" && <XDAIIcon />}
-					<TransactionValue
-						value={
-							transaction.data.value
-								? transaction.data.value
-								: "0"
-						}
+				<TransactionAmount transaction={transaction} />
+				{isConfirmed && data.type === "BAKE" && (
+					<MiddleContent
+						pastBreadCoop={funding.past}
+						additionalBreadCoop={funding.additional}
+						totalBreadCoop={funding.total}
+						transactionHash={transaction.hash || ""}
 					/>
-					{/*  */}
-					{/* {transaction.data.type !== "BAKE" && (
-						<TokenLabelContainer>
-							<BreadIcon />
-							<TokenLabelText>BREAD</TokenLabelText>
-						</TokenLabelContainer>
-					)} */}
-				</div>
-				{transaction.status === "CONFIRMED" &&
-					transaction.data.type === "BAKE" && (
-						<MiddleContent
-							pastBreadCoop={pastBreadCoop}
-							additionalBreadCoop={additionalBreadCoop}
-							totalBreadCoop={totalBreadCoop}
-							transactionHash={transaction.hash || ""}
-						/>
-					)}
+				)}
 				<BottomContent
-					txStatus={transaction.status}
-					data={transaction.data}
+					txStatus={txStatus}
+					data={data}
 					hash={transaction.hash}
 					newSupply={newSupply}
 				/>
-				{transaction.status === "CONFIRMED" &&
-					transaction.data.type === "BURN" && (
-						<DialogPrimitiveClose asChild>
-							<div className="lifted-button-container mt-14">
-								<LiftedButton preset="secondary">
-									Close
-								</LiftedButton>
-							</div>
-						</DialogPrimitiveClose>
-					)}
+				{isConfirmed && data.type === "BURN" && (
+					<DialogPrimitiveClose asChild>
+						<div className="lifted-button-container mt-14">
+							<LiftedButton preset="secondary">Close</LiftedButton>
+						</div>
+					</DialogPrimitiveClose>
+				)}
 			</ModalContent>
 		</ModalContainer>
 	);
