@@ -3,18 +3,20 @@ import { LoginButton } from "@/app/components/login-button";
 import NavAccountMenu from "@/app/components/nav/account-menu";
 import PageMenuLink from "./page-menu-link";
 import { SafeIndicatorBadge } from "./SafeIndicatorBadge";
+import { useOpenFundWallet } from "@/app/components/fund-wallet/useOpenFundWallet";
 
 function DesktopNavigation({ currentPath }: { currentPath: string }) {
 	const { user, isSafe } = useConnectedUser();
+	const openFundWallet = useOpenFundWallet();
 	return (
 		<div className="hidden md:flex md:flex-grow md:items-center md:gap-8 md:ml-auto md:max-w-max">
 			<nav
 				aria-label="site navigation"
 				className="flex items-center justify-start gap-4"
 			>
-				<PageMenuLink isCurrentPage={currentPath === "/"} href="/">
-					Bake
-				</PageMenuLink>
+				{/* The homepage has no bake form, so "Bake" opens the deposit
+				    flow directly instead of linking back to "/". */}
+				<PageMenuLink onClick={openFundWallet}>Bake</PageMenuLink>
 				{user.features.governancePage === true && (
 					<PageMenuLink
 						isCurrentPage={currentPath.includes("/governance")}
