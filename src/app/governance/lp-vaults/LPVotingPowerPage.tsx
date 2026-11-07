@@ -9,6 +9,7 @@ import { PageGrid } from "@/app/governance/components/PageGrid";
 import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 import { Body, Heading3, Caption, LiftedButton, Heading5 } from "@breadcoop/ui";
 import { ArrowUpRightIcon, ArrowRightIcon } from "@phosphor-icons/react/ssr";
+import { CURVE_DEPOSIT_URL } from "@/constants";
 
 export function LPVotingPowerPage() {
   const { user } = useConnectedUser();
@@ -96,6 +97,13 @@ function TitleSection() {
 				</Caption>
 				<div className="pt-4">
 					<LiftedButton
+						onClick={() =>
+							window.open(
+								CURVE_DEPOSIT_URL,
+								"_blank",
+								"noopener,noreferrer"
+							)
+						}
 						className="group relative py-10 px-10 bg-contain bg-right bg-no-repeat"
 						style={{ backgroundImage: "url(/bread-logo-line.png)" }}
 					>
