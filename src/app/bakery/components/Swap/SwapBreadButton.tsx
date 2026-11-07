@@ -1,5 +1,5 @@
 import { ExternalLink } from "@/app/core/components/ExternalLink";
-import { CURVE_SWAP_URL } from "@/constants";
+import { CURVE_POOL_URL } from "@/constants";
 import { Body, LiftedButton } from "@breadcoop/ui";
 import { ArrowUpRightIcon } from "@phosphor-icons/react";
 
@@ -9,7 +9,7 @@ export default function SwapBreadButton({
 	withRecommended: boolean;
 }) {
 	return (
-		<ExternalLink href={CURVE_SWAP_URL} className="w-full">
+		<ExternalLink href={CURVE_POOL_URL} className="w-full">
 			{withRecommended && (
 				<Body bold className="text-center text-system-green">
 					Recommended

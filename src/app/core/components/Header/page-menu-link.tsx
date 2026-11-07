@@ -6,7 +6,8 @@ import { ReactNode } from "react";
 
 interface PageMenuLinkProps {
 	children: ReactNode;
-	href: string;
+	/** Omit to render a button that only runs `onClick`. */
+	href?: string;
 	onClick?: () => void;
 	isCurrentPage?: boolean;
 	isExternal?: boolean;
@@ -29,6 +30,14 @@ const PageMenuLink = ({
 			  }`
 			: "text-text-standard"
 	);
+
+	if (!href) {
+		return (
+			<button type="button" onClick={onClick} className={classList}>
+				{children}
+			</button>
+		);
+	}
 
 	if (isExternal) {
 		return (

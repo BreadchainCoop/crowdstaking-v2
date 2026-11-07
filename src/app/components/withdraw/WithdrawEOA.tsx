@@ -8,7 +8,7 @@ import { ArrowUpRightIcon, InfoIcon, WarningIcon } from "@phosphor-icons/react";
 import { TUserConnected } from "@/app/core/hooks/useConnectedUser";
 import { useTokenBalances } from "@/app/core/context/TokenBalanceContext/TokenBalanceContext";
 import { sanitizeInputValue } from "@/app/core/util/sanitizeInput";
-import { CURVE_SWAP_URL } from "@/constants";
+import { CURVE_POOL_URL } from "@/constants";
 import { ExternalLink } from "@/app/core/components/ExternalLink";
 import Burn from "@/app/bakery/components/Swap/Burn";
 
@@ -151,7 +151,7 @@ export function WithdrawEOA({
 			{receive === "WXDAI" ? (
 				<div className="flex flex-col gap-2">
 					<ExternalLink
-						href={CURVE_SWAP_URL}
+						href={CURVE_POOL_URL}
 						className="w-full !text-current"
 					>
 						<div className="lifted-button-container">

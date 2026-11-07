@@ -30,10 +30,11 @@ import { WRAPPER_CLASSES } from "@/app/core/util/classes";
 import { LoginButton } from "@/app/components/login-button";
 import { FistIcon } from "@/app/core/components/Icons/FistIcon";
 import SwapWrapper from "@/app/components/SwapWrapper";
+import { WithdrawModule } from "@/app/components/withdraw/WithdrawModule";
 import { useUserVoteCount } from "@/app/governance/useUserVoteCount";
 import { useActiveChain } from "@/app/core/hooks/useActiveChain";
 import { copyToClipboard } from "@/utils/copy-to-clipboard";
-import { CURVE_SWAP_URL, GNOSIS_LINK } from "@/constants";
+import { GNOSIS_LINK } from "@/constants";
 import { useAccountHistory, AccountHistoryEntry } from "./useAccountHistory";
 
 const CARD_CLASSES = "bg-paper-0 border border-paper-2 p-5";
@@ -83,6 +84,18 @@ export function ProfilePage() {
       includeContainerStyling: false,
       children: <SwapWrapper />,
       className: "max-w-[30rem]",
+    });
+  };
+
+  // Same Withdraw module as the nav account menu: lets the user choose
+  // between swapping on Curve and withdrawing in xDAI, rather than dumping
+  // them straight onto the Curve pool page.
+  const handleWithdraw = () => {
+    setModal({
+      type: "GENERIC_MODAL",
+      showCloseButton: true,
+      includeContainerStyling: true,
+      children: <WithdrawModule />,
     });
   };
 
@@ -146,19 +159,15 @@ export function ProfilePage() {
               <div className="lifted-button-container flex-1">
                 <LiftedButton onClick={handleBake}>Deposit</LiftedButton>
               </div>
-              <a
-                href={CURVE_SWAP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="lifted-button-container flex-1"
-              >
+              <div className="lifted-button-container flex-1">
                 <LiftedButton
                   preset="secondary"
-                  leftIcon={<ArrowUpRightIcon />}
+                  rightIcon={<ArrowLineDownIcon />}
+                  onClick={handleWithdraw}
                 >
                   Withdraw
                 </LiftedButton>
-              </a>
+              </div>
             </div>
           </div>
 

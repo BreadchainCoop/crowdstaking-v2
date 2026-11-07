@@ -6,6 +6,7 @@ import { LinkIcon } from "@/app/core/components/Icons/LinkIcon";
 
 import { useConnectedUser } from "../../hooks/useConnectedUser";
 import PageMenuLink from "../Header/page-menu-link";
+import { useOpenFundWallet } from "@/app/components/fund-wallet/useOpenFundWallet";
 
 interface IProps {
 	handleNavToggle: () => void;
@@ -14,12 +15,14 @@ interface IProps {
 export function MobileNavigation({ handleNavToggle }: IProps) {
 	const pathname = usePathname();
 	const user = useConnectedUser();
+	const openFundWallet = useOpenFundWallet();
 	return (
 		<nav className="flex flex-col gap-2">
 			<PageMenuLink
-				isCurrentPage={pathname === "/"}
-				href="/"
-				onClick={() => handleNavToggle()}
+				onClick={() => {
+					handleNavToggle();
+					openFundWallet();
+				}}
 			>
 				Bake
 			</PageMenuLink>

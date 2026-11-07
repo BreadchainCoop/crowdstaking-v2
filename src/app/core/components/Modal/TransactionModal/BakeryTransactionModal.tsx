@@ -41,6 +41,7 @@ import { ArrowUpRightIcon } from "@phosphor-icons/react";
 import Image from "next/image";
 import { Close as DialogPrimitiveClose } from "@radix-ui/react-dialog";
 import BakingBreadImportance from "@/app/components/baking-bread-importance";
+import { CURVE_POOL_URL } from "@/constants";
 
 function makeHeaderText(
 	modalType: "BAKE" | "BURN",
@@ -456,7 +457,7 @@ const BottomContent = ({ txStatus, data, hash, newSupply }: IBottomContent) => {
 					<LiftedButton
 						onClick={() => {
 							window.open(
-								`https://www.curve.finance/dex/xdai/pools/factory-stable-ng-15/swap/`,
+								CURVE_POOL_URL,
 								"_blank"
 							);
 						}}
