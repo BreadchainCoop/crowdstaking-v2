@@ -19,6 +19,13 @@ export function MobileNavigation({ handleNavToggle }: IProps) {
 	return (
 		<nav className="flex flex-col gap-2">
 			<PageMenuLink
+				isCurrentPage={pathname === "/"}
+				href="/"
+				onClick={() => handleNavToggle()}
+			>
+				Home
+			</PageMenuLink>
+			<PageMenuLink
 				onClick={() => {
 					handleNavToggle();
 					openFundWallet();

@@ -14,6 +14,9 @@ function DesktopNavigation({ currentPath }: { currentPath: string }) {
 				aria-label="site navigation"
 				className="flex items-center justify-start gap-4"
 			>
+				<PageMenuLink isCurrentPage={currentPath === "/"} href="/">
+					Home
+				</PageMenuLink>
 				{/* The homepage has no bake form, so "Bake" opens the deposit
 				    flow directly instead of linking back to "/". */}
 				<PageMenuLink onClick={openFundWallet}>Bake</PageMenuLink>

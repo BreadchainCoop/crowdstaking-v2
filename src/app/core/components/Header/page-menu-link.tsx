@@ -22,13 +22,7 @@ const PageMenuLink = ({
 }: PageMenuLinkProps) => {
 	const classList = clsx(
 		"text-base font-normal hover:text-primary-orange md:px-1",
-		isCurrentPage
-			? `${
-					href === "/"
-						? "text-[#EA5817] md:text-text-standard"
-						: "text-[#EA5817]"
-			  }`
-			: "text-text-standard"
+		isCurrentPage ? "text-[#EA5817]" : "text-text-standard"
 	);
 
 	if (!href) {
