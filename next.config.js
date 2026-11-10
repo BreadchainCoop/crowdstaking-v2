@@ -1,6 +1,16 @@
+// Netlify sets NETLIFY=true. Its production builds also generate Sentry
+// source maps, and running type-check + lint in the same `next build` pushes
+// the container past its memory cap (killed with exit 137). GitHub CI
+// (integration.yml) still runs `pnpm lint` and a full `pnpm build` with
+// type-checking on every push/PR to main and development, so skip both here
+// only on Netlify.
+const isNetlify = process.env.NETLIFY === "true";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	// output: "export",
+	eslint: { ignoreDuringBuilds: isNetlify },
+	typescript: { ignoreBuildErrors: isNetlify },
 	env: {
 		SUBGRAPH_API_KEY: process.env.SUBGRAPH_API_KEY,
 	},
@@ -48,10 +58,11 @@ module.exports = withSentryConfig(module.exports, {
 	// For all available options, see:
 	// https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
-	// Uploads a larger set of source maps for better stack traces
-	// Trade-off: increases build time but provides more detailed error context
-	// Helps debug minified production code by mapping back to original source
-	widenClientFileUpload: true,
+	// When true, also uploads source maps for Next.js framework chunks
+	// (better stack traces inside Next internals). Disabled: on the Netlify
+	// production build, the extra source-map work pushed `next build` past
+	// its 4 GB heap (exit 134). App code source maps are still uploaded.
+	widenClientFileUpload: false,
 
 	// Routes browser requests to Sentry through Next.js instead of directly
 	// Bypasses ad-blockers that might block sentry.io domain
