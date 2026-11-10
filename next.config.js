@@ -32,13 +32,14 @@ module.exports = nextConfig;
 
 const { withSentryConfig } = require("@sentry/nextjs");
 
-// Determine if we should upload source maps to Sentry
-// Only upload in production deployments or when explicitly enabled via env var
-// This prevents unnecessary uploads in preview/branch deployments and avoids
-// potential network issues that could fail the build
-const shouldUploadSourceMaps =
-	process.env.CONTEXT === "production" ||
-	process.env.ENABLE_SENTRY_UPLOAD === "true";
+// Generate + upload source maps to Sentry only when explicitly enabled.
+// This used to be on for every Netlify production deploy
+// (CONTEXT=production), but generating + uploading them in `next build`
+// got the build killed for running out of memory (exit 134 at a 4 GB heap,
+// exit 137 at 6 GB). Preview builds with source maps off pass, so production
+// now matches them. Trade-off: Sentry shows minified stack traces. Set
+// ENABLE_SENTRY_UPLOAD=true to opt back in.
+const shouldUploadSourceMaps = process.env.ENABLE_SENTRY_UPLOAD === "true";
 
 module.exports = withSentryConfig(module.exports, {
 	// For all available options, see:
@@ -59,9 +60,8 @@ module.exports = withSentryConfig(module.exports, {
 	// https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
 	// When true, also uploads source maps for Next.js framework chunks
-	// (better stack traces inside Next internals). Disabled: on the Netlify
-	// production build, the extra source-map work pushed `next build` past
-	// its 4 GB heap (exit 134). App code source maps are still uploaded.
+	// (better stack traces inside Next internals). Kept off to limit memory
+	// if source-map uploads are re-enabled via ENABLE_SENTRY_UPLOAD.
 	widenClientFileUpload: false,
 
 	// Routes browser requests to Sentry through Next.js instead of directly
@@ -91,11 +91,10 @@ module.exports = withSentryConfig(module.exports, {
 	// Only actually uploads when shouldUploadSourceMaps is true
 	dryRun: !shouldUploadSourceMaps,
 
-	// Fully disable source-map GENERATION on non-production builds. `dryRun`
+	// Fully disable source-map GENERATION unless uploads are enabled. `dryRun`
 	// only skips the upload — the plugin still generates maps, which is
-	// memory-heavy and OOMs the CI/Netlify builder on the Privy/wagmi/LiFi
-	// graph (exit 134). Production (CONTEXT=production) still generates +
-	// uploads for readable stack traces.
+	// memory-heavy and OOMs the Netlify builder on the Privy/wagmi/LiFi
+	// graph (see shouldUploadSourceMaps above).
 	sourcemaps: {
 		disable: !shouldUploadSourceMaps,
 	},

@@ -5,9 +5,3 @@ for = "/manifest.json"
 Access-Control-Allow-Origin = "*"
 Access-Control-Allow-Methods = "GET"
 Access-Control-Allow-Headers = "X-Requested-With, content-type, Authorization"
-
-[build.environment]
-# Production builds generate + upload Sentry source maps, which pushed
-# `next build` past the 4 GB heap set in the Netlify UI (exit 134). Match
-# the heap CI uses in integration.yml. Values here override the UI.
-NODE_OPTIONS = "--max-old-space-size=6144"
