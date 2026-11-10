@@ -3,9 +3,9 @@ name: Integration
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main, development]
+    branches: [main, dev]
   push:
-    branches: [main, development]
+    branches: [main, dev]
 
 env:
   NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: xxxx
