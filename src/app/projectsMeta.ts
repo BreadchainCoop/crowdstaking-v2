@@ -36,7 +36,7 @@ export const projectsMeta: {
     description:
       "Creating research and events on decentralized tech and the commons.",
     logoSrc: "project/cca.png",
-    active: true,
+    active: false,
     link: "https://www.karmahq.xyz/project/crypto-commons-association-1",
   },
   "0xA232F16aB37C9a646f91Ba901E92Ed1Ba4B7b544": {
