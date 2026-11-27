@@ -24,6 +24,9 @@ importers:
       '@lifi/widget':
         specifier: ^3.30.0
         version: 3.35.1(d00e4602eb6403d56902f0024bb8133e)
+      '@markee_team/sdk':
+        specifier: 0.1.0-beta.17
+        version: 0.1.0-beta.17(react@19.2.0)
       '@phosphor-icons/react':
         specifier: ^2.1.10
         version: 2.1.10(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1751,6 +1754,15 @@ packages:
   '@lit/reactive-element@2.1.1':
     resolution: {integrity: sha512-N+dm5PAYdQ8e6UlywyyrgI2t++wFGXfHx+dSJ1oBrg6FAxUj40jId++EaRm80MKX5JnlH1sBsyZ5h0bcZKemCg==}
 
+  '@markee_team/sdk@0.1.0-beta.17':
+    resolution: {integrity: sha512-a7d3am12TUWG1m0RGLltEEAPnuG73KAvJEnme7WideJb3DzRWP0BWY9EkX8CKtsoTe40uKB/xU3MNmqYsoH2vg==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      react: ^18.2.0 || ^19.0.0
+    peerDependenciesMeta:
+      react:
+        optional: true
+
   '@marsidev/react-turnstile@1.3.1':
     resolution: {integrity: sha512-h2THG/75k4Y049hgjSGPIcajxXnh+IZAiXVbryQyVmagkboN7pJtBgR16g8akjwUBSfRrg6jw6KvPDjscQflog==}
     peerDependencies:
@@ -1937,6 +1949,7 @@ packages:
 
   '@mysten/dapp-kit@0.19.9':
     resolution: {integrity: sha512-tQmAp9vTpNkN+t8kB5RNuNy7hPDQMDBaWA+IlxeZdTk9ovYzfj0rDWoTpbWzom8zSGJRayKbHKIbq04Jtw2pZg==}
+    deprecated: 'This package only supports the deprecated Sui JSON-RPC API and will not receive further updates. See the migration guide: https://sdk.mystenlabs.com/sui/migrations/sui-2.0/dapp-kit'
     peerDependencies:
       '@tanstack/react-query': ^5.0.0
       react: '*'
@@ -8853,10 +8866,6 @@ packages:
     resolution: {integrity: sha512-dMACeu63HtRLmCG8VKdy4cShCPKaYDR4youZqoSWLxl5Gu99HUw8bw75thbPv9Nip+H+QYX8o3ZJbTdVZZ2TVg==}
     hasBin: true
 
-  pirates@4.0.6:
-    resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}
-    engines: {node: '>= 6'}
-
   pirates@4.0.7:
     resolution: {integrity: sha512-TfySrs/5nm8fQJDcBDuUng3VOUKsd7S+zqvbOTiGXHfxX4wK31ard+hoNuvkicM/2YFzlpDgABOevKSsB4G/FA==}
     engines: {node: '>= 6'}
@@ -12555,7 +12564,7 @@ snapshots:
       jest-regex-util: 29.6.3
       jest-util: 29.7.0
       micromatch: 4.0.8
-      pirates: 4.0.6
+      pirates: 4.0.7
       slash: 3.0.0
       write-file-atomic: 4.0.2
     transitivePeerDependencies:
@@ -12777,6 +12786,10 @@ snapshots:
   '@lit/reactive-element@2.1.1':
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.4.0
+
+  '@markee_team/sdk@0.1.0-beta.17(react@19.2.0)':
+    optionalDependencies:
+      react: 19.2.0
 
   '@marsidev/react-turnstile@1.3.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:
@@ -22530,8 +22543,6 @@ snapshots:
       safe-stable-stringify: 2.5.0
       sonic-boom: 2.8.0
       thread-stream: 0.15.2
-
-  pirates@4.0.6: {}
 
   pirates@4.0.7: {}
 
