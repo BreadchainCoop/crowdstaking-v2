@@ -5,7 +5,7 @@ import {
 	MegaphoneSimpleIcon,
 } from "@phosphor-icons/react/dist/ssr";
 
-export const MARKEE_ADDRESS = "0xa52eb22029677029d4e609ad5e54ca6552c0b31f";
+export const MARKEE_ADDRESS = "0x87ce8464f3262cbb23ebeb618622b608bdeeae04";
 const MARKEE_URL = `https://www.markee.xyz/markee/${MARKEE_ADDRESS}`;
 const FALLBACK_MESSAGE = "Be the first to set a message on the Solidarity Fund.";
 
