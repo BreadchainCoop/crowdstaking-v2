@@ -1,12 +1,9 @@
 import { Body, Caption } from "@breadcoop/ui";
 // dist/ssr: context-free icons usable in server components
-import {
-	ArrowUpRightIcon,
-	MegaphoneSimpleIcon,
-} from "@phosphor-icons/react/dist/ssr";
+import { MegaphoneSimpleIcon } from "@phosphor-icons/react/dist/ssr";
+import { MarkeeChangeMessage } from "./MarkeeChangeMessage";
 
-export const MARKEE_ADDRESS = "0x87ce8464f3262cbb23ebeb618622b608bdeeae04";
-const MARKEE_URL = `https://www.markee.xyz/markee/${MARKEE_ADDRESS}`;
+export const MARKEE_ADDRESS = "0x87ce8464f3262cbb23ebeb618622b608bdeeae04" as const;
 const FALLBACK_MESSAGE = "Be the first to set a message on the Solidarity Fund.";
 
 type MarkeeData = { message?: string; name?: string };
@@ -23,22 +20,6 @@ async function getMarkee(): Promise<MarkeeData | null> {
 		return null;
 	}
 }
-
-// Only this link navigates, so the message text stays selectable and copyable.
-const ChangeMessageLink = () => (
-	<a
-		href={MARKEE_URL}
-		target="_blank"
-		rel="noopener noreferrer"
-		className="group flex shrink-0 items-center gap-1 text-primary-orange hover:underline"
-	>
-		<Caption className="font-bold">Change message</Caption>
-		<ArrowUpRightIcon
-			size={16}
-			className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-		/>
-	</a>
-);
 
 export const Markee = async ({
 	variant = "card",
@@ -60,7 +41,7 @@ export const Markee = async ({
 				<Body bold className="min-w-0 grow text-surface-ink">
 					{message}
 				</Body>
-				<ChangeMessageLink />
+				<MarkeeChangeMessage address={MARKEE_ADDRESS} />
 			</div>
 		);
 	}
@@ -83,7 +64,7 @@ export const Markee = async ({
 					</Caption>
 				)}
 			</span>
-			<ChangeMessageLink />
+			<MarkeeChangeMessage address={MARKEE_ADDRESS} />
 		</div>
 	);
 };

@@ -19,6 +19,7 @@
     "@breadcoop/ui": "^2.0.4",
     "@duneanalytics/client-sdk": "^0.2.5",
     "@lifi/widget": "^3.30.0",
+    "@markee_team/sdk": "0.1.0-beta.17",
     "@phosphor-icons/react": "^2.1.10",
     "@privy-io/react-auth": "^3.13.1",
     "@privy-io/wagmi": "^4.0.1",
